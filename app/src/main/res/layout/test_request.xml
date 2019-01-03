@@ -4,16 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.bristol.hackerhunt.helloworld.TestBeaconsActivity">
+    tools:context="com.bristol.hackerhunt.helloworld.TestRequestActivity">
 
     <Button
-        android:id="@+id/go_to_test_request"
+        android:id="@+id/go_home_from_test_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/go_to_test_request"/>
+        android:text="@string/go_back_home"/>
+
+    <Button
+        android:id="@+id/test_request"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/test_request"/>
 
     <TextView
-        android:id="@+id/show_count"
+        android:id="@+id/test_request_received"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:textStyle="bold"

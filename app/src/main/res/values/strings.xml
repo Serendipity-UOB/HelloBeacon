@@ -1,8 +1,13 @@
 <resources>
-    <string name="app_name">Hello World</string>
+    <string name="app_name">Hacker Hunt Test</string>
     <string name="button_label_toast">Toast</string>
     <string name="count_initial_value">0</string>
     <string name="button_label_count">Count</string>
     <string name="toast_message">Hello Toast</string>
     <string name="kontakt_io_api_key">pNqcUiJPjCLoeibtwzmjKkZwoPBPGXYS</string>
+    <string name="go_to_test_request">Go to test request</string>
+    <string name="this_is_the_test_request_page">This is the test request page.</string>
+    <string name="go_back_home">go back home</string>
+    <string name="test_request">Test request</string>
+    <string name="title_screen_start_button">{ start{}; }</string>
 </resources>
