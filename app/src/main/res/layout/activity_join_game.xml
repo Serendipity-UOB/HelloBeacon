@@ -9,12 +9,33 @@
     android:background="@color/mainBackground">
 
     <TextView
+        android:id="@+id/join_game_welcome_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="This is the join game page."
+        android:text="@string/join_game_welcome_message"
         android:textColor="@color/mainText"
         android:fontFamily="@font/vt323"/>
+
+    <TextView
+        android:id="@+id/join_game_players_in_game"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/join_game_players_in_game"
+        android:textColor="@color/mainText"
+        android:fontFamily="@font/vt323"
+        android:layout_marginTop="10pt"/>
+
+    <TextView
+        android:id="@+id/join_game_time_until_game"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/join_game_time_until_game"
+        android:textColor="@color/mainText"
+        android:fontFamily="@font/vt323"
+        android:layout_marginBottom="40pt"/>
 
     <Button
         android:id="@+id/join_game_button"
@@ -24,5 +45,17 @@
         android:fontFamily="@font/vt323"
         android:textSize="10pt"
         android:text="join_game();" />
+
+    <TextView
+        android:id="@+id/join_game_success"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/join_game_success"
+        android:textColor="@color/mainText"
+        android:fontFamily="@font/vt323"
+        android:textSize="10pt"
+        android:visibility="gone"/>
+
 
 </LinearLayout>

@@ -13,4 +13,8 @@
     <string name="create_profile_real_name">Real name</string>
     <string name="create_profile_hacker_name">Hacker name</string>
     <string name="create_profile_nfc_id">NFC id</string>
+    <string name="join_game_welcome_message">Welcome, $PLAYER_NAME.</string>
+    <string name="join_game_players_in_game">Players in game: </string>
+    <string name="join_game_success">JOIN_SUCCESS</string>
+    <string name="join_game_time_until_game">Time until game:</string>
 </resources>
