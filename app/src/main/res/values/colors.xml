@@ -6,4 +6,6 @@
     <color name="myBackgroundColor">#9b7eff</color>
     <color name="titleScreenBackground">#000000</color>
     <color name="titleScreenText">#ffffff</color>
+    <color name="mainBackground">#2E2E41</color>
+    <color name="mainText">#fff</color>
 </resources>

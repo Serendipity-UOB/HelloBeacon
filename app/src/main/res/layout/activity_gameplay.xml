@@ -6,13 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".GameplayActivity"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/mainBackground">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="This is the main gameplay activity."/>
+        android:text="This is the main gameplay activity."
+        android:textColor="@color/mainText"
+        android:fontFamily="@font/vt323" />
 
     <Button
         android:id="@+id/end_game_button"

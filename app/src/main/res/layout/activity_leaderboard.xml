@@ -6,13 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".LeaderboardActivity"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@color/mainBackground">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="This is the leaderboard page."/>
+        android:text="This is the leaderboard page."
+        android:textColor="@color/mainText"
+        android:fontFamily="@font/vt323"/>
 
     <Button
         android:id="@+id/return_to_title_button"

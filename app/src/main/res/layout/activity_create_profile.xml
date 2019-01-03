@@ -5,12 +5,15 @@
     android:layout_height="match_parent"
     android:gravity="center"
     tools:context=".CreateProfileActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/mainBackground">
 
    <TextView
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:gravity="center"
+       android:textColor="@color/mainText"
+       android:fontFamily="@font/vt323"
        android:text="This is the create profile page."/>
 
     <Button
