@@ -8,4 +8,5 @@
     <color name="titleScreenText">#ffffff</color>
     <color name="mainBackground">#2E2E41</color>
     <color name="mainText">#fff</color>
+    <color name="create_profile_textbox">#fff</color>
 </resources>
