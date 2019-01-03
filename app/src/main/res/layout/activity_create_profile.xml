@@ -52,6 +52,17 @@
         android:layout_marginVertical="5pt"
         android:paddingLeft="10pt"/>
 
+    <TextView
+        android:id="@+id/create_profile_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/attentionText"
+        android:fontFamily="@font/vt323"
+        android:text="Error: this is an error"
+        android:layout_marginBottom="10pt"
+        android:visibility="invisible"/>
+
     <Button
         android:id="@+id/create_profile_button"
         android:layout_width="wrap_content"

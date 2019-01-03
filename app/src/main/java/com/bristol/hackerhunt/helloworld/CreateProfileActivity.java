@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
@@ -26,9 +27,11 @@ public class CreateProfileActivity extends AppCompatActivity {
 
                 PlayerIdentifiers playerIdentifiers = new PlayerIdentifiers(playerRealName, playerHackerName, playerNfcId);
 
-                Intent intent = new Intent(CreateProfileActivity.this, JoinGameActivity.class);
-                intent.putExtra("player_identifiers", playerIdentifiers);
-                startActivity(intent);
+                if (userInputValid(playerRealName, playerHackerName, playerNfcId)) {
+                    Intent intent = new Intent(CreateProfileActivity.this, JoinGameActivity.class);
+                    intent.putExtra("player_identifiers", playerIdentifiers);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -36,5 +39,39 @@ public class CreateProfileActivity extends AppCompatActivity {
     private String getStringFromEditTextView(int viewId) {
         EditText editTextView = findViewById(viewId);
         return editTextView.getText().toString();
+    }
+
+    private boolean userInputValid(String playerRealName, String playerHackerName, String playerNfcId) {
+        return (playerRealNameIsValid(playerRealName) && playerHackerNameIsValid(playerHackerName) && playerNfcIdIsValid(playerNfcId));
+    }
+
+    private boolean playerRealNameIsValid(String playerRealName) {
+        if (playerRealName == null || playerRealName.length() == 0)  {
+            setFormErrorMessage("Please provide a real name.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean playerHackerNameIsValid(String playerHackerName) {
+        if (playerHackerName == null || playerHackerName.length() == 0)  {
+            setFormErrorMessage("Please provide a hacker name.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean playerNfcIdIsValid(String playerNfcId) {
+        if (playerNfcId == null || playerNfcId.length() == 0)  {
+            setFormErrorMessage("Please provide a valid NFC ID.");
+            return false;
+        }
+        return true;
+    }
+
+    private void setFormErrorMessage(String message) {
+        TextView errorMessageView = findViewById(R.id.create_profile_error);
+        errorMessageView.setVisibility(View.VISIBLE);
+        errorMessageView.setText("Error: " + message);
     }
 }

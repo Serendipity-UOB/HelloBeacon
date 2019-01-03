@@ -40,7 +40,7 @@ public class JoinGameActivity extends AppCompatActivity {
         updateNumberOfPlayersInGame(noOfPlayers.toString());
 
         // Starting timer thread
-        new CountDownTimer(100000, 1000) {
+        new CountDownTimer(10000, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
