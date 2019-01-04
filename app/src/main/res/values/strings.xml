@@ -17,4 +17,10 @@
     <string name="join_game_players_in_game">Players in game: </string>
     <string name="join_game_success">JOIN_SUCCESS</string>
     <string name="join_game_time_until_game">Time until game:</string>
+    <string name="gamplay_exchange_button">exchange();</string>
+    <string name="gameplay_take_down_button">take_down();</string>
+    <string name="gameplay_player_leaderboard_position">Pos:</string>
+    <string name="gameplay_player_leaderboard_points">Points:</string>
+    <string name="gameplay_player_target">Target:</string>
+    <string name="player_identifiers_intent_key">player_identifiers</string>
 </resources>

@@ -10,4 +10,6 @@
     <color name="mainText">#fff</color>
     <color name="attentionText">#d25252</color>
     <color name="create_profile_textbox">#fff</color>
+    <color name="gameplay_exchange_button">#15B13E</color>
+    <color name="gameplay_takedown_button">#CC4125</color>
 </resources>
