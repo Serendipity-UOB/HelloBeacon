@@ -10,6 +10,15 @@
     <color name="mainText">#fff</color>
     <color name="attentionText">#d25252</color>
     <color name="create_profile_textbox">#fff</color>
+
+    <!-- GAMEPLAY UI: actions -->
+
     <color name="gameplay_exchange_button">#15B13E</color>
     <color name="gameplay_takedown_button">#CC4125</color>
+
+    <!-- GAMEPLAY UI: player list -->
+    <color name="gameplay_nearby_player_name">#351c75</color>
+    <color name="gameplay_nearby_player_background">#9191CD</color>
+    <color name="gameplay_far_player_name">#000</color>
+    <color name="gameplay_far_player_background">#5e5e86</color>
 </resources>
