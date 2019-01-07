@@ -1,5 +1,7 @@
 package com.bristol.hackerhunt.helloworld.gameplay;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -63,6 +65,21 @@ public class ConsoleController {
             }
         });
 
+
+        overlay.setVisibility(View.VISIBLE);
+    }
+
+    public void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent) {
+        final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
+        final String[] message = {"Incoming message...\n\nGood work. Return your equipment to the base station to collect your award.\n\n\n - Anon"};
+        consoleView.setText(message[0]);
+
+        consoleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(goToLeaderboardIntent);
+            }
+        });
 
         overlay.setVisibility(View.VISIBLE);
     }

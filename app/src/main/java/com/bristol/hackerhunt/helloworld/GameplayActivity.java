@@ -1,5 +1,6 @@
 package com.bristol.hackerhunt.helloworld;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,7 @@ import java.util.Arrays;
 
 public class GameplayActivity extends AppCompatActivity {
 
-    private static final long GAMEPLAY_DURATION = 10; // given in minutes.
+    private static final double GAMEPLAY_DURATION = 10; // given in minutes.
     private static final int INTEL_INCREMENT = 20; // given as a percentage.
 
     private PlayerIdentifiers playerIdentifiers;
@@ -103,8 +104,11 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private void startGameTimer() {
+        final Context thisContext = this;
+        long duration = (long) (GAMEPLAY_DURATION * 60 * 1000);
+
         // Starting timer thread
-        new CountDownTimer(GAMEPLAY_DURATION * 60 * 1000, 1000) {
+        new CountDownTimer(duration, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -114,7 +118,9 @@ public class GameplayActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                goToLeaderboardActivity();
+                Intent intent = new Intent(GameplayActivity.this, LeaderboardActivity.class);
+                intent.putExtra(getString(R.string.player_identifiers_intent_key), playerIdentifiers);
+                consoleController.endOfGamePrompt(thisContext, intent);
             }
         }.start();
     }
