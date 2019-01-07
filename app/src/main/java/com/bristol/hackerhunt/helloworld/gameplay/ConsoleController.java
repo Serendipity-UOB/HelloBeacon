@@ -7,9 +7,11 @@ import com.bristol.hackerhunt.helloworld.R;
 
 public class ConsoleController {
     private final View overlay;
+    private String homeBeacon;
 
-    public ConsoleController(View consolePromptContainer) {
+    public ConsoleController(View consolePromptContainer, String homeBeacon) {
         this.overlay = consolePromptContainer;
+        this.homeBeacon = homeBeacon;
 
         // this is only temporary.
         overlay.setOnClickListener(new View.OnClickListener() {
@@ -20,11 +22,48 @@ public class ConsoleController {
         });
     }
 
-    public void goToStartBeaconPrompt(String beacon) {
+    public void goToStartBeaconPrompt() {
         TextView consoleView = overlay.findViewById(R.id.gameplay_console);
         String message = overlay.getContext().getString(R.string.console_start_beacon_message);
-        message = message.replace("$BEACON", beacon);
+        message = message.replace("$BEACON", homeBeacon);
         consoleView.setText(message);
+        overlay.setVisibility(View.VISIBLE);
+    }
+
+    // todo: this function is only a placeholder, functionality needs to be overhauled.
+    public void mutualExchangePrompt() {
+        final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
+        final String[] message = {"Scan target NFC tag."};
+        consoleView.setText(message[0]);
+
+        consoleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                message[0] = "EXCHANGE_SUCCESS";
+                consoleView.setText(message[0]);
+            }
+        });
+
+
+        overlay.setVisibility(View.VISIBLE);
+    }
+
+    // todo: this function is only a placeholder, functionality needs to be overhauled.
+    public void targetTakedownPrompt() {
+        final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
+        final String[] message = {"Scan target NFC tag."};
+        consoleView.setText(message[0]);
+
+        consoleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                message[0] = "TAKEDOWN_SUCCESS\n\n\nReturn to $BEACON for new target.";
+                message[0] = message[0].replace("$BEACON", homeBeacon);
+                consoleView.setText(message[0]);
+            }
+        });
+
+
         overlay.setVisibility(View.VISIBLE);
     }
 }

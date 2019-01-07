@@ -59,6 +59,7 @@
             android:weightSum="1.0"
             android:layout_marginTop="5pt">
             <Button
+                android:id="@+id/gameplay_exchange_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
@@ -70,6 +71,7 @@
                 android:background="@color/gameplay_exchange_button"
                 android:layout_marginEnd="2pt" />
             <Button
+                android:id="@+id/gameplay_takedown_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"

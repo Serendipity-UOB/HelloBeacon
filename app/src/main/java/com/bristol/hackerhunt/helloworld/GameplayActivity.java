@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,13 +25,14 @@ public class GameplayActivity extends AppCompatActivity {
     private PlayerListController playerListController;
     private ConsoleController consoleController;
 
+    private String homeBeacon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // initialization
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameplay);
         initializePlayerListController();
-        initializeConsoleController();
         getPlayerIdentifiers();
 
         //final Button endGameButton = findViewById(R.id.end_game_button);
@@ -59,7 +61,12 @@ public class GameplayActivity extends AppCompatActivity {
         setPlayerPoints("516");
 
         // First task: player needs to head to their home beacon.
-        consoleController.goToStartBeaconPrompt("Beacon A");
+        this.homeBeacon = "Beacon A";
+        initializeConsoleController();
+        initializeExchangeButton();
+        initializeTakeDownButton();
+
+        consoleController.goToStartBeaconPrompt();
 
         // Server polling: nearby players
         playerListController.updateNearbyPlayers(Arrays.asList("Nuha", "Tilly"));
@@ -70,9 +77,29 @@ public class GameplayActivity extends AppCompatActivity {
         playerListController.increasePlayerIntel("Tilly");
     }
 
+    private void initializeExchangeButton() {
+        Button exchangeButton = findViewById(R.id.gameplay_exchange_button);
+        exchangeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                consoleController.mutualExchangePrompt();
+            }
+        });
+    }
+
+    private void initializeTakeDownButton() {
+        Button takeDownButton = findViewById(R.id.gameplay_takedown_button);
+        takeDownButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                consoleController.targetTakedownPrompt();
+            }
+        });
+    }
+
     private void initializeConsoleController() {
         final View overlay = findViewById(R.id.gameplay_console_overlay);
-        this.consoleController = new ConsoleController(overlay);
+        this.consoleController = new ConsoleController(overlay, homeBeacon);
     }
 
     private void startGameTimer() {
