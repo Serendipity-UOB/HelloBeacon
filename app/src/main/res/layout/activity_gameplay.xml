@@ -1,117 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GameplayActivity"
-    android:orientation="vertical"
-    android:background="@color/mainBackground"
-    android:padding="5pt">
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/gameplay_player_leaderboard_position"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/vt323"
-            android:textColor="@color/mainText"
-            android:layout_alignParentStart="true"
-            android:text="@string/gameplay_player_leaderboard_position"/>
-        <TextView
-            android:id="@+id/gameplay_player_leaderboard_points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/vt323"
-            android:textColor="@color/mainText"
-            android:text="@string/gameplay_player_leaderboard_points"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center" />
-        <TextView
-            android:id="@+id/gameplay_time_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/vt323"
-            android:textColor="@color/mainText"
-            android:layout_alignParentEnd="true"
-            android:text="" />
-    </RelativeLayout>
-    <TextView
-        android:id="@+id/gameplay_player_target"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/vt323"
-        android:textColor="#ead1dc"
-        android:text="@string/gameplay_player_target"
-        android:layout_marginBottom="4pt" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="5pt"
+        android:background="@color/mainBackground">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        <include layout="@layout/gameplay_player_status_bar" />
 
-        <LinearLayout
-            android:id="@+id/gameplay_player_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-        <!--LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <TextView
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/gameplay_player_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="This is the main gameplay activity."
-                android:textColor="@color/mainText"
-                android:fontFamily="@font/vt323" />
+                android:orientation="vertical" />
 
+            <!--LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="This is the main gameplay activity."
+                    android:textColor="@color/mainText"
+                    android:fontFamily="@font/vt323" />
+
+                <Button
+                    android:id="@+id/end_game_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/vt323"
+                    android:textSize="10pt"
+                    android:text="end_game();" />
+            </LinearLayout -->
+
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1.0"
+            android:layout_marginTop="5pt">
             <Button
-                android:id="@+id/end_game_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
                 android:fontFamily="@font/vt323"
                 android:textSize="10pt"
-                android:text="end_game();" />
-        </LinearLayout -->
-
-    </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="1.0"
-        android:layout_marginTop="5pt">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAllCaps="false"
-            android:fontFamily="@font/vt323"
-            android:textSize="10pt"
-            android:layout_weight=".5"
-            android:text="@string/gamplay_exchange_button"
-            android:textColor="@android:color/white"
-            android:background="@color/gameplay_exchange_button"
-            android:layout_marginEnd="2pt" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAllCaps="false"
-            android:fontFamily="@font/vt323"
-            android:textSize="10pt"
-            android:layout_weight=".5"
-            android:text="@string/gameplay_take_down_button"
-            android:textColor="@android:color/white"
-            android:background="@color/gameplay_takedown_button"
-            android:layout_marginStart="2pt"/>
+                android:layout_weight=".5"
+                android:text="@string/gamplay_exchange_button"
+                android:textColor="@android:color/white"
+                android:background="@color/gameplay_exchange_button"
+                android:layout_marginEnd="2pt" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:fontFamily="@font/vt323"
+                android:textSize="10pt"
+                android:layout_weight=".5"
+                android:text="@string/gameplay_take_down_button"
+                android:textColor="@android:color/white"
+                android:background="@color/gameplay_takedown_button"
+                android:layout_marginStart="2pt"/>
+        </LinearLayout>
     </LinearLayout>
 
+    <!-- Console pop-up overlay -->
+    <RelativeLayout
+        android:id="@+id/gameplay_console_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CCFFFFFF"
+        android:visibility="gone">
 
-</LinearLayout>
+        <include layout="@layout/gameplay_console" />
+    </RelativeLayout>
+</RelativeLayout>

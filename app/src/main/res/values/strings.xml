@@ -23,4 +23,5 @@
     <string name="gameplay_player_leaderboard_points">Points:</string>
     <string name="gameplay_player_target">Target:</string>
     <string name="player_identifiers_intent_key">player_identifiers</string>
+    <string name="console_start_beacon_message">Incoming message...  \n\nGo to $BEACON to receive your first target.\n\n\n- Anon</string>
 </resources>

@@ -5,9 +5,11 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bristol.hackerhunt.helloworld.gameplay.ConsoleController;
 import com.bristol.hackerhunt.helloworld.gameplay.PlayerListController;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
@@ -20,6 +22,7 @@ public class GameplayActivity extends AppCompatActivity {
 
     private PlayerIdentifiers playerIdentifiers;
     private PlayerListController playerListController;
+    private ConsoleController consoleController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,7 @@ public class GameplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameplay);
         initializePlayerListController();
+        initializeConsoleController();
         getPlayerIdentifiers();
 
         //final Button endGameButton = findViewById(R.id.end_game_button);
@@ -54,6 +58,9 @@ public class GameplayActivity extends AppCompatActivity {
         // Server polling: receive points.
         setPlayerPoints("516");
 
+        // First task: player needs to head to their home beacon.
+        consoleController.goToStartBeaconPrompt("Beacon A");
+
         // Server polling: nearby players
         playerListController.updateNearbyPlayers(Arrays.asList("Nuha", "Tilly"));
         playerListController.updateNearbyPlayers(Arrays.asList("Jack"));
@@ -61,6 +68,11 @@ public class GameplayActivity extends AppCompatActivity {
         // Player interaction: gained intel.
         playerListController.increasePlayerIntel("Nuha");
         playerListController.increasePlayerIntel("Tilly");
+    }
+
+    private void initializeConsoleController() {
+        final View overlay = findViewById(R.id.gameplay_console_overlay);
+        this.consoleController = new ConsoleController(overlay);
     }
 
     private void startGameTimer() {
