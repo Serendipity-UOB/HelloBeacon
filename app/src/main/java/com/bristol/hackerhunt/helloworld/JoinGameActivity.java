@@ -11,8 +11,14 @@ import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class JoinGameActivity extends AppCompatActivity {
     private Integer noOfPlayers = 1;
+    private long timeToGameStart = 10000;
+    private String startBeacon = "Beacon A";
+
     private boolean joinedGame = false;
     private boolean startedTimer = false;
 
@@ -22,10 +28,38 @@ public class JoinGameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_join_game);
 
         final PlayerIdentifiers playerIdentifiers = getIntent().getParcelableExtra("player_identifiers");
+
         replaceStringInTextView(R.id.join_game_welcome_text, "$PLAYER_NAME", playerIdentifiers.getRealName());
         updateNumberOfPlayersInGame("Loading...");
         updateTimeLeftUntilGame("Loading...");
 
+        initializeJoinGameButton();
+
+        // "Receiving" information; insert server calls here.
+        updateNumberOfPlayersInGame(noOfPlayers.toString());
+
+        // Starting timer thread
+        new CountDownTimer(timeToGameStart, 1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                String formattedTime = formatTime(millisUntilFinished);
+                updateTimeLeftUntilGame(formattedTime);
+            }
+
+            @Override
+            public void onFinish() {
+                if (joinedGame) {
+                    goToGameplayActivity(playerIdentifiers);
+                }
+                else {
+                    goToTitleScreenActivity();
+                }
+            }
+        }.start();
+    }
+
+    private void initializeJoinGameButton() {
         final Button joinGameButton = findViewById(R.id.join_game_button);
         joinGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,38 +69,33 @@ public class JoinGameActivity extends AppCompatActivity {
                 joinedGame = true;
             }
         });
+    }
 
-        // "Receiving" information; insert server calls here.
-        updateNumberOfPlayersInGame(noOfPlayers.toString());
+    private String formatTime(long milliseconds) {
+        Long minutes = milliseconds / 60000;
+        Long seconds = (milliseconds - minutes * 60000) / 1000;
+        String formattedTime = minutes.toString() + ":" ;
+        if (minutes < 10) formattedTime = "0" + formattedTime;
+        if (seconds < 10) formattedTime = formattedTime + "0";
+        return formattedTime + seconds.toString();
+    }
 
-        // Starting timer thread
-        new CountDownTimer(10000, 1000) {
+    private void goToGameplayActivity(PlayerIdentifiers playerIdentifiers) {
+        Intent intent = new Intent(JoinGameActivity.this, GameplayActivity.class);
+        intent.putExtra("player_identifiers", playerIdentifiers);
+        intent.putExtra("start_beacon", startBeacon);
+        startActivity(intent);
+    }
 
-            @Override
-            public void onTick(long millisUntilFinished) {
-                Long minutes = millisUntilFinished / 60000;
-                Long seconds = (millisUntilFinished - minutes * 60000) / 1000;
-                String formattedTime = minutes.toString() + ":" ;
-                if (minutes < 10) formattedTime = "0" + formattedTime;
-                if (seconds < 10) formattedTime = formattedTime + "0";
-                formattedTime = formattedTime + seconds.toString();
+    private void goToTitleScreenActivity() {
+        Intent intent = new Intent(JoinGameActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
 
-                updateTimeLeftUntilGame(formattedTime);
-            }
-
-            @Override
-            public void onFinish() {
-                if (joinedGame) {
-                    Intent intent = new Intent(JoinGameActivity.this, GameplayActivity.class);
-                    intent.putExtra("player_identifiers", playerIdentifiers);
-                    startActivity(intent);
-                }
-                else {
-                    Intent intent = new Intent(JoinGameActivity.this, MainActivity.class);
-                    startActivity(intent);
-                }
-            }
-        }.start();
+    private JSONObject joinGameJson(String playerId) throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("player_id", playerId);
+        return obj;
     }
 
     private void updateNumberOfPlayersInGame(String players) {
