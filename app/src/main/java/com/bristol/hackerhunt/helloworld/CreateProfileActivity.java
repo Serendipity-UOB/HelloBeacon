@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class CreateProfileActivity extends AppCompatActivity {
 
     @Override
@@ -34,6 +37,14 @@ public class CreateProfileActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private JSONObject playerIdentifiersToJson(PlayerIdentifiers playerIdentifiers) throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("real_name", playerIdentifiers.getRealName());
+        obj.put("hacker_name", playerIdentifiers.getHackerName());
+        obj.put("nfc_id", playerIdentifiers.getNfcId());
+        return obj;
     }
 
     private String getStringFromEditTextView(int viewId) {
