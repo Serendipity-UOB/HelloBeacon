@@ -21,6 +21,7 @@ public class GameState {
     private final PlayerIdentifiers playerIdentifiers;
     private final Map<String, Integer> beaconMinorRssiMap;
     private List<PlayerUpdate> playerUpdates;
+    private final String homeBeacon;
     private int points;
     private String position;
 
@@ -30,7 +31,8 @@ public class GameState {
 
     public GameState(PlayerListController playerListController,
                      PlayerStatusBarController playerStatusBarController,
-                     PlayerIdentifiers playerIdentifiers) {
+                     PlayerIdentifiers playerIdentifiers,
+                     String homeBeacon) {
         this.playerListController = playerListController;
         this.playerStatusBarController = playerStatusBarController;
         this.playerIdentifiers = playerIdentifiers;
@@ -38,8 +40,8 @@ public class GameState {
         this.allPlayersMap = new HashMap<>();
         this.nearbyPlayerIds = new ArrayList<>();
         this.playerUpdates = new ArrayList<>();
-        this.playerUpdates.add(PlayerUpdate.REQ_NEW_TARGET);
 
+        this.homeBeacon = homeBeacon;
         this.points = 0;
         this.position = "Loading...";
     }
@@ -53,6 +55,30 @@ public class GameState {
             this.realName = realName;
             this.hackerName = hackerName;
             this.intel = 0;
+        }
+    }
+
+    public String getHomeBeacon() {
+        return homeBeacon;
+    }
+
+    public boolean playerHasBeenTakenDown() {
+        return playerUpdates.contains(PlayerUpdate.TAKEN_DOWN);
+    }
+
+    public void resetPlayerTakenDown() {
+        if (playerUpdates.contains(PlayerUpdate.TAKEN_DOWN)) {
+            playerUpdates.remove(PlayerUpdate.TAKEN_DOWN);
+        }
+    }
+
+    public boolean playersTargetHasBeenTakenDown() {
+        return playerUpdates.contains(PlayerUpdate.REQ_NEW_TARGET);
+    }
+
+    public void resetPlayersTargetHasBeenTakenDown() {
+        if (playerUpdates.contains(PlayerUpdate.REQ_NEW_TARGET)) {
+            playerUpdates.remove(PlayerUpdate.REQ_NEW_TARGET);
         }
     }
 
@@ -70,7 +96,7 @@ public class GameState {
             allPlayersMap.put(playerIdentifiers.getNfcId(), pd);
 
             playerListController.insertPlayer(playerIdentifiers.getNfcId(),
-                    playerIdentifiers.getRealName()); //todo: change to identifiers.
+                    playerIdentifiers.getRealName());
         }
     }
 

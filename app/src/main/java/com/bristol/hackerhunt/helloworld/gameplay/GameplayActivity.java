@@ -17,8 +17,12 @@ import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
 import org.json.JSONException;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class GameplayActivity extends AppCompatActivity {
 
+    private static int POLLING_PERIOD = 10; // in seconds
     private static final double GAMEPLAY_DURATION = 10; // given in minutes.
 
     private PlayerIdentifiers playerIdentifiers;
@@ -28,24 +32,22 @@ public class GameplayActivity extends AppCompatActivity {
     private GameplayServerRequestsController serverRequestsController;
     private GameState gameState;
 
-    private String homeBeacon;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // initialization
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameplay);
         getPlayerIdentifiers();
-        this.homeBeacon = getIntent().getStringExtra("start_beacon");
 
         initializePlayerListController();
         initializePlayerStatusBarController();
-        initializeConsoleController();
         initializeExchangeButton();
         initializeTakeDownButton();
 
-        this.gameState = new GameState(playerListController, playerStatusBarController, playerIdentifiers);
+        this.gameState = new GameState(playerListController, playerStatusBarController,
+                playerIdentifiers, getIntent().getStringExtra("start_beacon"));
         this.serverRequestsController = new GameplayServerRequestsController(gameState);
+        initializeConsoleController();
 
         startGameTimer();
 
@@ -56,13 +58,46 @@ public class GameplayActivity extends AppCompatActivity {
             serverRequestsController.startInfoRequest();
             serverRequestsController.newTargetRequest();
 
-            // polling loop goes here
-            serverRequestsController.playerUpdateRequest();
+            // polling
+            Timer timer = new Timer(false);
+            timer.scheduleAtFixedRate(pollServer(),0, POLLING_PERIOD * 1000);
 
             // check player updates once per loop & behave accordingly
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private TimerTask pollServer() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                pollServerTask();
+            }
+        };
+    }
+
+    private void pollServerTask() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    serverRequestsController.playerUpdateRequest();
+
+                    if (gameState.playerHasBeenTakenDown()) {
+                        // TODO: player has been taken down.
+                        gameState.resetPlayerTakenDown();
+                    }
+                    if (gameState.playersTargetHasBeenTakenDown()) {
+                        // TODO: player's target has been taken down.
+                        gameState.resetPlayersTargetHasBeenTakenDown();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void initializePlayerStatusBarController() {
@@ -91,7 +126,7 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeConsoleController() {
         final View overlay = findViewById(R.id.gameplay_console_overlay);
-        this.consoleController = new ConsoleController(overlay, homeBeacon);
+        this.consoleController = new ConsoleController(overlay, gameState);
     }
 
     private void startGameTimer() {

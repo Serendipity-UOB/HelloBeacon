@@ -14,7 +14,7 @@ public class JoinGameServerRequestController {
     // TODO: GET /gameInfo
     public void gameInfoRequest() throws JSONException {
          // this is a placeholder
-        String response = "{\"start_time\":0.17,\"number_players\":2}";
+        String response = "{\"start_time\":0.25,\"number_players\":2}";
         JSONObject obj = new JSONObject(response);
 
         double minutesToStart = obj.getDouble("start_time");

@@ -9,11 +9,11 @@ import com.bristol.hackerhunt.helloworld.R;
 
 public class ConsoleController {
     private final View overlay;
-    private String homeBeacon;
+    private GameState gameState;
 
-    public ConsoleController(View consolePromptContainer, String homeBeacon) {
+    public ConsoleController(View consolePromptContainer, GameState gameState) {
         this.overlay = consolePromptContainer;
-        this.homeBeacon = homeBeacon;
+        this.gameState = gameState;
 
         // this is only temporary.
         overlay.setOnClickListener(new View.OnClickListener() {
@@ -27,7 +27,7 @@ public class ConsoleController {
     public void goToStartBeaconPrompt() {
         TextView consoleView = overlay.findViewById(R.id.gameplay_console);
         String message = overlay.getContext().getString(R.string.console_start_beacon_message);
-        message = message.replace("$BEACON", homeBeacon);
+        message = message.replace("$BEACON", gameState.getHomeBeacon());
         consoleView.setText(message);
         overlay.setVisibility(View.VISIBLE);
     }
@@ -60,13 +60,21 @@ public class ConsoleController {
             @Override
             public void onClick(View view) {
                 message[0] = "TAKEDOWN_SUCCESS\n\n\nReturn to $BEACON for new target.";
-                message[0] = message[0].replace("$BEACON", homeBeacon);
+                message[0] = message[0].replace("$BEACON", gameState.getHomeBeacon());
                 consoleView.setText(message[0]);
             }
         });
 
 
         overlay.setVisibility(View.VISIBLE);
+    }
+
+    public void playersTargetTakenDownPrompt() {
+        // todo
+    }
+
+    public void playerGotTakenDownPrompt() {
+        // todo
     }
 
     public void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent) {
