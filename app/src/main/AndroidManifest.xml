@@ -33,10 +33,10 @@
             android:name="com.kontakt.sdk.android.ble.service.ProximityService"
             android:exported="false" />
 
-        <activity android:name=".CreateProfileActivity" />
-        <activity android:name=".JoinGameActivity" />
+        <activity android:name=".profileCreation.CreateProfileActivity" />
+        <activity android:name=".joinGame.JoinGameActivity" />
         <activity android:name=".gameplay.GameplayActivity" />
-        <activity android:name=".LeaderboardActivity"></activity>
+        <activity android:name=".leaderboard.LeaderboardActivity"></activity>
     </application>
 
 </manifest>

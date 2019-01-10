@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bristol.hackerhunt.helloworld.LeaderboardActivity;
+import com.bristol.hackerhunt.helloworld.leaderboard.LeaderboardActivity;
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 

@@ -1,4 +1,4 @@
-package com.bristol.hackerhunt.helloworld;
+package com.bristol.hackerhunt.helloworld.profileCreation;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bristol.hackerhunt.helloworld.joinGame.JoinGameActivity;
+import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
 import org.json.JSONException;
