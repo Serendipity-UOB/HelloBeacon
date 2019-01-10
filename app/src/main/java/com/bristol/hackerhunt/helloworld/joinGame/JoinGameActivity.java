@@ -1,5 +1,6 @@
 package com.bristol.hackerhunt.helloworld.joinGame;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -16,19 +17,25 @@ import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JoinGameActivity extends AppCompatActivity {
-    private Integer noOfPlayers = 1;
-    private long timeToGameStart = 10000;
-    private String startBeacon = "Beacon A";
+import java.util.Timer;
+import java.util.TimerTask;
 
+public class JoinGameActivity extends AppCompatActivity {
+
+    private static int POLLING_PERIOD = 10; // in seconds
+
+    private JoinGameServerRequestController serverRequestController;
+
+    private GameInfo gameInfo;
     private boolean joinedGame = false;
-    private boolean startedTimer = false;
+    private boolean timerStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_game);
-
+        this.gameInfo = new GameInfo();
+        this.serverRequestController = new JoinGameServerRequestController(gameInfo);
         final PlayerIdentifiers playerIdentifiers = getIntent().getParcelableExtra("player_identifiers");
 
         replaceStringInTextView(R.id.join_game_welcome_text, "$PLAYER_NAME", playerIdentifiers.getRealName());
@@ -37,11 +44,43 @@ public class JoinGameActivity extends AppCompatActivity {
 
         initializeJoinGameButton();
 
-        // "Receiving" information; insert server calls here.
-        updateNumberOfPlayersInGame(noOfPlayers.toString());
+        Timer timer = new Timer(true);
+        timer.scheduleAtFixedRate(pollServer(playerIdentifiers, timer), 0, POLLING_PERIOD * 1000);
+    }
 
-        // Starting timer thread
-        new CountDownTimer(timeToGameStart, 1000) {
+    private TimerTask pollServer(final PlayerIdentifiers playerIdentifiers, final Timer timer) {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    serverRequestController.gameInfoRequest();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                // Starting timer thread
+                if (gameInfo.minutesToStart != null && !timerStarted) {
+                    startCountdownToGameStart(playerIdentifiers, timer);
+                }
+                if (gameInfo.numberOfPlayers != null) {
+                    updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
+                }
+            }
+        };
+    }
+
+    private void startCountdownToGameStart(final PlayerIdentifiers playerIdentifiers, final Timer timer) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                startGameTimer(playerIdentifiers, timer, (long) (gameInfo.minutesToStart * 60 * 1000)).start();
+            }
+        });
+        timerStarted = true;
+    }
+
+    private CountDownTimer startGameTimer(final PlayerIdentifiers playerIdentifiers, final Timer timer,
+                                          long millisecondsToGameStart) {
+        return new CountDownTimer(millisecondsToGameStart, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -58,7 +97,7 @@ public class JoinGameActivity extends AppCompatActivity {
                     goToTitleScreenActivity();
                 }
             }
-        }.start();
+        };
     }
 
     private void initializeJoinGameButton() {
@@ -67,7 +106,21 @@ public class JoinGameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 joinGameButton.setVisibility(View.GONE);
+                try {
+                    serverRequestController.joinGameRequest();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                TextView joinStatus = findViewById(R.id.join_game_success);
                 findViewById(R.id.join_game_success).setVisibility(View.VISIBLE);
+                if (gameInfo.startBeacon == null) {
+                    joinStatus.setText(R.string.join_game_loading);
+                    while (gameInfo.startBeacon == null) {
+                        // do nothing, wait for response
+                    }
+                    joinStatus.setText(R.string.join_game_success);
+                }
                 joinedGame = true;
             }
         });
@@ -85,19 +138,13 @@ public class JoinGameActivity extends AppCompatActivity {
     private void goToGameplayActivity(PlayerIdentifiers playerIdentifiers) {
         Intent intent = new Intent(JoinGameActivity.this, GameplayActivity.class);
         intent.putExtra("player_identifiers", playerIdentifiers);
-        intent.putExtra("start_beacon", startBeacon);
+        intent.putExtra("start_beacon", gameInfo.startBeacon);
         startActivity(intent);
     }
 
     private void goToTitleScreenActivity() {
         Intent intent = new Intent(JoinGameActivity.this, MainActivity.class);
         startActivity(intent);
-    }
-
-    private JSONObject joinGameJson(String playerId) throws JSONException {
-        JSONObject obj = new JSONObject();
-        obj.put("player_id", playerId);
-        return obj;
     }
 
     private void updateNumberOfPlayersInGame(String players) {
