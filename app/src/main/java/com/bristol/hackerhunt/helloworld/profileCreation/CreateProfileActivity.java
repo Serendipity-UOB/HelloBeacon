@@ -12,15 +12,17 @@ import com.bristol.hackerhunt.helloworld.joinGame.JoinGameActivity;
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class CreateProfileActivity extends AppCompatActivity {
 
+    private ProfileCreationServerRequestsController serverRequestsController;
+    private ProfileValid profileValid;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
+        this.profileValid = new ProfileValid();
+        this.serverRequestsController = new ProfileCreationServerRequestsController(profileValid);
 
         final Button goToProfileButton = findViewById(R.id.create_profile_button);
         goToProfileButton.setOnClickListener(new View.OnClickListener() {
@@ -32,21 +34,16 @@ public class CreateProfileActivity extends AppCompatActivity {
 
                 PlayerIdentifiers playerIdentifiers = new PlayerIdentifiers(playerRealName, playerHackerName, playerNfcId);
 
-                if (userInputValid(playerRealName, playerHackerName, playerNfcId)) {
+                serverRequestsController.registerPlayerRequest(playerRealName, playerHackerName, playerNfcId);
+                // TODO: need to implement some sort of wait for the server.
+
+                if (userInputValid(playerRealName, playerHackerName, playerNfcId) && profileValid.valid) {
                     Intent intent = new Intent(CreateProfileActivity.this, JoinGameActivity.class);
                     intent.putExtra("player_identifiers", playerIdentifiers);
                     startActivity(intent);
                 }
             }
         });
-    }
-
-    private JSONObject playerIdentifiersToJson(PlayerIdentifiers playerIdentifiers) throws JSONException {
-        JSONObject obj = new JSONObject();
-        obj.put("real_name", playerIdentifiers.getRealName());
-        obj.put("hacker_name", playerIdentifiers.getHackerName());
-        obj.put("nfc_id", playerIdentifiers.getNfcId());
-        return obj;
     }
 
     private String getStringFromEditTextView(int viewId) {
