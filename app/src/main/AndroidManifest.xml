@@ -35,7 +35,7 @@
 
         <activity android:name=".CreateProfileActivity" />
         <activity android:name=".JoinGameActivity" />
-        <activity android:name=".GameplayActivity" />
+        <activity android:name=".gameplay.GameplayActivity" />
         <activity android:name=".LeaderboardActivity"></activity>
     </application>
 

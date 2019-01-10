@@ -17,39 +17,38 @@ import java.util.Map;
 public class PlayerListController {
     private final LayoutInflater inflater;
     private final LinearLayout playerList;
-    private final Map<String, Integer> playerListItemIdMap;
-    private final int intelIncrement;
-    private List<String> nearbyPlayers;
+    private final Map<String, Integer> playerIdListItemIdMap;
+    private final Map<String, String> playerIdNameMap;
+    private List<String> nearbyPlayerIds;
 
-    public PlayerListController(LayoutInflater inflater, LinearLayout playerList, int intelIncrement) {
+    public PlayerListController(LayoutInflater inflater, LinearLayout playerList) {
         this.inflater = inflater;
         this.playerList  = playerList;
-        this.playerListItemIdMap = new HashMap<>();
+        this.playerIdListItemIdMap = new HashMap<>();
+        this.playerIdNameMap = new HashMap<>();
 
-        if (intelIncrement < 0 || intelIncrement > 100) {
-            throw new IllegalArgumentException("Error: increment used for intel needs to be a percentage");
-        }
-        this.intelIncrement = intelIncrement;
-
-        this.nearbyPlayers = new ArrayList<>();
+        this.nearbyPlayerIds = new ArrayList<>();
     }
 
-    public void insertPlayer(String playerName) {
-        insertPlayer(playerName, false, 0);
+    public void insertPlayer(String playerId, String playerName) {
+        playerIdNameMap.put(playerId, playerName);
+        insertPlayer(playerId, false, 0);
     }
 
-    private void insertPlayer(String playerName, boolean nearby, int progress) {
+    private void insertPlayer(String playerId, boolean nearby, int progress) {
         LinearLayout listItem = (LinearLayout) inflater.inflate(R.layout.gameplay_player_list_item, null);
 
         int playerItemId = View.generateViewId();
-        playerListItemIdMap.put(playerName, playerItemId);
+        playerIdListItemIdMap.put(playerId, playerItemId);
         listItem.setId(playerItemId);
 
         TextView playerNameView = listItem.findViewById(R.id.player_name);
         ProgressBar intelGathered = listItem.findViewById(R.id.player_intel_bar);
 
+        String playerName = playerIdNameMap.get(playerId);
         playerNameView.setText(playerName);
         intelGathered.setProgress(progress);
+
         if (nearby) {
             listItem.findViewById(R.id.player_item_background).setBackgroundColor(ContextCompat.getColor(playerList.getContext(), R.color.gameplay_nearby_player_background));
             playerNameView.setTextColor(ContextCompat.getColor(playerList.getContext(), R.color.gameplay_nearby_player_name));
@@ -58,50 +57,50 @@ public class PlayerListController {
         playerList.addView(listItem, 0);
     }
 
-    public void increasePlayerIntel(String playerName) {
-        if (!playerListItemIdMap.containsKey(playerName)) {
+    public void increasePlayerIntel(String playerId, int intelIncrement) {
+        if (!playerIdListItemIdMap.containsKey(playerId)) {
             throw new IllegalArgumentException("Error: player is not listed as playing the game.");
         }
         else {
-            int id = playerListItemIdMap.get(playerName);
+            int id = playerIdListItemIdMap.get(playerId);
             LinearLayout listItem = playerList.findViewById(id);
             ProgressBar intelBar = listItem.findViewById(R.id.player_intel_bar);
             intelBar.incrementProgressBy(intelIncrement);
         }
     }
 
-    public void updateNearbyPlayers(List<String> newNearbyPlayerNames) {
-        for (String playerName : nearbyPlayers) {
-            if (!newNearbyPlayerNames.contains(playerName)) {
-                int intel = getPlayerIntel(playerName);
-                removeListItemEntry(playerName);
-                insertPlayer(playerName, false, intel);
+    public void updateNearbyPlayers(List<String> newNearbyPlayerIds) {
+        for (String playerId : nearbyPlayerIds) {
+            if (!newNearbyPlayerIds.contains(playerId)) {
+                int intel = getPlayerIntel(playerId);
+                removeListItemEntry(playerId);
+                insertPlayer(playerId, false, intel);
             }
         }
 
-        for (String playerName : newNearbyPlayerNames) {
-            int intel = getPlayerIntel(playerName);
-            removeListItemEntry(playerName);
-            insertPlayer(playerName, true, intel);
+        for (String playerId : newNearbyPlayerIds) {
+            int intel = getPlayerIntel(playerId);
+            removeListItemEntry(playerId);
+            insertPlayer(playerId, true, intel);
         }
 
-        this.nearbyPlayers = newNearbyPlayerNames;
+        this.nearbyPlayerIds = newNearbyPlayerIds;
     }
 
-    private int getPlayerIntel(String playerName) {
-        if (!playerListItemIdMap.containsKey(playerName)) {
+    private int getPlayerIntel(String playerId) {
+        if (!playerIdListItemIdMap.containsKey(playerId)) {
             throw new IllegalArgumentException("Error: player is not listed as playing the game.");
         }
         else {
-            int id = playerListItemIdMap.get(playerName);
+            int id = playerIdListItemIdMap.get(playerId);
             LinearLayout ll = playerList.findViewById(id);
             ProgressBar ib = ll.findViewById(R.id.player_intel_bar);
             return ib.getProgress();
         }
     }
 
-    private void removeListItemEntry(String playerName) {
-        int id = playerListItemIdMap.get(playerName);
+    private void removeListItemEntry(String playerId) {
+        int id = playerIdListItemIdMap.get(playerId);
         LinearLayout view = playerList.findViewById(id);
         playerList.removeView(view);
     }

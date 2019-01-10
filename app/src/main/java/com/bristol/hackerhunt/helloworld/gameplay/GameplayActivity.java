@@ -1,4 +1,4 @@
-package com.bristol.hackerhunt.helloworld;
+package com.bristol.hackerhunt.helloworld.gameplay;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,20 +11,22 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bristol.hackerhunt.helloworld.gameplay.ConsoleController;
-import com.bristol.hackerhunt.helloworld.gameplay.PlayerListController;
+import com.bristol.hackerhunt.helloworld.LeaderboardActivity;
+import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
-import java.util.Arrays;
+import org.json.JSONException;
 
 public class GameplayActivity extends AppCompatActivity {
 
     private static final double GAMEPLAY_DURATION = 10; // given in minutes.
-    private static final int INTEL_INCREMENT = 20; // given as a percentage.
 
     private PlayerIdentifiers playerIdentifiers;
     private PlayerListController playerListController;
+    private PlayerStatusBarController playerStatusBarController;
     private ConsoleController consoleController;
+    private GameplayServerRequestsController serverRequestsController;
+    private GameState gameState;
 
     private String homeBeacon;
 
@@ -33,49 +35,38 @@ public class GameplayActivity extends AppCompatActivity {
         // initialization
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameplay);
-        initializePlayerListController();
         getPlayerIdentifiers();
+        this.homeBeacon = getIntent().getStringExtra("start_beacon");
 
-        //final Button endGameButton = findViewById(R.id.end_game_button);
-        //endGameButton.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View view) {
-        //        goToLeaderboardActivity();
-        //    }
-        //});
-
-        startGameTimer();
-
-        // Obtain list of all players from the server and initialize their list entries.
-        String[] playerNames = new String[]{"Tom", "Tilly", "Louis", "David", "Jack", "Nuha", "Tilo", "Beth", "Becky", "Bradley"};
-        for (String playerName : playerNames) {
-            playerListController.insertPlayer(playerName);
-        }
-
-        // Request new target from the server at the start of the game.
-        setPlayerTargetHackerName("cutie_kitten");
-
-        // Server polling: receive leaderboard position.
-        setPlayerLeaderboardPosition("2");
-
-        // Server polling: receive points.
-        setPlayerPoints("516");
-
-        // First task: player needs to head to their home beacon.
-        this.homeBeacon = "Beacon A";
+        initializePlayerListController();
+        initializePlayerStatusBarController();
         initializeConsoleController();
         initializeExchangeButton();
         initializeTakeDownButton();
 
+        this.gameState = new GameState(playerListController, playerStatusBarController, playerIdentifiers);
+        this.serverRequestsController = new GameplayServerRequestsController(gameState);
+
+        startGameTimer();
+
+        // First task: player needs to head to their home beacon.
         consoleController.goToStartBeaconPrompt();
 
-        // Server polling: nearby players
-        playerListController.updateNearbyPlayers(Arrays.asList("Nuha", "Tilly"));
-        playerListController.updateNearbyPlayers(Arrays.asList("Jack"));
+        try {
+            serverRequestsController.startInfoRequest();
+            serverRequestsController.newTargetRequest();
 
-        // Player interaction: gained intel.
-        playerListController.increasePlayerIntel("Nuha");
-        playerListController.increasePlayerIntel("Tilly");
+            // polling loop goes here
+            serverRequestsController.playerUpdateRequest();
+
+            // check player updates once per loop & behave accordingly
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initializePlayerStatusBarController() {
+        this.playerStatusBarController = new PlayerStatusBarController(findViewById(R.id.gameplay_player_status_bar));
     }
 
     private void initializeExchangeButton() {
@@ -142,7 +133,7 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializePlayerListController() {
         this.playerListController = new PlayerListController(LayoutInflater.from(this),
-                (LinearLayout) findViewById(R.id.gameplay_player_list), INTEL_INCREMENT);
+                (LinearLayout) findViewById(R.id.gameplay_player_list));
     }
 
     private void goToLeaderboardActivity() {
@@ -153,23 +144,5 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void getPlayerIdentifiers() {
         this.playerIdentifiers = getIntent().getParcelableExtra(getString(R.string.player_identifiers_intent_key));
-    }
-
-    private void setPlayerTargetHackerName(String targetHackerName) {
-        TextView targetHackerNameView = findViewById(R.id.gameplay_player_target);
-        String prefix = getString(R.string.gameplay_player_target);
-        targetHackerNameView.setText(prefix + " " + targetHackerName);
-    }
-
-    private void setPlayerLeaderboardPosition(String position) {
-        TextView positionTextView = findViewById(R.id.gameplay_player_leaderboard_position);
-        String prefix = getString(R.string.gameplay_player_leaderboard_position);
-        positionTextView.setText(prefix + " #" + position);
-    }
-
-    private void setPlayerPoints(String points) {
-        TextView pointsTextView = findViewById(R.id.gameplay_player_leaderboard_points);
-        String prefix = getString(R.string.gameplay_player_leaderboard_points);
-        pointsTextView.setText(prefix + " " + points);
     }
 }
