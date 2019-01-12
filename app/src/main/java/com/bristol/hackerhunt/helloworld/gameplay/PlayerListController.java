@@ -1,5 +1,6 @@
 package com.bristol.hackerhunt.helloworld.gameplay;
 
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +22,24 @@ public class PlayerListController {
     private final Map<String, String> playerIdNameMap;
     private List<String> nearbyPlayerIds;
 
+    private final Handler uiHandler;
+
     public PlayerListController(LayoutInflater inflater, LinearLayout playerList) {
         this.inflater = inflater;
         this.playerList  = playerList;
         this.playerIdListItemIdMap = new HashMap<>();
         this.playerIdNameMap = new HashMap<>();
-
         this.nearbyPlayerIds = new ArrayList<>();
+
+        this.uiHandler = new Handler(playerList.getContext().getMainLooper());
+    }
+
+    public void revealPlayerHackerName(String playerId, final String hackerName) {
+        int id = playerIdListItemIdMap.get(playerId);
+        LinearLayout listItem = playerList.findViewById(id);
+        final TextView nameView = listItem.findViewById(R.id.player_name);
+
+        setTextOfView(nameView, hackerName);
     }
 
     public void insertPlayer(String playerId, String playerName) {
@@ -46,7 +58,7 @@ public class PlayerListController {
         ProgressBar intelGathered = listItem.findViewById(R.id.player_intel_bar);
 
         String playerName = playerIdNameMap.get(playerId);
-        playerNameView.setText(playerName);
+        setTextOfView(playerNameView, playerName);
         intelGathered.setProgress(progress);
 
         if (nearby) {
@@ -103,5 +115,15 @@ public class PlayerListController {
         int id = playerIdListItemIdMap.get(playerId);
         LinearLayout view = playerList.findViewById(id);
         playerList.removeView(view);
+    }
+
+    // Run text update on UI thread.
+    private void setTextOfView(final TextView view, final String text) {
+        uiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                view.setText(text);
+            }
+        });
     }
 }

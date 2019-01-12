@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GameState {
+public class GameStateController {
 
     private static final int INTEL_INCREMENT = 20; // a percentage
 
@@ -29,10 +29,10 @@ public class GameState {
     private List<String> nearbyPlayerIds;
     private String targetPlayerId;
 
-    public GameState(PlayerListController playerListController,
-                     PlayerStatusBarController playerStatusBarController,
-                     PlayerIdentifiers playerIdentifiers,
-                     String homeBeacon) {
+    public GameStateController(PlayerListController playerListController,
+                               PlayerStatusBarController playerStatusBarController,
+                               PlayerIdentifiers playerIdentifiers,
+                               String homeBeacon) {
         this.playerListController = playerListController;
         this.playerStatusBarController = playerStatusBarController;
         this.playerIdentifiers = playerIdentifiers;
@@ -62,6 +62,10 @@ public class GameState {
         return homeBeacon;
     }
 
+    public String getTargetPlayerId() {
+        return this.targetPlayerId;
+    }
+
     public boolean playerHasBeenTakenDown() {
         return playerUpdates.contains(PlayerUpdate.TAKEN_DOWN);
     }
@@ -84,8 +88,15 @@ public class GameState {
 
     public void increasePlayerIntel(String playerId) {
         PlayerDetails pd = allPlayersMap.get(playerId);
-        pd.intel = pd.intel + INTEL_INCREMENT;
+        pd.intel = Math.min(100, pd.intel + INTEL_INCREMENT);
         playerListController.increasePlayerIntel(playerId, INTEL_INCREMENT);
+        if (playerHasFullIntel(playerId)) {
+            playerListController.revealPlayerHackerName(playerId, pd.hackerName);
+        }
+    }
+
+    public boolean playerHasFullIntel(String targetId) {
+        return (allPlayersMap.get(targetId).intel == 100);
     }
 
     public void setAllPlayers(List<PlayerIdentifiers> allPlayersIdentifiers) {

@@ -30,7 +30,9 @@ public class GameplayActivity extends AppCompatActivity {
     private PlayerStatusBarController playerStatusBarController;
     private ConsoleController consoleController;
     private GameplayServerRequestsController serverRequestsController;
-    private GameState gameState;
+    private GameStateController gameStateController;
+
+    private boolean gameOver = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +46,9 @@ public class GameplayActivity extends AppCompatActivity {
         initializeExchangeButton();
         initializeTakeDownButton();
 
-        this.gameState = new GameState(playerListController, playerStatusBarController,
+        this.gameStateController = new GameStateController(playerListController, playerStatusBarController,
                 playerIdentifiers, getIntent().getStringExtra("start_beacon"));
-        this.serverRequestsController = new GameplayServerRequestsController(gameState);
+        this.serverRequestsController = new GameplayServerRequestsController(gameStateController);
         initializeConsoleController();
 
         startGameTimer();
@@ -62,7 +64,6 @@ public class GameplayActivity extends AppCompatActivity {
             Timer timer = new Timer(false);
             timer.scheduleAtFixedRate(pollServer(),0, POLLING_PERIOD * 1000);
 
-            // check player updates once per loop & behave accordingly
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -72,6 +73,10 @@ public class GameplayActivity extends AppCompatActivity {
         return new TimerTask() {
             @Override
             public void run() {
+                if (gameOver) {
+                    cancel();
+                }
+
                 pollServerTask();
             }
         };
@@ -84,13 +89,13 @@ public class GameplayActivity extends AppCompatActivity {
                 try {
                     serverRequestsController.playerUpdateRequest();
 
-                    if (gameState.playerHasBeenTakenDown()) {
+                    if (gameStateController.playerHasBeenTakenDown()) {
                         // TODO: player has been taken down.
-                        gameState.resetPlayerTakenDown();
+                        gameStateController.resetPlayerTakenDown();
                     }
-                    if (gameState.playersTargetHasBeenTakenDown()) {
+                    if (gameStateController.playersTargetHasBeenTakenDown()) {
                         // TODO: player's target has been taken down.
-                        gameState.resetPlayersTargetHasBeenTakenDown();
+                        gameStateController.resetPlayersTargetHasBeenTakenDown();
                     }
 
                 } catch (JSONException e) {
@@ -126,7 +131,7 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeConsoleController() {
         final View overlay = findViewById(R.id.gameplay_console_overlay);
-        this.consoleController = new ConsoleController(overlay, gameState, serverRequestsController);
+        this.consoleController = new ConsoleController(overlay, gameStateController, serverRequestsController);
     }
 
     private void startGameTimer() {
@@ -144,6 +149,7 @@ public class GameplayActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                gameOver = true;
                 Intent intent = new Intent(GameplayActivity.this, LeaderboardActivity.class);
                 intent.putExtra(getString(R.string.player_identifiers_intent_key), playerIdentifiers);
                 consoleController.endOfGamePrompt(thisContext, intent);

@@ -21,13 +21,13 @@ public class ConsoleController {
 
     private final View overlay;
 
-    private final GameState gameState;
+    private final GameStateController gameStateController;
     private final GameplayServerRequestsController serverRequestsController;
 
-    public ConsoleController(View consolePromptContainer, GameState gameState,
+    public ConsoleController(View consolePromptContainer, GameStateController gameStateController,
                              GameplayServerRequestsController serverRequestsController) {
         this.overlay = consolePromptContainer;
-        this.gameState = gameState;
+        this.gameStateController = gameStateController;
         this.serverRequestsController = serverRequestsController;
 
         // this is only temporary.
@@ -42,7 +42,7 @@ public class ConsoleController {
     public void goToStartBeaconPrompt() {
         TextView consoleView = overlay.findViewById(R.id.gameplay_console);
         String message = overlay.getContext().getString(R.string.console_start_beacon_message);
-        message = message.replace("$BEACON", gameState.getHomeBeacon());
+        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
         consoleView.setText(message);
         overlay.setVisibility(View.VISIBLE);
     }
@@ -67,7 +67,6 @@ public class ConsoleController {
             }
         });
 
-
         overlay.setVisibility(View.VISIBLE);
     }
 
@@ -90,7 +89,7 @@ public class ConsoleController {
                         if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
                             consoleView.setText("EXCHANGE_SUCCESS");
                             for (String id : details.gainedIntelPlayerIds) {
-                                gameState.increasePlayerIntel(id);
+                                gameStateController.increasePlayerIntel(id);
                             }
                             cancel();
                         }
@@ -105,28 +104,48 @@ public class ConsoleController {
     // todo: this function is only a placeholder, functionality needs to be overhauled.
     public void targetTakedownPrompt() {
         final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
-        final String[] message = {"Scan target NFC tag."};
-        consoleView.setText(message[0]);
+        consoleView.setText("Scan target NFC tag.");
 
         consoleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                message[0] = "TAKEDOWN_SUCCESS\n\n\nReturn to $BEACON for new target.";
-                message[0] = message[0].replace("$BEACON", gameState.getHomeBeacon());
-                consoleView.setText(message[0]);
+
+                // TODO: NFC has been scanned.
+                String targetId = "5";
+
+                if (!gameStateController.playerHasFullIntel(targetId)) {
+                    consoleView.setText("Error: not enough intel has been collected.");
+                }
+                else if (!targetId.equals(gameStateController.getTargetPlayerId())) {
+                    consoleView.setText("Error: player is not the target.");
+                }
+                else {
+                    serverRequestsController.takeDownRequest(targetId);
+
+                    String message = "TAKEDOWN_SUCCESS\n\n\nReturn to $BEACON for new target.";
+                    message = message.replace("$BEACON", gameStateController.getHomeBeacon());
+                    consoleView.setText(message);
+
+                    // TODO: wait for player to go to correct beacon.
+
+                    try {
+                        serverRequestsController.newTargetRequest();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
-
 
         overlay.setVisibility(View.VISIBLE);
     }
 
     public void playersTargetTakenDownPrompt() {
-        // todo
+        // TODO: return to base and request new target
     }
 
     public void playerGotTakenDownPrompt() {
-        // todo
+        // TODO: half intel gathered and return to base.
     }
 
     public void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent) {

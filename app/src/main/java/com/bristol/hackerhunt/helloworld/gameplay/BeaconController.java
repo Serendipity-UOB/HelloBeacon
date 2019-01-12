@@ -1,10 +1,10 @@
 package com.bristol.hackerhunt.helloworld.gameplay;
 
 public class BeaconController {
-    private final GameState gameState;
+    private final GameStateController gameStateController;
 
-    public BeaconController(GameState gameState) {
-        this.gameState = gameState;
+    public BeaconController(GameStateController gameStateController) {
+        this.gameStateController = gameStateController;
     }
 
 
