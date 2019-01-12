@@ -126,7 +126,7 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeConsoleController() {
         final View overlay = findViewById(R.id.gameplay_console_overlay);
-        this.consoleController = new ConsoleController(overlay, gameState);
+        this.consoleController = new ConsoleController(overlay, gameState, serverRequestsController);
     }
 
     private void startGameTimer() {

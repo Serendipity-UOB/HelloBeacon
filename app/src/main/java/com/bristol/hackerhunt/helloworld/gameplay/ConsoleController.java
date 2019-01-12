@@ -6,14 +6,29 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
+import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
+
+import org.json.JSONException;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ConsoleController {
-    private final View overlay;
-    private GameState gameState;
 
-    public ConsoleController(View consolePromptContainer, GameState gameState) {
+    private static final int EXCHANGE_POLLING_DURATION = 20; // given in seconds;
+    private static final int POLLING_PERIOD = 3; // given in seconds.
+
+    private final View overlay;
+
+    private final GameState gameState;
+    private final GameplayServerRequestsController serverRequestsController;
+
+    public ConsoleController(View consolePromptContainer, GameState gameState,
+                             GameplayServerRequestsController serverRequestsController) {
         this.overlay = consolePromptContainer;
         this.gameState = gameState;
+        this.serverRequestsController = serverRequestsController;
 
         // this is only temporary.
         overlay.setOnClickListener(new View.OnClickListener() {
@@ -41,13 +56,50 @@ public class ConsoleController {
         consoleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                message[0] = "EXCHANGE_SUCCESS";
-                consoleView.setText(message[0]);
+
+                // TODO: scan NFC.
+                final String targetId = "4";
+
+                consoleView.setText("NFC scan successful. Exchange in progress.");
+                consoleView.setOnClickListener(null);
+
+                beginExchangeServerPolling(consoleView, targetId);
             }
         });
 
 
         overlay.setVisibility(View.VISIBLE);
+    }
+
+    private void beginExchangeServerPolling(final TextView consoleView, final String playerId) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            final long t0 = System.currentTimeMillis();
+            final InteractionDetails details = new InteractionDetails();
+
+            @Override
+            public void run() {
+                if (System.currentTimeMillis() - t0 > EXCHANGE_POLLING_DURATION * 1000) {
+                    consoleView.setText("EXCHANGE_FAILED");
+                    cancel();
+                }
+                else {
+                    try {
+                        serverRequestsController.exchangeRequest(playerId, details);
+
+                        if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
+                            consoleView.setText("EXCHANGE_SUCCESS");
+                            for (String id : details.gainedIntelPlayerIds) {
+                                gameState.increasePlayerIntel(id);
+                            }
+                            cancel();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, 0, POLLING_PERIOD * 1000);
     }
 
     // todo: this function is only a placeholder, functionality needs to be overhauled.

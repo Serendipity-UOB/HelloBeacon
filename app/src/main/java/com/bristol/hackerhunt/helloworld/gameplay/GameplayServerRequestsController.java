@@ -1,5 +1,7 @@
 package com.bristol.hackerhunt.helloworld.gameplay;
 
+import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
+import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
 import org.json.JSONArray;
@@ -69,8 +71,18 @@ public class GameplayServerRequestsController {
     }
 
     // TODO: POST /exchange { interacter_id, interactee_id }
-    public void exchangeRequest() {
+    public void exchangeRequest(String interacteeId, InteractionDetails details) throws JSONException {
+        // this is just a placeholder (assuming success).
+        String response = "{\"secondary_id\":\"5\"}";
+        JSONObject obj = new JSONObject(response);
 
+        // TODO: check if interaction successful
+
+        // assuming successful:
+        String secondaryId = obj.getString("secondary_id");
+        details.gainedIntelPlayerIds.add(interacteeId);
+        details.gainedIntelPlayerIds.add(secondaryId);
+        details.status = InteractionStatus.SUCCESSFUL;
     }
 
     // TODO: POST /takeDown { player_id, target_id }
