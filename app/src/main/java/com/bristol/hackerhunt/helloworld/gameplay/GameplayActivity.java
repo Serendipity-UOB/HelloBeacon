@@ -90,11 +90,11 @@ public class GameplayActivity extends AppCompatActivity {
                     serverRequestsController.playerUpdateRequest();
 
                     if (gameStateController.playerHasBeenTakenDown()) {
-                        // TODO: player has been taken down.
+                        consoleController.playerGotTakenDownPrompt();
                         gameStateController.resetPlayerTakenDown();
                     }
                     if (gameStateController.playersTargetHasBeenTakenDown()) {
-                        // TODO: player's target has been taken down.
+                        consoleController.playersTargetTakenDownPrompt();
                         gameStateController.resetPlayersTargetHasBeenTakenDown();
                     }
 

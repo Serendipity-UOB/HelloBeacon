@@ -77,7 +77,23 @@ public class PlayerListController {
             int id = playerIdListItemIdMap.get(playerId);
             LinearLayout listItem = playerList.findViewById(id);
             ProgressBar intelBar = listItem.findViewById(R.id.player_intel_bar);
-            intelBar.incrementProgressBy(intelIncrement);
+
+            int intel = intelBar.getProgress();
+            intelBar.setProgress(intel + intelIncrement);
+        }
+    }
+
+    public void decreasePlayerIntel(String playerId, int intelIncrement) {
+        if (!playerIdListItemIdMap.containsKey(playerId)) {
+            throw new IllegalArgumentException("Error: player is not listed as playing the game.");
+        }
+        else {
+            int id = playerIdListItemIdMap.get(playerId);
+            LinearLayout listItem = playerList.findViewById(id);
+            ProgressBar intelBar = listItem.findViewById(R.id.player_intel_bar);
+
+            int intel = intelBar.getProgress();
+            intelBar.setProgress(intel - intelIncrement);
         }
     }
 

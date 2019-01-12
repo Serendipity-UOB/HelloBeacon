@@ -99,6 +99,17 @@ public class GameStateController {
         return (allPlayersMap.get(targetId).intel == 100);
     }
 
+    public void loseHalfOfPlayersIntel() {
+        for (String id : allPlayersMap.keySet()) {
+            if (allPlayersMap.get(id).intel < 100) {
+                int decrease = (allPlayersMap.get(id).intel / 2) / INTEL_INCREMENT;
+                for (int i = 0; i < decrease; i++) {
+                   playerListController.decreasePlayerIntel(id, INTEL_INCREMENT);
+                }
+            }
+        }
+    }
+
     public void setAllPlayers(List<PlayerIdentifiers> allPlayersIdentifiers) {
         for (PlayerIdentifiers playerIdentifiers : allPlayersIdentifiers) {
             PlayerDetails pd = new PlayerDetails(playerIdentifiers.getRealName(),

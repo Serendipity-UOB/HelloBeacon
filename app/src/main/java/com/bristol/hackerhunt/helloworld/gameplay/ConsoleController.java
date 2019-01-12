@@ -141,11 +141,32 @@ public class ConsoleController {
     }
 
     public void playersTargetTakenDownPrompt() {
-        // TODO: return to base and request new target
+        final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
+        String message = "Too slow; your target has been taken down.\n\nReturn to $BEACON to receive your new target";
+        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
+        consoleView.setText(message);
+        overlay.setVisibility(View.VISIBLE);
+
+        // TODO: Wait for player to go to beacon.
+
+        consoleView.setText("Receiving new target...");
+        try {
+            serverRequestsController.newTargetRequest();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void playerGotTakenDownPrompt() {
-        // TODO: half intel gathered and return to base.
+        gameStateController.loseHalfOfPlayersIntel();
+
+        final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
+        String message = "You have been taken down.\n\nReturn to $BEACON.";
+        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
+        consoleView.setText(message);
+        overlay.setVisibility(View.VISIBLE);
+
+        // TODO: Wait for player to go to beacon.
     }
 
     public void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent) {
