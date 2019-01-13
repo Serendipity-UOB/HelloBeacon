@@ -46,7 +46,7 @@ public class TestBeaconsActivity extends AppCompatActivity {
     private TextView mShowCount;
     private ProximityManager proximityManager;
 
-        private Map<String, IBeaconDevice> beaconMap;
+    private Map<String, IBeaconDevice> beaconMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
