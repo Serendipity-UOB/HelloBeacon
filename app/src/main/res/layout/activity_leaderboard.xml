@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".leaderboard.LeaderboardActivity"
     android:orientation="vertical"
+    android:padding="5pt"
     android:gravity="center"
     android:background="@color/mainBackground">
 
@@ -13,9 +13,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="This is the leaderboard page."
+        android:text="@string/leaderboard_title"
+        android:textSize="12pt"
         android:textColor="@color/mainText"
-        android:fontFamily="@font/vt323"/>
+        android:fontFamily="@font/vt323"
+        android:layout_marginBottom="5pt"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/leaderboard_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/leaderboard_loading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/return_to_title_button"
@@ -24,6 +52,8 @@
         android:textAllCaps="false"
         android:fontFamily="@font/vt323"
         android:textSize="10pt"
-        android:text="exit(EXIT_SUCCESS);" />
+        android:backgroundTint="@color/gameplay_exchange_button"
+        android:textColor="@android:color/white"
+        android:text="@string/exit_leaderboard_button_text" />
 
 </LinearLayout>

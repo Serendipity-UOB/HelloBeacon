@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
+    android:orientation="vertical">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/player_item_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/gameplay_far_player_background"
-        android:padding="3pt"
         android:layout_marginBottom="5pt"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        android:background="@color/gameplay_far_player_background"
+        android:orientation="vertical"
+        android:padding="3pt">
+
         <TextView
             android:id="@+id/player_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/vt323"
             android:text=""
-            android:textColor="@color/gameplay_far_player_name"
-            android:fontFamily="@font/vt323"/>
+            android:textColor="@color/gameplay_far_player_name" />
+
         <include layout="@layout/gameplay_player_list_intel_bar" />
     </LinearLayout>
 </LinearLayout>

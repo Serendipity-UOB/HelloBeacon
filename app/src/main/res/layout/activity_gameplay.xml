@@ -26,31 +26,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
-
-            <!--LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="This is the main gameplay activity."
-                    android:textColor="@color/mainText"
-                    android:fontFamily="@font/vt323" />
-
-                <Button
-                    android:id="@+id/end_game_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAllCaps="false"
-                    android:fontFamily="@font/vt323"
-                    android:textSize="10pt"
-                    android:text="end_game();" />
-            </LinearLayout -->
-
         </ScrollView>
 
         <LinearLayout

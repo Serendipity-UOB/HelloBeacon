@@ -38,6 +38,7 @@ public class PlayerListController {
         int id = playerIdListItemIdMap.get(playerId);
         LinearLayout listItem = playerList.findViewById(id);
         final TextView nameView = listItem.findViewById(R.id.player_name);
+        this.playerIdNameMap.put(playerId, hackerName);
 
         setTextOfView(nameView, hackerName);
     }
@@ -98,21 +99,24 @@ public class PlayerListController {
     }
 
     public void updateNearbyPlayers(List<String> newNearbyPlayerIds) {
-        for (String playerId : nearbyPlayerIds) {
-            if (!newNearbyPlayerIds.contains(playerId)) {
+        if (!newNearbyPlayerIds.containsAll(nearbyPlayerIds) || !nearbyPlayerIds.containsAll(newNearbyPlayerIds)) {
+
+            for (String playerId : nearbyPlayerIds) {
+                if (!newNearbyPlayerIds.contains(playerId)) {
+                    int intel = getPlayerIntel(playerId);
+                    removeListItemEntry(playerId);
+                    insertPlayer(playerId, false, intel);
+                }
+            }
+
+            for (String playerId : newNearbyPlayerIds) {
                 int intel = getPlayerIntel(playerId);
                 removeListItemEntry(playerId);
-                insertPlayer(playerId, false, intel);
+                insertPlayer(playerId, true, intel);
             }
-        }
 
-        for (String playerId : newNearbyPlayerIds) {
-            int intel = getPlayerIntel(playerId);
-            removeListItemEntry(playerId);
-            insertPlayer(playerId, true, intel);
+            this.nearbyPlayerIds = newNearbyPlayerIds;
         }
-
-        this.nearbyPlayerIds = newNearbyPlayerIds;
     }
 
     private int getPlayerIntel(String playerId) {

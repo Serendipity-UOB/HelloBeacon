@@ -25,4 +25,6 @@
     <string name="player_identifiers_intent_key">player_identifiers</string>
     <string name="console_start_beacon_message">Incoming message...  \n\nGo to $BEACON to receive your first target.\n\n\n- Anon</string>
     <string name="join_game_loading">JOIN_GAME_LOADING</string>
+    <string name="leaderboard_title">Leaderboard</string>
+    <string name="exit_leaderboard_button_text">exit(EXIT_SUCCESS);</string>
 </resources>
