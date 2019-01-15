@@ -23,7 +23,7 @@ import java.util.TimerTask;
 public class GameplayActivity extends AppCompatActivity {
 
     private static final int POLLING_PERIOD = 10; // in seconds
-    private static final double GAMEPLAY_DURATION = 10; // given in minutes.
+    private static final double GAMEPLAY_DURATION = 0.2; // given in minutes.
 
     private PlayerIdentifiers playerIdentifiers;
 

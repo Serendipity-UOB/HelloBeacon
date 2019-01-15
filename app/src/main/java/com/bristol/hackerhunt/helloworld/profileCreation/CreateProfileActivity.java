@@ -12,9 +12,11 @@ import com.bristol.hackerhunt.helloworld.joinGame.JoinGameActivity;
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
+import org.json.JSONException;
+
 public class CreateProfileActivity extends AppCompatActivity {
 
-    private ProfileCreationServerRequestsController serverRequestsController;
+    private IProfileCreationServerRequestsController serverRequestsController;
     private ProfileValid profileValid;
 
     @Override
@@ -22,28 +24,42 @@ public class CreateProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
         this.profileValid = new ProfileValid();
-        this.serverRequestsController = new ProfileCreationServerRequestsController(profileValid);
+        this.serverRequestsController = new ProfileCreationServerRequestsController(this,profileValid);
 
+        initializeNewProfileButton();
+    }
+
+    private void initializeNewProfileButton() {
         final Button goToProfileButton = findViewById(R.id.create_profile_button);
         goToProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String playerRealName = getStringFromEditTextView(R.id.create_profile_real_name);
-                String playerHackerName = getStringFromEditTextView(R.id.create_profile_hacker_name);
-                String playerNfcId = getStringFromEditTextView(R.id.create_profile_nfc_id);
-
-                PlayerIdentifiers playerIdentifiers = new PlayerIdentifiers(playerRealName, playerHackerName, playerNfcId);
-
-                serverRequestsController.registerPlayerRequest(playerRealName, playerHackerName, playerNfcId);
-                // TODO: need to implement some sort of wait for the server.
-
-                if (userInputValid(playerRealName, playerHackerName, playerNfcId) && profileValid.valid) {
-                    Intent intent = new Intent(CreateProfileActivity.this, JoinGameActivity.class);
-                    intent.putExtra("player_identifiers", playerIdentifiers);
-                    startActivity(intent);
-                }
+                requestNewProfile();
             }
         });
+    }
+
+    private void requestNewProfile() {
+        String playerRealName = getStringFromEditTextView(R.id.create_profile_real_name);
+        String playerHackerName = getStringFromEditTextView(R.id.create_profile_hacker_name);
+        String playerNfcId = getStringFromEditTextView(R.id.create_profile_nfc_id);
+
+        try {
+            serverRequestsController.registerPlayerRequest(playerRealName, playerHackerName, playerNfcId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // TODO: need to implement some sort of wait for the server to fetch the outcome.
+
+        if (userInputValid(playerRealName, playerHackerName, playerNfcId) && profileValid.valid) {
+            serverRequestsController.cancelAllRequests();
+            PlayerIdentifiers playerIdentifiers = new PlayerIdentifiers(playerRealName, playerHackerName, playerNfcId);
+
+            Intent intent = new Intent(CreateProfileActivity.this, JoinGameActivity.class);
+            intent.putExtra("player_identifiers", playerIdentifiers);
+            startActivity(intent);
+        }
     }
 
     private String getStringFromEditTextView(int viewId) {
