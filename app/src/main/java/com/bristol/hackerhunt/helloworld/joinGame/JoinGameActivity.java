@@ -1,6 +1,5 @@
 package com.bristol.hackerhunt.helloworld.joinGame;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +14,6 @@ import com.bristol.hackerhunt.helloworld.gameplay.GameplayActivity;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,19 +22,20 @@ public class JoinGameActivity extends AppCompatActivity {
 
     private static int POLLING_PERIOD = 10; // in seconds
 
-    private JoinGameServerRequestController serverRequestController;
+    private IJoinGameServerRequestController serverRequestController;
 
     private GameInfo gameInfo;
     private boolean joinedGame = false;
     private boolean timerStarted = false;
+    private PlayerIdentifiers playerIdentifiers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_game);
         this.gameInfo = new GameInfo();
-        this.serverRequestController = new JoinGameServerRequestController(gameInfo);
-        final PlayerIdentifiers playerIdentifiers = getIntent().getParcelableExtra("player_identifiers");
+        this.serverRequestController = new JoinGameServerRequestController(this, gameInfo);
+        this.playerIdentifiers = getIntent().getParcelableExtra("player_identifiers");
 
         replaceStringInTextView(R.id.join_game_welcome_text, "$PLAYER_NAME", playerIdentifiers.getRealName());
         updateNumberOfPlayersInGame("Loading...");
@@ -91,6 +90,7 @@ public class JoinGameActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 if (joinedGame) {
+                    serverRequestController.cancelAllRequests();
                     goToGameplayActivity(playerIdentifiers);
                 }
                 else {
@@ -107,7 +107,7 @@ public class JoinGameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 joinGameButton.setVisibility(View.GONE);
                 try {
-                    serverRequestController.joinGameRequest();
+                    serverRequestController.joinGameRequest(playerIdentifiers.getNfcId());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
