@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class GameStateController {
 
@@ -169,6 +170,14 @@ public class GameStateController {
 
     public void updateBeacon(String minor, int rssi) {
         beaconMinorRssiMap.put(minor, rssi);
+    }
+
+    public Set<String> getAllBeaconMinors() {
+        return beaconMinorRssiMap.keySet();
+    }
+
+    public int getBeaconRssi(String minor) {
+        return beaconMinorRssiMap.get(minor);
     }
 
     public void updateStatus(List<PlayerUpdate> updates) {

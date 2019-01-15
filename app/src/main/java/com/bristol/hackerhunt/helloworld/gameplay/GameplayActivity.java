@@ -49,7 +49,7 @@ public class GameplayActivity extends AppCompatActivity {
 
         this.gameStateController = new GameStateController(playerListController, playerStatusBarController,
                 playerIdentifiers, getIntent().getStringExtra("start_beacon"));
-        this.serverRequestsController = new GameplayServerRequestsController(gameStateController);
+        this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
         initializeConsoleController();
         this.beaconController = new BeaconController(this, gameStateController);
 
@@ -79,6 +79,7 @@ public class GameplayActivity extends AppCompatActivity {
                 if (gameOver) {
                     cancel();
                     beaconController.stopScanning();
+                    serverRequestsController.cancelAllRequests();
                 }
 
                 pollServerTask();
