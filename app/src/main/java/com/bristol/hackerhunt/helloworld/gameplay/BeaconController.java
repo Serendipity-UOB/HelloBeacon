@@ -21,23 +21,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * A controller used to make use of logic with relation to the Kontakt beacons.
- */
-public class BeaconController {
+public class BeaconController implements IBeaconController {
 
-    private final GameStateController gameStateController;
+    private final IGameStateController gameStateController;
     private ProximityManager proximityManager;
 
-    public BeaconController(Context context, GameStateController gameStateController) {
+    BeaconController(Context context, IGameStateController gameStateController) {
         this.gameStateController = gameStateController;
         KontaktSDK.initialize(context);
         initializeProximityManager(context);
     }
 
-    /**
-     * Begin searching for beacons.
-     */
+    @Override
     public void startScanning() {
         proximityManager.connect(new OnServiceReadyListener() {
             @Override
@@ -47,9 +42,7 @@ public class BeaconController {
         });
     }
 
-    /**
-     * Finish searching for beacons.
-     */
+    @Override
     public void stopScanning() {
         proximityManager.stopScanning();
         proximityManager.disconnect();

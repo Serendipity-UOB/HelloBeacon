@@ -14,18 +14,18 @@ import org.json.JSONException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ConsoleController {
+public class ConsoleController implements IConsoleController {
 
     private static final int EXCHANGE_POLLING_DURATION = 20; // given in seconds;
     private static final int POLLING_PERIOD = 3; // given in seconds.
 
     private final View overlay;
 
-    private final GameStateController gameStateController;
+    private final IGameStateController gameStateController;
     private final IGameplayServerRequestsController serverRequestsController;
 
-    public ConsoleController(View consolePromptContainer, GameStateController gameStateController,
-                             IGameplayServerRequestsController serverRequestsController) {
+    ConsoleController(View consolePromptContainer, IGameStateController gameStateController,
+                      IGameplayServerRequestsController serverRequestsController) {
         this.overlay = consolePromptContainer;
         this.gameStateController = gameStateController;
         this.serverRequestsController = serverRequestsController;
@@ -39,15 +39,18 @@ public class ConsoleController {
         });
     }
 
+    @Override
     public void goToStartBeaconPrompt() {
         TextView consoleView = overlay.findViewById(R.id.gameplay_console);
         String message = overlay.getContext().getString(R.string.console_start_beacon_message);
         message = message.replace("$BEACON", gameStateController.getHomeBeacon());
         consoleView.setText(message);
         overlay.setVisibility(View.VISIBLE);
+
+        // TODO: wait until player reaches beacon.
     }
 
-    // todo: this function is only a placeholder, functionality needs to be overhauled.
+    @Override
     public void mutualExchangePrompt() {
         final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
         final String[] message = {"Scan target NFC tag."};
@@ -101,7 +104,7 @@ public class ConsoleController {
         }, 0, POLLING_PERIOD * 1000);
     }
 
-    // todo: this function is only a placeholder, functionality needs to be overhauled.
+    @Override
     public void targetTakedownPrompt() {
         final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
         consoleView.setText("Scan target NFC tag.");
@@ -144,6 +147,7 @@ public class ConsoleController {
         overlay.setVisibility(View.VISIBLE);
     }
 
+    @Override
     public void playersTargetTakenDownPrompt() {
         final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
         String message = "Too slow; your target has been taken down.\n\nReturn to $BEACON to receive your new target";
@@ -161,6 +165,7 @@ public class ConsoleController {
         }
     }
 
+    @Override
     public void playerGotTakenDownPrompt() {
         gameStateController.loseHalfOfPlayersIntel();
 
@@ -173,6 +178,7 @@ public class ConsoleController {
         // TODO: Wait for player to go to beacon.
     }
 
+    @Override
     public void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent) {
         final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
         final String[] message = {"Incoming message...\n\nGood work. Return your equipment to the base station to collect your award.\n\n\n - Anon"};

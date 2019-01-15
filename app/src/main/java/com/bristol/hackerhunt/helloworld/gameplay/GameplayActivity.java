@@ -26,12 +26,13 @@ public class GameplayActivity extends AppCompatActivity {
     private static final double GAMEPLAY_DURATION = 10; // given in minutes.
 
     private PlayerIdentifiers playerIdentifiers;
-    private PlayerListController playerListController;
-    private PlayerStatusBarController playerStatusBarController;
-    private ConsoleController consoleController;
+
+    private IPlayerListController playerListController;
+    private IPlayerStatusBarController playerStatusBarController;
+    private IConsoleController consoleController;
     private IGameplayServerRequestsController serverRequestsController;
-    private GameStateController gameStateController;
-    private BeaconController beaconController;
+    private IGameStateController gameStateController;
+    private IBeaconController beaconController;
 
     private boolean gameOver = false;
 

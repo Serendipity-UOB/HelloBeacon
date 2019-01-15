@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class GameStateController {
+public class GameStateController implements IGameStateController {
 
     private static final int INTEL_INCREMENT = 20; // a percentage
 
-    private final PlayerListController playerListController;
-    private final PlayerStatusBarController playerStatusBarController;
+    private final IPlayerListController playerListController;
+    private final IPlayerStatusBarController playerStatusBarController;
 
     private final PlayerIdentifiers playerIdentifiers;
     private final Map<String, Integer> beaconMinorRssiMap;
@@ -30,8 +30,8 @@ public class GameStateController {
     private List<String> nearbyPlayerIds;
     private String targetPlayerId;
 
-    public GameStateController(PlayerListController playerListController,
-                               PlayerStatusBarController playerStatusBarController,
+    public GameStateController(IPlayerListController playerListController,
+                               IPlayerStatusBarController playerStatusBarController,
                                PlayerIdentifiers playerIdentifiers,
                                String homeBeacon) {
         this.playerListController = playerListController;
@@ -59,34 +59,41 @@ public class GameStateController {
         }
     }
 
+    @Override
     public String getHomeBeacon() {
         return homeBeacon;
     }
 
+    @Override
     public String getTargetPlayerId() {
         return this.targetPlayerId;
     }
 
+    @Override
     public boolean playerHasBeenTakenDown() {
         return playerUpdates.contains(PlayerUpdate.TAKEN_DOWN);
     }
 
+    @Override
     public void resetPlayerTakenDown() {
         if (playerUpdates.contains(PlayerUpdate.TAKEN_DOWN)) {
             playerUpdates.remove(PlayerUpdate.TAKEN_DOWN);
         }
     }
 
+    @Override
     public boolean playersTargetHasBeenTakenDown() {
         return playerUpdates.contains(PlayerUpdate.REQ_NEW_TARGET);
     }
 
+    @Override
     public void resetPlayersTargetHasBeenTakenDown() {
         if (playerUpdates.contains(PlayerUpdate.REQ_NEW_TARGET)) {
             playerUpdates.remove(PlayerUpdate.REQ_NEW_TARGET);
         }
     }
 
+    @Override
     public void increasePlayerIntel(String playerId) {
         PlayerDetails pd = allPlayersMap.get(playerId);
         pd.intel = Math.min(100, pd.intel + INTEL_INCREMENT);
@@ -96,10 +103,12 @@ public class GameStateController {
         }
     }
 
+    @Override
     public boolean playerHasFullIntel(String targetId) {
         return (allPlayersMap.get(targetId).intel == 100);
     }
 
+    @Override
     public void loseHalfOfPlayersIntel() {
         for (String id : allPlayersMap.keySet()) {
             if (allPlayersMap.get(id).intel < 100) {
@@ -111,6 +120,7 @@ public class GameStateController {
         }
     }
 
+    @Override
     public void setAllPlayers(List<PlayerIdentifiers> allPlayersIdentifiers) {
         for (PlayerIdentifiers playerIdentifiers : allPlayersIdentifiers) {
             PlayerDetails pd = new PlayerDetails(playerIdentifiers.getRealName(),
@@ -123,55 +133,47 @@ public class GameStateController {
         }
     }
 
+    @Override
     public boolean allPlayersHaveBeenSet() {
         return (allPlayersMap.keySet().size() > 0);
     }
 
-    public JSONObject getJsonPlayerUpdate() throws JSONException {
-        JSONObject playerUpdate = new JSONObject();
-        JSONArray beacons = new JSONArray();
-
-        for (String minor : beaconMinorRssiMap.keySet()) {
-            JSONObject obj = new JSONObject();
-            obj.put("beacon_minor", minor);
-            obj.put("rssi", beaconMinorRssiMap.get(minor));
-            beacons.put(obj);
-        }
-
-        playerUpdate.put("player_id", playerIdentifiers.getNfcId());
-        playerUpdate.put("beacons", beacons);
-        return playerUpdate;
-    }
-
+    @Override
     public String getPlayerId() {
         return this.playerIdentifiers.getNfcId();
     }
 
+    @Override
     public void updateTargetPlayer(String targetPlayerId) {
         this.targetPlayerId = targetPlayerId;
         String hackerName = allPlayersMap.get(targetPlayerId).hackerName;
         playerStatusBarController.setPlayerTargetHackerName(hackerName);
     }
 
+    @Override
     public void updateNearbyPlayers(List<String> playerIds) {
         nearbyPlayerIds = playerIds;
         playerListController.updateNearbyPlayers(playerIds);
     }
 
+    @Override
     public void updatePoints(int points) {
         this.points = points;
         playerStatusBarController.setPlayerPoints(Integer.toString(points));
     }
 
+    @Override
     public void updatePosition(String position) {
         this.position = position;
         playerStatusBarController.setPlayerLeaderboardPosition(position);
     }
 
+    @Override
     public void updateBeacon(String minor, int rssi) {
         beaconMinorRssiMap.put(minor, rssi);
     }
 
+    @Override
     public Set<String> getAllBeaconMinors() {
         return beaconMinorRssiMap.keySet();
     }
@@ -180,6 +182,7 @@ public class GameStateController {
         return beaconMinorRssiMap.get(minor);
     }
 
+    @Override
     public void updateStatus(List<PlayerUpdate> updates) {
         this.playerUpdates = updates;
     }

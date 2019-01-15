@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerListController {
+public class PlayerListController implements IPlayerListController {
     private final LayoutInflater inflater;
     private final LinearLayout playerList;
     private final Map<String, Integer> playerIdListItemIdMap;
@@ -24,7 +24,7 @@ public class PlayerListController {
 
     private final Handler uiHandler;
 
-    public PlayerListController(LayoutInflater inflater, LinearLayout playerList) {
+    PlayerListController(LayoutInflater inflater, LinearLayout playerList) {
         this.inflater = inflater;
         this.playerList  = playerList;
         this.playerIdListItemIdMap = new HashMap<>();
@@ -34,6 +34,7 @@ public class PlayerListController {
         this.uiHandler = new Handler(playerList.getContext().getMainLooper());
     }
 
+    @Override
     public void revealPlayerHackerName(String playerId, final String hackerName) {
         int id = playerIdListItemIdMap.get(playerId);
         LinearLayout listItem = playerList.findViewById(id);
@@ -43,6 +44,7 @@ public class PlayerListController {
         setTextOfView(nameView, hackerName);
     }
 
+    @Override
     public void insertPlayer(String playerId, String playerName) {
         playerIdNameMap.put(playerId, playerName);
         insertPlayer(playerId, false, 0);
@@ -70,6 +72,7 @@ public class PlayerListController {
         playerList.addView(listItem, 0);
     }
 
+    @Override
     public void increasePlayerIntel(String playerId, int intelIncrement) {
         if (!playerIdListItemIdMap.containsKey(playerId)) {
             throw new IllegalArgumentException("Error: player is not listed as playing the game.");
@@ -84,6 +87,7 @@ public class PlayerListController {
         }
     }
 
+    @Override
     public void decreasePlayerIntel(String playerId, int intelIncrement) {
         if (!playerIdListItemIdMap.containsKey(playerId)) {
             throw new IllegalArgumentException("Error: player is not listed as playing the game.");
@@ -98,6 +102,7 @@ public class PlayerListController {
         }
     }
 
+    @Override
     public void updateNearbyPlayers(List<String> newNearbyPlayerIds) {
         if (!newNearbyPlayerIds.containsAll(nearbyPlayerIds) || !nearbyPlayerIds.containsAll(newNearbyPlayerIds)) {
 

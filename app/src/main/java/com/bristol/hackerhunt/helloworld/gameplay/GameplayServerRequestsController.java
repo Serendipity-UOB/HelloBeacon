@@ -29,14 +29,14 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
     private static final String TAKE_DOWN_URL = "/takeDown";
 
     private final RequestQueue requestQueue;
-    private final GameStateController gameStateController;
+    private final IGameStateController gameStateController;
 
     /**
      * Class constructor.
      * @param context Context of activity using the controller.
      * @param gameStateController The GameStateController used to control the state of the game.
      */
-    GameplayServerRequestsController(Context context, GameStateController gameStateController) {
+    GameplayServerRequestsController(Context context, IGameStateController gameStateController) {
         this.requestQueue = Volley.newRequestQueue(context);
         this.gameStateController = gameStateController;
     }
