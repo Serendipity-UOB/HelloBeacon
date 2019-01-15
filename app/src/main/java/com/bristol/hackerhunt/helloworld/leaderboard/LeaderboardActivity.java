@@ -23,7 +23,7 @@ import java.util.List;
 public class LeaderboardActivity extends AppCompatActivity {
 
     private PlayerIdentifiers playerIdentifiers;
-    private LeaderboardServerRequestController serverRequestController;
+    private ILeaderboardServerRequestController serverRequestController;
 
     private List<LeaderboardItem> leaderboardItems;
     private LinearLayout leaderboardList;
@@ -37,7 +37,7 @@ public class LeaderboardActivity extends AppCompatActivity {
 
         this.leaderboardList = findViewById(R.id.leaderboard_list);
         this.inflater = LayoutInflater.from(this);
-        this.serverRequestController = new LeaderboardServerRequestController();
+        this.serverRequestController = new LeaderboardServerRequestController(this);
         this.leaderboardItems = new ArrayList<>();
         initializeReturnToTitleButton();
 
