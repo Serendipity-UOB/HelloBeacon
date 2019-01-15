@@ -22,10 +22,10 @@ public class ConsoleController {
     private final View overlay;
 
     private final GameStateController gameStateController;
-    private final GameplayServerRequestsController serverRequestsController;
+    private final IGameplayServerRequestsController serverRequestsController;
 
     public ConsoleController(View consolePromptContainer, GameStateController gameStateController,
-                             GameplayServerRequestsController serverRequestsController) {
+                             IGameplayServerRequestsController serverRequestsController) {
         this.overlay = consolePromptContainer;
         this.gameStateController = gameStateController;
         this.serverRequestsController = serverRequestsController;
@@ -120,7 +120,11 @@ public class ConsoleController {
                     consoleView.setText("Error: player is not the target.");
                 }
                 else {
-                    serverRequestsController.takeDownRequest(targetId);
+                    try {
+                        serverRequestsController.takeDownRequest(targetId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                     String message = "TAKEDOWN_SUCCESS\n\n\nReturn to $BEACON for new target.";
                     message = message.replace("$BEACON", gameStateController.getHomeBeacon());

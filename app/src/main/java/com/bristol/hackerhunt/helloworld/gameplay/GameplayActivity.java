@@ -22,14 +22,14 @@ import java.util.TimerTask;
 
 public class GameplayActivity extends AppCompatActivity {
 
-    private static int POLLING_PERIOD = 10; // in seconds
+    private static final int POLLING_PERIOD = 10; // in seconds
     private static final double GAMEPLAY_DURATION = 10; // given in minutes.
 
     private PlayerIdentifiers playerIdentifiers;
     private PlayerListController playerListController;
     private PlayerStatusBarController playerStatusBarController;
     private ConsoleController consoleController;
-    private GameplayServerRequestsController serverRequestsController;
+    private IGameplayServerRequestsController serverRequestsController;
     private GameStateController gameStateController;
     private BeaconController beaconController;
 
