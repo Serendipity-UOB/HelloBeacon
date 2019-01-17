@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.bristol.hackerhunt.helloworld.MainActivity;
+import com.bristol.hackerhunt.helloworld.TitleScreenActivity;
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.gameplay.GameplayActivity;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
@@ -143,7 +143,7 @@ public class JoinGameActivity extends AppCompatActivity {
     }
 
     private void goToTitleScreenActivity() {
-        Intent intent = new Intent(JoinGameActivity.this, MainActivity.class);
+        Intent intent = new Intent(JoinGameActivity.this, TitleScreenActivity.class);
         startActivity(intent);
     }
 

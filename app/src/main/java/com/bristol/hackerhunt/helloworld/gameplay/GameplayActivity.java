@@ -98,10 +98,12 @@ public class GameplayActivity extends AppCompatActivity {
                     if (gameStateController.playerHasBeenTakenDown()) {
                         consoleController.playerGotTakenDownPrompt();
                         gameStateController.resetPlayerTakenDown();
+                        serverRequestsController.newTargetRequest();
                     }
                     if (gameStateController.playersTargetHasBeenTakenDown()) {
                         consoleController.playersTargetTakenDownPrompt();
                         gameStateController.resetPlayersTargetHasBeenTakenDown();
+                        serverRequestsController.newTargetRequest();
                     }
 
                 } catch (JSONException e) {

@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bristol.hackerhunt.helloworld.MainActivity;
+import com.bristol.hackerhunt.helloworld.TitleScreenActivity;
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
@@ -66,7 +66,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         returnToTitleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LeaderboardActivity.this, MainActivity.class);
+                Intent intent = new Intent(LeaderboardActivity.this, TitleScreenActivity.class);
                 startActivity(intent);
             }
         });

@@ -189,7 +189,7 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
         }
         if (state.has("position")) {
             String position = state.getString("position");
-            gameStateController.updatePosition(position);
+            gameStateController.updateLeaderboardPosition(position);
         }
 
         if (!obj.has("update")) {

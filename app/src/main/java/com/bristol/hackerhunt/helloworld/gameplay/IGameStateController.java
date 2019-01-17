@@ -23,6 +23,16 @@ public interface IGameStateController {
     String getTargetPlayerId();
 
     /**
+     * @return the minor of the nearest beacon.
+     */
+    String getNearestBeaconMinor();
+
+    /**
+     * Set the nearest beacon minor.
+     */
+    void setNearestBeaconMinor(String minor);
+
+    /**
      * Get the rssi of a given beacon.
      * @param minor the minor of the desired beacon.
      * @return the last recorded rssi.
@@ -99,7 +109,7 @@ public interface IGameStateController {
      * Update the player's leaderboard position.
      * @param position leaderboard position.
      */
-    void updatePosition(String position);
+    void updateLeaderboardPosition(String position);
 
     /**
      * Update nearby beacon.
@@ -118,4 +128,10 @@ public interface IGameStateController {
      * @param updates a list of player updates.
      */
     void updateStatus(List<PlayerUpdate> updates);
+
+    /**
+     * Sets a task that runs if the nearest beacon is the home beacon.
+     * @param runnable a runnable that contains the task to run.
+     */
+    void setOnNearestBeaconBeingHomeBeaconListener(Runnable runnable);
 }

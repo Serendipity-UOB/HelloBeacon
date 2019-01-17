@@ -27,4 +27,10 @@
     <string name="join_game_loading">JOIN_GAME_LOADING</string>
     <string name="leaderboard_title">Leaderboard</string>
     <string name="exit_leaderboard_button_text">exit(EXIT_SUCCESS);</string>
+    <string name="NFC_scan_successful_exchange">NFC scan successful. Exchange in progress.</string>
+    <string name="exchange_failed_message">EXCHANGE_FAILED</string>
+    <string name="exchange_success_message">EXCHANGE_SUCCESS</string>
+    <string name="not_enough_intel_take_down_message">Error: not enough intel has been collected.</string>
+    <string name="player_isnt_target_takedown_message">Error: player is not the target.</string>
+    <string name="scan_target_nfc_message">Scan target NFC tag.</string>
 </resources>

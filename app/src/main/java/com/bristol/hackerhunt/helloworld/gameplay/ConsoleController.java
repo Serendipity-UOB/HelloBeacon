@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bristol.hackerhunt.helloworld.INfcController;
+import com.bristol.hackerhunt.helloworld.NfcController;
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
@@ -20,17 +22,23 @@ public class ConsoleController implements IConsoleController {
     private static final int POLLING_PERIOD = 3; // given in seconds.
 
     private final View overlay;
+    private final TextView consoleView;
 
     private final IGameStateController gameStateController;
     private final IGameplayServerRequestsController serverRequestsController;
+    private final INfcController nfcController;
 
     ConsoleController(View consolePromptContainer, IGameStateController gameStateController,
                       IGameplayServerRequestsController serverRequestsController) {
         this.overlay = consolePromptContainer;
         this.gameStateController = gameStateController;
+        gameStateController.setOnNearestBeaconBeingHomeBeaconListener(onNearestBeaconBeingHomeRunnable());
         this.serverRequestsController = serverRequestsController;
+        this.nfcController = new NfcController();
+        this.consoleView = overlay.findViewById(R.id.gameplay_console);
+    }
 
-        // this is only temporary.
+    private void enableCloseConsole() {
         overlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,38 +47,55 @@ public class ConsoleController implements IConsoleController {
         });
     }
 
+    private void disableCloseConsole() {
+        overlay.setOnClickListener(null);
+    }
+
+    private Runnable onNearestBeaconBeingHomeRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                if (overlay.getVisibility() != View.GONE) {
+                    overlay.setVisibility(View.GONE);
+                }
+            }
+        };
+    }
+
     @Override
     public void goToStartBeaconPrompt() {
-        TextView consoleView = overlay.findViewById(R.id.gameplay_console);
-        String message = overlay.getContext().getString(R.string.console_start_beacon_message);
-        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
-        consoleView.setText(message);
-        overlay.setVisibility(View.VISIBLE);
+        disableCloseConsole();
+        goToStartBeaconConsoleMessage();
 
         // TODO: wait until player reaches beacon.
     }
 
+    private void goToStartBeaconConsoleMessage() {
+        String message = overlay.getContext().getString(R.string.console_start_beacon_message);
+        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
+        consoleView.setText(message);
+        overlay.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void mutualExchangePrompt() {
-        final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
-        final String[] message = {"Scan target NFC tag."};
-        consoleView.setText(message[0]);
+        enableCloseConsole();
+        scanTargetNfcTagConsoleMessage();
 
         consoleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 // TODO: scan NFC.
-                final String targetId = "4";
+                final String targetId = nfcController.readNfcTag();
 
-                consoleView.setText("NFC scan successful. Exchange in progress.");
+                consoleView.setText(R.string.NFC_scan_successful_exchange);
                 consoleView.setOnClickListener(null);
+                disableCloseConsole();
 
                 beginExchangeServerPolling(consoleView, targetId);
             }
         });
-
-        overlay.setVisibility(View.VISIBLE);
     }
 
     private void beginExchangeServerPolling(final TextView consoleView, final String playerId) {
@@ -82,7 +107,8 @@ public class ConsoleController implements IConsoleController {
             @Override
             public void run() {
                 if (System.currentTimeMillis() - t0 > EXCHANGE_POLLING_DURATION * 1000) {
-                    consoleView.setText("EXCHANGE_FAILED");
+                    consoleView.setText(R.string.exchange_failed_message);
+                    enableCloseConsole();
                     cancel();
                 }
                 else {
@@ -90,10 +116,11 @@ public class ConsoleController implements IConsoleController {
                         serverRequestsController.exchangeRequest(playerId, details);
 
                         if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
-                            consoleView.setText("EXCHANGE_SUCCESS");
+                            consoleView.setText(R.string.exchange_success_message);
                             for (String id : details.gainedIntelPlayerIds) {
                                 gameStateController.increasePlayerIntel(id);
                             }
+                            enableCloseConsole();
                             cancel();
                         }
                     } catch (JSONException e) {
@@ -106,21 +133,21 @@ public class ConsoleController implements IConsoleController {
 
     @Override
     public void targetTakedownPrompt() {
-        final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
-        consoleView.setText("Scan target NFC tag.");
+        enableCloseConsole();
+        scanTargetNfcTagConsoleMessage();
 
         consoleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                // TODO: NFC has been scanned.
-                String targetId = "5";
+                // TODO: Scan NFC tag.
+                String targetId = nfcController.readNfcTag();
 
                 if (!gameStateController.playerHasFullIntel(targetId)) {
-                    consoleView.setText("Error: not enough intel has been collected.");
+                    consoleView.setText(R.string.not_enough_intel_take_down_message);
                 }
                 else if (!targetId.equals(gameStateController.getTargetPlayerId())) {
-                    consoleView.setText("Error: player is not the target.");
+                    consoleView.setText(R.string.player_isnt_target_takedown_message);
                 }
                 else {
                     try {
@@ -129,60 +156,63 @@ public class ConsoleController implements IConsoleController {
                         e.printStackTrace();
                     }
 
-                    String message = "TAKEDOWN_SUCCESS\n\n\nReturn to $BEACON for new target.";
-                    message = message.replace("$BEACON", gameStateController.getHomeBeacon());
-                    consoleView.setText(message);
+                    disableCloseConsole();
+                    takedownSuccessConsoleMessage();
 
                     // TODO: wait for player to go to correct beacon.
-
-                    try {
-                        serverRequestsController.newTargetRequest();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
         });
+    }
 
+    private void scanTargetNfcTagConsoleMessage() {
+        consoleView.setText(R.string.scan_target_nfc_message);
         overlay.setVisibility(View.VISIBLE);
+    }
+
+    private void takedownSuccessConsoleMessage() {
+        String message = "TAKEDOWN_SUCCESS\n\n\nReturn to $BEACON for new target.";
+        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
+        consoleView.setText(message);
     }
 
     @Override
     public void playersTargetTakenDownPrompt() {
-        final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
+        disableCloseConsole();
+        playersTargetGotTakenDownConsoleMessage();
+
+        // TODO: Wait for player to go to beacon.
+    }
+
+    private void playersTargetGotTakenDownConsoleMessage() {
         String message = "Too slow; your target has been taken down.\n\nReturn to $BEACON to receive your new target";
         message = message.replace("$BEACON", gameStateController.getHomeBeacon());
         consoleView.setText(message);
         overlay.setVisibility(View.VISIBLE);
-
-        // TODO: Wait for player to go to beacon.
-
-        consoleView.setText("Receiving new target...");
-        try {
-            serverRequestsController.newTargetRequest();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void playerGotTakenDownPrompt() {
+        disableCloseConsole();
         gameStateController.loseHalfOfPlayersIntel();
-
-        final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
-        String message = "You have been taken down.\n\nReturn to $BEACON.";
-        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
-        consoleView.setText(message);
-        overlay.setVisibility(View.VISIBLE);
+        playerTakenDownConsoleMessage();
 
         // TODO: Wait for player to go to beacon.
     }
 
+    private void playerTakenDownConsoleMessage() {
+        String message = "You have been taken down.\n\nReturn to $BEACON.";
+        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
+        consoleView.setText(message);
+        overlay.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent) {
-        final TextView consoleView = overlay.findViewById(R.id.gameplay_console);
-        final String[] message = {"Incoming message...\n\nGood work. Return your equipment to the base station to collect your award.\n\n\n - Anon"};
-        consoleView.setText(message[0]);
+        disableCloseConsole();
+        endOfGameConsoleMessage();
+
+        // TODO: return to base station.
 
         consoleView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +220,11 @@ public class ConsoleController implements IConsoleController {
                 context.startActivity(goToLeaderboardIntent);
             }
         });
+    }
 
+    private void endOfGameConsoleMessage() {
+        final String[] message = {"Incoming message...\n\nGood work. Return your equipment to the base station to collect your award.\n\n\n - Anon"};
+        consoleView.setText(message[0]);
         overlay.setVisibility(View.VISIBLE);
     }
 }

@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.bristol.hackerhunt.helloworld.profileCreation.CreateProfileActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class TitleScreenActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_PERMISSIONS = 100;
 
 
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
+                Intent intent = new Intent(TitleScreenActivity.this, CreateProfileActivity.class);
                 startActivity(intent);
             }
         });

@@ -15,12 +15,15 @@ public class GameStateController implements IGameStateController {
     private final IPlayerListController playerListController;
     private final IPlayerStatusBarController playerStatusBarController;
 
-    private final PlayerIdentifiers playerIdentifiers;
     private final Map<String, Integer> beaconMinorRssiMap;
-    private List<PlayerUpdate> playerUpdates;
+    private String nearestBeaconMinor;
     private final String homeBeacon;
+    private Runnable onNearestBeaconHomRunnable;
+
+    private final PlayerIdentifiers playerIdentifiers;
+    private List<PlayerUpdate> playerUpdates;
     private int points;
-    private String position;
+    private String leaderboardPosition;
 
     private final Map<String, PlayerDetails> allPlayersMap; // key: player_id (nfc)
     private List<String> nearbyPlayerIds;
@@ -40,7 +43,8 @@ public class GameStateController implements IGameStateController {
 
         this.homeBeacon = homeBeacon;
         this.points = 0;
-        this.position = "Loading...";
+        this.leaderboardPosition = "Loading...";
+        nearestBeaconMinor = "none";
     }
 
     private class PlayerDetails {
@@ -63,6 +67,20 @@ public class GameStateController implements IGameStateController {
     @Override
     public String getTargetPlayerId() {
         return this.targetPlayerId;
+    }
+
+    @Override
+    public String getNearestBeaconMinor() {
+        return nearestBeaconMinor;
+    }
+
+    @Override
+    public void setNearestBeaconMinor(String minor) {
+        this.nearestBeaconMinor = minor;
+
+        if (onNearestBeaconHomRunnable != null && nearestBeaconMinor.equals(homeBeacon)) {
+            onNearestBeaconHomRunnable.run();
+        }
     }
 
     @Override
@@ -159,8 +177,8 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
-    public void updatePosition(String position) {
-        this.position = position;
+    public void updateLeaderboardPosition(String position) {
+        this.leaderboardPosition = position;
         playerStatusBarController.setPlayerLeaderboardPosition(position);
     }
 
@@ -181,5 +199,10 @@ public class GameStateController implements IGameStateController {
     @Override
     public void updateStatus(List<PlayerUpdate> updates) {
         this.playerUpdates = updates;
+    }
+
+    @Override
+    public void setOnNearestBeaconBeingHomeBeaconListener(Runnable runnable) {
+        this.onNearestBeaconHomRunnable = runnable;
     }
 }
