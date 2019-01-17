@@ -173,7 +173,6 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
                 playerUpdateRequestBody(), listener, errorListener);
     }
 
-    // TODO: this method is unfinished.
     private void playerUpdate(JSONObject obj) throws JSONException {
         JSONArray nearbyPlayerIdsJson = obj.getJSONArray("nearby_players");
         List<String> nearbyPlayerIds = new ArrayList<>();
@@ -192,8 +191,21 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
             gameStateController.updateLeaderboardPosition(position);
         }
 
-        if (!obj.has("update")) {
-            gameStateController.updateStatus(new ArrayList<PlayerUpdate>());
+        if (obj.has("update")) {
+            JSONArray updatesArr = obj.getJSONArray("update");
+            List<PlayerUpdate> updates = new ArrayList<>();
+
+            for (int i = 0; i < updatesArr.length(); i++) {
+                String updateStr = updatesArr.getString(i);
+
+                if (updateStr.equals("taken_down")) {
+                    updates.add(PlayerUpdate.TAKEN_DOWN);
+                }
+                else if (updateStr.equals("req_new_target")) {
+                    updates.add(PlayerUpdate.REQ_NEW_TARGET);
+                }
+            }
+            gameStateController.updateStatus(updates);
         }
     }
 

@@ -36,6 +36,8 @@ public class ConsoleController implements IConsoleController {
         this.serverRequestsController = serverRequestsController;
         this.nfcController = new NfcController();
         this.consoleView = overlay.findViewById(R.id.gameplay_console);
+
+        enableCloseConsole();
     }
 
     private void enableCloseConsole() {
@@ -64,10 +66,8 @@ public class ConsoleController implements IConsoleController {
 
     @Override
     public void goToStartBeaconPrompt() {
-        disableCloseConsole();
+        // disableCloseConsole();
         goToStartBeaconConsoleMessage();
-
-        // TODO: wait until player reaches beacon.
     }
 
     private void goToStartBeaconConsoleMessage() {
