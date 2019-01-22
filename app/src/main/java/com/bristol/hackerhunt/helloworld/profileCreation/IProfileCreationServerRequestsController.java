@@ -19,4 +19,16 @@ public interface IProfileCreationServerRequestsController {
      * @throws JSONException server's response couldn't be parsed into JSON.
      */
     void registerPlayerRequest(String realName, String hackerName, String nfcId) throws JSONException;
+
+    /**
+     * Registers a runnable to run a method upon receiving that the submitted profile is valid.
+     * @param runnable A runnable.
+     */
+    void registerOnProfileValidRunnable(Runnable runnable);
+
+    /**
+     * Registers a runnable to run a method upon receiving that the submitted profile is invalid.
+     * @param runnable A runnable.
+     */
+    void registerOnProfileInvalidRunnable(Runnable runnable);
 }

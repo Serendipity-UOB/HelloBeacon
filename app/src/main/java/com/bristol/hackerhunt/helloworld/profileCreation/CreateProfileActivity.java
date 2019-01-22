@@ -17,14 +17,14 @@ import org.json.JSONException;
 public class CreateProfileActivity extends AppCompatActivity {
 
     private IProfileCreationServerRequestsController serverRequestsController;
-    private ProfileValid profileValid;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
-        this.profileValid = new ProfileValid();
-        this.serverRequestsController = new ProfileCreationServerRequestsController(this,profileValid);
+
+        this.serverRequestsController = new ProfileCreationServerRequestsController(this);
+        serverRequestsController.registerOnProfileInvalidRunnable(profileInvalidRunnable());
 
         initializeNewProfileButton();
     }
@@ -39,26 +39,50 @@ public class CreateProfileActivity extends AppCompatActivity {
         });
     }
 
+    private void setNewProfileButtonLoading() {
+        final Button goToProfileButton = findViewById(R.id.create_profile_button);
+        goToProfileButton.setText("Loading...");
+        goToProfileButton.setOnClickListener(null);
+    }
+
+    private Runnable goToJoinGameActivityRunnable(final String playerRealName, final String playerHackerName,
+                                                  final String playerNfcId) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                PlayerIdentifiers playerIdentifiers = new PlayerIdentifiers(playerRealName, playerHackerName, playerNfcId);
+
+                Intent intent = new Intent(CreateProfileActivity.this, JoinGameActivity.class);
+                intent.putExtra("player_identifiers", playerIdentifiers);
+                startActivity(intent);
+            }
+        };
+    }
+
+    private Runnable profileInvalidRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                setFormErrorMessage("Profile invalid.");
+            }
+        };
+    }
+
     private void requestNewProfile() {
         String playerRealName = getStringFromEditTextView(R.id.create_profile_real_name);
         String playerHackerName = getStringFromEditTextView(R.id.create_profile_hacker_name);
         String playerNfcId = getStringFromEditTextView(R.id.create_profile_nfc_id);
 
-        try {
-            serverRequestsController.registerPlayerRequest(playerRealName, playerHackerName, playerNfcId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        if (userInputValid(playerRealName, playerHackerName, playerNfcId)) {
+            setNewProfileButtonLoading();
+            serverRequestsController.registerOnProfileValidRunnable(
+                    goToJoinGameActivityRunnable(playerRealName, playerHackerName, playerNfcId));
 
-        // TODO: need to implement some sort of wait for the server to fetch the outcome.
-
-        if (userInputValid(playerRealName, playerHackerName, playerNfcId) && profileValid.valid) {
-            serverRequestsController.cancelAllRequests();
-            PlayerIdentifiers playerIdentifiers = new PlayerIdentifiers(playerRealName, playerHackerName, playerNfcId);
-
-            Intent intent = new Intent(CreateProfileActivity.this, JoinGameActivity.class);
-            intent.putExtra("player_identifiers", playerIdentifiers);
-            startActivity(intent);
+            try {
+                serverRequestsController.registerPlayerRequest(playerRealName, playerHackerName, playerNfcId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 

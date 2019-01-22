@@ -19,10 +19,11 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     private final String REGISTER_PLAYER_URL;
 
     private final RequestQueue requestQueue;
-    private final ProfileValid profileValid;
 
-    ProfileCreationServerRequestsController(Context context, ProfileValid profileValid) {
-        this.profileValid = profileValid;
+    private Runnable onProfileValidRunnable;
+    private Runnable onProfileInvalidRunnable;
+
+    ProfileCreationServerRequestsController(Context context) {
         this.requestQueue = Volley.newRequestQueue(context);
 
         this.SERVER_ADDRESS = context.getString(R.string.server_address);
@@ -34,25 +35,36 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
         requestQueue.stop();
     }
 
+    @Override
     public void registerPlayerRequest(String realName, String hackerName, String nfcId) throws JSONException {
        // this is a placeholder.
-        this.profileValid.valid = true;
+        onProfileValidRunnable.run();
 
         // TODO: requestQueue.add(volleyRegisterPlayerRequest(realName, hackerName, nfcId));
+    }
+
+    @Override
+    public void registerOnProfileValidRunnable(Runnable runnable) {
+        this.onProfileValidRunnable = runnable;
+    }
+
+    @Override
+    public void registerOnProfileInvalidRunnable(Runnable runnable) {
+        this.onProfileInvalidRunnable = runnable;
     }
 
     private JsonObjectRequest volleyRegisterPlayerRequest(String realName, String hackerName, String nfcId) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                profileValid.valid = true;
+                onProfileValidRunnable.run();
             }
         };
 
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                profileValid.valid = false;
+                onProfileInvalidRunnable.run();
             }
         };
 
