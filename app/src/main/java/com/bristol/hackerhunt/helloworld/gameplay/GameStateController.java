@@ -18,7 +18,7 @@ public class GameStateController implements IGameStateController {
     private final Map<String, Integer> beaconMinorRssiMap;
     private String nearestBeaconMinor;
     private final String homeBeacon;
-    private Runnable onNearestBeaconHomRunnable;
+    private Runnable onNearestBeaconHomeRunnable;
 
     private final PlayerIdentifiers playerIdentifiers;
     private List<PlayerUpdate> playerUpdates;
@@ -78,8 +78,8 @@ public class GameStateController implements IGameStateController {
     public void setNearestBeaconMinor(String minor) {
         this.nearestBeaconMinor = minor;
 
-        if (onNearestBeaconHomRunnable != null && nearestBeaconMinor.equals(homeBeacon)) {
-            onNearestBeaconHomRunnable.run();
+        if (onNearestBeaconHomeRunnable != null && nearestBeaconMinor.equals(homeBeacon)) {
+            onNearestBeaconHomeRunnable.run();
         }
     }
 
@@ -203,6 +203,6 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void setOnNearestBeaconBeingHomeBeaconListener(Runnable runnable) {
-        this.onNearestBeaconHomRunnable = runnable;
+        this.onNearestBeaconHomeRunnable = runnable;
     }
 }

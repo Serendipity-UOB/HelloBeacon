@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.bristol.hackerhunt.helloworld.INfcController;
 import com.bristol.hackerhunt.helloworld.NfcController;
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.Typewriter;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
 
@@ -28,6 +29,8 @@ public class ConsoleController implements IConsoleController {
     private final IGameplayServerRequestsController serverRequestsController;
     private final INfcController nfcController;
 
+    private final Typewriter typewriter;
+
     ConsoleController(View consolePromptContainer, IGameStateController gameStateController,
                       IGameplayServerRequestsController serverRequestsController) {
         this.overlay = consolePromptContainer;
@@ -36,6 +39,8 @@ public class ConsoleController implements IConsoleController {
         this.serverRequestsController = serverRequestsController;
         this.nfcController = new NfcController();
         this.consoleView = overlay.findViewById(R.id.gameplay_console);
+
+        this.typewriter = new Typewriter(10);
 
         enableCloseConsole();
     }
@@ -73,7 +78,7 @@ public class ConsoleController implements IConsoleController {
     private void goToStartBeaconConsoleMessage() {
         String message = overlay.getContext().getString(R.string.console_start_beacon_message);
         message = message.replace("$BEACON", gameStateController.getHomeBeacon());
-        consoleView.setText(message);
+        typewriter.animateText(consoleView, message);
         overlay.setVisibility(View.VISIBLE);
     }
 
@@ -166,14 +171,14 @@ public class ConsoleController implements IConsoleController {
     }
 
     private void scanTargetNfcTagConsoleMessage() {
-        consoleView.setText(R.string.scan_target_nfc_message);
+        typewriter.animateText(consoleView, consoleView.getContext().getString(R.string.scan_target_nfc_message));
         overlay.setVisibility(View.VISIBLE);
     }
 
     private void takedownSuccessConsoleMessage() {
         String message = "TAKEDOWN_SUCCESS\n\n\nReturn to $BEACON for new target.";
         message = message.replace("$BEACON", gameStateController.getHomeBeacon());
-        consoleView.setText(message);
+        typewriter.animateText(consoleView, message);
     }
 
     @Override
@@ -187,7 +192,7 @@ public class ConsoleController implements IConsoleController {
     private void playersTargetGotTakenDownConsoleMessage() {
         String message = "Too slow; your target has been taken down.\n\nReturn to $BEACON to receive your new target";
         message = message.replace("$BEACON", gameStateController.getHomeBeacon());
-        consoleView.setText(message);
+        typewriter.animateText(consoleView, message);
         overlay.setVisibility(View.VISIBLE);
     }
 
@@ -203,7 +208,7 @@ public class ConsoleController implements IConsoleController {
     private void playerTakenDownConsoleMessage() {
         String message = "You have been taken down.\n\nReturn to $BEACON.";
         message = message.replace("$BEACON", gameStateController.getHomeBeacon());
-        consoleView.setText(message);
+        typewriter.animateText(consoleView, message);
         overlay.setVisibility(View.VISIBLE);
     }
 
@@ -223,8 +228,8 @@ public class ConsoleController implements IConsoleController {
     }
 
     private void endOfGameConsoleMessage() {
-        final String[] message = {"Incoming message...\n\nGood work. Return your equipment to the base station to collect your award.\n\n\n - Anon"};
-        consoleView.setText(message[0]);
+        final String message = "Incoming message...\n\nGood work. Return your equipment to the base station to collect your award.\n\n\n - Anon";
+        typewriter.animateText(consoleView, message);
         overlay.setVisibility(View.VISIBLE);
     }
 }
