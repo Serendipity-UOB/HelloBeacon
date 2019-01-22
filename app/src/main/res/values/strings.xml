@@ -1,10 +1,29 @@
 <resources>
-    <string name="app_name">Hacker Hunt Test</string>
+    <!-- KONTAKT API KEY-->
+    <string name="kontakt_io_api_key">pNqcUiJPjCLoeibtwzmjKkZwoPBPGXYS</string>
+
+    <!-- SERVER REQUEST URLS -->
+    <string name="server_address"> </string>
+
+    <string name="register_player_request">/registerPlayer</string>
+
+    <string name="game_info_request">/gameInfo</string>
+    <string name="join_game_request">/joinGame</string>
+
+    <string name="start_info_request">/startInfo</string>
+    <string name="new_target_request">/newTarget</string>
+    <string name="player_update_request">/playerUpdate</string>
+    <string name="exchange_request">/exchange</string>
+    <string name="takedown_request">/takeDown</string>
+
+    <string name="get_info_request">/getInfo</string>
+
+    <!-- UI -->
+    <string name="app_name">Hacker Hunt</string>
     <string name="button_label_toast">Toast</string>
     <string name="count_initial_value">0</string>
     <string name="button_label_count">Count</string>
     <string name="toast_message">Hello Toast</string>
-    <string name="kontakt_io_api_key">pNqcUiJPjCLoeibtwzmjKkZwoPBPGXYS</string>
     <string name="go_to_test_request">Go to test request</string>
     <string name="this_is_the_test_request_page">This is the test request page.</string>
     <string name="go_back_home">go back home</string>

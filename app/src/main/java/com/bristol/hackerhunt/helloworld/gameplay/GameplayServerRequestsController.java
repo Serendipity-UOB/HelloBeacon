@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
@@ -21,12 +22,12 @@ import java.util.List;
 
 class GameplayServerRequestsController implements IGameplayServerRequestsController {
 
-    private static final String SERVER_ADDRESS = "";
-    private static final String START_INFO_URL = "/startInfo";
-    private static final String NEW_TARGET_URL = "/newTarget";
-    private static final String PLAYER_UPDATE_URL = "/playerUpdate";
-    private static final String EXCHANGE_URL = "/exchange";
-    private static final String TAKE_DOWN_URL = "/takeDown";
+    private final String SERVER_ADDRESS;
+    private final String START_INFO_URL;
+    private final String NEW_TARGET_URL;
+    private final String PLAYER_UPDATE_URL;
+    private final String EXCHANGE_URL;
+    private final String TAKE_DOWN_URL;
 
     private final RequestQueue requestQueue;
     private final IGameStateController gameStateController;
@@ -39,6 +40,13 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
     GameplayServerRequestsController(Context context, IGameStateController gameStateController) {
         this.requestQueue = Volley.newRequestQueue(context);
         this.gameStateController = gameStateController;
+
+        this.SERVER_ADDRESS = context.getString(R.string.server_address);
+        this.START_INFO_URL = context.getString(R.string.start_info_request);
+        this.NEW_TARGET_URL = context.getString(R.string.new_target_request);
+        this.PLAYER_UPDATE_URL = context.getString(R.string.player_update_request);
+        this.EXCHANGE_URL = context.getString(R.string.exchange_request);
+        this.TAKE_DOWN_URL = context.getString(R.string.takedown_request);
     }
 
 

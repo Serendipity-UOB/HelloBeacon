@@ -8,15 +8,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
+import com.bristol.hackerhunt.helloworld.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ProfileCreationServerRequestsController implements IProfileCreationServerRequestsController {
 
-    private static final String SERVER_ADDRESS = "";
-    private static final String REGISTER_PLAYER_URL = "/registerPlayer";
+    private final String SERVER_ADDRESS;
+    private final String REGISTER_PLAYER_URL;
 
     private final RequestQueue requestQueue;
     private final ProfileValid profileValid;
@@ -24,6 +24,9 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     ProfileCreationServerRequestsController(Context context, ProfileValid profileValid) {
         this.profileValid = profileValid;
         this.requestQueue = Volley.newRequestQueue(context);
+
+        this.SERVER_ADDRESS = context.getString(R.string.server_address);
+        this.REGISTER_PLAYER_URL = context.getString(R.string.register_player_request);
     }
 
     @Override

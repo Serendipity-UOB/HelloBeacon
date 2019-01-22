@@ -8,15 +8,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bristol.hackerhunt.helloworld.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class JoinGameServerRequestController implements IJoinGameServerRequestController {
 
-    private static final String SERVER_ADDRESS = "";
-    private static final String GAME_INFO_URL = "/gameInfo";
-    private static final String JOIN_GAME_URL = "/joinGame";
+    private final String SERVER_ADDRESS;
+    private final String GAME_INFO_URL;
+    private final String JOIN_GAME_URL;
 
     private final RequestQueue requestQueue;
     private final GameInfo gameInfo;
@@ -24,6 +25,10 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
     JoinGameServerRequestController(Context context, GameInfo gameInfo) {
         this.requestQueue = Volley.newRequestQueue(context);
         this.gameInfo = gameInfo;
+
+        this.SERVER_ADDRESS = context.getString(R.string.server_address);
+        this.GAME_INFO_URL = context.getString(R.string.game_info_request);
+        this.JOIN_GAME_URL = context.getString(R.string.join_game_request);
     }
 
     @Override

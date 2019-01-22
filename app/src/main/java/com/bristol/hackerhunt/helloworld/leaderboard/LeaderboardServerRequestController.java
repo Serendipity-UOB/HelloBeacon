@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bristol.hackerhunt.helloworld.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,13 +19,16 @@ import java.util.List;
 
 public class LeaderboardServerRequestController implements ILeaderboardServerRequestController {
 
-    private static final String SERVER_ADDRESS = "";
-    private static final String GET_INFO_URL= "/getInfo";
+    private final String SERVER_ADDRESS;
+    private final String GET_INFO_URL;
 
     private final RequestQueue requestQueue;
 
     LeaderboardServerRequestController(Context context) {
         this.requestQueue = Volley.newRequestQueue(context);
+
+        this.SERVER_ADDRESS = context.getString(R.string.server_address);
+        this.GET_INFO_URL = context.getString(R.string.game_info_request);
     }
 
     @Override
