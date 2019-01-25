@@ -3,7 +3,7 @@
     <string name="kontakt_io_api_key">pNqcUiJPjCLoeibtwzmjKkZwoPBPGXYS</string>
 
     <!-- SERVER REQUEST URLS -->
-    <string name="server_address"> </string>
+    <string name="server_address">https://serendipity-game-controller.herokuapp.com</string>
 
     <string name="register_player_request">/registerPlayer</string>
 

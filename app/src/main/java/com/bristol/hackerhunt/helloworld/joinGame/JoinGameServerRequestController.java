@@ -43,11 +43,11 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
     @Override
     public void gameInfoRequest() throws JSONException {
          // this is a placeholder
-        String response = "{\"start_time\":\"17:46:50\",\"number_players\":2}";
-        JSONObject obj = new JSONObject(response);
-        updateGameInfo(obj);
+        // String response = "{\"start_time\":\"17:59:50\",\"number_players\":2}";
+        // JSONObject obj = new JSONObject(response);
+        // updateGameInfo(obj);
 
-        // TODO: requestQueue.add(volleyGameInfoRequest());
+        requestQueue.add(volleyGameInfoRequest());
     }
 
     private JsonObjectRequest volleyGameInfoRequest() throws JSONException {
@@ -69,7 +69,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
             }
         };
 
-        return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + GAME_INFO_URL, null,
+        return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + GAME_INFO_URL, new JSONObject(),
                 listener, errorListener);
     }
 
@@ -85,7 +85,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         gameInfo.numberOfPlayers = numberOfPlayers;
     }
 
-    private Long calculateTimeRemainingInMinutes(String startTime) {
+    private float calculateTimeRemainingInMinutes(String startTime) {
         Calendar c2 = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
         int currentHour = c2.get(Calendar.HOUR_OF_DAY);
@@ -95,14 +95,12 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         int currentTotal = currentSecond + 60 * (currentMinute + 60 * currentHour);
 
         String[] startTimeArr = startTime.split(":");
-        Long startHour = Long.parseLong(startTimeArr[0]);
-        Long startMinute = Long.parseLong(startTimeArr[1]);
-        Long startSecond = Long.parseLong(startTimeArr[2]);
-        Long startTotal = startSecond + 60 * (startMinute + 60 * startHour);
+        float startHour = Float.parseFloat(startTimeArr[0]);
+        float startMinute = Float.parseFloat(startTimeArr[1]);
+        float startSecond = Float.parseFloat(startTimeArr[2]);
+        float startTotal = startSecond + 60 * (startMinute + 60 * startHour);
 
-        Long diff = (startTotal - currentTotal) / 60;
-        Log.d("time", diff.toString());
-        return diff;
+        return ((startTotal - currentTotal) / 60);
     }
 
     @Override
