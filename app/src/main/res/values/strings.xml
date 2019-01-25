@@ -52,4 +52,5 @@
     <string name="not_enough_intel_take_down_message">Error: not enough intel has been collected.</string>
     <string name="player_isnt_target_takedown_message">Error: player is not the target.</string>
     <string name="scan_target_nfc_message">Scan target NFC tag.</string>
+    <string name="all_players_map_intent_key">all_players_map</string>
 </resources>

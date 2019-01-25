@@ -80,6 +80,15 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
+    public HashMap<String, String> getPlayerIdRealNameMap() {
+        HashMap<String,String> map = new HashMap<>();
+        for (String id : allPlayersMap.keySet()) {
+            map.put(id, allPlayersMap.get(id).realName);
+        }
+        return map;
+    }
+
+    @Override
     public void setNearestBeaconMinor(String minor) {
         this.nearestBeaconMinor = minor;
 

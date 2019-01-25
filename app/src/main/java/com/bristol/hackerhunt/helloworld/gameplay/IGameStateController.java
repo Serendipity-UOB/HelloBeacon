@@ -2,6 +2,7 @@ package com.bristol.hackerhunt.helloworld.gameplay;
 
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +27,11 @@ public interface IGameStateController {
      * @return the minor of the nearest beacon.
      */
     String getNearestBeaconMinor();
+
+    /**
+     * @return A mapping from player id to real name.
+     */
+    HashMap<String, String> getPlayerIdRealNameMap();
 
     /**
      * Set the nearest beacon minor.

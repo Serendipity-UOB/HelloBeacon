@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +19,9 @@ import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LeaderboardActivity extends AppCompatActivity {
 
@@ -33,11 +36,17 @@ public class LeaderboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
+
+        HashMap<String,String> playerIdsRealNameMap = (HashMap<String, String>)
+                getIntent().getExtras().getSerializable(String.valueOf(R.string.all_players_map_intent_key));
+        Log.d("debug",playerIdsRealNameMap.toString());
+
         this.playerIdentifiers = getIntent().getParcelableExtra(getString(R.string.player_identifiers_intent_key));
 
         this.leaderboardList = findViewById(R.id.leaderboard_list);
         this.inflater = LayoutInflater.from(this);
-        this.serverRequestController = new LeaderboardServerRequestController(this);
+
+        this.serverRequestController = new LeaderboardServerRequestController(this, playerIdsRealNameMap, playerIdentifiers);
         this.leaderboardItems = new ArrayList<>();
         initializeReturnToTitleButton();
 

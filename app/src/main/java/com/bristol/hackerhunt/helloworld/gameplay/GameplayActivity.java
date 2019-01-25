@@ -161,6 +161,10 @@ public class GameplayActivity extends AppCompatActivity {
                 gameOver = true;
                 Intent intent = new Intent(GameplayActivity.this, LeaderboardActivity.class);
                 intent.putExtra(getString(R.string.player_identifiers_intent_key), playerIdentifiers);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(String.valueOf(R.string.all_players_map_intent_key), gameStateController.getPlayerIdRealNameMap() );
+                intent.putExtras(bundle);
                 consoleController.endOfGamePrompt(thisContext, intent);
             }
         }.start();
