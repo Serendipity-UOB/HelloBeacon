@@ -106,12 +106,12 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
     @Override
     public void joinGameRequest(String playerId) throws JSONException {
         // this is a placeholder
-        String response = "{\"home_beacon_minor\":\"4\",\"home_beacon_name\":\"Beacon A\"}";
-        JSONObject obj = new JSONObject(response);
-        gameInfo.startBeaconMinor = obj.getString("home_beacon_minor");
-        gameInfo.startBeaconName = obj.getString("home_beacon_name");
+        // String response = "{\"home_beacon_minor\":\"4\",\"home_beacon_name\":\"Beacon A\"}";
+        // JSONObject obj = new JSONObject(response);
+        // gameInfo.startBeaconMinor = obj.getString("home_beacon_minor");
+        // gameInfo.startBeaconName = obj.getString("home_beacon_name");
 
-        // TODO: requestQueue.add(volleyJoinGameRequest(playerId));
+        requestQueue.add(volleyJoinGameRequest(playerId));
     }
 
     private JsonObjectRequest volleyJoinGameRequest(String playerId) throws JSONException {
@@ -130,14 +130,14 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                throw new IllegalStateException("Error: " + error.getMessage());
+                throw new IllegalStateException("Error: " + error.getCause());
             }
         };
 
         JSONObject requestBody = new JSONObject();
         requestBody.put("player_id", playerId);
 
-        return new JsonObjectRequest(Request.Method.PUT, SERVER_ADDRESS + JOIN_GAME_URL, requestBody,
+        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + JOIN_GAME_URL, requestBody,
                 listener, errorListener);
     }
 }

@@ -171,8 +171,14 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void updateNearbyPlayers(List<String> playerIds) {
-        nearbyPlayerIds = playerIds;
-        playerListController.updateNearbyPlayers(playerIds);
+        List<String> nearbyPlayers = new ArrayList<>();
+        for (String id : playerIds) {
+            if (allPlayersMap.containsKey(id)) {
+                nearbyPlayers.add(id);
+            }
+        }
+        nearbyPlayerIds = nearbyPlayers;
+        playerListController.updateNearbyPlayers(nearbyPlayers);
     }
 
     @Override

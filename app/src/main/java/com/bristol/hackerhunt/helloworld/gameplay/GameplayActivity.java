@@ -63,7 +63,7 @@ public class GameplayActivity extends AppCompatActivity {
         try {
             beaconController.startScanning();
             serverRequestsController.startInfoRequest();
-            serverRequestsController.newTargetRequest();
+            // serverRequestsController.newTargetRequest();
 
             // polling
             Timer timer = new Timer(false);

@@ -114,16 +114,23 @@ public class JoinGameActivity extends AppCompatActivity {
 
                 TextView joinStatus = findViewById(R.id.join_game_success);
                 findViewById(R.id.join_game_success).setVisibility(View.VISIBLE);
-                if (gameInfo.startBeaconMinor == null) {
-                    joinStatus.setText(R.string.join_game_loading);
-                    while (gameInfo.startBeaconMinor == null) {
-                        // do nothing, wait for response
-                    }
-                    joinStatus.setText(R.string.join_game_success);
-                }
-                joinedGame = true;
+
+                (new Timer()).schedule(checkHomeBeaconHasBeenRecieved(joinStatus), 1000);
             }
         });
+    }
+
+    private TimerTask checkHomeBeaconHasBeenRecieved(final TextView joinStatus) {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                if (gameInfo.startBeaconMinor != null) {
+                    joinStatus.setText(R.string.join_game_success);
+                    joinedGame = true;
+                    cancel();
+                }
+            }
+        };
     }
 
     private String formatTime(long milliseconds) {

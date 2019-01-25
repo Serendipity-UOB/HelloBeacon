@@ -92,7 +92,7 @@ public class ConsoleController implements IConsoleController {
             public void onClick(View view) {
 
                 // TODO: scan NFC.
-                final String targetId = nfcController.readNfcTag();
+                final String targetId = "0"; //nfcController.readNfcTag();
 
                 consoleView.setText(R.string.NFC_scan_successful_exchange);
                 consoleView.setOnClickListener(null);
@@ -146,7 +146,7 @@ public class ConsoleController implements IConsoleController {
             public void onClick(View view) {
 
                 // TODO: Scan NFC tag.
-                String targetId = nfcController.readNfcTag();
+                String targetId = "0";// nfcController.readNfcTag();
 
                 if (!gameStateController.playerHasFullIntel(targetId)) {
                     consoleView.setText(R.string.not_enough_intel_take_down_message);
