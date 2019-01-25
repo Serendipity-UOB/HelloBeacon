@@ -114,9 +114,9 @@ public class JoinGameActivity extends AppCompatActivity {
 
                 TextView joinStatus = findViewById(R.id.join_game_success);
                 findViewById(R.id.join_game_success).setVisibility(View.VISIBLE);
-                if (gameInfo.startBeacon == null) {
+                if (gameInfo.startBeaconMinor == null) {
                     joinStatus.setText(R.string.join_game_loading);
-                    while (gameInfo.startBeacon == null) {
+                    while (gameInfo.startBeaconMinor == null) {
                         // do nothing, wait for response
                     }
                     joinStatus.setText(R.string.join_game_success);
@@ -138,7 +138,8 @@ public class JoinGameActivity extends AppCompatActivity {
     private void goToGameplayActivity(PlayerIdentifiers playerIdentifiers) {
         Intent intent = new Intent(JoinGameActivity.this, GameplayActivity.class);
         intent.putExtra("player_identifiers", playerIdentifiers);
-        intent.putExtra("start_beacon", gameInfo.startBeacon);
+        intent.putExtra("start_beacon_minor", gameInfo.startBeaconMinor);
+        intent.putExtra("start_beacon_name", gameInfo.startBeaconName);
         startActivity(intent);
     }
 

@@ -15,7 +15,7 @@ public interface IGameStateController {
     /**
      * @return the player's home beacon.
      */
-    String getHomeBeacon();
+    String getHomeBeaconName();
 
     /**
      * @return the target player's NFC ID.

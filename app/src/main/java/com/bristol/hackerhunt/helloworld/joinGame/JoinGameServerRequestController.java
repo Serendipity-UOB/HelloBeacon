@@ -82,9 +82,10 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
     @Override
     public void joinGameRequest(String playerId) throws JSONException {
         // this is a placeholder
-        String response = "{\"start_beacon\":\"Beacon A\"}";
+        String response = "{\"home_beacon_minor\":\"4\",\"home_beacon_name\":\"Beacon A\"}";
         JSONObject obj = new JSONObject(response);
-        gameInfo.startBeacon = obj.getString("start_beacon");
+        gameInfo.startBeaconMinor = obj.getString("home_beacon_minor");
+        gameInfo.startBeaconName = obj.getString("home_beacon_name");
 
         // TODO: requestQueue.add(volleyJoinGameRequest(playerId));
     }
@@ -94,7 +95,8 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    gameInfo.startBeacon = response.getString("start_beacon");
+                    gameInfo.startBeaconMinor = response.getString("home_beacon_minor");
+                    gameInfo.startBeaconName = response.getString("home_beacon_name");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

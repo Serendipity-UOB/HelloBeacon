@@ -49,7 +49,8 @@ public class GameplayActivity extends AppCompatActivity {
         initializeTakeDownButton();
 
         this.gameStateController = new GameStateController(playerListController, playerStatusBarController,
-                playerIdentifiers, getIntent().getStringExtra("start_beacon"));
+                playerIdentifiers, getIntent().getStringExtra("start_beacon_minor"),
+                getIntent().getStringExtra("start_beacon_name"));
         this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
         initializeConsoleController();
         this.beaconController = new BeaconController(this, gameStateController);

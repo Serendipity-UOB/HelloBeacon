@@ -77,7 +77,7 @@ public class ConsoleController implements IConsoleController {
 
     private void goToStartBeaconConsoleMessage() {
         String message = overlay.getContext().getString(R.string.console_start_beacon_message);
-        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
+        message = message.replace("$BEACON", gameStateController.getHomeBeaconName());
         typewriter.animateText(consoleView, message);
         overlay.setVisibility(View.VISIBLE);
     }
@@ -177,7 +177,7 @@ public class ConsoleController implements IConsoleController {
 
     private void takedownSuccessConsoleMessage() {
         String message = "TAKEDOWN_SUCCESS\n\n\nReturn to $BEACON for new target.";
-        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
+        message = message.replace("$BEACON", gameStateController.getHomeBeaconName());
         typewriter.animateText(consoleView, message);
     }
 
@@ -191,7 +191,7 @@ public class ConsoleController implements IConsoleController {
 
     private void playersTargetGotTakenDownConsoleMessage() {
         String message = "Too slow; your target has been taken down.\n\nReturn to $BEACON to receive your new target";
-        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
+        message = message.replace("$BEACON", gameStateController.getHomeBeaconName());
         typewriter.animateText(consoleView, message);
         overlay.setVisibility(View.VISIBLE);
     }
@@ -207,7 +207,7 @@ public class ConsoleController implements IConsoleController {
 
     private void playerTakenDownConsoleMessage() {
         String message = "You have been taken down.\n\nReturn to $BEACON.";
-        message = message.replace("$BEACON", gameStateController.getHomeBeacon());
+        message = message.replace("$BEACON", gameStateController.getHomeBeaconName());
         typewriter.animateText(consoleView, message);
         overlay.setVisibility(View.VISIBLE);
     }

@@ -16,8 +16,9 @@ public class GameStateController implements IGameStateController {
     private final IPlayerStatusBarController playerStatusBarController;
 
     private final Map<String, Integer> beaconMinorRssiMap;
+    private final Map<String, String> beaconMinorNameMap;
     private String nearestBeaconMinor;
-    private final String homeBeacon;
+    private final String homeBeaconMinor;
     private Runnable onNearestBeaconHomeRunnable;
 
     private final PlayerIdentifiers playerIdentifiers;
@@ -32,16 +33,20 @@ public class GameStateController implements IGameStateController {
     public GameStateController(IPlayerListController playerListController,
                                IPlayerStatusBarController playerStatusBarController,
                                PlayerIdentifiers playerIdentifiers,
-                               String homeBeacon) {
+                               String homeBeaconMinor,
+                               String homeBeaconName) {
         this.playerListController = playerListController;
         this.playerStatusBarController = playerStatusBarController;
         this.playerIdentifiers = playerIdentifiers;
-        this.beaconMinorRssiMap = new HashMap<>();
         this.allPlayersMap = new HashMap<>();
         this.nearbyPlayerIds = new ArrayList<>();
         this.playerUpdates = new ArrayList<>();
 
-        this.homeBeacon = homeBeacon;
+        this.beaconMinorRssiMap = new HashMap<>();
+        this.beaconMinorNameMap = new HashMap<>();
+        this.homeBeaconMinor = homeBeaconMinor;
+        this.beaconMinorNameMap.put(homeBeaconMinor, homeBeaconName);
+
         this.points = 0;
         this.leaderboardPosition = "Loading...";
         nearestBeaconMinor = "none";
@@ -60,8 +65,8 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
-    public String getHomeBeacon() {
-        return homeBeacon;
+    public String getHomeBeaconName() {
+        return beaconMinorNameMap.get(homeBeaconMinor);
     }
 
     @Override
@@ -78,7 +83,7 @@ public class GameStateController implements IGameStateController {
     public void setNearestBeaconMinor(String minor) {
         this.nearestBeaconMinor = minor;
 
-        if (onNearestBeaconHomeRunnable != null && nearestBeaconMinor.equals(homeBeacon)) {
+        if (onNearestBeaconHomeRunnable != null && nearestBeaconMinor.equals(homeBeaconMinor)) {
             onNearestBeaconHomeRunnable.run();
         }
     }
