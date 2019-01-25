@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 class GameplayServerRequestsController implements IGameplayServerRequestsController {
@@ -235,11 +236,11 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
     @Override
     public void exchangeRequest(String interacteeId, InteractionDetails details) throws JSONException {
         // this is just a placeholder (assuming success).
-        String response = "{\"secondary_id\":\"1\"}";
-        JSONObject obj = new JSONObject(response);
-        successfulExchange(interacteeId, details, obj);
+        // String response = "{\"secondary_id\":\"1\"}";
+        // JSONObject obj = new JSONObject(response);
+        // successfulExchange(interacteeId, details, obj);
 
-        // TODO: requestQueue.add(volleyExchangeRequest(interacteeId, details));
+        requestQueue.add(volleyExchangeRequest(interacteeId, details));
     }
 
     private JsonObjectRequest volleyExchangeRequest(final String interacteeId, final InteractionDetails details) throws JSONException {
@@ -285,7 +286,7 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
 
     @Override
     public void takeDownRequest(String targetId) throws JSONException {
-        // TODO: requestQueue.add(volleyTakeDownRequest(targetId));
+        requestQueue.add(volleyTakeDownRequest(targetId));
     }
 
     private JsonObjectRequest volleyTakeDownRequest(String targetId) throws JSONException {
@@ -299,7 +300,7 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                throw new IllegalStateException("Error: " + error.getMessage());
+                // do nothing.
             }
         };
 
