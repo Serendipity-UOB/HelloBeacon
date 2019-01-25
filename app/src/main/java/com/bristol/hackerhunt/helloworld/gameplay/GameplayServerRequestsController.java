@@ -151,7 +151,7 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
     @Override
     public void playerUpdateRequest() throws JSONException {
         // this is just a placeholder.
-        String response = "{\"nearby_players\":[\"2\",\"3\",\"4\"],\"state\":{\"points\":516,\"position\":\"2\"}}";
+        String response = "{\"nearby_players\":[\"2\",\"3\",\"4\"],\"points\":516,\"position\":\"2\"}";
         JSONObject obj = new JSONObject(response);
         playerUpdate(obj);
 
@@ -189,32 +189,30 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
         }
         gameStateController.updateNearbyPlayers(nearbyPlayerIds);
 
-        JSONObject state = obj.getJSONObject("state");
-        if (state.has("points")) {
-            int points = state.getInt("points");
+        if (obj.has("points")) {
+            int points = obj.getInt("points");
             gameStateController.updatePoints(points);
         }
-        if (state.has("position")) {
-            String position = state.getString("position");
+        if (obj.has("position")) {
+            String position = obj.getString("position");
             gameStateController.updateLeaderboardPosition(position);
         }
 
-        if (obj.has("update")) {
-            JSONArray updatesArr = obj.getJSONArray("update");
-            List<PlayerUpdate> updates = new ArrayList<>();
-
-            for (int i = 0; i < updatesArr.length(); i++) {
-                String updateStr = updatesArr.getString(i);
-
-                if (updateStr.equals("taken_down")) {
-                    updates.add(PlayerUpdate.TAKEN_DOWN);
-                }
-                else if (updateStr.equals("req_new_target")) {
-                    updates.add(PlayerUpdate.REQ_NEW_TARGET);
-                }
+        List<PlayerUpdate> updates = new ArrayList<>();
+        if (obj.has("taken_down")) {
+            boolean takenDown = obj.getInt("taken_down") == 1;
+            if (takenDown) {
+                updates.add(PlayerUpdate.TAKEN_DOWN);
             }
-            gameStateController.updateStatus(updates);
         }
+        if (obj.has("req_new_target")) {
+            boolean reqNewTarget = obj.getInt("req_new_target") == 1;
+            if (reqNewTarget) {
+                updates.add(PlayerUpdate.REQ_NEW_TARGET);
+            }
+        }
+
+        gameStateController.updateStatus(updates);
     }
 
     private JSONObject playerUpdateRequestBody() throws JSONException {
