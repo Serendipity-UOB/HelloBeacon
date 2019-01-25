@@ -1,6 +1,7 @@
 package com.bristol.hackerhunt.helloworld.joinGame;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -12,6 +13,9 @@ import com.bristol.hackerhunt.helloworld.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class JoinGameServerRequestController implements IJoinGameServerRequestController {
 
@@ -39,7 +43,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
     @Override
     public void gameInfoRequest() throws JSONException {
          // this is a placeholder
-        String response = "{\"start_time\":0.25,\"number_players\":2}";
+        String response = "{\"start_time\":\"17:46:50\",\"number_players\":2}";
         JSONObject obj = new JSONObject(response);
         updateGameInfo(obj);
 
@@ -70,13 +74,35 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
     }
 
     private void updateGameInfo(JSONObject gameInfoJson) throws JSONException {
-        double minutesToStart = gameInfoJson.getDouble("start_time");
+        String timeToStartJson = gameInfoJson.getString("start_time");
+        double minutesToStart = calculateTimeRemainingInMinutes(timeToStartJson);
+
         int numberOfPlayers = gameInfoJson.getInt("number_players");
 
         if (gameInfo.minutesToStart == null) {
             gameInfo.minutesToStart = minutesToStart;
         }
         gameInfo.numberOfPlayers = numberOfPlayers;
+    }
+
+    private Long calculateTimeRemainingInMinutes(String startTime) {
+        Calendar c2 = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
+        int currentHour = c2.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = c2.get(Calendar.MINUTE);
+        int currentSecond = c2.get(Calendar.SECOND);
+
+        int currentTotal = currentSecond + 60 * (currentMinute + 60 * currentHour);
+
+        String[] startTimeArr = startTime.split(":");
+        Long startHour = Long.parseLong(startTimeArr[0]);
+        Long startMinute = Long.parseLong(startTimeArr[1]);
+        Long startSecond = Long.parseLong(startTimeArr[2]);
+        Long startTotal = startSecond + 60 * (startMinute + 60 * startHour);
+
+        Long diff = (startTotal - currentTotal) / 60;
+        Log.d("time", diff.toString());
+        return diff;
     }
 
     @Override
