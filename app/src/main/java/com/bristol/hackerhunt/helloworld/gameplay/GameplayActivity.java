@@ -26,7 +26,7 @@ import java.util.TimerTask;
 public class GameplayActivity extends AppCompatActivity {
 
     private static final int POLLING_PERIOD = 10; // in seconds
-    private static final double GAMEPLAY_DURATION = 0.5; // given in minutes.
+    private static final double GAMEPLAY_DURATION = 2; // given in minutes.
     private static final int EXCHANGE_POLLING_DURATION = 20; // given in seconds;
     private static final int EXCHANGE_POLLING_PERIOD = 3; // given in seconds.
 
@@ -87,6 +87,12 @@ public class GameplayActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        beaconController.stopScanning();
     }
 
     private TimerTask pollServer() {
@@ -202,9 +208,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 if (System.currentTimeMillis() - t0 > EXCHANGE_POLLING_DURATION * 1000) {
                     consoleController.exchangeFailedPrompt();
-                    showInteractionButtons();
-                    hideExchangeSelectPlayerButton();
-                    playerListController.resumeGameplay();
+                    finishExchange();
                     cancel();
                 }
                 else {
@@ -216,9 +220,7 @@ public class GameplayActivity extends AppCompatActivity {
                                 gameStateController.increasePlayerIntel(id);
                             }
                             consoleController.exchangeSuccessPrompt();
-                            showInteractionButtons();
-                            hideExchangeSelectPlayerButton();
-                            playerListController.resumeGameplay();
+                            finishExchange();
                             cancel();
                         }
                     } catch (JSONException e) {
@@ -227,6 +229,17 @@ public class GameplayActivity extends AppCompatActivity {
                 }
             }
         }, 0, EXCHANGE_POLLING_PERIOD * 1000);
+    }
+
+    private void finishExchange() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showInteractionButtons();
+                hideExchangeSelectPlayerButton();
+                playerListController.resumeGameplay();
+            }
+        });
     }
 
     private Runnable takedownSuccessfulRunnable() {

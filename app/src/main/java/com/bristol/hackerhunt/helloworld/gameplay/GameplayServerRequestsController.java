@@ -2,6 +2,7 @@ package com.bristol.hackerhunt.helloworld.gameplay;
 
 import android.content.Context;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -32,6 +33,8 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
 
     private final RequestQueue requestQueue;
     private final IGameStateController gameStateController;
+
+    private int statusCode = 0;
 
     private Runnable takedownSuccessRunnable;
 
@@ -249,10 +252,12 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                try {
-                    successfulExchange(interacteeId, details, response);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (statusCode == 200) {
+                    try {
+                        successfulExchange(interacteeId, details, response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -265,7 +270,15 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
         };
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_URL,
-                exchangeRequestBody(interacteeId), listener, errorListener);
+                exchangeRequestBody(interacteeId), listener, errorListener) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                if (response != null) {
+                    statusCode = response.statusCode;
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
     }
 
     private void successfulExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
@@ -283,6 +296,17 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
         JSONObject requestBody = new JSONObject();
         requestBody.put("interacter_id", gameStateController.getPlayerId());
         requestBody.put("interactee_id", interacteeId);
+
+        JSONArray contactIds = new JSONArray();
+        for (String playerId : gameStateController.getPlayerIdRealNameMap().keySet()) {
+            if (gameStateController.playerHasFullIntel(playerId)) {
+                JSONObject contactId = new JSONObject();
+                contactId.put("contact_id", playerId);
+                contactIds.put(contactId);
+            }
+        }
+        requestBody.put("contact_ids", contactIds);
+
         return requestBody;
     }
 
