@@ -35,7 +35,6 @@ public class ConsoleController implements IConsoleController {
                       IGameplayServerRequestsController serverRequestsController) {
         this.overlay = consolePromptContainer;
         this.gameStateController = gameStateController;
-        gameStateController.setOnNearestBeaconBeingHomeBeaconListener(onNearestBeaconBeingHomeRunnable());
         this.serverRequestsController = serverRequestsController;
         this.nfcController = new NfcController();
         this.consoleView = overlay.findViewById(R.id.gameplay_console);
@@ -56,17 +55,6 @@ public class ConsoleController implements IConsoleController {
 
     private void disableCloseConsole() {
         overlay.setOnClickListener(null);
-    }
-
-    private Runnable onNearestBeaconBeingHomeRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                if (overlay.getVisibility() != View.GONE) {
-                    overlay.setVisibility(View.GONE);
-                }
-            }
-        };
     }
 
     @Override
@@ -139,7 +127,7 @@ public class ConsoleController implements IConsoleController {
     @Override
     public void targetTakedownPrompt() {
         enableCloseConsole();
-        scanTargetNfcTagConsoleMessage();
+
 
         consoleView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,7 +203,8 @@ public class ConsoleController implements IConsoleController {
     @Override
     public void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent) {
         disableCloseConsole();
-        endOfGameConsoleMessage();
+        consoleMessage("Incoming message...\n\nGood work. Return your equipment to the base " +
+                "station to collect your award.\n\n\n - Anon");
 
         // TODO: return to base station.
 
@@ -227,9 +216,41 @@ public class ConsoleController implements IConsoleController {
         });
     }
 
-    private void endOfGameConsoleMessage() {
-        final String message = "Incoming message...\n\nGood work. Return your equipment to the base station to collect your award.\n\n\n - Anon";
+    @Override
+    public void executingTakedownPrompt() {
+        disableCloseConsole();
+        consoleMessage("TAKEDOWN_INIT\n\nExecuting attack...");
+    }
+
+    @Override
+    public void takedownSuccessPrompt(String homeBeaconName) {
+        disableCloseConsole();
+        String message = "TAKEDOWN_SUCCESS\n\nReturn to $HOME for new target.";
+        message = message.replace("$HOME", homeBeaconName);
+        consoleMessage(message);
+    }
+
+    private void consoleMessage(String message) {
         typewriter.animateText(consoleView, message);
         overlay.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void takedownNotYourTargetPrompt() {
+        enableCloseConsole();
+        consoleMessage("TAKEDOWN_FAILURE\n\nNot your target");
+    }
+
+    @Override
+    public void takedownInsufficientIntelPrompt() {
+        enableCloseConsole();
+        consoleMessage("TAKEDOWN_FAILURE\n\nInsufficient Intel");
+    }
+
+    @Override
+    public void closeConsole() {
+        if (overlay.getVisibility() != View.GONE) {
+            overlay.setVisibility(View.GONE);
+        }
     }
 }

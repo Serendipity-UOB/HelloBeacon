@@ -107,7 +107,7 @@ public class JoinGameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 joinGameButton.setVisibility(View.GONE);
                 try {
-                    serverRequestController.joinGameRequest(playerIdentifiers.getNfcId());
+                    serverRequestController.joinGameRequest(playerIdentifiers.getPlayerId());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

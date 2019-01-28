@@ -57,4 +57,7 @@ public interface IGameplayServerRequestsController {
      * @throws JSONException if the server JSON response cannot be parsed.
      */
     void takeDownRequest(String targetId) throws JSONException;
+
+    // TODO
+    void registerTakedownSuccessRunnable(Runnable takedownSuccessRunnable);
 }

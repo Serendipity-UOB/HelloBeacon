@@ -13,13 +13,28 @@
         android:orientation="vertical"
         android:padding="3pt">
 
-        <TextView
-            android:id="@+id/player_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/vt323"
-            android:text=""
-            android:textColor="@color/gameplay_far_player_name" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/player_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/vt323"
+                android:text=""
+                android:textColor="@color/gameplay_far_player_name"
+                android:layout_alignParentLeft="true"/>
+            <TextView
+                android:id="@+id/player_hacker_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/vt323"
+                android:text=""
+                android:textColor="@color/gameplay_nearby_player_name"
+                android:visibility="gone"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
 
         <include layout="@layout/gameplay_player_list_intel_bar" />
     </LinearLayout>

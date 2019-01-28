@@ -96,7 +96,7 @@ public class LeaderboardServerRequestController implements ILeaderboardServerReq
         if (playerIdsRealNameMap.containsKey(playerId)) {
             return playerIdsRealNameMap.get(playerId);
         }
-        else if (playerIdentifiers.getNfcId().equals(playerId)) {
+        else if (playerIdentifiers.getPlayerId().equals(playerId)) {
             return playerIdentifiers.getRealName();
         }
         else {

@@ -39,4 +39,19 @@ public interface IConsoleController {
      * @param goToLeaderboardIntent an intent leading to the leaderboard activity.
      */
     void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent);
+
+    //TODO.
+    void executingTakedownPrompt();
+
+    //TODO
+    void takedownSuccessPrompt(String homeBeaconName);
+
+    //TODO
+    void takedownNotYourTargetPrompt();
+
+    //TODO
+    void takedownInsufficientIntelPrompt();
+
+    // TODO
+    void closeConsole();
 }

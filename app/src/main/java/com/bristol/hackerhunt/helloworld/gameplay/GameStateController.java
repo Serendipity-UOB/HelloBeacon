@@ -154,9 +154,9 @@ public class GameStateController implements IGameStateController {
             PlayerDetails pd = new PlayerDetails(playerIdentifiers.getRealName(),
                     playerIdentifiers.getHackerName());
 
-            allPlayersMap.put(playerIdentifiers.getNfcId(), pd);
+            allPlayersMap.put(playerIdentifiers.getPlayerId(), pd);
 
-            playerListController.insertPlayer(playerIdentifiers.getNfcId(),
+            playerListController.insertPlayer(playerIdentifiers.getPlayerId(),
                     playerIdentifiers.getRealName());
         }
     }
@@ -168,7 +168,7 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public String getPlayerId() {
-        return this.playerIdentifiers.getNfcId();
+        return this.playerIdentifiers.getPlayerId();
     }
 
     @Override

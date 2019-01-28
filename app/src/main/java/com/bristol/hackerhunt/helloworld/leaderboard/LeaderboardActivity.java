@@ -21,7 +21,6 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class LeaderboardActivity extends AppCompatActivity {
 
@@ -99,7 +98,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         playerName.setText(name);
         playerScore.setText(score);
 
-        if (this.playerIdentifiers.getNfcId().equals(item.playerId)) {
+        if (this.playerIdentifiers.getPlayerId().equals(item.playerId)) {
             int color = ContextCompat.getColor(this, R.color.gameplay_nearby_player_name);
             playerName.setTextColor(color);
             playerScore.setTextColor(color);

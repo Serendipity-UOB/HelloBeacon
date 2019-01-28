@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
 import com.bristol.hackerhunt.helloworld.leaderboard.LeaderboardActivity;
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
@@ -51,9 +52,19 @@ public class GameplayActivity extends AppCompatActivity {
         this.gameStateController = new GameStateController(playerListController, playerStatusBarController,
                 playerIdentifiers, getIntent().getStringExtra("start_beacon_minor"),
                 getIntent().getStringExtra("start_beacon_name"));
+
         this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
+        serverRequestsController.registerTakedownSuccessRunnable(takedownSuccessfulRunnable());
+
         initializeConsoleController();
         this.beaconController = new BeaconController(this, gameStateController);
+
+        gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
+            @Override
+            public void run() {
+                consoleController.closeConsole();
+            }
+        });
 
         startGameTimer();
 
@@ -123,6 +134,10 @@ public class GameplayActivity extends AppCompatActivity {
         exchangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideInteractionButtons();
+
+                Button exchangeSelectPlayerButton = findViewById(R.id.gameplay_exchange_select_player_button);
+                exchangeSelectPlayerButton.setVisibility(View.VISIBLE);
                 consoleController.mutualExchangePrompt();
             }
         });
@@ -133,9 +148,67 @@ public class GameplayActivity extends AppCompatActivity {
         takeDownButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                consoleController.targetTakedownPrompt();
+                hideInteractionButtons();
+                showTakedownSelectPlayerButton();
+                playerListController.beginTakedown();
             }
         });
+    }
+
+    private StringInputRunnable beginSelectedTakedownOnClickRunner() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String targetId) {
+                if (!gameStateController.playerHasFullIntel(targetId)) {
+                    consoleController.takedownInsufficientIntelPrompt();
+                }
+                else if (!gameStateController.getTargetPlayerId().equals(targetId)) {
+                    consoleController.takedownNotYourTargetPrompt();
+                }
+                else {
+                    consoleController.executingTakedownPrompt();
+                    try {
+                        serverRequestsController.takeDownRequest(targetId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                showInteractionButtons();
+                hideTakedownSelectPlayerButton();
+                playerListController.resumeGameplay();
+            }
+        };
+    }
+
+    private Runnable takedownSuccessfulRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                String homeBeaconName = gameStateController.getHomeBeaconName();
+                consoleController.takedownSuccessPrompt(homeBeaconName);
+            }
+        };
+    }
+
+    // TODO: put into buttonsView class
+    private void hideInteractionButtons() {
+        LinearLayout buttons = findViewById(R.id.interaction_buttons);
+        buttons.setVisibility(View.GONE);
+    }
+
+    private void showInteractionButtons() {
+        LinearLayout buttons = findViewById(R.id.interaction_buttons);
+        buttons.setVisibility(View.VISIBLE);
+    }
+
+    private void hideTakedownSelectPlayerButton() {
+        Button takedownSelectPlayerButton = findViewById(R.id.takedown_exchange_select_player_button);
+        takedownSelectPlayerButton.setVisibility(View.GONE);
+    }
+
+    private void showTakedownSelectPlayerButton() {
+        Button takedownSelectPlayerButton = findViewById(R.id.takedown_exchange_select_player_button);
+        takedownSelectPlayerButton.setVisibility(View.VISIBLE);
     }
 
     private void initializeConsoleController() {
@@ -187,7 +260,8 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializePlayerListController() {
         this.playerListController = new PlayerListController(LayoutInflater.from(this),
-                (LinearLayout) findViewById(R.id.gameplay_player_list));
+                (LinearLayout) findViewById(R.id.gameplay_player_list),
+                beginSelectedTakedownOnClickRunner());
     }
 
     private void goToLeaderboardActivity() {

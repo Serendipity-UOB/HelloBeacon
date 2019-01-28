@@ -1,6 +1,7 @@
 package com.bristol.hackerhunt.helloworld.profileCreation;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,9 +40,9 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     @Override
     public void registerPlayerRequest(String realName, String hackerName) throws JSONException {
        // this is a placeholder.
-        onProfileValidRunnable.run("100");
+        //onProfileValidRunnable.run("100");
 
-        // TODO: requestQueue.add(volleyRegisterPlayerRequest(realName, hackerName));
+        requestQueue.add(volleyRegisterPlayerRequest(realName, hackerName));
     }
 
     @Override
@@ -70,11 +71,12 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d("Networking", error.getMessage());
                 onProfileInvalidRunnable.run();
             }
         };
 
-        return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + REGISTER_PLAYER_URL,
+        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + REGISTER_PLAYER_URL,
                 playerIdentifiersToJson(realName, hackerName), listener, errorListener);
     }
 

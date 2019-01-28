@@ -1,5 +1,7 @@
 package com.bristol.hackerhunt.helloworld.gameplay;
 
+import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,14 +25,19 @@ public class PlayerListController implements IPlayerListController {
     private final Map<String, String> playerIdNameMap;
     private List<String> nearbyPlayerIds;
 
+    private StringInputRunnable beginSelectedTakedownOnClickRunner;
+
     private final Handler uiHandler;
 
-    PlayerListController(LayoutInflater inflater, LinearLayout playerList) {
+    PlayerListController(LayoutInflater inflater, LinearLayout playerList,
+                         StringInputRunnable beginSelectedTakedownOnClickRunner) {
         this.inflater = inflater;
         this.playerList  = playerList;
         this.playerIdListItemIdMap = new HashMap<>();
         this.playerIdNameMap = new HashMap<>();
         this.nearbyPlayerIds = new ArrayList<>();
+
+        this.beginSelectedTakedownOnClickRunner = beginSelectedTakedownOnClickRunner;
 
         this.uiHandler = new Handler(playerList.getContext().getMainLooper());
     }
@@ -150,5 +158,74 @@ public class PlayerListController implements IPlayerListController {
                 view.setText(text);
             }
         });
+    }
+
+    @Override
+    public void beginTakedown() {
+        for (String playerId : playerIdListItemIdMap.keySet()) {
+            if (!nearbyPlayerIds.contains(playerId)) {
+                darkenFarAwayPlayerEntries(playerId);
+            }
+            else {
+                setTakedownOnClickListener(playerId);
+            }
+        }
+    }
+
+    private void darkenFarAwayPlayerEntries(String playerId) {
+        Context context = playerList.getContext();
+
+        int viewId = playerIdListItemIdMap.get(playerId);
+        View entry = playerList.findViewById(viewId);
+        entry.findViewById(R.id.player_item_background).setBackgroundColor(ContextCompat.getColor(context,
+                R.color.gameplay_nearby_player_background_interaction));
+
+        ProgressBar pb = entry.findViewById(R.id.player_intel_bar);
+        pb.setProgressBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context,
+                R.color.gameplay_far_player_progress_bar_background_interaction)));
+        pb.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(context,
+                R.color.gameplay_far_player_progress_bar_interaction)));
+    }
+
+    private void setTakedownOnClickListener(final String playerId) {
+        int viewId = playerIdListItemIdMap.get(playerId);
+        View entry = playerList.findViewById(viewId);
+        entry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                beginSelectedTakedownOnClickRunner.run(playerId);
+            }
+        });
+    }
+
+    @Override
+    public void resumeGameplay() {
+        for (String playerId : playerIdListItemIdMap.keySet()) {
+            if (!nearbyPlayerIds.contains(playerId)) {
+                restoreFarAwayPlayerEntry(playerId);
+            }
+            else {
+                clearOnClickListener(playerId);
+            }
+        }
+    }
+
+    private void restoreFarAwayPlayerEntry(String playerId) {
+        Context context = playerList.getContext();
+
+        int viewId = playerIdListItemIdMap.get(playerId);
+        View entry = playerList.findViewById(viewId);
+        entry.findViewById(R.id.player_item_background).setBackgroundColor(ContextCompat.getColor(context,
+                R.color.gameplay_far_player_background));
+
+        ProgressBar pb = entry.findViewById(R.id.player_intel_bar);
+        pb.setProgressBackgroundTintMode(null);
+        pb.setProgressTintMode(null);
+    }
+
+    private void clearOnClickListener(String playerId) {
+        int viewId = playerIdListItemIdMap.get(playerId);
+        View entry = playerList.findViewById(viewId);
+        entry.setOnClickListener(null);
     }
 }

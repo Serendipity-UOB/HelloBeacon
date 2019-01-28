@@ -40,4 +40,10 @@ public interface IPlayerListController {
      * @param newNearbyPlayerIds the list of nearby player IDs.
      */
     void updateNearbyPlayers(List<String> newNearbyPlayerIds);
+
+    // TODO
+    void beginTakedown();
+
+    // TODO
+    void resumeGameplay();
 }

@@ -33,6 +33,8 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
     private final RequestQueue requestQueue;
     private final IGameStateController gameStateController;
 
+    private Runnable takedownSuccessRunnable;
+
     /**
      * Class constructor.
      * @param context Context of activity using the controller.
@@ -293,7 +295,7 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                // do nothing.
+                takedownSuccessRunnable.run();
             }
         };
 
@@ -321,5 +323,10 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
         String playerId = obj.getString("id");
 
         return new PlayerIdentifiers(playerRealName, playerHackerName, playerId);
+    }
+
+    @Override
+    public void registerTakedownSuccessRunnable(Runnable runnable) {
+        this.takedownSuccessRunnable = runnable;
     }
 }
