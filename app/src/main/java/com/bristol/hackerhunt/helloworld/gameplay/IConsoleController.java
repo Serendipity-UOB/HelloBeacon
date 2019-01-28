@@ -54,4 +54,13 @@ public interface IConsoleController {
 
     // TODO
     void closeConsole();
+
+    // TODO
+    void exchangeRequestedPrompt();
+
+    //TODO
+    void exchangeSuccessPrompt();
+
+    //TODO
+    void exchangeFailedPrompt();
 }

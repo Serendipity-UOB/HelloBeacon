@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.bristol.hackerhunt.helloworld.StringInputRunnable;
 import com.bristol.hackerhunt.helloworld.leaderboard.LeaderboardActivity;
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
+import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
 import org.json.JSONException;
@@ -25,6 +27,8 @@ public class GameplayActivity extends AppCompatActivity {
 
     private static final int POLLING_PERIOD = 10; // in seconds
     private static final double GAMEPLAY_DURATION = 0.5; // given in minutes.
+    private static final int EXCHANGE_POLLING_DURATION = 20; // given in seconds;
+    private static final int EXCHANGE_POLLING_PERIOD = 3; // given in seconds.
 
     private PlayerIdentifiers playerIdentifiers;
 
@@ -135,10 +139,8 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 hideInteractionButtons();
-
-                Button exchangeSelectPlayerButton = findViewById(R.id.gameplay_exchange_select_player_button);
-                exchangeSelectPlayerButton.setVisibility(View.VISIBLE);
-                consoleController.mutualExchangePrompt();
+                showExchangeSelectPlayerButton();
+                playerListController.beginExchange();
             }
         });
     }
@@ -180,6 +182,53 @@ public class GameplayActivity extends AppCompatActivity {
         };
     }
 
+    private StringInputRunnable beginSelectedExchangeOnClickRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String interacteeId) {
+                consoleController.exchangeRequestedPrompt();
+                beginExchangeServerPolling(interacteeId);
+            }
+        };
+    }
+
+    private void beginExchangeServerPolling(final String interacteeId) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            final long t0 = System.currentTimeMillis();
+            final InteractionDetails details = new InteractionDetails();
+
+            @Override
+            public void run() {
+                if (System.currentTimeMillis() - t0 > EXCHANGE_POLLING_DURATION * 1000) {
+                    consoleController.exchangeFailedPrompt();
+                    showInteractionButtons();
+                    hideExchangeSelectPlayerButton();
+                    playerListController.resumeGameplay();
+                    cancel();
+                }
+                else {
+                    try {
+                        serverRequestsController.exchangeRequest(interacteeId, details);
+
+                        if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
+                            for (String id : details.gainedIntelPlayerIds) {
+                                gameStateController.increasePlayerIntel(id);
+                            }
+                            consoleController.exchangeSuccessPrompt();
+                            showInteractionButtons();
+                            hideExchangeSelectPlayerButton();
+                            playerListController.resumeGameplay();
+                            cancel();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, 0, EXCHANGE_POLLING_PERIOD * 1000);
+    }
+
     private Runnable takedownSuccessfulRunnable() {
         return new Runnable() {
             @Override
@@ -208,6 +257,16 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void showTakedownSelectPlayerButton() {
         Button takedownSelectPlayerButton = findViewById(R.id.takedown_exchange_select_player_button);
+        takedownSelectPlayerButton.setVisibility(View.VISIBLE);
+    }
+
+    private void hideExchangeSelectPlayerButton() {
+        Button takedownSelectPlayerButton = findViewById(R.id.gameplay_exchange_select_player_button);
+        takedownSelectPlayerButton.setVisibility(View.GONE);
+    }
+
+    private void showExchangeSelectPlayerButton() {
+        Button takedownSelectPlayerButton = findViewById(R.id.gameplay_exchange_select_player_button);
         takedownSelectPlayerButton.setVisibility(View.VISIBLE);
     }
 
@@ -261,7 +320,7 @@ public class GameplayActivity extends AppCompatActivity {
     private void initializePlayerListController() {
         this.playerListController = new PlayerListController(LayoutInflater.from(this),
                 (LinearLayout) findViewById(R.id.gameplay_player_list),
-                beginSelectedTakedownOnClickRunner());
+                beginSelectedTakedownOnClickRunner(), beginSelectedExchangeOnClickRunnable());
     }
 
     private void goToLeaderboardActivity() {

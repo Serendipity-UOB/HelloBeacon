@@ -46,4 +46,7 @@ public interface IPlayerListController {
 
     // TODO
     void resumeGameplay();
+
+    //TODO
+    void beginExchange();
 }

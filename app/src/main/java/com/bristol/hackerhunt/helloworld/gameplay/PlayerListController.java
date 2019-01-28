@@ -26,11 +26,13 @@ public class PlayerListController implements IPlayerListController {
     private List<String> nearbyPlayerIds;
 
     private StringInputRunnable beginSelectedTakedownOnClickRunner;
+    private StringInputRunnable beginSelectedExchangeOnClickRunner;
 
     private final Handler uiHandler;
 
     PlayerListController(LayoutInflater inflater, LinearLayout playerList,
-                         StringInputRunnable beginSelectedTakedownOnClickRunner) {
+                         StringInputRunnable beginSelectedTakedownOnClickRunner,
+                         StringInputRunnable beginSelectedExchangeOnClickRunner) {
         this.inflater = inflater;
         this.playerList  = playerList;
         this.playerIdListItemIdMap = new HashMap<>();
@@ -38,6 +40,7 @@ public class PlayerListController implements IPlayerListController {
         this.nearbyPlayerIds = new ArrayList<>();
 
         this.beginSelectedTakedownOnClickRunner = beginSelectedTakedownOnClickRunner;
+        this.beginSelectedExchangeOnClickRunner = beginSelectedExchangeOnClickRunner;
 
         this.uiHandler = new Handler(playerList.getContext().getMainLooper());
     }
@@ -227,5 +230,28 @@ public class PlayerListController implements IPlayerListController {
         int viewId = playerIdListItemIdMap.get(playerId);
         View entry = playerList.findViewById(viewId);
         entry.setOnClickListener(null);
+    }
+
+    @Override
+    public void beginExchange() {
+        for (String playerId : playerIdListItemIdMap.keySet()) {
+            if (!nearbyPlayerIds.contains(playerId)) {
+                darkenFarAwayPlayerEntries(playerId);
+            }
+            else {
+                setExchangeOnClickListener(playerId);
+            }
+        }
+    }
+
+    private void setExchangeOnClickListener(final String playerId) {
+        int viewId = playerIdListItemIdMap.get(playerId);
+        View entry = playerList.findViewById(viewId);
+        entry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                beginSelectedExchangeOnClickRunner.run(playerId);
+            }
+        });
     }
 }

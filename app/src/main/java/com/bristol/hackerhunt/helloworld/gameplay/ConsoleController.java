@@ -253,4 +253,22 @@ public class ConsoleController implements IConsoleController {
             overlay.setVisibility(View.GONE);
         }
     }
+
+    @Override
+    public void exchangeRequestedPrompt() {
+        disableCloseConsole();
+        consoleMessage("EXCHANGE_REQUESTED\n\nWaiting for handshake");
+    }
+
+    @Override
+    public void exchangeSuccessPrompt() {
+        enableCloseConsole();
+        consoleMessage("EXCHANGE_SUCCESS\n\nIntel gained");
+    }
+
+    @Override
+    public void exchangeFailedPrompt() {
+        enableCloseConsole();
+        consoleMessage("EXCHANGE_FAIL\n\nHandshake incomplete");
+    }
 }
