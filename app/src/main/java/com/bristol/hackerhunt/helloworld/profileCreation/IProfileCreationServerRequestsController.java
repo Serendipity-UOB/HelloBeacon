@@ -1,5 +1,7 @@
 package com.bristol.hackerhunt.helloworld.profileCreation;
 
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
+
 import org.json.JSONException;
 
 public interface IProfileCreationServerRequestsController {
@@ -15,16 +17,15 @@ public interface IProfileCreationServerRequestsController {
      *
      * @param realName real name.
      * @param hackerName hacker name.
-     * @param nfcId NFC ID
      * @throws JSONException server's response couldn't be parsed into JSON.
      */
-    void registerPlayerRequest(String realName, String hackerName, String nfcId) throws JSONException;
+    void registerPlayerRequest(String realName, String hackerName) throws JSONException;
 
     /**
      * Registers a runnable to run a method upon receiving that the submitted profile is valid.
      * @param runnable A runnable.
      */
-    void registerOnProfileValidRunnable(Runnable runnable);
+    void registerOnProfileValidRunnable(StringInputRunnable runnable);
 
     /**
      * Registers a runnable to run a method upon receiving that the submitted profile is invalid.

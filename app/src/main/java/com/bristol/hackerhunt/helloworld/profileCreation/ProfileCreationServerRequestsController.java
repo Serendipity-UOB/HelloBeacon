@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +21,7 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
 
     private final RequestQueue requestQueue;
 
-    private Runnable onProfileValidRunnable;
+    private StringInputRunnable onProfileValidRunnable;
     private Runnable onProfileInvalidRunnable;
 
     ProfileCreationServerRequestsController(Context context) {
@@ -36,15 +37,15 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     }
 
     @Override
-    public void registerPlayerRequest(String realName, String hackerName, String nfcId) throws JSONException {
+    public void registerPlayerRequest(String realName, String hackerName) throws JSONException {
        // this is a placeholder.
-        onProfileValidRunnable.run();
+        onProfileValidRunnable.run("100");
 
-        // TODO: requestQueue.add(volleyRegisterPlayerRequest(realName, hackerName, nfcId));
+        // TODO: requestQueue.add(volleyRegisterPlayerRequest(realName, hackerName));
     }
 
     @Override
-    public void registerOnProfileValidRunnable(Runnable runnable) {
+    public void registerOnProfileValidRunnable(StringInputRunnable runnable) {
         this.onProfileValidRunnable = runnable;
     }
 
@@ -53,11 +54,16 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
         this.onProfileInvalidRunnable = runnable;
     }
 
-    private JsonObjectRequest volleyRegisterPlayerRequest(String realName, String hackerName, String nfcId) throws JSONException {
+    private JsonObjectRequest volleyRegisterPlayerRequest(String realName, String hackerName) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                onProfileValidRunnable.run();
+                try {
+                    String id = response.getString("player_id");
+                    onProfileValidRunnable.run(id);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
 
@@ -69,14 +75,13 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
         };
 
         return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + REGISTER_PLAYER_URL,
-                playerIdentifiersToJson(realName, hackerName, nfcId), listener, errorListener);
+                playerIdentifiersToJson(realName, hackerName), listener, errorListener);
     }
 
-    private JSONObject playerIdentifiersToJson(String realName, String hackerName, String nfcId) throws JSONException {
+    private JSONObject playerIdentifiersToJson(String realName, String hackerName) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("real_name", realName);
         obj.put("hacker_name", hackerName);
-        obj.put("nfc_id", nfcId);
         return obj;
     }
 }

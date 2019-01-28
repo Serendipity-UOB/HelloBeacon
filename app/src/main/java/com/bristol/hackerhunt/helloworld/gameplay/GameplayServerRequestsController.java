@@ -316,8 +316,8 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
     }
 
     private PlayerIdentifiers jsonToPlayerIdentifiers(JSONObject obj) throws JSONException {
-        String playerRealName = obj.getString("realName");
-        String playerHackerName = obj.getString("hackerName");
+        String playerRealName = obj.getString("real_name");
+        String playerHackerName = obj.getString("hacker_name");
         String playerId = obj.getString("id");
 
         return new PlayerIdentifiers(playerRealName, playerHackerName, playerId);
