@@ -12,8 +12,8 @@ public class GameStateController implements IGameStateController {
 
     private static final int INTEL_INCREMENT = 20; // a percentage
 
-    private final IPlayerListController playerListController;
-    private final IPlayerStatusBarController playerStatusBarController;
+    private final IPlayerListView playerListController;
+    private final IPlayerStatusBarView playerStatusBarController;
 
     private final Map<String, Integer> beaconMinorRssiMap;
     private final Map<String, String> beaconMinorNameMap;
@@ -30,8 +30,8 @@ public class GameStateController implements IGameStateController {
     private List<String> nearbyPlayerIds;
     private String targetPlayerId;
 
-    public GameStateController(IPlayerListController playerListController,
-                               IPlayerStatusBarController playerStatusBarController,
+    public GameStateController(IPlayerListView playerListController,
+                               IPlayerStatusBarView playerStatusBarController,
                                PlayerIdentifiers playerIdentifiers,
                                String homeBeaconMinor,
                                String homeBeaconName) {

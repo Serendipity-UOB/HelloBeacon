@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Controller class responsible for the visible list of players in the gameplay UI.
  */
-public interface IPlayerListController {
+public interface IPlayerListView {
 
     /**
      * Reveal the hacker name of a player on the list.

@@ -3,7 +3,7 @@ package com.bristol.hackerhunt.helloworld.gameplay;
 /**
  * A controller class responsible for the status bar of the UI.
  */
-public interface IPlayerStatusBarController {
+public interface IPlayerStatusBarView {
 
     /**
      * Set the hacker name of the player's target.

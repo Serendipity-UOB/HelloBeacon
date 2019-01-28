@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerListController implements IPlayerListController {
+public class PlayerListView implements IPlayerListView {
     private final LayoutInflater inflater;
     private final LinearLayout playerList;
     private final Map<String, Integer> playerIdListItemIdMap;
@@ -30,9 +30,9 @@ public class PlayerListController implements IPlayerListController {
 
     private final Handler uiHandler;
 
-    PlayerListController(LayoutInflater inflater, LinearLayout playerList,
-                         StringInputRunnable beginSelectedTakedownOnClickRunner,
-                         StringInputRunnable beginSelectedExchangeOnClickRunner) {
+    PlayerListView(LayoutInflater inflater, LinearLayout playerList,
+                   StringInputRunnable beginSelectedTakedownOnClickRunner,
+                   StringInputRunnable beginSelectedExchangeOnClickRunner) {
         this.inflater = inflater;
         this.playerList  = playerList;
         this.playerIdListItemIdMap = new HashMap<>();
@@ -49,8 +49,7 @@ public class PlayerListController implements IPlayerListController {
     public void revealPlayerHackerName(String playerId, final String hackerName) {
         int id = playerIdListItemIdMap.get(playerId);
         LinearLayout listItem = playerList.findViewById(id);
-        final TextView nameView = listItem.findViewById(R.id.player_name);
-        this.playerIdNameMap.put(playerId, hackerName);
+        final TextView nameView = listItem.findViewById(R.id.player_hacker_name);
 
         setTextOfView(nameView, hackerName);
     }
@@ -158,6 +157,9 @@ public class PlayerListController implements IPlayerListController {
         uiHandler.post(new Runnable() {
             @Override
             public void run() {
+                if (view.getVisibility() == View.GONE) {
+                    view.setVisibility(View.VISIBLE);
+                }
                 view.setText(text);
             }
         });

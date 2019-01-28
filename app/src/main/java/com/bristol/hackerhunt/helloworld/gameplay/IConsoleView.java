@@ -6,32 +6,22 @@ import android.content.Intent;
 /**
  * Controller responsible for console pop up UIs and player interaction.
  */
-public interface IConsoleController {
+public interface IConsoleView {
 
     /**
      * Prompts player to go to their start beacon, and waits until they do so.
      */
-    void goToStartBeaconPrompt();
-
-    /**
-     * Prompts player to carry out mutual exchange, and implements associated functionality.
-     */
-    void mutualExchangePrompt();
-
-    /**
-     * Prompts player to carry out a player take-down, and implements associated functionality.
-     */
-    void targetTakedownPrompt();
+    void goToStartBeaconPrompt(String homeBeaconName);
 
     /**
      * Prompts player to go to their home beacon, as their target has been taken down.
      */
-    void playersTargetTakenDownPrompt();
+    void playersTargetTakenDownPrompt(String homeBeaconName);
 
     /**
      * Tells player that they have been taken down, and associated functionality.
      */
-    void playerGotTakenDownPrompt();
+    void playerGotTakenDownPrompt(String homeBeaconName);
 
     /**
      * End of game prompt.

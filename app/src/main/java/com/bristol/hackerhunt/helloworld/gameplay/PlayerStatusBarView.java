@@ -5,11 +5,11 @@ import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
 
-public class PlayerStatusBarController implements IPlayerStatusBarController {
+public class PlayerStatusBarView implements IPlayerStatusBarView {
 
     private final View playerStatusBar;
 
-    PlayerStatusBarController(View playerStatusBar) {
+    PlayerStatusBarView(View playerStatusBar) {
         this.playerStatusBar = playerStatusBar;
     }
 
