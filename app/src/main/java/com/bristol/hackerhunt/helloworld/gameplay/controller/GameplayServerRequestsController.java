@@ -11,8 +11,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
-import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameStateController;
-import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameplayServerRequestsController;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;

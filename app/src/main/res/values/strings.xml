@@ -5,18 +5,18 @@
     <!-- SERVER REQUEST URLS -->
     <string name="server_address">https://serendipity-game-controller.herokuapp.com</string>
 
-    <string name="register_player_request">/registerPlayerTest</string>
+    <string name="register_player_request">/registerPlayer</string>
 
-    <string name="game_info_request">/gameInfoTest</string>
-    <string name="join_game_request">/joinGameTest</string>
+    <string name="game_info_request">/gameInfo</string>
+    <string name="join_game_request">/joinGame</string>
 
-    <string name="start_info_request">/startInfoTest</string>
-    <string name="new_target_request">/newTargetTest</string>
-    <string name="player_update_request">/playerUpdateTest</string>
-    <string name="exchange_request">/exchangeTest</string>
-    <string name="takedown_request">/takeDownTest</string>
+    <string name="start_info_request">/startInfo</string>
+    <string name="new_target_request">/newTarget</string>
+    <string name="player_update_request">/playerUpdate</string>
+    <string name="exchange_request">/exchange</string>
+    <string name="takedown_request">/takeDown</string>
 
-    <string name="get_info_request">/getInfoTest</string>
+    <string name="get_info_request">/getInfo</string>
 
     <!-- UI -->
     <string name="app_name">Hacker Hunt</string>

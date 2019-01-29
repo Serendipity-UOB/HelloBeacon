@@ -63,6 +63,7 @@ public class CreateProfileActivity extends AppCompatActivity {
             @Override
             public void run() {
                 setFormErrorMessage("Hacker name already exists.");
+                initializeNewProfileButton();
             }
         };
     }

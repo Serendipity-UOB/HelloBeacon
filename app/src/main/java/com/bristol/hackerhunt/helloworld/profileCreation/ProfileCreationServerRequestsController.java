@@ -63,7 +63,7 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
                     String id = response.getString("player_id");
                     onProfileValidRunnable.run(id);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.d("Network", String.valueOf(e.getCause()));
                 }
             }
         };

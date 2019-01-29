@@ -129,7 +129,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                throw new IllegalStateException("Error: " + error.getCause());
+                throw new IllegalStateException("Error: " + error.toString());
             }
         };
 
