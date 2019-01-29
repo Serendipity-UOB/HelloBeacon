@@ -71,7 +71,6 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Networking", error.getMessage());
                 onProfileInvalidRunnable.run();
             }
         };

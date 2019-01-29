@@ -62,7 +62,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         return new Runnable() {
             @Override
             public void run() {
-                setFormErrorMessage("Profile invalid.");
+                setFormErrorMessage("Hacker name already exists.");
             }
         };
     }
