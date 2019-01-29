@@ -2,6 +2,7 @@ package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.StringInputRunnable;
-import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +28,7 @@ public class PlayerListView implements IPlayerListView {
 
     private final Map<String, Integer> playerIdListItemIdMap;
     private final Map<String, String> playerIdNameMap;
+    private final Map<String, String> playerIdHackerNameMap;
     private List<String> nearbyPlayerIds;
 
     private StringInputRunnable beginSelectedTakedownOnClickRunner;
@@ -49,6 +50,7 @@ public class PlayerListView implements IPlayerListView {
         this.playerList  = playerList;
         this.playerIdListItemIdMap = new HashMap<>();
         this.playerIdNameMap = new HashMap<>();
+        this.playerIdHackerNameMap = new HashMap<>();
         this.nearbyPlayerIds = new ArrayList<>();
 
         this.beginSelectedTakedownOnClickRunner = beginSelectedTakedownOnClickRunner;
@@ -59,11 +61,17 @@ public class PlayerListView implements IPlayerListView {
 
     @Override
     public void revealPlayerHackerName(String playerId, final String hackerName) {
+        playerIdHackerNameMap.put(playerId, hackerName);
         int id = playerIdListItemIdMap.get(playerId);
         LinearLayout listItem = playerList.findViewById(id);
         final TextView nameView = listItem.findViewById(R.id.player_hacker_name);
 
-        setTextOfView(nameView, hackerName);
+        if (!nearbyPlayerIds.contains(playerId)) {
+            setTextOfView(nameView, hackerName, R.color.gameplay_far_player_name);
+        }
+        else {
+            setTextOfView(nameView, hackerName);
+        }
     }
 
     @Override
@@ -87,8 +95,24 @@ public class PlayerListView implements IPlayerListView {
         intelGathered.setProgress(progress);
 
         if (nearby) {
-            listItem.findViewById(R.id.player_item_background).setBackgroundColor(ContextCompat.getColor(playerList.getContext(), R.color.gameplay_nearby_player_background));
-            playerNameView.setTextColor(ContextCompat.getColor(playerList.getContext(), R.color.gameplay_nearby_player_name));
+            listItem.findViewById(R.id.player_item_background)
+                    .setBackgroundColor(ContextCompat.getColor(playerList.getContext(),
+                            R.color.gameplay_nearby_player_background));
+            playerNameView
+                    .setTextColor(ContextCompat.getColor(playerList.getContext(),
+                            R.color.gameplay_nearby_player_name));
+        }
+
+        if (playerIdHackerNameMap.containsKey(playerId)) {
+            TextView hackerNameView = listItem.findViewById(R.id.player_hacker_name);
+            String hackerName = playerIdHackerNameMap.get(playerId);
+            if (nearby) {
+                setTextOfView(hackerNameView, hackerName);
+            }
+            else {
+                setTextOfView(hackerNameView, hackerName, ContextCompat.getColor(hackerNameView.getContext(),
+                        R.color.gameplay_far_player_name));
+            }
         }
 
         playerList.addView(listItem, 0);
@@ -177,6 +201,20 @@ public class PlayerListView implements IPlayerListView {
         });
     }
 
+    // Run text update on UI thread.
+    private void setTextOfView(final TextView view, final String text, final int colorId) {
+        uiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (view.getVisibility() == View.GONE) {
+                    view.setVisibility(View.VISIBLE);
+                }
+                view.setText(text);
+                view.setTextColor(ContextCompat.getColor(view.getContext(), colorId));
+            }
+        });
+    }
+
     @Override
     public void beginTakedown() {
         for (String playerId : playerIdListItemIdMap.keySet()) {
@@ -236,8 +274,8 @@ public class PlayerListView implements IPlayerListView {
                 R.color.gameplay_far_player_background));
 
         ProgressBar pb = entry.findViewById(R.id.player_intel_bar);
-        pb.setProgressBackgroundTintMode(null);
-        pb.setProgressTintMode(null);
+        pb.setProgressBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#515172")));
+        pb.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#26d2ce")));
     }
 
     private void clearOnClickListener(String playerId) {
