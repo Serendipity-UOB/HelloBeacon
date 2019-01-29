@@ -41,12 +41,20 @@ public interface IPlayerListView {
      */
     void updateNearbyPlayers(List<String> newNearbyPlayerIds);
 
-    // TODO
+    /**
+     * Begins process of takedown; greys out far away players, and add select on-click listeners to
+     * nearby players
+     */
     void beginTakedown();
 
-    // TODO
-    void resumeGameplay();
+    /**
+     * Resumes gameplay after interaction, by returning the player list to how it was before.
+     */
+    void resumeGameplayAfterInteraction();
 
-    //TODO
+    /**
+     * Begins process of mutual takedown; greys out far away players, and add select on-click
+     * listeners to nearby players
+     */
     void beginExchange();
 }

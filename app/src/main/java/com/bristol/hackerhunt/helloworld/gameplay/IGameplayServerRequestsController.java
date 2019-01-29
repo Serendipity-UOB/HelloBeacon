@@ -58,6 +58,9 @@ public interface IGameplayServerRequestsController {
      */
     void takeDownRequest(String targetId) throws JSONException;
 
-    // TODO
+    /**
+     * Registers a runnable that is run when a takedown is successful.
+     * @param takedownSuccessRunnable a runnable.
+     */
     void registerTakedownSuccessRunnable(Runnable takedownSuccessRunnable);
 }

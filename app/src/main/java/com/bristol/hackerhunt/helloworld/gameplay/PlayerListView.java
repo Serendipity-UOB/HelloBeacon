@@ -19,8 +19,12 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayerListView implements IPlayerListView {
+
     private final LayoutInflater inflater;
+    private final Handler uiHandler;      // This is used to run changes to the UI on the UI thread.
+
     private final LinearLayout playerList;
+
     private final Map<String, Integer> playerIdListItemIdMap;
     private final Map<String, String> playerIdNameMap;
     private List<String> nearbyPlayerIds;
@@ -28,8 +32,15 @@ public class PlayerListView implements IPlayerListView {
     private StringInputRunnable beginSelectedTakedownOnClickRunner;
     private StringInputRunnable beginSelectedExchangeOnClickRunner;
 
-    private final Handler uiHandler;
-
+    /**
+     * Constructor
+     * @param inflater Inflater used to insert and render new UI components.
+     * @param playerList The view that wraps the list of players in the UI.
+     * @param beginSelectedTakedownOnClickRunner A Runner that will initialize the takedown process
+     *                                           on a selected player when run.
+     * @param beginSelectedExchangeOnClickRunner A Runner that will initialize the mutual exchange
+     *                                           process on a selected player when run.
+     */
     PlayerListView(LayoutInflater inflater, LinearLayout playerList,
                    StringInputRunnable beginSelectedTakedownOnClickRunner,
                    StringInputRunnable beginSelectedExchangeOnClickRunner) {
@@ -204,7 +215,7 @@ public class PlayerListView implements IPlayerListView {
     }
 
     @Override
-    public void resumeGameplay() {
+    public void resumeGameplayAfterInteraction() {
         for (String playerId : playerIdListItemIdMap.keySet()) {
             if (!nearbyPlayerIds.contains(playerId)) {
                 restoreFarAwayPlayerEntry(playerId);

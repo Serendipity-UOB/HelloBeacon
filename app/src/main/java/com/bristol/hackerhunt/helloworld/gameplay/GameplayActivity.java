@@ -47,22 +47,18 @@ public class GameplayActivity extends AppCompatActivity {
         // initialization
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameplay);
+
         getPlayerIdentifiers();
 
-        initializePlayerListController();
-        initializePlayerStatusBarController();
+        initializePlayerListView();
+        initializePlayerStatusBarView();
         initializeExchangeButton();
         initializeTakeDownButton();
 
-        this.gameStateController = new GameStateController(playerListView, playerStatusBarView,
-                playerIdentifiers, getIntent().getStringExtra("start_beacon_minor"),
-                getIntent().getStringExtra("start_beacon_name"));
-
-        this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
-        serverRequestsController.registerTakedownSuccessRunnable(takedownSuccessfulRunnable());
-
-        initializeConsoleController();
-        this.beaconController = new BeaconController(this, gameStateController);
+        initializeGameStateController();
+        initializeServerRequestController();
+        initializeConsoleView();
+        initializeBeaconController();
 
         gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
             @Override
@@ -79,7 +75,6 @@ public class GameplayActivity extends AppCompatActivity {
         try {
             beaconController.startScanning();
             serverRequestsController.startInfoRequest();
-            // serverRequestsController.newTargetRequest();
 
             // polling
             Timer timer = new Timer(false);
@@ -94,6 +89,21 @@ public class GameplayActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         beaconController.stopScanning();
+    }
+
+    private void initializeGameStateController() {
+        this.gameStateController = new GameStateController(playerListView, playerStatusBarView,
+                playerIdentifiers, getIntent().getStringExtra("start_beacon_minor"),
+                getIntent().getStringExtra("start_beacon_name"));
+    }
+
+    private void initializeServerRequestController() {
+        this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
+        serverRequestsController.registerTakedownSuccessRunnable(takedownSuccessfulRunnable());
+    }
+
+    private void initializeBeaconController() {
+        this.beaconController = new BeaconController(this, gameStateController);
     }
 
     private TimerTask pollServer() {
@@ -137,7 +147,7 @@ public class GameplayActivity extends AppCompatActivity {
         });
     }
 
-    private void initializePlayerStatusBarController() {
+    private void initializePlayerStatusBarView() {
         this.playerStatusBarView = new PlayerStatusBarView(findViewById(R.id.gameplay_player_status_bar));
     }
 
@@ -185,7 +195,7 @@ public class GameplayActivity extends AppCompatActivity {
                 }
                 showInteractionButtons();
                 hideTakedownSelectPlayerButton();
-                playerListView.resumeGameplay();
+                playerListView.resumeGameplayAfterInteraction();
             }
         };
     }
@@ -239,7 +249,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 showInteractionButtons();
                 hideExchangeSelectPlayerButton();
-                playerListView.resumeGameplay();
+                playerListView.resumeGameplayAfterInteraction();
             }
         });
     }
@@ -285,7 +295,7 @@ public class GameplayActivity extends AppCompatActivity {
         takedownSelectPlayerButton.setVisibility(View.VISIBLE);
     }
 
-    private void initializeConsoleController() {
+    private void initializeConsoleView() {
         final View overlay = findViewById(R.id.gameplay_console_overlay);
         this.consoleView = new ConsoleView(overlay);
     }
@@ -332,7 +342,7 @@ public class GameplayActivity extends AppCompatActivity {
         return formattedTime + seconds.toString();
     }
 
-    private void initializePlayerListController() {
+    private void initializePlayerListView() {
         this.playerListView = new PlayerListView(LayoutInflater.from(this),
                 (LinearLayout) findViewById(R.id.gameplay_player_list),
                 beginSelectedTakedownOnClickRunner(), beginSelectedExchangeOnClickRunnable());

@@ -30,27 +30,48 @@ public interface IConsoleView {
      */
     void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent);
 
-    //TODO.
+    /**
+     * Reveals a console prompt that tells the player that takedown is being executed. Tap out
+     * is disabled.
+     */
     void executingTakedownPrompt();
 
-    //TODO
+    /**
+     * Reveals a console prompt that tells the player that their takedown was a success, and that
+     * they need to return to their home beacon. Tap out enabled.
+     * @param homeBeaconName the home beacon name.
+     */
     void takedownSuccessPrompt(String homeBeaconName);
 
-    //TODO
+    /**
+     * Reveals a console prompt that tells the the player that their takedown recipient isn't their
+     * target.
+     */
     void takedownNotYourTargetPrompt();
 
-    //TODO
+    /**
+     * Reveals a console prompt that tells the the player that they don't have enough intel on their
+     * takedown target.
+     */
     void takedownInsufficientIntelPrompt();
 
-    // TODO
+    /**
+     * Closes the console box.
+     */
     void closeConsole();
 
-    // TODO
+    /**
+     * Reveals a console prompt that tells the the player that their exchange has been requested.
+     */
     void exchangeRequestedPrompt();
 
-    //TODO
+    /**
+     * Reveals a console prompt that tells the the player that their exchange has been successful.
+     */
     void exchangeSuccessPrompt();
 
-    //TODO
+    /**
+     * Reveals a console prompt that tells the the player that their exchange has failed.
+     */
     void exchangeFailedPrompt();
 }
