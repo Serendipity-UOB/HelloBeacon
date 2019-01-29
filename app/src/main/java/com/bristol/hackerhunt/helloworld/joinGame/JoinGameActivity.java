@@ -20,7 +20,7 @@ import java.util.TimerTask;
 
 public class JoinGameActivity extends AppCompatActivity {
 
-    private static int POLLING_PERIOD = 10; // in seconds
+    private static int POLLING_PERIOD = 3; // in seconds
 
     private IJoinGameServerRequestController serverRequestController;
 
@@ -57,11 +57,22 @@ public class JoinGameActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 // Starting timer thread
-                if (gameInfo.minutesToStart != null && !timerStarted) {
+                if (gameInfo.minutesToStart != null && gameInfo.minutesToStart >= 0 && !timerStarted) {
                     startCountdownToGameStart(playerIdentifiers, timer);
                 }
-                if (gameInfo.numberOfPlayers != null) {
+                if (gameInfo.numberOfPlayers != null && gameInfo.numberOfPlayers >= 0 ) {
                     updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
+                }
+                if (gameInfo.minutesToStart != null && gameInfo.minutesToStart < 0) {
+                    updateTimeLeftUntilGame("--:--");
+                    updateNumberOfPlayersInGame("--");
+
+                    final Button joinGameButton = findViewById(R.id.join_game_button);
+                    joinGameButton.setVisibility(View.GONE);
+                    TextView joinStatus = findViewById(R.id.join_game_success);
+                    joinStatus.setVisibility(View.VISIBLE);
+                    joinStatus.setText("NO_GAME_AVAILABLE");
+                    cancel();
                 }
             }
         };

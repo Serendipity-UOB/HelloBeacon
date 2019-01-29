@@ -38,9 +38,8 @@ import java.util.TimerTask;
 
 public class GameplayActivity extends AppCompatActivity {
 
-    private static final int POLLING_PERIOD = 10;               // given in seconds
+    private static final int POLLING_PERIOD = 3;               // given in seconds
     private static final double GAMEPLAY_DURATION = 10;         // given in minutes.
-    private static final int EXCHANGE_POLLING_DURATION = 20;    // given in seconds;
     private static final int EXCHANGE_POLLING_PERIOD = 3;       // given in seconds.
 
     private PlayerIdentifiers playerIdentifiers;
@@ -230,7 +229,7 @@ public class GameplayActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                if (System.currentTimeMillis() - t0 > EXCHANGE_POLLING_DURATION * 1000) {
+                if (details.status.equals(InteractionStatus.FAILED)) {
                     consoleView.exchangeFailedPrompt();
                     finishExchange();
                     cancel();

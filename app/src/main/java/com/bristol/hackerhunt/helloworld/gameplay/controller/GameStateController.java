@@ -126,11 +126,13 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void increasePlayerIntel(String playerId) {
-        PlayerDetails pd = allPlayersMap.get(playerId);
-        pd.intel = Math.min(100, pd.intel + INTEL_INCREMENT);
-        playerListController.increasePlayerIntel(playerId, INTEL_INCREMENT);
-        if (playerHasFullIntel(playerId)) {
-            playerListController.revealPlayerHackerName(playerId, pd.hackerName);
+        if (!playerId.equals("0")) {
+            PlayerDetails pd = allPlayersMap.get(playerId);
+            pd.intel = Math.min(100, pd.intel + INTEL_INCREMENT);
+            playerListController.increasePlayerIntel(playerId, INTEL_INCREMENT);
+            if (playerHasFullIntel(playerId)) {
+                playerListController.revealPlayerHackerName(playerId, pd.hackerName);
+            }
         }
     }
 

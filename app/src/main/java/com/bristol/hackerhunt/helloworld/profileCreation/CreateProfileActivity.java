@@ -32,6 +32,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
     private void initializeNewProfileButton() {
         final Button goToProfileButton = findViewById(R.id.create_profile_button);
+        goToProfileButton.setText("go();");
         goToProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,8 +63,9 @@ public class CreateProfileActivity extends AppCompatActivity {
         return new Runnable() {
             @Override
             public void run() {
-                setFormErrorMessage("Hacker name already exists.");
                 initializeNewProfileButton();
+                setFormErrorMessage("Hacker name already exists.");
+
             }
         };
     }

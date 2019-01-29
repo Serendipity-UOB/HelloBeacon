@@ -284,12 +284,13 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private void successfulExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
         String secondaryId = obj.getString("secondary_id");
         details.gainedIntelPlayerIds.add(interacteeId);
-        details.gainedIntelPlayerIds.add(secondaryId);
+        if (!secondaryId.equals("0"))
+            details.gainedIntelPlayerIds.add(secondaryId);
         details.status = InteractionStatus.SUCCESSFUL;
     }
 
     private void unsuccessfulExchange(InteractionDetails details) {
-        details.status = InteractionStatus.IN_PROGRESS;
+        details.status = InteractionStatus.FAILED;
     }
 
     private JSONObject exchangeRequestBody(String interacteeId) throws JSONException {

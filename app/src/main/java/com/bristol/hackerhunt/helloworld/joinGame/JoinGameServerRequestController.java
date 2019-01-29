@@ -2,6 +2,7 @@ package com.bristol.hackerhunt.helloworld.joinGame;
 
 import android.content.Context;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,6 +25,8 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
 
     private final RequestQueue requestQueue;
     private final GameInfo gameInfo;
+
+    private int statusCode = 0;
 
     JoinGameServerRequestController(Context context, GameInfo gameInfo) {
         this.requestQueue = Volley.newRequestQueue(context);
@@ -54,7 +57,13 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    updateGameInfo(response);
+                    if (statusCode == 200) {
+                        updateGameInfo(response);
+                    }
+                    else if (statusCode == 204) {
+                        gameInfo.minutesToStart = -1.0;
+                        gameInfo.numberOfPlayers = -1;
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -69,7 +78,15 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         };
 
         return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + GAME_INFO_URL, new JSONObject(),
-                listener, errorListener);
+                listener, errorListener) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                if (response != null) {
+                    statusCode = response.statusCode;
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
     }
 
     private void updateGameInfo(JSONObject gameInfoJson) throws JSONException {
