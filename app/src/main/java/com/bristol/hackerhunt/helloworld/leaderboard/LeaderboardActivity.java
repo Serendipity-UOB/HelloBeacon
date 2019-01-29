@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.TitleScreenActivity;
@@ -87,7 +86,7 @@ public class LeaderboardActivity extends AppCompatActivity {
     }
 
     private void insertLeaderboardItem(int position, LeaderboardItem item) {
-        RelativeLayout itemView = (RelativeLayout) inflater.inflate(R.layout.leaderboard_list_item, null);
+        LinearLayout itemView = (LinearLayout) inflater.inflate(R.layout.leaderboard_list_item, null);
 
         TextView playerName = itemView.findViewById(R.id.player_name);
         TextView playerScore = itemView.findViewById(R.id.player_score);
