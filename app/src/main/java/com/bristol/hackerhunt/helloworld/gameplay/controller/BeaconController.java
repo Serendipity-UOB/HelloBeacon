@@ -1,4 +1,4 @@
-package com.bristol.hackerhunt.helloworld.gameplay;
+package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 import android.content.Context;
 
@@ -26,7 +26,7 @@ public class BeaconController implements IBeaconController {
     private final IGameStateController gameStateController;
     private ProximityManager proximityManager;
 
-    BeaconController(Context context, IGameStateController gameStateController) {
+    public BeaconController(Context context, IGameStateController gameStateController) {
         this.gameStateController = gameStateController;
         KontaktSDK.initialize(context);
         initializeProximityManager(context);

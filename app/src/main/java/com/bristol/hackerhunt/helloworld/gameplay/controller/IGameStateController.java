@@ -1,5 +1,6 @@
-package com.bristol.hackerhunt.helloworld.gameplay;
+package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
+import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
 import java.util.HashMap;

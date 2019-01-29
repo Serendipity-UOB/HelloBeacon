@@ -1,4 +1,4 @@
-package com.bristol.hackerhunt.helloworld.gameplay;
+package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.StringInputRunnable;
+import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class PlayerListView implements IPlayerListView {
      * @param beginSelectedExchangeOnClickRunner A Runner that will initialize the mutual exchange
      *                                           process on a selected player when run.
      */
-    PlayerListView(LayoutInflater inflater, LinearLayout playerList,
+    public PlayerListView(LayoutInflater inflater, LinearLayout playerList,
                    StringInputRunnable beginSelectedTakedownOnClickRunner,
                    StringInputRunnable beginSelectedExchangeOnClickRunner) {
         this.inflater = inflater;

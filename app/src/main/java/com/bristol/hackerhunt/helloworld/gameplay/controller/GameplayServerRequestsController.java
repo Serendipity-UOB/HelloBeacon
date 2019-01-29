@@ -1,4 +1,4 @@
-package com.bristol.hackerhunt.helloworld.gameplay;
+package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 import android.content.Context;
 
@@ -10,6 +10,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
+import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameStateController;
+import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameplayServerRequestsController;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
@@ -19,10 +22,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-class GameplayServerRequestsController implements IGameplayServerRequestsController {
+public class GameplayServerRequestsController implements IGameplayServerRequestsController {
 
     private final String SERVER_ADDRESS;
     private final String START_INFO_URL;
@@ -43,7 +45,7 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
      * @param context Context of activity using the controller.
      * @param gameStateController The GameStateController used to control the state of the game.
      */
-    GameplayServerRequestsController(Context context, IGameStateController gameStateController) {
+    public GameplayServerRequestsController(Context context, IGameStateController gameStateController) {
         this.requestQueue = Volley.newRequestQueue(context);
         this.gameStateController = gameStateController;
 

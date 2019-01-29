@@ -1,4 +1,4 @@
-package com.bristol.hackerhunt.helloworld.gameplay;
+package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,7 @@ public class ConsoleView implements IConsoleView {
 
     private final Typewriter typewriter;
 
-    ConsoleView(View consolePromptContainer) {
+    public ConsoleView(View consolePromptContainer) {
         this.overlay = consolePromptContainer;
         this.consoleView = overlay.findViewById(R.id.gameplay_console);
 
