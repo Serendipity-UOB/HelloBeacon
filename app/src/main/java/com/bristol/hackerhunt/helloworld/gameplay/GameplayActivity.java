@@ -35,6 +35,7 @@ public class GameplayActivity extends AppCompatActivity {
     private IPlayerListView playerListView;
     private IPlayerStatusBarView playerStatusBarView;
     private IConsoleView consoleView;
+    private IInteractionButtonsView interactionButtonsView;
 
     private IGameplayServerRequestsController serverRequestsController;
     private IGameStateController gameStateController;
@@ -52,8 +53,7 @@ public class GameplayActivity extends AppCompatActivity {
 
         initializePlayerListView();
         initializePlayerStatusBarView();
-        initializeExchangeButton();
-        initializeTakeDownButton();
+        initializeInteractionButtonsView();
 
         initializeGameStateController();
         initializeServerRequestController();
@@ -151,28 +151,27 @@ public class GameplayActivity extends AppCompatActivity {
         this.playerStatusBarView = new PlayerStatusBarView(findViewById(R.id.gameplay_player_status_bar));
     }
 
-    private void initializeExchangeButton() {
-        Button exchangeButton = findViewById(R.id.gameplay_exchange_button);
-        exchangeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hideInteractionButtons();
-                showExchangeSelectPlayerButton();
-                playerListView.beginExchange();
-            }
-        });
+    private void initializeInteractionButtonsView() {
+        this.interactionButtonsView = new InteractionButtonsView(this, exchangeButtonOnClickRunnable(),
+                takedownButtonOnClickRunnable());
     }
 
-    private void initializeTakeDownButton() {
-        Button takeDownButton = findViewById(R.id.gameplay_takedown_button);
-        takeDownButton.setOnClickListener(new View.OnClickListener() {
+    private Runnable takedownButtonOnClickRunnable() {
+        return new Runnable() {
             @Override
-            public void onClick(View view) {
-                hideInteractionButtons();
-                showTakedownSelectPlayerButton();
+            public void run() {
                 playerListView.beginTakedown();
             }
-        });
+        };
+    }
+
+    private Runnable exchangeButtonOnClickRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                playerListView.beginExchange();
+            }
+        };
     }
 
     private StringInputRunnable beginSelectedTakedownOnClickRunner() {
@@ -193,8 +192,8 @@ public class GameplayActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                showInteractionButtons();
-                hideTakedownSelectPlayerButton();
+                interactionButtonsView.showInteractionButtons();
+                interactionButtonsView.hideTakedownSelectPlayerButton();
                 playerListView.resumeGameplayAfterInteraction();
             }
         };
@@ -247,8 +246,8 @@ public class GameplayActivity extends AppCompatActivity {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                showInteractionButtons();
-                hideExchangeSelectPlayerButton();
+                interactionButtonsView.showInteractionButtons();
+                interactionButtonsView.hideExchangeSelectPlayerButton();
                 playerListView.resumeGameplayAfterInteraction();
             }
         });
@@ -262,37 +261,6 @@ public class GameplayActivity extends AppCompatActivity {
                 consoleView.takedownSuccessPrompt(homeBeaconName);
             }
         };
-    }
-
-    // TODO: put into buttonsView class
-    private void hideInteractionButtons() {
-        LinearLayout buttons = findViewById(R.id.interaction_buttons);
-        buttons.setVisibility(View.GONE);
-    }
-
-    private void showInteractionButtons() {
-        LinearLayout buttons = findViewById(R.id.interaction_buttons);
-        buttons.setVisibility(View.VISIBLE);
-    }
-
-    private void hideTakedownSelectPlayerButton() {
-        Button takedownSelectPlayerButton = findViewById(R.id.takedown_exchange_select_player_button);
-        takedownSelectPlayerButton.setVisibility(View.GONE);
-    }
-
-    private void showTakedownSelectPlayerButton() {
-        Button takedownSelectPlayerButton = findViewById(R.id.takedown_exchange_select_player_button);
-        takedownSelectPlayerButton.setVisibility(View.VISIBLE);
-    }
-
-    private void hideExchangeSelectPlayerButton() {
-        Button takedownSelectPlayerButton = findViewById(R.id.gameplay_exchange_select_player_button);
-        takedownSelectPlayerButton.setVisibility(View.GONE);
-    }
-
-    private void showExchangeSelectPlayerButton() {
-        Button takedownSelectPlayerButton = findViewById(R.id.gameplay_exchange_select_player_button);
-        takedownSelectPlayerButton.setVisibility(View.VISIBLE);
     }
 
     private void initializeConsoleView() {
