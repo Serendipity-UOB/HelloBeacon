@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class LeaderboardServerRequestController implements ILeaderboardServerRequestController {
 
@@ -24,8 +26,14 @@ public class LeaderboardServerRequestController implements ILeaderboardServerReq
 
     private final RequestQueue requestQueue;
 
-    LeaderboardServerRequestController(Context context) {
+    private final Map<String,String> playerIdsRealNameMap;
+    private final PlayerIdentifiers playerIdentifiers;
+
+    LeaderboardServerRequestController(Context context, Map<String,String> playerIdsRealNameMap, PlayerIdentifiers playerIdentifiers) {
         this.requestQueue = Volley.newRequestQueue(context);
+
+        this.playerIdentifiers = playerIdentifiers;
+        this.playerIdsRealNameMap = playerIdsRealNameMap;
 
         this.SERVER_ADDRESS = context.getString(R.string.server_address);
         this.GET_INFO_URL = context.getString(R.string.game_info_request);
@@ -34,7 +42,7 @@ public class LeaderboardServerRequestController implements ILeaderboardServerReq
     @Override
     public void getInfoRequest(List<LeaderboardItem> leaderboardList) throws JSONException {
         // placeholder
-        String response = "{\"leaderboard\":[{\"player_id\":\"55\",\"player_name\":\"Rockie\",\"score\":1000},{\"player_id\":\"1\",\"player_name\":\"Tom\",\"score\":565},{\"player_id\":\"2\",\"player_name\":\"Tilly\",\"score\":500},{\"player_id\":\"3\",\"player_name\":\"Louis\",\"score\":488},{\"player_id\":\"4\",\"player_name\":\"David\",\"score\":450},{\"player_id\":\"5\",\"player_name\":\"Jack\",\"score\":433},{\"player_id\":\"7\",\"player_name\":\"Tilo\",\"score\":400},{\"player_id\":\"8\",\"player_name\":\"Beth\",\"score\":388},{\"player_id\":\"9\",\"player_name\":\"Becky\",\"score\":350},{\"player_id\":\"10\",\"player_name\":\"Bradley\",\"score\":300}]}";
+        String response = "{\"leaderboard\":[{\"player_id\":\"0\",\"score\":1000},{\"player_id\":\"1\",\"score\":565},{\"player_id\":\"2\",\"score\":500}]}";
         JSONObject obj = new JSONObject(response);
         addLeaderboardItems(obj, leaderboardList);
 
@@ -75,12 +83,24 @@ public class LeaderboardServerRequestController implements ILeaderboardServerReq
             JSONObject itemJson = leaderboard.getJSONObject(i);
 
             item.playerId = itemJson.getString("player_id");
-            item.playerName = itemJson.getString("player_name");
+            item.playerName = getPlayerName(item.playerId);
             item.score = itemJson.getInt("score");
 
             items.add(item);
         }
 
         leaderboardList.addAll(items);
+    }
+
+    private String getPlayerName(String playerId) {
+        if (playerIdsRealNameMap.containsKey(playerId)) {
+            return playerIdsRealNameMap.get(playerId);
+        }
+        else if (playerIdentifiers.getPlayerId().equals(playerId)) {
+            return playerIdentifiers.getRealName();
+        }
+        else {
+            return "Unknown";
+        }
     }
 }

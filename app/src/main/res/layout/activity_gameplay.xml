@@ -29,6 +29,7 @@
         </ScrollView>
 
         <LinearLayout
+            android:id="@+id/interaction_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="1.0"
@@ -58,6 +59,32 @@
                 android:background="@color/gameplay_takedown_button"
                 android:layout_marginStart="2pt"/>
         </LinearLayout>
+        <Button
+            android:visibility="gone"
+            android:layout_marginTop="5pt"
+            android:id="@+id/gameplay_exchange_select_player_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:fontFamily="@font/vt323"
+            android:textSize="10pt"
+            android:text="@string/exchange_select_player_button"
+            android:textColor="@android:color/white"
+            android:background="@color/gameplay_exchange_button"
+            android:layout_marginEnd="2pt" />
+        <Button
+            android:visibility="gone"
+            android:layout_marginTop="5pt"
+            android:id="@+id/takedown_exchange_select_player_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:fontFamily="@font/vt323"
+            android:textSize="10pt"
+            android:text="@string/takedown_select_player_button"
+            android:textColor="@android:color/white"
+            android:background="@color/gameplay_takedown_button"
+            android:layout_marginEnd="2pt" />
     </LinearLayout>
 
     <!-- Console pop-up overlay -->

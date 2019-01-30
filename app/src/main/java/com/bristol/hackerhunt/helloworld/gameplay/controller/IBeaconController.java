@@ -1,4 +1,4 @@
-package com.bristol.hackerhunt.helloworld.gameplay;
+package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 /**
  * A controller used to make use of logic with relation to the Kontakt beacons.

@@ -1,15 +1,16 @@
-package com.bristol.hackerhunt.helloworld.gameplay;
+package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 import android.view.View;
 import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
 
-public class PlayerStatusBarController implements IPlayerStatusBarController {
+public class PlayerStatusBarView implements IPlayerStatusBarView {
 
     private final View playerStatusBar;
 
-    PlayerStatusBarController(View playerStatusBar) {
+    public PlayerStatusBarView(View playerStatusBar) {
         this.playerStatusBar = playerStatusBar;
     }
 

@@ -20,7 +20,7 @@ import java.util.TimerTask;
 
 public class JoinGameActivity extends AppCompatActivity {
 
-    private static int POLLING_PERIOD = 10; // in seconds
+    private static int POLLING_PERIOD = 3; // in seconds
 
     private IJoinGameServerRequestController serverRequestController;
 
@@ -57,11 +57,22 @@ public class JoinGameActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 // Starting timer thread
-                if (gameInfo.minutesToStart != null && !timerStarted) {
+                if (gameInfo.minutesToStart != null && gameInfo.minutesToStart >= 0 && !timerStarted) {
                     startCountdownToGameStart(playerIdentifiers, timer);
                 }
-                if (gameInfo.numberOfPlayers != null) {
+                if (gameInfo.numberOfPlayers != null && gameInfo.numberOfPlayers >= 0 ) {
                     updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
+                }
+                if (gameInfo.minutesToStart != null && gameInfo.minutesToStart < 0) {
+                    updateTimeLeftUntilGame("--:--");
+                    updateNumberOfPlayersInGame("--");
+
+                    final Button joinGameButton = findViewById(R.id.join_game_button);
+                    joinGameButton.setVisibility(View.GONE);
+                    TextView joinStatus = findViewById(R.id.join_game_success);
+                    joinStatus.setVisibility(View.VISIBLE);
+                    joinStatus.setText("NO_GAME_AVAILABLE");
+                    cancel();
                 }
             }
         };
@@ -107,23 +118,30 @@ public class JoinGameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 joinGameButton.setVisibility(View.GONE);
                 try {
-                    serverRequestController.joinGameRequest(playerIdentifiers.getNfcId());
+                    serverRequestController.joinGameRequest(playerIdentifiers.getPlayerId());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
                 TextView joinStatus = findViewById(R.id.join_game_success);
                 findViewById(R.id.join_game_success).setVisibility(View.VISIBLE);
-                if (gameInfo.startBeacon == null) {
-                    joinStatus.setText(R.string.join_game_loading);
-                    while (gameInfo.startBeacon == null) {
-                        // do nothing, wait for response
-                    }
-                    joinStatus.setText(R.string.join_game_success);
-                }
-                joinedGame = true;
+
+                (new Timer()).schedule(checkHomeBeaconHasBeenRecieved(joinStatus), 1000);
             }
         });
+    }
+
+    private TimerTask checkHomeBeaconHasBeenRecieved(final TextView joinStatus) {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                if (gameInfo.startBeaconMinor != null) {
+                    joinStatus.setText(R.string.join_game_success);
+                    joinedGame = true;
+                    cancel();
+                }
+            }
+        };
     }
 
     private String formatTime(long milliseconds) {
@@ -138,7 +156,8 @@ public class JoinGameActivity extends AppCompatActivity {
     private void goToGameplayActivity(PlayerIdentifiers playerIdentifiers) {
         Intent intent = new Intent(JoinGameActivity.this, GameplayActivity.class);
         intent.putExtra("player_identifiers", playerIdentifiers);
-        intent.putExtra("start_beacon", gameInfo.startBeacon);
+        intent.putExtra("start_beacon_minor", gameInfo.startBeaconMinor);
+        intent.putExtra("start_beacon_name", gameInfo.startBeaconName);
         startActivity(intent);
     }
 

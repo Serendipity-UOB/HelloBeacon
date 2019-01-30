@@ -1,4 +1,4 @@
-package com.bristol.hackerhunt.helloworld.gameplay;
+package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 
@@ -57,4 +57,10 @@ public interface IGameplayServerRequestsController {
      * @throws JSONException if the server JSON response cannot be parsed.
      */
     void takeDownRequest(String targetId) throws JSONException;
+
+    /**
+     * Registers a runnable that is run when a takedown is successful.
+     * @param takedownSuccessRunnable a runnable.
+     */
+    void registerTakedownSuccessRunnable(Runnable takedownSuccessRunnable);
 }

@@ -7,12 +7,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
+import com.bristol.hackerhunt.helloworld.gameplay.controller.BeaconController;
+import com.bristol.hackerhunt.helloworld.gameplay.controller.GameStateController;
+import com.bristol.hackerhunt.helloworld.gameplay.controller.GameplayServerRequestsController;
+import com.bristol.hackerhunt.helloworld.gameplay.controller.IBeaconController;
+import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameStateController;
+import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameplayServerRequestsController;
+import com.bristol.hackerhunt.helloworld.gameplay.view.ConsoleView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.IConsoleView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.IInteractionButtonsView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.InteractionButtonsView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.PlayerListView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.PlayerStatusBarView;
 import com.bristol.hackerhunt.helloworld.leaderboard.LeaderboardActivity;
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
+import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
 import org.json.JSONException;
@@ -22,14 +38,17 @@ import java.util.TimerTask;
 
 public class GameplayActivity extends AppCompatActivity {
 
-    private static final int POLLING_PERIOD = 10; // in seconds
-    private static final double GAMEPLAY_DURATION = 0.5; // given in minutes.
+    private static final int POLLING_PERIOD = 3;               // given in seconds
+    private static final double GAMEPLAY_DURATION = 10;         // given in minutes.
+    private static final int EXCHANGE_POLLING_PERIOD = 3;       // given in seconds.
 
     private PlayerIdentifiers playerIdentifiers;
 
-    private IPlayerListController playerListController;
-    private IPlayerStatusBarController playerStatusBarController;
-    private IConsoleController consoleController;
+    private IPlayerListView playerListView;
+    private IPlayerStatusBarView playerStatusBarView;
+    private IConsoleView consoleView;
+    private IInteractionButtonsView interactionButtonsView;
+
     private IGameplayServerRequestsController serverRequestsController;
     private IGameStateController gameStateController;
     private IBeaconController beaconController;
@@ -41,28 +60,33 @@ public class GameplayActivity extends AppCompatActivity {
         // initialization
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameplay);
+
         getPlayerIdentifiers();
 
-        initializePlayerListController();
-        initializePlayerStatusBarController();
-        initializeExchangeButton();
-        initializeTakeDownButton();
+        initializePlayerListView();
+        initializePlayerStatusBarView();
+        initializeInteractionButtonsView();
 
-        this.gameStateController = new GameStateController(playerListController, playerStatusBarController,
-                playerIdentifiers, getIntent().getStringExtra("start_beacon"));
-        this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
-        initializeConsoleController();
-        this.beaconController = new BeaconController(this, gameStateController);
+        initializeGameStateController();
+        initializeServerRequestController();
+        initializeConsoleView();
+        initializeBeaconController();
+
+        gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
+            @Override
+            public void run() {
+                consoleView.closeConsole();
+            }
+        });
 
         startGameTimer();
 
         // First task: player needs to head to their home beacon.
-        consoleController.goToStartBeaconPrompt();
+        consoleView.goToStartBeaconPrompt(gameStateController.getHomeBeaconName());
 
         try {
             beaconController.startScanning();
             serverRequestsController.startInfoRequest();
-            serverRequestsController.newTargetRequest();
 
             // polling
             Timer timer = new Timer(false);
@@ -71,6 +95,27 @@ public class GameplayActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        beaconController.stopScanning();
+    }
+
+    private void initializeGameStateController() {
+        this.gameStateController = new GameStateController(playerListView, playerStatusBarView,
+                playerIdentifiers, getIntent().getStringExtra("start_beacon_minor"),
+                getIntent().getStringExtra("start_beacon_name"));
+    }
+
+    private void initializeServerRequestController() {
+        this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
+        serverRequestsController.registerTakedownSuccessRunnable(takedownSuccessfulRunnable());
+    }
+
+    private void initializeBeaconController() {
+        this.beaconController = new BeaconController(this, gameStateController);
     }
 
     private TimerTask pollServer() {
@@ -96,12 +141,13 @@ public class GameplayActivity extends AppCompatActivity {
                     serverRequestsController.playerUpdateRequest();
 
                     if (gameStateController.playerHasBeenTakenDown()) {
-                        consoleController.playerGotTakenDownPrompt();
+                        consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
+                        gameStateController.loseHalfOfPlayersIntel();
                         gameStateController.resetPlayerTakenDown();
                         serverRequestsController.newTargetRequest();
                     }
                     if (gameStateController.playersTargetHasBeenTakenDown()) {
-                        consoleController.playersTargetTakenDownPrompt();
+                        consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
                         gameStateController.resetPlayersTargetHasBeenTakenDown();
                         serverRequestsController.newTargetRequest();
                     }
@@ -113,33 +159,125 @@ public class GameplayActivity extends AppCompatActivity {
         });
     }
 
-    private void initializePlayerStatusBarController() {
-        this.playerStatusBarController = new PlayerStatusBarController(findViewById(R.id.gameplay_player_status_bar));
+    private void initializePlayerStatusBarView() {
+        this.playerStatusBarView = new PlayerStatusBarView(findViewById(R.id.gameplay_player_status_bar));
     }
 
-    private void initializeExchangeButton() {
-        Button exchangeButton = findViewById(R.id.gameplay_exchange_button);
-        exchangeButton.setOnClickListener(new View.OnClickListener() {
+    private void initializeInteractionButtonsView() {
+        this.interactionButtonsView = new InteractionButtonsView(this, exchangeButtonOnClickRunnable(),
+                takedownButtonOnClickRunnable());
+    }
+
+    private Runnable takedownButtonOnClickRunnable() {
+        return new Runnable() {
             @Override
-            public void onClick(View view) {
-                consoleController.mutualExchangePrompt();
+            public void run() {
+                playerListView.beginTakedown();
+            }
+        };
+    }
+
+    private Runnable exchangeButtonOnClickRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                playerListView.beginExchange();
+            }
+        };
+    }
+
+    private StringInputRunnable beginSelectedTakedownOnClickRunner() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String targetId) {
+                if (!gameStateController.playerHasFullIntel(targetId)) {
+                    consoleView.takedownInsufficientIntelPrompt();
+                }
+                else if (!gameStateController.getTargetPlayerId().equals(targetId)) {
+                    consoleView.takedownNotYourTargetPrompt();
+                }
+                else {
+                    consoleView.executingTakedownPrompt();
+                    try {
+                        serverRequestsController.takeDownRequest(targetId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                interactionButtonsView.showInteractionButtons();
+                interactionButtonsView.hideTakedownSelectPlayerButton();
+                playerListView.resumeGameplayAfterInteraction();
+            }
+        };
+    }
+
+    private StringInputRunnable beginSelectedExchangeOnClickRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String interacteeId) {
+                consoleView.exchangeRequestedPrompt();
+                beginExchangeServerPolling(interacteeId);
+            }
+        };
+    }
+
+    private void beginExchangeServerPolling(final String interacteeId) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            final long t0 = System.currentTimeMillis();
+            final InteractionDetails details = new InteractionDetails();
+
+            @Override
+            public void run() {
+                if (details.status.equals(InteractionStatus.FAILED)) {
+                    consoleView.exchangeFailedPrompt();
+                    finishExchange();
+                    cancel();
+                }
+                else {
+                    try {
+                        serverRequestsController.exchangeRequest(interacteeId, details);
+
+                        if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
+                            for (String id : details.gainedIntelPlayerIds) {
+                                gameStateController.increasePlayerIntel(id);
+                            }
+                            consoleView.exchangeSuccessPrompt();
+                            finishExchange();
+                            cancel();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, 0, EXCHANGE_POLLING_PERIOD * 1000);
+    }
+
+    private void finishExchange() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                interactionButtonsView.showInteractionButtons();
+                interactionButtonsView.hideExchangeSelectPlayerButton();
+                playerListView.resumeGameplayAfterInteraction();
             }
         });
     }
 
-    private void initializeTakeDownButton() {
-        Button takeDownButton = findViewById(R.id.gameplay_takedown_button);
-        takeDownButton.setOnClickListener(new View.OnClickListener() {
+    private Runnable takedownSuccessfulRunnable() {
+        return new Runnable() {
             @Override
-            public void onClick(View view) {
-                consoleController.targetTakedownPrompt();
+            public void run() {
+                String homeBeaconName = gameStateController.getHomeBeaconName();
+                consoleView.takedownSuccessPrompt(homeBeaconName);
             }
-        });
+        };
     }
 
-    private void initializeConsoleController() {
+    private void initializeConsoleView() {
         final View overlay = findViewById(R.id.gameplay_console_overlay);
-        this.consoleController = new ConsoleController(overlay, gameStateController, serverRequestsController);
+        this.consoleView = new ConsoleView(overlay);
     }
 
     private void startGameTimer() {
@@ -160,7 +298,11 @@ public class GameplayActivity extends AppCompatActivity {
                 gameOver = true;
                 Intent intent = new Intent(GameplayActivity.this, LeaderboardActivity.class);
                 intent.putExtra(getString(R.string.player_identifiers_intent_key), playerIdentifiers);
-                consoleController.endOfGamePrompt(thisContext, intent);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(String.valueOf(R.string.all_players_map_intent_key), gameStateController.getPlayerIdRealNameMap() );
+                intent.putExtras(bundle);
+                consoleView.endOfGamePrompt(thisContext, intent);
             }
         }.start();
     }
@@ -180,9 +322,10 @@ public class GameplayActivity extends AppCompatActivity {
         return formattedTime + seconds.toString();
     }
 
-    private void initializePlayerListController() {
-        this.playerListController = new PlayerListController(LayoutInflater.from(this),
-                (LinearLayout) findViewById(R.id.gameplay_player_list));
+    private void initializePlayerListView() {
+        this.playerListView = new PlayerListView(LayoutInflater.from(this),
+                (LinearLayout) findViewById(R.id.gameplay_player_list),
+                beginSelectedTakedownOnClickRunner(), beginSelectedExchangeOnClickRunnable());
     }
 
     private void goToLeaderboardActivity() {

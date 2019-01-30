@@ -1,5 +1,8 @@
-package com.bristol.hackerhunt.helloworld.gameplay;
+package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
+import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
+import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
 
 import java.util.ArrayList;
@@ -12,12 +15,13 @@ public class GameStateController implements IGameStateController {
 
     private static final int INTEL_INCREMENT = 20; // a percentage
 
-    private final IPlayerListController playerListController;
-    private final IPlayerStatusBarController playerStatusBarController;
+    private final IPlayerListView playerListController;
+    private final IPlayerStatusBarView playerStatusBarController;
 
     private final Map<String, Integer> beaconMinorRssiMap;
+    private final Map<String, String> beaconMinorNameMap;
     private String nearestBeaconMinor;
-    private final String homeBeacon;
+    private final String homeBeaconMinor;
     private Runnable onNearestBeaconHomeRunnable;
 
     private final PlayerIdentifiers playerIdentifiers;
@@ -29,19 +33,23 @@ public class GameStateController implements IGameStateController {
     private List<String> nearbyPlayerIds;
     private String targetPlayerId;
 
-    public GameStateController(IPlayerListController playerListController,
-                               IPlayerStatusBarController playerStatusBarController,
+    public GameStateController(IPlayerListView playerListController,
+                               IPlayerStatusBarView playerStatusBarController,
                                PlayerIdentifiers playerIdentifiers,
-                               String homeBeacon) {
+                               String homeBeaconMinor,
+                               String homeBeaconName) {
         this.playerListController = playerListController;
         this.playerStatusBarController = playerStatusBarController;
         this.playerIdentifiers = playerIdentifiers;
-        this.beaconMinorRssiMap = new HashMap<>();
         this.allPlayersMap = new HashMap<>();
         this.nearbyPlayerIds = new ArrayList<>();
         this.playerUpdates = new ArrayList<>();
 
-        this.homeBeacon = homeBeacon;
+        this.beaconMinorRssiMap = new HashMap<>();
+        this.beaconMinorNameMap = new HashMap<>();
+        this.homeBeaconMinor = homeBeaconMinor;
+        this.beaconMinorNameMap.put(homeBeaconMinor, homeBeaconName);
+
         this.points = 0;
         this.leaderboardPosition = "Loading...";
         nearestBeaconMinor = "none";
@@ -60,8 +68,8 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
-    public String getHomeBeacon() {
-        return homeBeacon;
+    public String getHomeBeaconName() {
+        return beaconMinorNameMap.get(homeBeaconMinor);
     }
 
     @Override
@@ -75,10 +83,19 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
+    public HashMap<String, String> getPlayerIdRealNameMap() {
+        HashMap<String,String> map = new HashMap<>();
+        for (String id : allPlayersMap.keySet()) {
+            map.put(id, allPlayersMap.get(id).realName);
+        }
+        return map;
+    }
+
+    @Override
     public void setNearestBeaconMinor(String minor) {
         this.nearestBeaconMinor = minor;
 
-        if (onNearestBeaconHomeRunnable != null && nearestBeaconMinor.equals(homeBeacon)) {
+        if (onNearestBeaconHomeRunnable != null && nearestBeaconMinor.equals(homeBeaconMinor)) {
             onNearestBeaconHomeRunnable.run();
         }
     }
@@ -109,11 +126,13 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void increasePlayerIntel(String playerId) {
-        PlayerDetails pd = allPlayersMap.get(playerId);
-        pd.intel = Math.min(100, pd.intel + INTEL_INCREMENT);
-        playerListController.increasePlayerIntel(playerId, INTEL_INCREMENT);
-        if (playerHasFullIntel(playerId)) {
-            playerListController.revealPlayerHackerName(playerId, pd.hackerName);
+        if (!playerId.equals("0")) {
+            PlayerDetails pd = allPlayersMap.get(playerId);
+            pd.intel = Math.min(100, pd.intel + INTEL_INCREMENT);
+            playerListController.increasePlayerIntel(playerId, INTEL_INCREMENT);
+            if (playerHasFullIntel(playerId)) {
+                playerListController.revealPlayerHackerName(playerId, pd.hackerName);
+            }
         }
     }
 
@@ -140,9 +159,9 @@ public class GameStateController implements IGameStateController {
             PlayerDetails pd = new PlayerDetails(playerIdentifiers.getRealName(),
                     playerIdentifiers.getHackerName());
 
-            allPlayersMap.put(playerIdentifiers.getNfcId(), pd);
+            allPlayersMap.put(playerIdentifiers.getPlayerId(), pd);
 
-            playerListController.insertPlayer(playerIdentifiers.getNfcId(),
+            playerListController.insertPlayer(playerIdentifiers.getPlayerId(),
                     playerIdentifiers.getRealName());
         }
     }
@@ -154,7 +173,7 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public String getPlayerId() {
-        return this.playerIdentifiers.getNfcId();
+        return this.playerIdentifiers.getPlayerId();
     }
 
     @Override
@@ -166,8 +185,14 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void updateNearbyPlayers(List<String> playerIds) {
-        nearbyPlayerIds = playerIds;
-        playerListController.updateNearbyPlayers(playerIds);
+        List<String> nearbyPlayers = new ArrayList<>();
+        for (String id : playerIds) {
+            if (allPlayersMap.containsKey(id)) {
+                nearbyPlayers.add(id);
+            }
+        }
+        nearbyPlayerIds = nearbyPlayers;
+        playerListController.updateNearbyPlayers(nearbyPlayers);
     }
 
     @Override

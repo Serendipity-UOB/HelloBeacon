@@ -40,18 +40,6 @@
         android:layout_marginVertical="5pt"
         android:paddingLeft="10pt"/>
 
-    <EditText
-        android:id="@+id/create_profile_nfc_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/create_profile_textbox"
-        android:hint="@string/create_profile_nfc_id"
-        android:fontFamily="@font/vt323"
-        android:inputType="text"
-        android:layout_marginHorizontal="10pt"
-        android:layout_marginVertical="5pt"
-        android:paddingLeft="10pt"/>
-
     <TextView
         android:id="@+id/create_profile_error"
         android:layout_width="match_parent"

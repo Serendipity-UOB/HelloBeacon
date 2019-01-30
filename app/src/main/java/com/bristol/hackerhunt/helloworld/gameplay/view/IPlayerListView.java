@@ -1,11 +1,11 @@
-package com.bristol.hackerhunt.helloworld.gameplay;
+package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 import java.util.List;
 
 /**
  * Controller class responsible for the visible list of players in the gameplay UI.
  */
-public interface IPlayerListController {
+public interface IPlayerListView {
 
     /**
      * Reveal the hacker name of a player on the list.
@@ -40,4 +40,21 @@ public interface IPlayerListController {
      * @param newNearbyPlayerIds the list of nearby player IDs.
      */
     void updateNearbyPlayers(List<String> newNearbyPlayerIds);
+
+    /**
+     * Begins process of takedown; greys out far away players, and add select on-click listeners to
+     * nearby players
+     */
+    void beginTakedown();
+
+    /**
+     * Resumes gameplay after interaction, by returning the player list to how it was before.
+     */
+    void resumeGameplayAfterInteraction();
+
+    /**
+     * Begins process of mutual takedown; greys out far away players, and add select on-click
+     * listeners to nearby players
+     */
+    void beginExchange();
 }

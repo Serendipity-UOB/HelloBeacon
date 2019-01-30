@@ -1,7 +1,8 @@
-package com.bristol.hackerhunt.helloworld.gameplay;
+package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 import android.content.Context;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -9,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
@@ -20,7 +22,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-class GameplayServerRequestsController implements IGameplayServerRequestsController {
+public class GameplayServerRequestsController implements IGameplayServerRequestsController {
 
     private final String SERVER_ADDRESS;
     private final String START_INFO_URL;
@@ -32,12 +34,16 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
     private final RequestQueue requestQueue;
     private final IGameStateController gameStateController;
 
+    private int statusCode = 0;
+
+    private Runnable takedownSuccessRunnable;
+
     /**
      * Class constructor.
      * @param context Context of activity using the controller.
      * @param gameStateController The GameStateController used to control the state of the game.
      */
-    GameplayServerRequestsController(Context context, IGameStateController gameStateController) {
+    public GameplayServerRequestsController(Context context, IGameStateController gameStateController) {
         this.requestQueue = Volley.newRequestQueue(context);
         this.gameStateController = gameStateController;
 
@@ -58,12 +64,12 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
     @Override
     public void startInfoRequest() throws JSONException {
         // this is just a placeholder.
-        String response = "{\"all_players\":[{\"id\":\"1\",\"real_name\":\"Tom\",\"hacker_name\":\"Tom\"},{\"id\":\"2\",\"real_name\":\"Tilly\",\"hacker_name\":\"cutie_kitten\"},{\"id\":\"3\",\"real_name\":\"Louis\",\"hacker_name\":\"Louis\"},{\"id\":\"4\",\"real_name\":\"David\",\"hacker_name\":\"CookingKing\"},{\"id\":\"5\",\"real_name\":\"Jack\",\"hacker_name\":\"falafel\"},{\"id\":\"7\",\"real_name\":\"Tilo\",\"hacker_name\":\"Tilo\"},{\"id\":\"8\",\"real_name\":\"Beth\",\"hacker_name\":\"Beth\"},{\"id\":\"9\",\"real_name\":\"Becky\",\"hacker_name\":\"Becky\"},{\"id\":\"10\",\"real_name\":\"Bradley\",\"hacker_name\":\"Bradley\"}]}";
-        JSONObject obj = new JSONObject(response);
+        // String response = "{\"all_players\":[{\"id\":\"1\",\"real_name\":\"Tom\",\"hacker_name\":\"Tom\"},{\"id\":\"2\",\"real_name\":\"Tilly\",\"hacker_name\":\"cutie_kitten\"},{\"id\":\"3\",\"real_name\":\"Louis\",\"hacker_name\":\"Louis\"},{\"id\":\"4\",\"real_name\":\"David\",\"hacker_name\":\"CookingKing\"},{\"id\":\"5\",\"real_name\":\"Jack\",\"hacker_name\":\"falafel\"},{\"id\":\"7\",\"real_name\":\"Tilo\",\"hacker_name\":\"Tilo\"},{\"id\":\"8\",\"real_name\":\"Beth\",\"hacker_name\":\"Beth\"},{\"id\":\"9\",\"real_name\":\"Becky\",\"hacker_name\":\"Becky\"},{\"id\":\"10\",\"real_name\":\"Bradley\",\"hacker_name\":\"Bradley\"}]}";
+        // JSONObject obj = new JSONObject(response);
 
-        setAllPlayers(obj);
+        // setAllPlayers(obj);
 
-        // TODO: requestQueue.add(volleyStartInfoRequest());
+        requestQueue.add(volleyStartInfoRequest());
     }
 
     private JsonObjectRequest volleyStartInfoRequest() {
@@ -72,6 +78,7 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
             public void onResponse(JSONObject response) {
                 try {
                     setAllPlayers(response);
+                    newTargetRequest();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -110,11 +117,11 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
     @Override
     public void newTargetRequest() throws JSONException {
         // this is just a placeholder.
-        String response = "{\"target_player_id\": \"2\"}";
-        JSONObject obj = new JSONObject(response);
-        updateTargetPlayer(obj);
+        // String response = "{\"target_player_id\": \"2\"}";
+        // JSONObject obj = new JSONObject(response);
+        // updateTargetPlayer(obj);
 
-        // TODO: requestQueue.add(volleyNewTargetRequest());
+        requestQueue.add(volleyNewTargetRequest());
     }
 
     private JsonObjectRequest volleyNewTargetRequest() throws JSONException {
@@ -151,11 +158,11 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
     @Override
     public void playerUpdateRequest() throws JSONException {
         // this is just a placeholder.
-        String response = "{\"nearby_players\":[\"2\",\"3\",\"4\"],\"state\":{\"points\":516,\"position\":\"2\"}}";
-        JSONObject obj = new JSONObject(response);
-        playerUpdate(obj);
+        // String response = "{\"nearby_players\":[\"2\",\"3\",\"4\"],\"points\":516,\"position\":\"2\"}";
+        // JSONObject obj = new JSONObject(response);
+        // playerUpdate(obj);
 
-        // TODO: requestQueue.add(volleyPlayerUpdateRequest());
+        requestQueue.add(volleyPlayerUpdateRequest());
     }
 
     private JsonObjectRequest volleyPlayerUpdateRequest() throws JSONException {
@@ -189,32 +196,30 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
         }
         gameStateController.updateNearbyPlayers(nearbyPlayerIds);
 
-        JSONObject state = obj.getJSONObject("state");
-        if (state.has("points")) {
-            int points = state.getInt("points");
+        if (obj.has("points")) {
+            int points = obj.getInt("points");
             gameStateController.updatePoints(points);
         }
-        if (state.has("position")) {
-            String position = state.getString("position");
+        if (obj.has("position")) {
+            String position = obj.getString("position");
             gameStateController.updateLeaderboardPosition(position);
         }
 
-        if (obj.has("update")) {
-            JSONArray updatesArr = obj.getJSONArray("update");
-            List<PlayerUpdate> updates = new ArrayList<>();
-
-            for (int i = 0; i < updatesArr.length(); i++) {
-                String updateStr = updatesArr.getString(i);
-
-                if (updateStr.equals("taken_down")) {
-                    updates.add(PlayerUpdate.TAKEN_DOWN);
-                }
-                else if (updateStr.equals("req_new_target")) {
-                    updates.add(PlayerUpdate.REQ_NEW_TARGET);
-                }
+        List<PlayerUpdate> updates = new ArrayList<>();
+        if (obj.has("taken_down")) {
+            boolean takenDown = obj.getInt("taken_down") == 1;
+            if (takenDown) {
+                updates.add(PlayerUpdate.TAKEN_DOWN);
             }
-            gameStateController.updateStatus(updates);
         }
+        if (obj.has("req_new_target")) {
+            boolean reqNewTarget = obj.getInt("req_new_target") == 1;
+            if (reqNewTarget) {
+                updates.add(PlayerUpdate.REQ_NEW_TARGET);
+            }
+        }
+
+        gameStateController.updateStatus(updates);
     }
 
     private JSONObject playerUpdateRequestBody() throws JSONException {
@@ -236,21 +241,23 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
     @Override
     public void exchangeRequest(String interacteeId, InteractionDetails details) throws JSONException {
         // this is just a placeholder (assuming success).
-        String response = "{\"secondary_id\":\"5\"}";
-        JSONObject obj = new JSONObject(response);
-        successfulExchange(interacteeId, details, obj);
+        // String response = "{\"secondary_id\":\"1\"}";
+        // JSONObject obj = new JSONObject(response);
+        // successfulExchange(interacteeId, details, obj);
 
-        // TODO: requestQueue.add(volleyExchangeRequest(interacteeId, details));
+        requestQueue.add(volleyExchangeRequest(interacteeId, details));
     }
 
     private JsonObjectRequest volleyExchangeRequest(final String interacteeId, final InteractionDetails details) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                try {
-                    successfulExchange(interacteeId, details, response);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (statusCode == 200) {
+                    try {
+                        successfulExchange(interacteeId, details, response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -263,44 +270,64 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
         };
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_URL,
-                exchangeRequestBody(interacteeId), listener, errorListener);
+                exchangeRequestBody(interacteeId), listener, errorListener) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                if (response != null) {
+                    statusCode = response.statusCode;
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
     }
 
     private void successfulExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
         String secondaryId = obj.getString("secondary_id");
         details.gainedIntelPlayerIds.add(interacteeId);
-        details.gainedIntelPlayerIds.add(secondaryId);
+        if (!secondaryId.equals("0"))
+            details.gainedIntelPlayerIds.add(secondaryId);
         details.status = InteractionStatus.SUCCESSFUL;
     }
 
     private void unsuccessfulExchange(InteractionDetails details) {
-        details.status = InteractionStatus.IN_PROGRESS;
+        details.status = InteractionStatus.FAILED;
     }
 
     private JSONObject exchangeRequestBody(String interacteeId) throws JSONException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("interacter_id", gameStateController.getPlayerId());
         requestBody.put("interactee_id", interacteeId);
+
+        JSONArray contactIds = new JSONArray();
+        for (String playerId : gameStateController.getPlayerIdRealNameMap().keySet()) {
+            if (gameStateController.playerHasFullIntel(playerId)) {
+                JSONObject contactId = new JSONObject();
+                contactId.put("contact_id", playerId);
+                contactIds.put(contactId);
+            }
+        }
+        requestBody.put("contact_ids", contactIds);
+
         return requestBody;
     }
 
     @Override
     public void takeDownRequest(String targetId) throws JSONException {
-        // TODO: requestQueue.add(volleyTakeDownRequest(targetId));
+        requestQueue.add(volleyTakeDownRequest(targetId));
     }
 
     private JsonObjectRequest volleyTakeDownRequest(String targetId) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                // do nothing.
+                takedownSuccessRunnable.run();
             }
         };
 
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                throw new IllegalStateException("Error: " + error.getMessage());
+                // do nothing.
             }
         };
 
@@ -321,5 +348,10 @@ class GameplayServerRequestsController implements IGameplayServerRequestsControl
         String playerId = obj.getString("id");
 
         return new PlayerIdentifiers(playerRealName, playerHackerName, playerId);
+    }
+
+    @Override
+    public void registerTakedownSuccessRunnable(Runnable runnable) {
+        this.takedownSuccessRunnable = runnable;
     }
 }

@@ -2,6 +2,7 @@ package com.bristol.hackerhunt.helloworld.joinGame;
 
 import android.content.Context;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -13,6 +14,9 @@ import com.bristol.hackerhunt.helloworld.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 public class JoinGameServerRequestController implements IJoinGameServerRequestController {
 
     private final String SERVER_ADDRESS;
@@ -21,6 +25,8 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
 
     private final RequestQueue requestQueue;
     private final GameInfo gameInfo;
+
+    private int statusCode = 0;
 
     JoinGameServerRequestController(Context context, GameInfo gameInfo) {
         this.requestQueue = Volley.newRequestQueue(context);
@@ -39,11 +45,11 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
     @Override
     public void gameInfoRequest() throws JSONException {
          // this is a placeholder
-        String response = "{\"start_time\":0.25,\"number_players\":2}";
-        JSONObject obj = new JSONObject(response);
-        updateGameInfo(obj);
+        // String response = "{\"start_time\":\"17:59:50\",\"number_players\":2}";
+        // JSONObject obj = new JSONObject(response);
+        // updateGameInfo(obj);
 
-        // TODO: requestQueue.add(volleyGameInfoRequest());
+        requestQueue.add(volleyGameInfoRequest());
     }
 
     private JsonObjectRequest volleyGameInfoRequest() throws JSONException {
@@ -51,7 +57,13 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    updateGameInfo(response);
+                    if (statusCode == 200) {
+                        updateGameInfo(response);
+                    }
+                    else if (statusCode == 204) {
+                        gameInfo.minutesToStart = -1.0;
+                        gameInfo.numberOfPlayers = -1;
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -65,12 +77,22 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
             }
         };
 
-        return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + GAME_INFO_URL, null,
-                listener, errorListener);
+        return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + GAME_INFO_URL, new JSONObject(),
+                listener, errorListener) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                if (response != null) {
+                    statusCode = response.statusCode;
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
     }
 
     private void updateGameInfo(JSONObject gameInfoJson) throws JSONException {
-        double minutesToStart = gameInfoJson.getDouble("start_time");
+        String timeToStartJson = gameInfoJson.getString("start_time");
+        double minutesToStart = calculateTimeRemainingInMinutes(timeToStartJson);
+
         int numberOfPlayers = gameInfoJson.getInt("number_players");
 
         if (gameInfo.minutesToStart == null) {
@@ -79,14 +101,33 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         gameInfo.numberOfPlayers = numberOfPlayers;
     }
 
+    private float calculateTimeRemainingInMinutes(String startTime) {
+        Calendar c2 = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
+        int currentHour = c2.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = c2.get(Calendar.MINUTE);
+        int currentSecond = c2.get(Calendar.SECOND);
+
+        int currentTotal = currentSecond + 60 * (currentMinute + 60 * currentHour);
+
+        String[] startTimeArr = startTime.split(":");
+        float startHour = Float.parseFloat(startTimeArr[0]);
+        float startMinute = Float.parseFloat(startTimeArr[1]);
+        float startSecond = Float.parseFloat(startTimeArr[2]);
+        float startTotal = startSecond + 60 * (startMinute + 60 * startHour);
+
+        return ((startTotal - currentTotal) / 60);
+    }
+
     @Override
     public void joinGameRequest(String playerId) throws JSONException {
         // this is a placeholder
-        String response = "{\"start_beacon\":\"Beacon A\"}";
-        JSONObject obj = new JSONObject(response);
-        gameInfo.startBeacon = obj.getString("start_beacon");
+        // String response = "{\"home_beacon_minor\":\"4\",\"home_beacon_name\":\"Beacon A\"}";
+        // JSONObject obj = new JSONObject(response);
+        // gameInfo.startBeaconMinor = obj.getString("home_beacon_minor");
+        // gameInfo.startBeaconName = obj.getString("home_beacon_name");
 
-        // TODO: requestQueue.add(volleyJoinGameRequest(playerId));
+        requestQueue.add(volleyJoinGameRequest(playerId));
     }
 
     private JsonObjectRequest volleyJoinGameRequest(String playerId) throws JSONException {
@@ -94,7 +135,8 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    gameInfo.startBeacon = response.getString("start_beacon");
+                    gameInfo.startBeaconMinor = response.getString("home_beacon_minor");
+                    gameInfo.startBeaconName = response.getString("home_beacon_name");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -104,14 +146,14 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                throw new IllegalStateException("Error: " + error.getMessage());
+                throw new IllegalStateException("Error: " + error.toString());
             }
         };
 
         JSONObject requestBody = new JSONObject();
         requestBody.put("player_id", playerId);
 
-        return new JsonObjectRequest(Request.Method.PUT, SERVER_ADDRESS + JOIN_GAME_URL, requestBody,
+        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + JOIN_GAME_URL, requestBody,
                 listener, errorListener);
     }
 }

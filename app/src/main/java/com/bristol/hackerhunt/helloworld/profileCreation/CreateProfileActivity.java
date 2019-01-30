@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
 import com.bristol.hackerhunt.helloworld.joinGame.JoinGameActivity;
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
@@ -31,6 +32,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
     private void initializeNewProfileButton() {
         final Button goToProfileButton = findViewById(R.id.create_profile_button);
+        goToProfileButton.setText("go();");
         goToProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,12 +47,10 @@ public class CreateProfileActivity extends AppCompatActivity {
         goToProfileButton.setOnClickListener(null);
     }
 
-    private Runnable goToJoinGameActivityRunnable(final String playerRealName, final String playerHackerName,
-                                                  final String playerNfcId) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                PlayerIdentifiers playerIdentifiers = new PlayerIdentifiers(playerRealName, playerHackerName, playerNfcId);
+    private StringInputRunnable goToJoinGameActivityRunnable(final String playerRealName, final String playerHackerName) {
+        return new StringInputRunnable() {
+            public void run(String playerId) {
+                PlayerIdentifiers playerIdentifiers = new PlayerIdentifiers(playerRealName, playerHackerName, playerId);
 
                 Intent intent = new Intent(CreateProfileActivity.this, JoinGameActivity.class);
                 intent.putExtra("player_identifiers", playerIdentifiers);
@@ -63,7 +63,9 @@ public class CreateProfileActivity extends AppCompatActivity {
         return new Runnable() {
             @Override
             public void run() {
-                setFormErrorMessage("Profile invalid.");
+                initializeNewProfileButton();
+                setFormErrorMessage("Hacker name already exists.");
+
             }
         };
     }
@@ -71,15 +73,14 @@ public class CreateProfileActivity extends AppCompatActivity {
     private void requestNewProfile() {
         String playerRealName = getStringFromEditTextView(R.id.create_profile_real_name);
         String playerHackerName = getStringFromEditTextView(R.id.create_profile_hacker_name);
-        String playerNfcId = getStringFromEditTextView(R.id.create_profile_nfc_id);
 
-        if (userInputValid(playerRealName, playerHackerName, playerNfcId)) {
+        if (userInputValid(playerRealName, playerHackerName)) {
             setNewProfileButtonLoading();
             serverRequestsController.registerOnProfileValidRunnable(
-                    goToJoinGameActivityRunnable(playerRealName, playerHackerName, playerNfcId));
+                    goToJoinGameActivityRunnable(playerRealName, playerHackerName));
 
             try {
-                serverRequestsController.registerPlayerRequest(playerRealName, playerHackerName, playerNfcId);
+                serverRequestsController.registerPlayerRequest(playerRealName, playerHackerName);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -91,8 +92,8 @@ public class CreateProfileActivity extends AppCompatActivity {
         return editTextView.getText().toString();
     }
 
-    private boolean userInputValid(String playerRealName, String playerHackerName, String playerNfcId) {
-        return (playerRealNameIsValid(playerRealName) && playerHackerNameIsValid(playerHackerName) && playerNfcIdIsValid(playerNfcId));
+    private boolean userInputValid(String playerRealName, String playerHackerName) {
+        return (playerRealNameIsValid(playerRealName) && playerHackerNameIsValid(playerHackerName));
     }
 
     private boolean playerRealNameIsValid(String playerRealName) {
@@ -106,14 +107,6 @@ public class CreateProfileActivity extends AppCompatActivity {
     private boolean playerHackerNameIsValid(String playerHackerName) {
         if (playerHackerName == null || playerHackerName.length() == 0)  {
             setFormErrorMessage("Please provide a hacker name.");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean playerNfcIdIsValid(String playerNfcId) {
-        if (playerNfcId == null || playerNfcId.length() == 0)  {
-            setFormErrorMessage("Please provide a valid NFC ID.");
             return false;
         }
         return true;

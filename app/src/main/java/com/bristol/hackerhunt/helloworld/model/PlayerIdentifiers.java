@@ -19,19 +19,19 @@ public class PlayerIdentifiers implements Parcelable {
 
     private String realName;
     private String hackerName;
-    private String nfcId;
+    private String playerId;
 
 
-    public PlayerIdentifiers(String realName, String hackerName, String nfcId) {
+    public PlayerIdentifiers(String realName, String hackerName, String playerId) {
         this.realName = realName;
         this.hackerName = hackerName;
-        this.nfcId = nfcId;
+        this.playerId = playerId;
     }
 
     public PlayerIdentifiers(Parcel in) {
         realName = in.readString();
         hackerName = in.readString();
-        nfcId = in.readString();
+        playerId = in.readString();
     }
 
     public String getRealName() {
@@ -42,8 +42,8 @@ public class PlayerIdentifiers implements Parcelable {
         return hackerName;
     }
 
-    public String getNfcId() {
-        return nfcId;
+    public String getPlayerId() {
+        return playerId;
     }
 
     @Override
@@ -55,6 +55,6 @@ public class PlayerIdentifiers implements Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(realName);
         parcel.writeString(hackerName);
-        parcel.writeString(nfcId);
+        parcel.writeString(playerId);
     }
 }
