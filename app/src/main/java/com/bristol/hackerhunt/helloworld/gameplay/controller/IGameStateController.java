@@ -79,6 +79,13 @@ public interface IGameStateController {
     boolean playerHasFullIntel(String targetId);
 
     /**
+     * Non-zero intel.
+     * @param targetId id
+     * @return true if non zero.
+     */
+    boolean playerHasNonZeroIntel(String targetId);
+
+    /**
      * Lose half of the player's learned intel on other players.
      */
     void loseHalfOfPlayersIntel();

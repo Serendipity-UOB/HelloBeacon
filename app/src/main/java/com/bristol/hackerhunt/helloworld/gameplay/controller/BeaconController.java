@@ -89,7 +89,7 @@ public class BeaconController implements IBeaconController {
                     String minor = Integer.toString(device.getMinor());
                     int rssi = device.getRssi();
 
-                    if (rssi > nearestRssi) {
+                    if (rssi > nearestRssi && rssi != 0) {
                         nearestRssi = rssi;
                         nearestMinor = minor;
                     }

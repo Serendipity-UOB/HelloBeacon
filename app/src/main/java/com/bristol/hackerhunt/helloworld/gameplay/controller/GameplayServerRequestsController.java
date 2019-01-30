@@ -268,11 +268,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (statusCode == 400) {
-                    Log.d("Network", "400 Error received");
+                    // Log.d("Network", "400 Error received");
                     unsuccessfulExchange(details);
                 }
                 else if (statusCode != 201 && statusCode != 202){
-                    Log.d("Network", "Different server error received: " + Integer.toString(statusCode));
+                    // Log.d("Network", "Different server error received: " + Integer.toString(statusCode));
                     unsuccessfulExchange(details);
                 }
                 statusCode = 0;
@@ -310,7 +310,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
         JSONArray contactIds = new JSONArray();
         for (String playerId : gameStateController.getPlayerIdRealNameMap().keySet()) {
-            if (gameStateController.playerHasFullIntel(playerId)) {
+            if (gameStateController.playerHasNonZeroIntel(playerId)) {
                 JSONObject contactId = new JSONObject();
                 contactId.put("contact_id", playerId);
                 contactIds.put(contactId);
@@ -318,7 +318,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         }
         requestBody.put("contact_ids", contactIds);
 
-        Log.d("Network", requestBody.toString());
+        // Log.d("Network", requestBody.toString());
         return requestBody;
     }
 

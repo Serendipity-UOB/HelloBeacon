@@ -39,9 +39,9 @@ import java.util.TimerTask;
 
 public class GameplayActivity extends AppCompatActivity {
 
-    private static final int POLLING_PERIOD = 3;               // given in seconds
+    private static final int POLLING_PERIOD = 1;               // given in seconds
     private static final double GAMEPLAY_DURATION = 10;         // given in minutes.
-    private static final int EXCHANGE_POLLING_PERIOD = 3;       // given in seconds.
+    private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
 
     private PlayerIdentifiers playerIdentifiers;
 
@@ -96,6 +96,11 @@ public class GameplayActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // do nothing.
     }
 
     @Override
@@ -286,6 +291,11 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 String homeBeaconName = gameStateController.getHomeBeaconName();
                 consoleView.takedownSuccessPrompt(homeBeaconName);
+                try {
+                    serverRequestsController.newTargetRequest();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
     }

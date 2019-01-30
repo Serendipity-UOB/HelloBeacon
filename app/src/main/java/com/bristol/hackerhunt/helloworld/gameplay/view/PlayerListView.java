@@ -34,6 +34,9 @@ public class PlayerListView implements IPlayerListView {
     private StringInputRunnable beginSelectedTakedownOnClickRunner;
     private StringInputRunnable beginSelectedExchangeOnClickRunner;
 
+    private boolean exchangeStarted = false;
+    private boolean takedownStarted = false;
+
     /**
      * Constructor
      * @param inflater Inflater used to insert and render new UI components.
@@ -110,8 +113,7 @@ public class PlayerListView implements IPlayerListView {
                 setTextOfView(hackerNameView, hackerName);
             }
             else {
-                setTextOfView(hackerNameView, hackerName, ContextCompat.getColor(hackerNameView.getContext(),
-                        R.color.gameplay_far_player_name));
+                setTextOfView(hackerNameView, hackerName, R.color.gameplay_far_player_name);
             }
         }
 
@@ -144,6 +146,8 @@ public class PlayerListView implements IPlayerListView {
             ProgressBar intelBar = listItem.findViewById(R.id.player_intel_bar);
 
             int intel = intelBar.getProgress();
+            TextView hackerName = listItem.findViewById(R.id.player_hacker_name);
+            hackerName.setVisibility(View.GONE);
             intelBar.setProgress(intel - intelIncrement);
         }
     }
@@ -157,6 +161,11 @@ public class PlayerListView implements IPlayerListView {
                     int intel = getPlayerIntel(playerId);
                     removeListItemEntry(playerId);
                     insertPlayer(playerId, false, intel);
+
+                    if (exchangeStarted || takedownStarted) {
+                        clearOnClickListener(playerId);
+                        darkenFarAwayPlayerEntries(playerId);
+                    }
                 }
             }
 
@@ -164,6 +173,13 @@ public class PlayerListView implements IPlayerListView {
                 int intel = getPlayerIntel(playerId);
                 removeListItemEntry(playerId);
                 insertPlayer(playerId, true, intel);
+
+                if (exchangeStarted) {
+                    setExchangeOnClickListener(playerId);
+                }
+                if (takedownStarted) {
+                    setTakedownOnClickListener(playerId);
+                }
             }
 
             this.nearbyPlayerIds = newNearbyPlayerIds;
@@ -217,6 +233,7 @@ public class PlayerListView implements IPlayerListView {
 
     @Override
     public void beginTakedown() {
+        this.takedownStarted = true;
         for (String playerId : playerIdListItemIdMap.keySet()) {
             if (!nearbyPlayerIds.contains(playerId)) {
                 darkenFarAwayPlayerEntries(playerId);
@@ -263,6 +280,8 @@ public class PlayerListView implements IPlayerListView {
                 clearOnClickListener(playerId);
             }
         }
+        this.takedownStarted = false;
+        this.exchangeStarted = false;
     }
 
     private void restoreFarAwayPlayerEntry(String playerId) {
@@ -286,6 +305,7 @@ public class PlayerListView implements IPlayerListView {
 
     @Override
     public void beginExchange() {
+        this.exchangeStarted = true;
         for (String playerId : playerIdListItemIdMap.keySet()) {
             if (!nearbyPlayerIds.contains(playerId)) {
                 darkenFarAwayPlayerEntries(playerId);
