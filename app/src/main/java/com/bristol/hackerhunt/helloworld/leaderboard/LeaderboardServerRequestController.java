@@ -42,11 +42,11 @@ public class LeaderboardServerRequestController implements ILeaderboardServerReq
     @Override
     public void getInfoRequest(List<LeaderboardItem> leaderboardList) throws JSONException {
         // placeholder
-        String response = "{\"leaderboard\":[{\"player_id\":\"0\",\"score\":1000},{\"player_id\":\"1\",\"score\":565},{\"player_id\":\"2\",\"score\":500}]}";
-        JSONObject obj = new JSONObject(response);
-        addLeaderboardItems(obj, leaderboardList);
+        // String response = "{\"leaderboard\":[{\"player_id\":\"0\",\"score\":1000},{\"player_id\":\"1\",\"score\":565},{\"player_id\":\"2\",\"score\":500}]}";
+        // JSONObject obj = new JSONObject(response);
+        // addLeaderboardItems(obj, leaderboardList);
 
-        // TODO: requestQueue.add(volleyGetInfoRequest(leaderboardList));
+        requestQueue.add(volleyGetInfoRequest(leaderboardList));
     }
 
     private JsonObjectRequest volleyGetInfoRequest(final List<LeaderboardItem> leaderboardList)

@@ -148,6 +148,7 @@ public class PlayerListView implements IPlayerListView {
             int intel = intelBar.getProgress();
             TextView hackerName = listItem.findViewById(R.id.player_hacker_name);
             hackerName.setVisibility(View.GONE);
+            playerIdHackerNameMap.remove(playerId);
             intelBar.setProgress(intel - intelIncrement);
         }
     }

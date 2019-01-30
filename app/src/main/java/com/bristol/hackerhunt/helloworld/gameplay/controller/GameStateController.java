@@ -151,7 +151,8 @@ public class GameStateController implements IGameStateController {
                 }
                 int decrease = (increments / 2);
                 for (int i = 0; i < decrease; i++) {
-                   playerListController.decreasePlayerIntel(id, INTEL_INCREMENT);
+                    allPlayersMap.get(id).intel = allPlayersMap.get(id).intel - INTEL_INCREMENT;
+                    playerListController.decreasePlayerIntel(id, INTEL_INCREMENT);
                 }
             }
         }
