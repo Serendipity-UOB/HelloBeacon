@@ -150,7 +150,6 @@ public class GameplayActivity extends AppCompatActivity {
                         consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
                         gameStateController.loseHalfOfPlayersIntel();
                         gameStateController.resetPlayerTakenDown();
-                        serverRequestsController.newTargetRequest();
                     }
                     if (gameStateController.playersTargetHasBeenTakenDown()) {
                         consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
