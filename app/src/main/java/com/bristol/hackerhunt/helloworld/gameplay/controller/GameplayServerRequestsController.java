@@ -1,6 +1,7 @@
 package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -259,13 +260,22 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                         e.printStackTrace();
                     }
                 }
+                statusCode = 0;
             }
         };
 
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                unsuccessfulExchange(details);
+                if (statusCode == 400) {
+                    Log.d("Network", "400 Error received");
+                    unsuccessfulExchange(details);
+                }
+                else if (statusCode != 201 && statusCode != 202){
+                    Log.d("Network", "Different server error received: " + Integer.toString(statusCode));
+                    unsuccessfulExchange(details);
+                }
+                statusCode = 0;
             }
         };
 
@@ -308,6 +318,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         }
         requestBody.put("contact_ids", contactIds);
 
+        Log.d("Network", requestBody.toString());
         return requestBody;
     }
 

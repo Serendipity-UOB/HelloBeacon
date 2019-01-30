@@ -1,5 +1,6 @@
 package com.bristol.hackerhunt.helloworld.gameplay;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
@@ -222,6 +223,8 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private void beginExchangeServerPolling(final String interacteeId) {
+        final Activity that = this;
+
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             final long t0 = System.currentTimeMillis();
@@ -230,21 +233,33 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (details.status.equals(InteractionStatus.FAILED)) {
-                    consoleView.exchangeFailedPrompt();
-                    finishExchange();
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            consoleView.exchangeFailedPrompt();
+                            finishExchange();
+                        }
+                    });
                     cancel();
                 }
                 else {
                     try {
-                        serverRequestsController.exchangeRequest(interacteeId, details);
-
                         if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
+                            cancel();
                             for (String id : details.gainedIntelPlayerIds) {
                                 gameStateController.increasePlayerIntel(id);
                             }
-                            consoleView.exchangeSuccessPrompt();
-                            finishExchange();
-                            cancel();
+
+                            that.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    consoleView.exchangeSuccessPrompt();
+                                    finishExchange();
+                                }
+                            });
+                        }
+                        else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                            serverRequestsController.exchangeRequest(interacteeId, details);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

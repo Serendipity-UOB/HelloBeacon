@@ -1,6 +1,7 @@
 package com.bristol.hackerhunt.helloworld.joinGame;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -73,7 +74,8 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                throw new IllegalStateException("Error: " + error.getMessage());
+                // throw new IllegalStateException("Error: " + error.getMessage());
+                Log.d("Network", error.getMessage());
             }
         };
 
