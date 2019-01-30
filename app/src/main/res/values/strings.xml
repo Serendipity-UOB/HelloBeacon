@@ -16,7 +16,7 @@
     <string name="exchange_request">/exchange</string>
     <string name="takedown_request">/takeDown</string>
 
-    <string name="get_info_request">/getInfo</string>
+    <string name="get_info_request">/endInfo</string>
 
     <!-- UI -->
     <string name="app_name">Hacker Hunt</string>
