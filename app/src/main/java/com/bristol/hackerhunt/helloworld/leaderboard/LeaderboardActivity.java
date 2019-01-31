@@ -80,6 +80,11 @@ public class LeaderboardActivity extends AppCompatActivity {
         }, 0, 1000);
     }
 
+    @Override
+    public void onBackPressed() {
+        // do nothing.
+    }
+
     private void initializeReturnToTitleButton() {
         final Button returnToTitleButton = findViewById(R.id.return_to_title_button);
         returnToTitleButton.setOnClickListener(new View.OnClickListener() {

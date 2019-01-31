@@ -6,7 +6,8 @@
     android:gravity="center"
     tools:context=".profileCreation.CreateProfileActivity"
     android:orientation="vertical"
-    android:background="@color/mainBackground">
+    android:background="@color/mainBackground"
+    android:screenOrientation="portrait">
 
    <TextView
        android:layout_width="match_parent"

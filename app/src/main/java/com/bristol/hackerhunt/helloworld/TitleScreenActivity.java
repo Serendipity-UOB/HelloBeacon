@@ -34,6 +34,11 @@ public class TitleScreenActivity extends AppCompatActivity {
         });
 
     }
+    
+    @Override
+    public void onBackPressed() {
+        // do nothing.
+    }
 
     //Since Android Marshmallow starting a Bluetooth Low Energy scan requires permission from location group.
     private void checkPermissions() {

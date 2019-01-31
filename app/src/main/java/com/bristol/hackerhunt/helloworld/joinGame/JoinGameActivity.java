@@ -48,6 +48,10 @@ public class JoinGameActivity extends AppCompatActivity {
         timer.scheduleAtFixedRate(pollServer(playerIdentifiers, timer), 0, POLLING_PERIOD * 1000);
     }
 
+    @Override
+    public void onBackPressed() {
+        // do nothing.
+    }
     private TimerTask pollServer(final PlayerIdentifiers playerIdentifiers, final Timer timer) {
         final Activity that = this;
 
