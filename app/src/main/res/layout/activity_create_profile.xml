@@ -15,6 +15,7 @@
        android:gravity="center"
        android:textColor="@color/mainText"
        android:fontFamily="@font/vt323"
+       android:textSize="13pt"
        android:text="// create your profile"/>
 
     <EditText
@@ -25,6 +26,7 @@
         android:hint="@string/create_profile_real_name"
         android:fontFamily="@font/vt323"
         android:inputType="text"
+        android:textSize="12pt"
         android:layout_marginHorizontal="10pt"
         android:layout_marginVertical="5pt"
         android:paddingLeft="10pt" />
@@ -37,6 +39,7 @@
         android:hint="@string/create_profile_hacker_name"
         android:fontFamily="@font/vt323"
         android:inputType="text"
+        android:textSize="12pt"
         android:layout_marginHorizontal="10pt"
         android:layout_marginVertical="5pt"
         android:paddingLeft="10pt"/>
@@ -49,7 +52,7 @@
         android:textColor="@color/attentionText"
         android:fontFamily="@font/vt323"
         android:text="Error: this is an error"
-        android:layout_marginBottom="10pt"
+        android:layout_marginBottom="11pt"
         android:visibility="invisible"/>
 
     <Button
@@ -58,7 +61,7 @@
         android:layout_height="wrap_content"
         android:textAllCaps="false"
         android:fontFamily="@font/vt323"
-        android:textSize="10pt"
+        android:textSize="12pt"
         android:text="go();" />
 
 </LinearLayout>
