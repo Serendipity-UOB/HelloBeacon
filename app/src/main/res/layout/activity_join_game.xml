@@ -42,10 +42,10 @@
         android:id="@+id/join_game_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
         android:fontFamily="@font/vt323"
-        android:textSize="10pt"
-        android:text="join_game();" />
+        android:text="join_game();"
+        android:textAllCaps="false"
+        android:textSize="10pt" />
 
     <TextView
         android:id="@+id/join_game_success"
