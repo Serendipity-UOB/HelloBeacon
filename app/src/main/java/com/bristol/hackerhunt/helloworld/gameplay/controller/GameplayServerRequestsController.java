@@ -79,7 +79,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             public void onResponse(JSONObject response) {
                 try {
                     setAllPlayers(response);
-                    newTargetRequest();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

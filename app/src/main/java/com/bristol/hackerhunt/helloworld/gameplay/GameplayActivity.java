@@ -57,6 +57,7 @@ public class GameplayActivity extends AppCompatActivity {
     private IBeaconController beaconController;
 
     private boolean gameOver = false;
+    private boolean newTargetRequested = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,14 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 consoleView.closeConsole();
+                if (newTargetRequested) {
+                    try {
+                        serverRequestsController.newTargetRequest();
+                        newTargetRequested = false;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }, CONSOLE_POPUP_DELAY_PERIOD * 1000);
     }
@@ -165,9 +174,9 @@ public class GameplayActivity extends AppCompatActivity {
                         gameStateController.resetPlayerTakenDown();
                     }
                     if (gameStateController.playersTargetHasBeenTakenDown()) {
+                        newTargetRequested = true;
                         consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
                         gameStateController.resetPlayersTargetHasBeenTakenDown();
-                        serverRequestsController.newTargetRequest();
                     }
 
                 } catch (JSONException e) {
@@ -221,7 +230,8 @@ public class GameplayActivity extends AppCompatActivity {
                 if (!gameStateController.playerHasFullIntel(targetId)) {
                     consoleView.takedownInsufficientIntelPrompt();
                 }
-                else if (!gameStateController.getTargetPlayerId().equals(targetId)) {
+                else if (gameStateController.getTargetPlayerId() == null ||
+                !gameStateController.getTargetPlayerId().equals(targetId)) {
                     consoleView.takedownNotYourTargetPrompt();
                 }
                 else {
@@ -313,11 +323,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 String homeBeaconName = gameStateController.getHomeBeaconName();
                 consoleView.takedownSuccessPrompt(homeBeaconName);
-                try {
-                    serverRequestsController.newTargetRequest();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                newTargetRequested = true;
             }
         };
     }
