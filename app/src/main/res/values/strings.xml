@@ -58,4 +58,5 @@
 
     <string name="leaderboard_title">Leaderboard</string>
     <string name="exit_leaderboard_button_text">exit(EXIT_SUCCESS);</string>
+    <string name="console_close_button">X</string>
 </resources>

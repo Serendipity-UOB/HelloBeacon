@@ -13,7 +13,8 @@ public class ConsoleView implements IConsoleView {
     private static final int TYPEWRITER_SPEED = 10;     // given in milliseconds.
 
     private final View overlay;
-    private final TextView consoleView;
+    private final View consoleView;
+    private final TextView consoleViewText;
 
     private final Typewriter typewriter;
 
@@ -22,6 +23,7 @@ public class ConsoleView implements IConsoleView {
     public ConsoleView(View consolePromptContainer) {
         this.overlay = consolePromptContainer;
         this.consoleView = overlay.findViewById(R.id.gameplay_console);
+        this.consoleViewText = overlay.findViewById(R.id.gameplay_console_text);
 
         this.typewriter = new Typewriter(TYPEWRITER_SPEED);
 
@@ -37,10 +39,20 @@ public class ConsoleView implements IConsoleView {
                 overlay.setVisibility(View.GONE);
             }
         });
+        showCloseButton();
     }
 
     private void disableCloseConsole() {
         overlay.setOnClickListener(null);
+        hideCloseButton();
+    }
+
+    private void showCloseButton() {
+        ((TextView) consoleView.findViewById(R.id.console_close_button)).setText("X ");
+    }
+
+    private void hideCloseButton() {
+        ((TextView) consoleView.findViewById(R.id.console_close_button)).setText(" ");
     }
 
     @Override
@@ -112,7 +124,7 @@ public class ConsoleView implements IConsoleView {
     }
 
     private void consoleMessage(String message) {
-        typewriter.animateText(consoleView, message);
+        typewriter.animateText(consoleViewText, message);
         overlay.setVisibility(View.VISIBLE);
     }
 
