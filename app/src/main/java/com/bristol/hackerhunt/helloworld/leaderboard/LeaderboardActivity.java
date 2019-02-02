@@ -115,7 +115,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         playerScore.setText(score);
 
         if (this.playerIdentifiers.getPlayerId().equals(item.playerId)) {
-            int color = ContextCompat.getColor(this, R.color.gameplay_nearby_player_name);
+            int color = ContextCompat.getColor(this, R.color.leaderboard_current_player_name);
             playerName.setTextColor(color);
             playerScore.setTextColor(color);
         }

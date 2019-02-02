@@ -27,4 +27,7 @@
     <color name="progress_bar_far_interaction">#1e3016</color>
     <color name="progress_bar_background">#ffffff</color>
     <color name="progress_bar_background_far_interaction">#484848</color>
+
+    <!-- LEADERBOARD UI -->
+    <color name="leaderboard_current_player_name">#fff</color>
 </resources>

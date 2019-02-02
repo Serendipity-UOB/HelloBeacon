@@ -21,7 +21,7 @@ import java.util.TimerTask;
 
 public class JoinGameActivity extends AppCompatActivity {
 
-    private static int POLLING_PERIOD = 3; // in seconds
+    private static int POLLING_PERIOD = 1; // in seconds
 
     private IJoinGameServerRequestController serverRequestController;
 
