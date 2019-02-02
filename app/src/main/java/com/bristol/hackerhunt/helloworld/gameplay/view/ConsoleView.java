@@ -15,6 +15,7 @@ public class ConsoleView implements IConsoleView {
     private final View overlay;
     private final View consoleView;
     private final TextView consoleViewText;
+    private final TextView consoleCloseButton;
 
     private final Typewriter typewriter;
 
@@ -24,6 +25,7 @@ public class ConsoleView implements IConsoleView {
         this.overlay = consolePromptContainer;
         this.consoleView = overlay.findViewById(R.id.gameplay_console);
         this.consoleViewText = overlay.findViewById(R.id.gameplay_console_text);
+        this.consoleCloseButton = overlay.findViewById(R.id.console_close_button);
 
         this.typewriter = new Typewriter(TYPEWRITER_SPEED);
 
@@ -33,7 +35,7 @@ public class ConsoleView implements IConsoleView {
     }
 
     private void enableCloseConsole() {
-        overlay.setOnClickListener(new View.OnClickListener() {
+        consoleCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 overlay.setVisibility(View.GONE);
@@ -43,16 +45,16 @@ public class ConsoleView implements IConsoleView {
     }
 
     private void disableCloseConsole() {
-        overlay.setOnClickListener(null);
+        consoleViewText.setOnClickListener(null);
         hideCloseButton();
     }
 
     private void showCloseButton() {
-        ((TextView) consoleView.findViewById(R.id.console_close_button)).setText("X ");
+        consoleCloseButton.setText("X");
     }
 
     private void hideCloseButton() {
-        ((TextView) consoleView.findViewById(R.id.console_close_button)).setText(" ");
+        consoleCloseButton.setText(" ");
     }
 
     @Override
