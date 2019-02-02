@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,9 +40,10 @@ import java.util.TimerTask;
 
 public class GameplayActivity extends AppCompatActivity {
 
-    private static final int POLLING_PERIOD = 1;               // given in seconds
-    private static final double GAMEPLAY_DURATION = 3;         // given in minutes.
+    private static final int POLLING_PERIOD = 1;                // given in seconds
+    private static final double GAMEPLAY_DURATION = 3;          // given in minutes.
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
+    private static final int CONSOLE_POPUP_DELAY_PERIOD = 5;    // given in seconds.
 
     private PlayerIdentifiers playerIdentifiers;
 
@@ -76,7 +78,8 @@ public class GameplayActivity extends AppCompatActivity {
         gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
             @Override
             public void run() {
-                consoleView.closeConsole();
+                closeConsoleAfterDelay();
+
             }
         });
 
@@ -97,6 +100,15 @@ public class GameplayActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void closeConsoleAfterDelay() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                consoleView.closeConsole();
+            }
+        }, CONSOLE_POPUP_DELAY_PERIOD * 1000);
     }
 
     @Override

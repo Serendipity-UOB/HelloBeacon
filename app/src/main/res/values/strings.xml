@@ -49,7 +49,7 @@
     <string name="exchange_select_player_button">cancel(EXCHANGE);</string>
     <string name="takedown_select_player_button">cancel(TAKEDOWN);</string>
 
-    <string name="game_over_console_message">Incoming message…  Game Over!  Good work!</string>
+    <string name="game_over_console_message">Incoming message…  \n\nGame Over!\n\nGood work!</string>
     <string name="console_start_beacon_message">Incoming message…  \n\nGo to $BEACON to receive your first target.\n\n\n- Anon</string>
     <string name="exchange_failed_message">EXCHANGE_FAILED</string>
     <string name="exchange_success_message">EXCHANGE_SUCCESS</string>
