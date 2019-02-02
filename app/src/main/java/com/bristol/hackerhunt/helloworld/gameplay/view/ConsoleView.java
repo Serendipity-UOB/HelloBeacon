@@ -10,6 +10,8 @@ import com.bristol.hackerhunt.helloworld.Typewriter;
 
 public class ConsoleView implements IConsoleView {
 
+    private static final int TYPEWRITER_SPEED = 10;     // given in milliseconds.
+
     private final View overlay;
     private final TextView consoleView;
 
@@ -21,7 +23,7 @@ public class ConsoleView implements IConsoleView {
         this.overlay = consolePromptContainer;
         this.consoleView = overlay.findViewById(R.id.gameplay_console);
 
-        this.typewriter = new Typewriter(10);
+        this.typewriter = new Typewriter(TYPEWRITER_SPEED);
 
         this.interactionInProgress = false;
 

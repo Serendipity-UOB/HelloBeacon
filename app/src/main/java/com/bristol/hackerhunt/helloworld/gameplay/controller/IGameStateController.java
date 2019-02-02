@@ -25,9 +25,9 @@ public interface IGameStateController {
     String getTargetPlayerId();
 
     /**
-     * @return the minor of the nearest beacon.
+     * @return the major of the nearest beacon.
      */
-    String getNearestBeaconMinor();
+    String getNearestBeaconMajor();
 
     /**
      * @return A mapping from player id to real name.
@@ -37,14 +37,22 @@ public interface IGameStateController {
     /**
      * Set the nearest beacon minor.
      */
-    void setNearestBeaconMinor(String minor);
+    void setNearestBeaconMajor(String major);
 
     /**
-     * Get the rssi of a given beacon.
-     * @param minor the minor of the desired beacon.
+     * Get the max rssi of a given beacon major.
+     * @param major the major of the desired beacon.
      * @return the last recorded rssi.
      */
-    int getBeaconRssi(String minor);
+    int getBeaconRssi(String major);
+
+    /**
+     * Get the rssi of a specific beacon.
+     * @param major major.
+     * @param minor minor
+     * @return rssi.
+     */
+    int getBeaconRssi(String major, String minor);
 
     /**
      * @return the playing player has been taken down.
@@ -127,15 +135,21 @@ public interface IGameStateController {
 
     /**
      * Update nearby beacon.
-     * @param minor minor of beacon.
+     * @param major major of beacon.
      * @param rssi recorded rssi of beacon.
      */
-    void updateBeacon(String minor, int rssi);
+    void updateBeacon(String major, String minor, int rssi);
 
     /**
-     * @return a set of all recorded beacon minors.
+     * @return a set of all recorded beacon majors.
      */
-    Set<String> getAllBeaconMinors();
+    Set<String> getAllBeaconMajors();
+
+    /**
+     * @param major beacon major.
+     * @return set of all minors associated with major.
+     */
+    Set<String> getAllBeaconMinors(String major);
 
     /**
      * Update the player's statuses.

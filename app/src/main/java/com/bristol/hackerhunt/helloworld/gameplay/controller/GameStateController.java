@@ -18,10 +18,10 @@ public class GameStateController implements IGameStateController {
     private final IPlayerListView playerListController;
     private final IPlayerStatusBarView playerStatusBarController;
 
-    private final Map<String, Integer> beaconMinorRssiMap;
-    private final Map<String, String> beaconMinorNameMap;
-    private String nearestBeaconMinor;
-    private final String homeBeaconMinor;
+    private final Map<String, Map<String, Integer>> beaconMajorMinorRssiMap;
+    private final Map<String, String> beaconMajorNameMap;
+    private String nearestBeaconMajor;
+    private final String homeBeaconMajor;
     private Runnable onNearestBeaconHomeRunnable;
 
     private final PlayerIdentifiers playerIdentifiers;
@@ -36,7 +36,7 @@ public class GameStateController implements IGameStateController {
     public GameStateController(IPlayerListView playerListController,
                                IPlayerStatusBarView playerStatusBarController,
                                PlayerIdentifiers playerIdentifiers,
-                               String homeBeaconMinor,
+                               String homeBeaconMajor,
                                String homeBeaconName) {
         this.playerListController = playerListController;
         this.playerStatusBarController = playerStatusBarController;
@@ -45,14 +45,14 @@ public class GameStateController implements IGameStateController {
         this.nearbyPlayerIds = new ArrayList<>();
         this.playerUpdates = new ArrayList<>();
 
-        this.beaconMinorRssiMap = new HashMap<>();
-        this.beaconMinorNameMap = new HashMap<>();
-        this.homeBeaconMinor = homeBeaconMinor;
-        this.beaconMinorNameMap.put(homeBeaconMinor, homeBeaconName);
+        this.beaconMajorMinorRssiMap = new HashMap<>();
+        this.beaconMajorNameMap = new HashMap<>();
+        this.homeBeaconMajor = homeBeaconMajor;
+        this.beaconMajorNameMap.put(homeBeaconMajor, homeBeaconName);
 
         this.points = 0;
         this.leaderboardPosition = "Loading...";
-        nearestBeaconMinor = "none";
+        nearestBeaconMajor = "none";
     }
 
     private class PlayerDetails {
@@ -69,7 +69,7 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public String getHomeBeaconName() {
-        return beaconMinorNameMap.get(homeBeaconMinor);
+        return beaconMajorNameMap.get(homeBeaconMajor);
     }
 
     @Override
@@ -78,8 +78,8 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
-    public String getNearestBeaconMinor() {
-        return nearestBeaconMinor;
+    public String getNearestBeaconMajor() {
+        return nearestBeaconMajor;
     }
 
     @Override
@@ -92,10 +92,10 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
-    public void setNearestBeaconMinor(String minor) {
-        this.nearestBeaconMinor = minor;
+    public void setNearestBeaconMajor(String major) {
+        this.nearestBeaconMajor = major;
 
-        if (onNearestBeaconHomeRunnable != null && nearestBeaconMinor.equals(homeBeaconMinor)) {
+        if (onNearestBeaconHomeRunnable != null && nearestBeaconMajor.equals(homeBeaconMajor)) {
             onNearestBeaconHomeRunnable.run();
         }
     }
@@ -213,17 +213,41 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
-    public void updateBeacon(String minor, int rssi) {
-        beaconMinorRssiMap.put(minor, rssi);
+    public void updateBeacon(String major, String minor, int rssi) {
+        if (beaconMajorMinorRssiMap.containsKey(major)) {
+            beaconMajorMinorRssiMap.get(major).put(minor, rssi);
+        }
+        else {
+            Map<String, Integer> minorRssiMap = new HashMap<>();
+            minorRssiMap.put(minor, rssi);
+            beaconMajorMinorRssiMap.put(major, minorRssiMap);
+        }
     }
 
     @Override
-    public Set<String> getAllBeaconMinors() {
-        return beaconMinorRssiMap.keySet();
+    public Set<String> getAllBeaconMajors() {
+        return beaconMajorMinorRssiMap.keySet();
     }
 
-    public int getBeaconRssi(String minor) {
-        return beaconMinorRssiMap.get(minor);
+    @Override
+    public Set<String> getAllBeaconMinors(String major) {
+        return beaconMajorMinorRssiMap.get(major).keySet();
+    }
+
+    public int getBeaconRssi(String major) {
+        Map<String, Integer> beaconMinorRssiMap = beaconMajorMinorRssiMap.get(major);
+        int maxRssi = Integer.MIN_VALUE;
+        for (String minor : beaconMinorRssiMap.keySet()) {
+            if (beaconMinorRssiMap.get(minor) > maxRssi) {
+                maxRssi = beaconMinorRssiMap.get(minor);
+            }
+        }
+        return maxRssi;
+    }
+
+    @Override
+    public int getBeaconRssi(String major, String minor) {
+        return beaconMajorMinorRssiMap.get(major).get(minor);
     }
 
     @Override

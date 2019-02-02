@@ -76,55 +76,60 @@ public class BeaconController implements IBeaconController {
             public void onIBeaconDiscovered(IBeaconDevice ibeacon, IBeaconRegion region) {
                 super.onIBeaconDiscovered(ibeacon, region);
 
+                String major = Integer.toString(ibeacon.getMajor());
                 String minor = Integer.toString(ibeacon.getMinor());
                 int rssi = ibeacon.getRssi();
 
-                gameStateController.updateBeacon(minor, rssi);
+                gameStateController.updateBeacon(major, minor, rssi);
             }
 
             @Override
             public void onIBeaconsUpdated(List<IBeaconDevice> iBeaconDevices, IBeaconRegion region) {
                 super.onIBeaconsUpdated(iBeaconDevices, region);
 
-                for (String minor : gameStateController.getAllBeaconMinors()) {
-                    gameStateController.updateBeacon(minor, 0);
+                for (String major : gameStateController.getAllBeaconMajors()) {
+                    for (String minor : gameStateController.getAllBeaconMinors(major)) {
+                        gameStateController.updateBeacon(major, minor, 0);
+                    }
                 }
 
-                String nearestMinor = "";
+                String nearestMajor = "";
                 int nearestRssi = Integer.MIN_VALUE;
 
                 for (IBeaconDevice device : iBeaconDevices) {
+                    String major = Integer.toString(device.getMajor());
                     String minor = Integer.toString(device.getMinor());
                     int rssi = device.getRssi();
 
                     if (rssi > nearestRssi && rssi <= 0) {
                         nearestRssi = rssi;
-                        nearestMinor = minor;
+                        nearestMajor = major;
                     }
 
-                    gameStateController.updateBeacon(minor, rssi);
+                    gameStateController.updateBeacon(major, minor, rssi);
                 }
 
-                gameStateController.setNearestBeaconMinor(nearestMinor);
+                gameStateController.setNearestBeaconMajor(nearestMajor);
             }
 
             @Override
             public void onIBeaconLost(IBeaconDevice ibeacon, IBeaconRegion region) {
+                String major = Integer.toString(ibeacon.getMajor());
                 String minor = Integer.toString(ibeacon.getMinor());
-                gameStateController.updateBeacon(minor, 0);
+                gameStateController.updateBeacon(major, minor, 0);
 
                 // Update nearest minor.
-                if (gameStateController.getNearestBeaconMinor().equals(minor)) {
+                if (gameStateController.getNearestBeaconMajor().equals(major)) {
                     Integer maxValue = Integer.MIN_VALUE;
-                    String nearestMinor = "";
-                    for (String m : gameStateController.getAllBeaconMinors()) {
-                        int rssi = gameStateController.getBeaconRssi(m);
+                    String nearestMajor = "";
+                    for (String maj : gameStateController.getAllBeaconMajors()) {
+                        int rssi = gameStateController.getBeaconRssi(major);
                         if (rssi > maxValue && rssi != 0) {
                             maxValue = rssi;
-                            nearestMinor = m;
+                            nearestMajor = maj;
                         }
                     }
-                    gameStateController.setNearestBeaconMinor(nearestMinor);
+                    gameStateController.setNearestBeaconMajor(nearestMajor);
                 }
             }
         };

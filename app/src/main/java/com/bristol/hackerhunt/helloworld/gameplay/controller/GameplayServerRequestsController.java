@@ -227,11 +227,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestBody.put("player_id", gameStateController.getPlayerId());
 
         JSONArray beacons = new JSONArray();
-        for (String minor : gameStateController.getAllBeaconMinors()) {
-            JSONObject beaconJson = new JSONObject();
-            beaconJson.put("beacon_minor", minor);
-            beaconJson.put("rssi", gameStateController.getBeaconRssi(minor));
-            beacons.put(beaconJson);
+        for (String major : gameStateController.getAllBeaconMajors()) {
+            for (String minor : gameStateController.getAllBeaconMinors(major)) {
+                JSONObject beaconJson = new JSONObject();
+                beaconJson.put("beacon_major", major);
+                beaconJson.put("beacon_minor", minor);
+                beaconJson.put("rssi", gameStateController.getBeaconRssi(major, minor));
+                beacons.put(beaconJson);
+            }
         }
         requestBody.put("beacons", beacons);
 
