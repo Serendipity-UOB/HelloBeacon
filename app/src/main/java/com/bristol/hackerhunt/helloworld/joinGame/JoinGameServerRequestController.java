@@ -64,10 +64,12 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
                     else if (statusCode == 204) {
                         gameInfo.minutesToStart = -1.0;
                         gameInfo.numberOfPlayers = -1;
+                        Log.d("JoinGame", "Status code 204");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                statusCode = 0;
             }
         };
 
@@ -118,6 +120,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         float startSecond = Float.parseFloat(startTimeArr[2]);
         float startTotal = startSecond + 60 * (startMinute + 60 * startHour);
 
+        Log.d("JoinGame", "Time remaining: " + Float.toString((startTotal - currentTotal) / 60));
         return ((startTotal - currentTotal) / 60);
     }
 

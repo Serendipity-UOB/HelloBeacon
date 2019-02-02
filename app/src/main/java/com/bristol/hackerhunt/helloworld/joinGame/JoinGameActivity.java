@@ -1,5 +1,6 @@
 package com.bristol.hackerhunt.helloworld.joinGame;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,8 @@ public class JoinGameActivity extends AppCompatActivity {
     }
 
     private TimerTask pollServer(final PlayerIdentifiers playerIdentifiers, final Timer timer) {
+        final Activity that = this;
+
         return new TimerTask() {
             @Override
             public void run() {
@@ -67,11 +70,18 @@ public class JoinGameActivity extends AppCompatActivity {
                     updateTimeLeftUntilGame("--:--");
                     updateNumberOfPlayersInGame("--");
 
-                    final Button joinGameButton = findViewById(R.id.join_game_button);
-                    joinGameButton.setVisibility(View.GONE);
-                    TextView joinStatus = findViewById(R.id.join_game_success);
-                    joinStatus.setVisibility(View.VISIBLE);
-                    joinStatus.setText("NO_GAME_AVAILABLE");
+                    that.runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    final Button joinGameButton = findViewById(R.id.join_game_button);
+                                    joinGameButton.setVisibility(View.GONE);
+                                    TextView joinStatus = findViewById(R.id.join_game_success);
+                                    joinStatus.setVisibility(View.VISIBLE);
+                                    joinStatus.setText("NO_GAME_AVAILABLE");
+                                }
+                            }
+                    );
                     cancel();
                 }
             }
@@ -132,12 +142,19 @@ public class JoinGameActivity extends AppCompatActivity {
     }
 
     private TimerTask checkHomeBeaconHasBeenRecieved(final TextView joinStatus) {
+        final Activity that = this;
         return new TimerTask() {
             @Override
             public void run() {
                 if (gameInfo.startBeaconMinor != null) {
-                    joinStatus.setText(R.string.join_game_success);
-                    joinedGame = true;
+
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            joinStatus.setText(R.string.join_game_success);
+                            joinedGame = true;
+                        }
+                    });
                     cancel();
                 }
             }
@@ -174,15 +191,27 @@ public class JoinGameActivity extends AppCompatActivity {
         appendStringToTextView(R.id.join_game_time_until_game, getResources().getString(R.string.join_game_time_until_game), time);
     }
 
-    private void replaceStringInTextView(int viewId, String oldString, String newString) {
-        TextView textView = findViewById(viewId);
-        String oldText = textView.getText().toString();
-        String newText = oldText.replace(oldString, newString);
-        textView.setText(newText);
+    private void replaceStringInTextView(final int viewId, final String oldString, final String newString) {
+        this.runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView textView = findViewById(viewId);
+                        String oldText = textView.getText().toString();
+                        String newText = oldText.replace(oldString, newString);
+                        textView.setText(newText);
+                    }
+                }
+        );
     }
 
-    private void appendStringToTextView(int viewId, String text, String suffix) {
-        TextView textView = findViewById(viewId);
-        textView.setText(text + " " + suffix);
+    private void appendStringToTextView(final int viewId, final String text, final String suffix) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView textView = findViewById(viewId);
+                textView.setText(text + " " + suffix);
+            }
+        });
     }
 }
