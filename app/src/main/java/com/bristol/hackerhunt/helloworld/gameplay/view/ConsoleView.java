@@ -83,8 +83,7 @@ public class ConsoleView implements IConsoleView {
     @Override
     public void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent) {
         disableCloseConsole();
-        consoleMessage("Incoming message...\n\nGood work. Return your equipment to the base " +
-                "station to collect your award.\n\n\n - Anon");
+        consoleMessage(context.getString(R.string.game_over_console_message));
         this.interactionInProgress = false;
         consoleView.setOnClickListener(new View.OnClickListener() {
             @Override

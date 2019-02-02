@@ -18,42 +18,44 @@
 
     <string name="get_info_request">/endInfoTest</string>
 
+    <!-- INTENT KEYS -->
+    <string name="all_players_map_intent_key">all_players_map</string>
+    <string name="player_identifiers_intent_key">player_identifiers</string>
+
     <!-- UI -->
     <string name="app_name">Hacker Hunt</string>
-    <string name="button_label_toast">Toast</string>
-    <string name="count_initial_value">0</string>
-    <string name="button_label_count">Count</string>
-    <string name="toast_message">Hello Toast</string>
     <string name="go_to_test_request">Go to test request</string>
     <string name="this_is_the_test_request_page">This is the test request page.</string>
     <string name="go_back_home">go back home</string>
     <string name="test_request">Test request</string>
-    <string name="title_screen_start_button">{ start(); }</string>
+
+    <string name="title_screen_start_button">start();</string>
+
     <string name="create_profile_real_name">Real name</string>
     <string name="create_profile_hacker_name">Hacker name</string>
-    <string name="create_profile_nfc_id">NFC id</string>
-    <string name="join_game_welcome_message">Welcome, $PLAYER_NAME.</string>
+
     <string name="join_game_players_in_game">Players in game: </string>
-    <string name="join_game_success">JOIN_SUCCESS</string>
     <string name="join_game_time_until_game">Time until game:</string>
-    <string name="gamplay_exchange_button">exchange();</string>
-    <string name="gameplay_take_down_button">take_down();</string>
+    <string name="join_game_welcome_message">Welcome, $PLAYER_NAME.</string>
+    <string name="join_game_success">JOIN_SUCCESS</string>
+    <string name="join_game_loading">JOIN_GAME_LOADING</string>
+
     <string name="gameplay_player_leaderboard_position">Pos:</string>
     <string name="gameplay_player_leaderboard_points">Points:</string>
     <string name="gameplay_player_target">Target:</string>
-    <string name="player_identifiers_intent_key">player_identifiers</string>
-    <string name="console_start_beacon_message">Incoming message...  \n\nGo to $BEACON to receive your first target.\n\n\n- Anon</string>
-    <string name="join_game_loading">JOIN_GAME_LOADING</string>
-    <string name="leaderboard_title">Leaderboard</string>
-    <string name="exit_leaderboard_button_text">exit(EXIT_SUCCESS);</string>
-    <string name="NFC_scan_successful_exchange">NFC scan successful. Exchange in progress.</string>
+
+    <string name="gamplay_exchange_button">exchange();</string>
+    <string name="gameplay_take_down_button">take_down();</string>
+    <string name="exchange_select_player_button">cancel(EXCHANGE);</string>
+    <string name="takedown_select_player_button">cancel(TAKEDOWN);</string>
+
+    <string name="game_over_console_message">Incoming message…  Game Over!  Good work!</string>
+    <string name="console_start_beacon_message">Incoming message…  \n\nGo to $BEACON to receive your first target.\n\n\n- Anon</string>
     <string name="exchange_failed_message">EXCHANGE_FAILED</string>
     <string name="exchange_success_message">EXCHANGE_SUCCESS</string>
     <string name="not_enough_intel_take_down_message">Error: not enough intel has been collected.</string>
     <string name="player_isnt_target_takedown_message">Error: player is not the target.</string>
-    <string name="scan_target_nfc_message">Scan target NFC tag.</string>
-    <string name="all_players_map_intent_key">all_players_map</string>
 
-    <string name="exchange_select_player_button">cancel(EXCHANGE);</string>
-    <string name="takedown_select_player_button">cancel(TAKEDOWN);</string>
+    <string name="leaderboard_title">Leaderboard</string>
+    <string name="exit_leaderboard_button_text">exit(EXIT_SUCCESS);</string>
 </resources>
