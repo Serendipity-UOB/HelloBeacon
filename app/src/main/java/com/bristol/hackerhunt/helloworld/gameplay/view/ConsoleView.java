@@ -43,7 +43,7 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void goToStartBeaconPrompt(String homeBeaconName) {
-        disableCloseConsole();
+        // disableCloseConsole();
         goToStartBeaconConsoleMessage(homeBeaconName);
         this.interactionInProgress = false;
     }

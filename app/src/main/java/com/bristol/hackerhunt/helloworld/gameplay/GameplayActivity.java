@@ -170,7 +170,17 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeInteractionButtonsView() {
         this.interactionButtonsView = new InteractionButtonsView(this, exchangeButtonOnClickRunnable(),
-                takedownButtonOnClickRunnable());
+                takedownButtonOnClickRunnable(), resumeGameAfterInteractionRunnable(),
+                resumeGameAfterInteractionRunnable());
+    }
+
+    private Runnable resumeGameAfterInteractionRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                playerListView.resumeGameplayAfterInteraction();
+            }
+        };
     }
 
     private Runnable takedownButtonOnClickRunnable() {

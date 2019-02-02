@@ -12,10 +12,38 @@ public class InteractionButtonsView implements IInteractionButtonsView {
     private final Activity activity;
 
     public InteractionButtonsView(Activity activity, Runnable exchangeButtonOnClickRunnable,
-                                  Runnable takedownButtonOnClickRunnable) {
+                                  Runnable takedownButtonOnClickRunnable,
+                                  Runnable cancelTakedownOnClickRunnable,
+                                  Runnable cancelExchangeOnClickRunnable) {
         this.activity = activity;
         initializeExchangeButton(exchangeButtonOnClickRunnable);
         initializeTakeDownButton(takedownButtonOnClickRunnable);
+        initializeCancelExchangeButton(cancelExchangeOnClickRunnable);
+        initializeCancelTakedownButton(cancelTakedownOnClickRunnable);
+    }
+
+    private void initializeCancelExchangeButton(final Runnable runnable) {
+        Button cancelExchangeButton = activity.findViewById(R.id.gameplay_exchange_select_player_button);
+        cancelExchangeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideExchangeSelectPlayerButton();
+                showInteractionButtons();
+                runnable.run();
+            }
+        });
+    }
+
+    private void initializeCancelTakedownButton(final Runnable runnable) {
+        Button cancelTakedownButton = activity.findViewById(R.id.takedown_exchange_select_player_button);
+        cancelTakedownButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideTakedownSelectPlayerButton();
+                showInteractionButtons();
+                runnable.run();
+            }
+        });
     }
 
     private void initializeExchangeButton(final Runnable runnable) {
