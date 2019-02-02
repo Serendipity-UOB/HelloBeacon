@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
-      <module fileurl="file://$PROJECT_DIR$/HelloWorld.iml" filepath="$PROJECT_DIR$/HelloWorld.iml" />
-=======
       <module fileurl="file://$PROJECT_DIR$/HelloBeacon.iml" filepath="$PROJECT_DIR$/HelloBeacon.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/hackhunt.iml" filepath="$PROJECT_DIR$/hackhunt.iml" />
->>>>>>> 48dd5b6ee26aca8a72c1082e859bd7b5cb5e8219
     </modules>
   </component>
 </project>

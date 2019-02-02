@@ -34,7 +34,7 @@ public class TitleScreenActivity extends AppCompatActivity {
         });
 
     }
-    
+
     @Override
     public void onBackPressed() {
         // do nothing.
