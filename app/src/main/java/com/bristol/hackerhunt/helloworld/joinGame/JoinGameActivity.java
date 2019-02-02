@@ -44,7 +44,10 @@ public class JoinGameActivity extends AppCompatActivity {
 
         initializeJoinGameButton();
 
+
         Timer timer = new Timer(true);
+        TimerTask task = pollServer(playerIdentifiers, timer);
+        task.run();
         timer.scheduleAtFixedRate(pollServer(playerIdentifiers, timer), 0, POLLING_PERIOD * 1000);
     }
 

@@ -91,6 +91,7 @@ public class GameplayActivity extends AppCompatActivity {
 
             // polling
             Timer timer = new Timer(false);
+            pollServer().run();
             timer.scheduleAtFixedRate(pollServer(),0, POLLING_PERIOD * 1000);
 
         } catch (JSONException e) {
