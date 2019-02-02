@@ -255,9 +255,9 @@ public class PlayerListView implements IPlayerListView {
 
         ProgressBar pb = entry.findViewById(R.id.player_intel_bar);
         pb.setProgressBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context,
-                R.color.gameplay_far_player_progress_bar_background_interaction)));
+                R.color.progress_bar_background_far_interaction)));
         pb.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(context,
-                R.color.gameplay_far_player_progress_bar_interaction)));
+                R.color.progress_bar_far_interaction)));
     }
 
     private void setTakedownOnClickListener(final String playerId) {
@@ -294,8 +294,10 @@ public class PlayerListView implements IPlayerListView {
                 R.color.gameplay_far_player_background));
 
         ProgressBar pb = entry.findViewById(R.id.player_intel_bar);
-        pb.setProgressBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#515172")));
-        pb.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#26d2ce")));
+        pb.setProgressBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(pb.getContext(),
+                R.color.progress_bar_background)));
+        pb.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(pb.getContext(),
+                R.color.progress_bar)));
     }
 
     private void clearOnClickListener(String playerId) {

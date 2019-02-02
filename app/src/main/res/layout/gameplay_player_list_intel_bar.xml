@@ -10,5 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:progressTint="@color/progress_bar"
+        android:progressBackgroundTint="@color/progress_bar_background"
         android:progress="30"/>
 </LinearLayout>

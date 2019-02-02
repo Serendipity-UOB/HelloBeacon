@@ -22,6 +22,9 @@
     <color name="gameplay_nearby_player_background_interaction">#1B1B26</color>
     <color name="gameplay_far_player_name">#000</color>
     <color name="gameplay_far_player_background">#5e5e86</color>
-    <color name="gameplay_far_player_progress_bar_background_interaction">#15312B</color>
-    <color name="gameplay_far_player_progress_bar_interaction">#15312B</color>
+
+    <color name="progress_bar">#6aa84f</color>
+    <color name="progress_bar_far_interaction">#1e3016</color>
+    <color name="progress_bar_background">#ffffff</color>
+    <color name="progress_bar_background_far_interaction">#484848</color>
 </resources>
