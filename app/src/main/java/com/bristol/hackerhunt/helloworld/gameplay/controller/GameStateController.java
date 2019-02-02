@@ -126,7 +126,7 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void increasePlayerIntel(String playerId) {
-        if (!playerId.equals("0")) {
+        if (!playerId.equals("0") && allPlayersMap.get(playerId) != null) {
             PlayerDetails pd = allPlayersMap.get(playerId);
             pd.intel = Math.min(100, pd.intel + INTEL_INCREMENT);
             playerListController.increasePlayerIntel(playerId, INTEL_INCREMENT);
@@ -144,10 +144,15 @@ public class GameStateController implements IGameStateController {
     @Override
     public void loseHalfOfPlayersIntel() {
         for (String id : allPlayersMap.keySet()) {
-            if (allPlayersMap.get(id).intel < 100) {
-                int decrease = (allPlayersMap.get(id).intel / 2) / INTEL_INCREMENT;
+            if (allPlayersMap.get(id).intel <= 100) {
+                int increments = (allPlayersMap.get(id).intel / INTEL_INCREMENT);
+                if (increments % 2 == 1) {
+                    increments++;
+                }
+                int decrease = (increments / 2);
                 for (int i = 0; i < decrease; i++) {
-                   playerListController.decreasePlayerIntel(id, INTEL_INCREMENT);
+                    allPlayersMap.get(id).intel = allPlayersMap.get(id).intel - INTEL_INCREMENT;
+                    playerListController.decreasePlayerIntel(id, INTEL_INCREMENT);
                 }
             }
         }
@@ -229,5 +234,10 @@ public class GameStateController implements IGameStateController {
     @Override
     public void setOnNearestBeaconBeingHomeBeaconListener(Runnable runnable) {
         this.onNearestBeaconHomeRunnable = runnable;
+    }
+
+    @Override
+    public boolean playerHasNonZeroIntel(String targetId) {
+        return allPlayersMap.get(targetId).intel > 0;
     }
 }

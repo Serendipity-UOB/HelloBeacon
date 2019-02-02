@@ -1,5 +1,6 @@
 package com.bristol.hackerhunt.helloworld.leaderboard;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,8 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LeaderboardActivity extends AppCompatActivity {
 
@@ -55,17 +58,31 @@ public class LeaderboardActivity extends AppCompatActivity {
         }
 
         // idle wait, loading.
-        while (leaderboardItems.isEmpty()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        final Activity that = this;
+        Timer timer = new Timer(false);
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (!leaderboardItems.isEmpty()) {
+                    that.runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    insertLeaderboard();
+                                    hideLoadingBar();
+                                    showLeaderboard();
+                                }
+                            }
+                    );
+                    cancel();
+                }
             }
-        }
+        }, 0, 1000);
+    }
 
-        insertLeaderboard();
-        hideLoadingBar();
-        showLeaderboard();
+    @Override
+    public void onBackPressed() {
+        // do nothing.
     }
 
     private void initializeReturnToTitleButton() {

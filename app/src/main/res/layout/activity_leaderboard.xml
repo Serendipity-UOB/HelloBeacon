@@ -7,7 +7,8 @@
     android:orientation="vertical"
     android:padding="5pt"
     android:gravity="center"
-    android:background="@color/mainBackground">
+    android:background="@color/mainBackground"
+    android:screenOrientation="portrait">
 
     <TextView
         android:layout_width="match_parent"

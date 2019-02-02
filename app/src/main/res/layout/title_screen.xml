@@ -23,8 +23,7 @@
         android:layout_gravity="center"
         android:text="@string/title_screen_start_button"
         android:fontFamily="@font/vt323"
-        android:background="@android:color/transparent"
-        android:textColor="@color/title_screen_start_button"
+        android:textColor="@color/titleScreenText"
         android:textSize="10pt"/>
 
 </LinearLayout>

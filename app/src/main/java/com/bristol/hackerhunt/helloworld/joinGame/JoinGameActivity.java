@@ -48,6 +48,10 @@ public class JoinGameActivity extends AppCompatActivity {
         timer.scheduleAtFixedRate(pollServer(playerIdentifiers, timer), 0, POLLING_PERIOD * 1000);
     }
 
+    @Override
+    public void onBackPressed() {
+        // do nothing.
+    }
     private TimerTask pollServer(final PlayerIdentifiers playerIdentifiers, final Timer timer) {
         final Activity that = this;
 
@@ -147,7 +151,10 @@ public class JoinGameActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (gameInfo.startBeaconMinor != null) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 48dd5b6ee26aca8a72c1082e859bd7b5cb5e8219
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -192,6 +199,7 @@ public class JoinGameActivity extends AppCompatActivity {
     }
 
     private void replaceStringInTextView(final int viewId, final String oldString, final String newString) {
+<<<<<<< HEAD
         this.runOnUiThread(
                 new Runnable() {
                     @Override
@@ -203,6 +211,17 @@ public class JoinGameActivity extends AppCompatActivity {
                     }
                 }
         );
+=======
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView textView = findViewById(viewId);
+                String oldText = textView.getText().toString();
+                String newText = oldText.replace(oldString, newString);
+                textView.setText(newText);
+            }
+        });
+>>>>>>> 48dd5b6ee26aca8a72c1082e859bd7b5cb5e8219
     }
 
     private void appendStringToTextView(final int viewId, final String text, final String suffix) {

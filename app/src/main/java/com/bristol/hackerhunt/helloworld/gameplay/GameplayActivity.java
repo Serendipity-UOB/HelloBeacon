@@ -39,9 +39,9 @@ import java.util.TimerTask;
 
 public class GameplayActivity extends AppCompatActivity {
 
-    private static final int POLLING_PERIOD = 3;               // given in seconds
-    private static final double GAMEPLAY_DURATION = 10;         // given in minutes.
-    private static final int EXCHANGE_POLLING_PERIOD = 3;       // given in seconds.
+    private static final int POLLING_PERIOD = 1;               // given in seconds
+    private static final double GAMEPLAY_DURATION = 3;         // given in minutes.
+    private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
 
     private PlayerIdentifiers playerIdentifiers;
 
@@ -99,6 +99,11 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        // do nothing.
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         beaconController.stopScanning();
@@ -145,7 +150,6 @@ public class GameplayActivity extends AppCompatActivity {
                         consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
                         gameStateController.loseHalfOfPlayersIntel();
                         gameStateController.resetPlayerTakenDown();
-                        serverRequestsController.newTargetRequest();
                     }
                     if (gameStateController.playersTargetHasBeenTakenDown()) {
                         consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
@@ -286,6 +290,11 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 String homeBeaconName = gameStateController.getHomeBeaconName();
                 consoleView.takedownSuccessPrompt(homeBeaconName);
+                try {
+                    serverRequestsController.newTargetRequest();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
     }

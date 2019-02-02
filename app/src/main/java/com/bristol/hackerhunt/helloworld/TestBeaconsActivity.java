@@ -1,6 +1,7 @@
 package com.bristol.hackerhunt.helloworld;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -46,7 +47,7 @@ public class TestBeaconsActivity extends AppCompatActivity {
     private TextView mShowCount;
     private ProximityManager proximityManager;
 
-    private Map<String, IBeaconDevice> beaconMap;
+    private Map<String, Double> beaconMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,7 @@ public class TestBeaconsActivity extends AppCompatActivity {
         proximityManager.configuration()
                 .scanMode(ScanMode.BALANCED)
                 .scanPeriod(ScanPeriod.create(3000, 2000))
-                .activityCheckConfiguration(ActivityCheckConfiguration.DISABLED)
+                .activityCheckConfiguration(ActivityCheckConfiguration.create(5000, 1000))
                 .forceScanConfiguration(ForceScanConfiguration.DISABLED)
                 .deviceUpdateCallbackInterval(TimeUnit.SECONDS.toMillis(5))
                 .rssiCalculator(RssiCalculators.DEFAULT)
@@ -143,21 +144,26 @@ public class TestBeaconsActivity extends AppCompatActivity {
                 String uuid = ibeacon.getUniqueId();
                 String log = "Beacon discovered: " + uuid;
                 Log.i("Beacon", log);
+                double rssi = ibeacon.getDistance();
 
-                beaconMap.put(uuid, ibeacon);
+                beaconMap.put(uuid, rssi);
                 writeBeaconInformation();
             }
 
             @Override
             public void onIBeaconsUpdated(List<IBeaconDevice> iBeaconDevices, IBeaconRegion region) {
-                super.onIBeaconsUpdated(iBeaconDevices, region);
+                for (String id : beaconMap.keySet()) {
+                    beaconMap.put(id, 0.0);
+                }
+
+                // super.onIBeaconsUpdated(iBeaconDevices, region);
                 Log.i("Bluetooth",  "Beacon updates");
                 for (IBeaconDevice device : iBeaconDevices) {
                     String uuid = device.getUniqueId();
-                    double rssi = device.getDistance();
+                    double rssi = device.getRssi();
                     String log = "Beacon: " + uuid + ", Signal strength: " + rssi;
                     Log.i("Beacon", log);
-                    beaconMap.put(uuid, device);
+                    beaconMap.put(uuid, rssi);
 
                     writeBeaconInformation();
                 }
@@ -165,7 +171,10 @@ public class TestBeaconsActivity extends AppCompatActivity {
 
             @Override
             public void onIBeaconLost(IBeaconDevice ibeacon, IBeaconRegion region) {
+                String uuid = ibeacon.getUniqueId();
+                beaconMap.put(uuid, 0.0);
 
+                writeBeaconInformation();
             }
         };
     }
@@ -230,14 +239,13 @@ public class TestBeaconsActivity extends AppCompatActivity {
     private void writeBeaconInformation() {
         StringBuilder out = new StringBuilder();
         String closestBeacon= "";
-        Integer closestStrength = Integer.MIN_VALUE;
+        double closestStrength = Integer.MIN_VALUE;
         for (String uuid : this.beaconMap.keySet()) {
-           IBeaconDevice beacon = this.beaconMap.get(uuid);
-           String log = "Beacon: " + uuid + ", Strength: " + beacon.getRssi()+ ", Distance: "
-                   + beacon.getDistance()+ ", Accuracy: " + this.calculateAccuracy(beacon.getTxPower(), beacon.getRssi())+ ".\n";
-           if (beacon.getRssi() > closestStrength) {
+           double rssi = this.beaconMap.get(uuid);
+           String log = "Beacon: " + uuid + ", Strength: " + rssi + ".\n";
+           if (rssi > closestStrength && rssi != 0) {
                closestBeacon = uuid;
-               closestStrength = beacon.getRssi();
+               closestStrength = rssi;
            }
            out.append(log);
         }

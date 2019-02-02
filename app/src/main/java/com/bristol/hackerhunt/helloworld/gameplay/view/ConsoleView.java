@@ -15,11 +15,15 @@ public class ConsoleView implements IConsoleView {
 
     private final Typewriter typewriter;
 
+    private boolean interactionInProgress;
+
     public ConsoleView(View consolePromptContainer) {
         this.overlay = consolePromptContainer;
         this.consoleView = overlay.findViewById(R.id.gameplay_console);
 
         this.typewriter = new Typewriter(10);
+
+        this.interactionInProgress = false;
 
         enableCloseConsole();
     }
@@ -39,8 +43,9 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void goToStartBeaconPrompt(String homeBeaconName) {
-        // disableCloseConsole();
+        disableCloseConsole();
         goToStartBeaconConsoleMessage(homeBeaconName);
+        this.interactionInProgress = false;
     }
 
     private void goToStartBeaconConsoleMessage(String homeBeaconName) {
@@ -53,6 +58,7 @@ public class ConsoleView implements IConsoleView {
     public void playersTargetTakenDownPrompt(String homeBeaconName) {
         disableCloseConsole();
         playersTargetGotTakenDownConsoleMessage(homeBeaconName);
+        this.interactionInProgress = false;
     }
 
     private void playersTargetGotTakenDownConsoleMessage(String homeBeaconName) {
@@ -65,6 +71,7 @@ public class ConsoleView implements IConsoleView {
     public void playerGotTakenDownPrompt(String homeBeaconName) {
         disableCloseConsole();
         playerTakenDownConsoleMessage(homeBeaconName);
+        this.interactionInProgress = false;
     }
 
     private void playerTakenDownConsoleMessage(String homeBeaconName) {
@@ -78,7 +85,7 @@ public class ConsoleView implements IConsoleView {
         disableCloseConsole();
         consoleMessage("Incoming message...\n\nGood work. Return your equipment to the base " +
                 "station to collect your award.\n\n\n - Anon");
-
+        this.interactionInProgress = false;
         consoleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,6 +98,7 @@ public class ConsoleView implements IConsoleView {
     public void executingTakedownPrompt() {
         disableCloseConsole();
         consoleMessage("TAKEDOWN_INIT\n\nExecuting attack...");
+        this.interactionInProgress = false;
     }
 
     @Override
@@ -98,6 +106,7 @@ public class ConsoleView implements IConsoleView {
         disableCloseConsole();
         String message = "TAKEDOWN_SUCCESS\n\nReturn to $HOME for new target.";
         message = message.replace("$HOME", homeBeaconName);
+        this.interactionInProgress = false;
         consoleMessage(message);
     }
 
@@ -109,18 +118,21 @@ public class ConsoleView implements IConsoleView {
     @Override
     public void takedownNotYourTargetPrompt() {
         enableCloseConsole();
+        this.interactionInProgress = false;
         consoleMessage("TAKEDOWN_FAILURE\n\nNot your target");
     }
 
     @Override
     public void takedownInsufficientIntelPrompt() {
         enableCloseConsole();
+
+        this.interactionInProgress = false;
         consoleMessage("TAKEDOWN_FAILURE\n\nInsufficient Intel");
     }
 
     @Override
     public void closeConsole() {
-        if (overlay.getVisibility() != View.GONE) {
+        if (overlay.getVisibility() != View.GONE && !interactionInProgress) {
             overlay.setVisibility(View.GONE);
         }
     }
@@ -128,18 +140,21 @@ public class ConsoleView implements IConsoleView {
     @Override
     public void exchangeRequestedPrompt() {
         disableCloseConsole();
+        this.interactionInProgress = true;
         consoleMessage("EXCHANGE_REQUESTED\n\nWaiting for handshake");
     }
 
     @Override
     public void exchangeSuccessPrompt() {
         enableCloseConsole();
+        this.interactionInProgress = false;
         consoleMessage("EXCHANGE_SUCCESS\n\nIntel gained");
     }
 
     @Override
     public void exchangeFailedPrompt() {
         enableCloseConsole();
+        this.interactionInProgress = false;
         consoleMessage("EXCHANGE_FAIL\n\nHandshake incomplete");
     }
 }

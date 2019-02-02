@@ -30,6 +30,11 @@ public class CreateProfileActivity extends AppCompatActivity {
         initializeNewProfileButton();
     }
 
+    @Override
+    public void onBackPressed() {
+        // do nothing.
+    }
+
     private void initializeNewProfileButton() {
         final Button goToProfileButton = findViewById(R.id.create_profile_button);
         goToProfileButton.setText("go();");
