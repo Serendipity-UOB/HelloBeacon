@@ -96,15 +96,15 @@ public class BeaconController implements IBeaconController {
                 String nearestMajor = "";
                 int nearestRssi = Integer.MIN_VALUE;
 
-                for (IBeaconDevice device : iBeaconDevices) {
-                    String major = Integer.toString(device.getMajor());
-                    String minor = Integer.toString(device.getMinor());
-                    int rssi = device.getRssi();
+                    for (IBeaconDevice device : iBeaconDevices) {
+                        String major = Integer.toString(device.getMajor());
+                        String minor = Integer.toString(device.getMinor());
+                        int rssi = device.getRssi();
 
-                    if (rssi > nearestRssi && rssi <= 0) {
-                        nearestRssi = rssi;
-                        nearestMajor = major;
-                    }
+                        if (rssi > nearestRssi && rssi <= 0) {
+                            nearestRssi = rssi;
+                            nearestMajor = major;
+                        }
 
                     gameStateController.updateBeacon(major, minor, rssi);
                 }

@@ -22,4 +22,10 @@ public interface IPlayerStatusBarView {
      * @param position position.
      */
     void setPlayerLeaderboardPosition(String position);
+
+    /**
+     * Set player's name
+     * @param playerName the player's name
+     */
+    void setPlayerName(String playerName);
 }

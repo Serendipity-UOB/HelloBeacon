@@ -34,4 +34,11 @@ public class PlayerStatusBarView implements IPlayerStatusBarView {
         String prefix = playerStatusBar.getContext().getString(R.string.gameplay_player_leaderboard_position);
         positionTextView.setText(prefix + " #" + position);
     }
+
+    @Override
+    public void setPlayerName(String playerName){
+        TextView nameTextView = playerStatusBar.findViewById(R.id.gameplay_player_name);
+        String prefix = "";
+        nameTextView.setText(prefix + " " + playerName);
+    }
 }
