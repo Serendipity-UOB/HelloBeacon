@@ -90,12 +90,6 @@ public class BeaconController implements IBeaconController {
             public void onIBeaconsUpdated(List<IBeaconDevice> iBeaconDevices, IBeaconRegion region) {
                 super.onIBeaconsUpdated(iBeaconDevices, region);
 
-                for (String major : gameStateController.getAllBeaconMajors()) {
-                    for (String minor : gameStateController.getAllBeaconMinors(major)) {
-                        gameStateController.updateBeacon(major, minor, 0);
-                    }
-                }
-
                 String nearestMajor = "";
                 int nearestRssi = Integer.MIN_VALUE;
 
