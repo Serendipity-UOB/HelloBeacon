@@ -58,7 +58,7 @@ public class BeaconController implements IBeaconController {
 
         proximityManager.configuration()
                 .scanMode(ScanMode.BALANCED)
-                .scanPeriod(ScanPeriod.create(3000, 2000))
+                .scanPeriod(ScanPeriod.RANGING)
                 .activityCheckConfiguration(ActivityCheckConfiguration.create(INACTIVITY_TIMEOUT, INACTIVITY_CHECK_PERIOD))
                 .forceScanConfiguration(ForceScanConfiguration.DISABLED)
                 .deviceUpdateCallbackInterval(TimeUnit.SECONDS.toMillis(5))
