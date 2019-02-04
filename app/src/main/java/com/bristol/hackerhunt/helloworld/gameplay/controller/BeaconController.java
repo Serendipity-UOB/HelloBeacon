@@ -119,9 +119,11 @@ public class BeaconController implements IBeaconController {
             public void onIBeaconLost(IBeaconDevice ibeacon, IBeaconRegion region) {
                 String major = Integer.toString(ibeacon.getMajor());
                 String minor = Integer.toString(ibeacon.getMinor());
-                gameStateController.updateBeacon(major, minor, 0);
+                // gameStateController.updateBeacon(major, minor, 0);
+                gameStateController.removeBeacon(major, minor);
 
-                // Update nearest majr.
+
+                // Update nearest major.
                 if (gameStateController.getNearestBeaconMajor().equals(major)) {
                     Integer maxValue = Integer.MIN_VALUE;
                     String nearestMajor = "";

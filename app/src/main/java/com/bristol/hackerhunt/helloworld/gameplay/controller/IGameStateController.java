@@ -54,6 +54,8 @@ public interface IGameStateController {
      */
     int getBeaconRssi(String major, String minor);
 
+    void removeBeacon(String major, String minor);
+
     /**
      * @return the playing player has been taken down.
      */

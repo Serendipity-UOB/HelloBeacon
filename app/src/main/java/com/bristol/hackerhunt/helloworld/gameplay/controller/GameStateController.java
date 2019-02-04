@@ -264,4 +264,12 @@ public class GameStateController implements IGameStateController {
     public boolean playerHasNonZeroIntel(String targetId) {
         return allPlayersMap.get(targetId).intel > 0;
     }
+
+    @Override
+    public void removeBeacon(String major, String minor) {
+        if (beaconMajorMinorRssiMap.containsKey(major)) {
+            Map<String, Integer> minorMap = beaconMajorMinorRssiMap.get(major);
+            minorMap.remove(minor);
+        }
+    }
 }
