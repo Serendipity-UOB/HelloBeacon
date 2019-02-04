@@ -69,6 +69,7 @@ public class JoinGameActivity extends AppCompatActivity {
                 // Starting timer thread
                 if (gameInfo.minutesToStart != null && gameInfo.minutesToStart >= 0 && !timerStarted) {
                     startCountdownToGameStart(playerIdentifiers, timer);
+                    showJoinGameButton();
                 }
                 if (gameInfo.numberOfPlayers != null && gameInfo.numberOfPlayers >= 0 ) {
                     updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
@@ -129,6 +130,7 @@ public class JoinGameActivity extends AppCompatActivity {
     }
 
     private void initializeJoinGameButton() {
+        hideJoinGameButton();
         final Button joinGameButton = findViewById(R.id.join_game_button);
         joinGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +146,26 @@ public class JoinGameActivity extends AppCompatActivity {
                 findViewById(R.id.join_game_success).setVisibility(View.VISIBLE);
 
                 (new Timer()).schedule(checkHomeBeaconHasBeenRecieved(joinStatus), 1000);
+            }
+        });
+    }
+
+    private void hideJoinGameButton() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final Button joinGameButton = findViewById(R.id.join_game_button);
+                joinGameButton.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    private void showJoinGameButton() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final Button joinGameButton = findViewById(R.id.join_game_button);
+                joinGameButton.setVisibility(View.VISIBLE);
             }
         });
     }
