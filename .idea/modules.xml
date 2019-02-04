@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HelloBeacon.iml" filepath="$PROJECT_DIR$/HelloBeacon.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hackhunt.iml" filepath="$PROJECT_DIR$/hackhunt.iml" />
     </modules>
   </component>
 </project>
