@@ -106,6 +106,9 @@ public class BeaconController implements IBeaconController {
                     gameStateController.updateBeacon(major, minor, rssi);
                 }
 
+                if (nearestMajor.equals("")) {
+                        nearestMajor = (String) gameStateController.getAllBeaconMajors().toArray()[0];
+                }
                 gameStateController.setNearestBeaconMajor(nearestMajor);
             }
 
