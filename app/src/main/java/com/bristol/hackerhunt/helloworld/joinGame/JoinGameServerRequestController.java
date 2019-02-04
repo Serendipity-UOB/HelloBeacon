@@ -140,7 +140,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    gameInfo.startBeaconMinor = response.getString("home_beacon_minor");
+                    gameInfo.startBeaconMajor = response.getString("home_beacon_major");
                     gameInfo.startBeaconName = response.getString("home_beacon_name");
                 } catch (JSONException e) {
                     e.printStackTrace();

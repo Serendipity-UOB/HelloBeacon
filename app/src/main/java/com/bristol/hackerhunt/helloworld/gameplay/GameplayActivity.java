@@ -133,7 +133,7 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeGameStateController() {
         this.gameStateController = new GameStateController(playerListView, playerStatusBarView,
-                playerIdentifiers, getIntent().getStringExtra("start_beacon_minor"),
+                playerIdentifiers, getIntent().getStringExtra("start_beacon_major"),
                 getIntent().getStringExtra("start_beacon_name"));
     }
 
