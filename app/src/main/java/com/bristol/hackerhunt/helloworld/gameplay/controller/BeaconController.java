@@ -64,12 +64,12 @@ public class BeaconController implements IBeaconController {
                 .scanPeriod(ScanPeriod.RANGING)
                 .activityCheckConfiguration(ActivityCheckConfiguration.create(INACTIVITY_TIMEOUT, INACTIVITY_CHECK_PERIOD))
                 .forceScanConfiguration(ForceScanConfiguration.DISABLED)
-                .deviceUpdateCallbackInterval(TimeUnit.SECONDS.toMillis(5))
+                .deviceUpdateCallbackInterval(TimeUnit.SECONDS.toMillis(1))
                 .rssiCalculator(RssiCalculators.DEFAULT)
                 .cacheFileName("Example")
                 .resolveShuffledInterval(3)
                 .monitoringEnabled(true)
-                .monitoringSyncInterval(10)
+                .monitoringSyncInterval(3)
                 .eddystoneFrameTypes(Arrays.asList(EddystoneFrameType.UID, EddystoneFrameType.URL));
     }
 
