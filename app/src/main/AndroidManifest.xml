@@ -19,24 +19,31 @@
             android:name="kontakt.io.API_KEY"
             android:value="@string/kontakt_io_api_key" />
 
-        <activity android:name=".TitleScreenActivity">
+        <activity android:name=".TitleScreenActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TestBeaconsActivity"/>
-        <activity android:name=".TestRequestActivity" />
+        <activity android:name=".TestBeaconsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".TestRequestActivity"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name="com.kontakt.sdk.android.ble.service.ProximityService"
             android:exported="false" />
 
-        <activity android:name=".profileCreation.CreateProfileActivity" />
-        <activity android:name=".joinGame.JoinGameActivity" />
-        <activity android:name=".gameplay.GameplayActivity" />
-        <activity android:name=".leaderboard.LeaderboardActivity"></activity>
+        <activity android:name=".profileCreation.CreateProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".joinGame.JoinGameActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".gameplay.GameplayActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".leaderboard.LeaderboardActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

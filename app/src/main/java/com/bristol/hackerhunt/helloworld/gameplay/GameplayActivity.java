@@ -79,8 +79,9 @@ public class GameplayActivity extends AppCompatActivity {
         gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
             @Override
             public void run() {
-                closeConsoleAfterDelay();
-
+                if (!gameOver) {
+                    closeConsoleAfterDelay();
+                }
             }
         });
 
