@@ -2,6 +2,7 @@ package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -45,6 +46,7 @@ public class ConsoleView implements IConsoleView {
     }
 
     private void disableCloseConsole() {
+        consoleCloseButton.setOnClickListener(null);
         consoleViewText.setOnClickListener(null);
         hideCloseButton();
     }
@@ -59,7 +61,7 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void goToStartBeaconPrompt(String homeBeaconName) {
-        disableCloseConsole();
+        //  disableCloseConsole();
         goToStartBeaconConsoleMessage(homeBeaconName);
         this.interactionInProgress = false;
     }
@@ -101,12 +103,16 @@ public class ConsoleView implements IConsoleView {
         disableCloseConsole();
         consoleMessage(context.getString(R.string.game_over_console_message));
         this.interactionInProgress = false;
-        consoleView.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener cl = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("App", "Going to leaderboard.");
                 context.startActivity(goToLeaderboardIntent);
             }
-        });
+        };
+
+        consoleViewText.setOnClickListener(cl);
+        consoleView.setOnClickListener(cl);
     }
 
     @Override

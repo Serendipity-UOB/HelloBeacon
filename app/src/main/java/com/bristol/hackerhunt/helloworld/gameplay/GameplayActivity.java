@@ -3,15 +3,17 @@ package com.bristol.hackerhunt.helloworld.gameplay;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.StringInputRunnable;
 import com.bristol.hackerhunt.helloworld.gameplay.controller.BeaconController;
 import com.bristol.hackerhunt.helloworld.gameplay.controller.GameStateController;
@@ -28,7 +30,6 @@ import com.bristol.hackerhunt.helloworld.gameplay.view.InteractionButtonsView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.PlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.PlayerStatusBarView;
 import com.bristol.hackerhunt.helloworld.leaderboard.LeaderboardActivity;
-import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
@@ -41,7 +42,7 @@ import java.util.TimerTask;
 public class GameplayActivity extends AppCompatActivity {
 
     private static final int POLLING_PERIOD = 1;                // given in seconds
-    private static final double GAMEPLAY_DURATION = 3;          // given in minutes.
+    private static final double GAMEPLAY_DURATION = 0.1;          // given in minutes.
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
     private static final int CONSOLE_POPUP_DELAY_PERIOD = 5;    // given in seconds.
 
@@ -57,6 +58,7 @@ public class GameplayActivity extends AppCompatActivity {
     private IBeaconController beaconController;
 
     private boolean gameOver = false;
+    private boolean closeConsoleOnHomeBeaconNearby = false;
     private boolean newTargetRequested = true;
 
     @Override
@@ -79,8 +81,10 @@ public class GameplayActivity extends AppCompatActivity {
         gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
             @Override
             public void run() {
-                if (!gameOver) {
+                if (!gameOver && closeConsoleOnHomeBeaconNearby) {
+                    Log.d("App", "Closing console, home beacon nearby");
                     closeConsoleAfterDelay();
+                    closeConsoleOnHomeBeaconNearby = false;
                 }
             }
         });
@@ -88,6 +92,7 @@ public class GameplayActivity extends AppCompatActivity {
         startGameTimer();
 
         // First task: player needs to head to their home beacon.
+        closeConsoleOnHomeBeaconNearby = true;
         consoleView.goToStartBeaconPrompt(gameStateController.getHomeBeaconName());
 
         try {
@@ -170,12 +175,14 @@ public class GameplayActivity extends AppCompatActivity {
                     serverRequestsController.playerUpdateRequest();
 
                     if (gameStateController.playerHasBeenTakenDown()) {
+                        closeConsoleOnHomeBeaconNearby = true;
                         consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
                         gameStateController.loseHalfOfPlayersIntel();
                         gameStateController.resetPlayerTakenDown();
                     }
                     if (gameStateController.playersTargetHasBeenTakenDown()) {
                         newTargetRequested = true;
+                        closeConsoleOnHomeBeaconNearby = true;
                         consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
                         gameStateController.resetPlayersTargetHasBeenTakenDown();
                     }
@@ -323,6 +330,7 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 String homeBeaconName = gameStateController.getHomeBeaconName();
+                closeConsoleOnHomeBeaconNearby = true;
                 consoleView.takedownSuccessPrompt(homeBeaconName);
                 newTargetRequested = true;
             }
