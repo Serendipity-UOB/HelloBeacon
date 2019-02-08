@@ -20,7 +20,12 @@ public class ConsoleView implements IConsoleView {
 
     private final Typewriter typewriter;
 
+    // status flags
+    private String currentHomeBeacon = "";
     private boolean interactionInProgress;
+    private boolean playerGotTakenDownInProgress;
+    private boolean playersTargetGotTakenDownInProgress;
+    private boolean takedownSuccessInProgress;
 
     public ConsoleView(View consolePromptContainer) {
         this.overlay = consolePromptContainer;
@@ -31,8 +36,17 @@ public class ConsoleView implements IConsoleView {
         this.typewriter = new Typewriter(TYPEWRITER_SPEED);
 
         this.interactionInProgress = false;
+        this.playerGotTakenDownInProgress = false;
+        this.playersTargetGotTakenDownInProgress = false;
+        this.takedownSuccessInProgress = true;
 
         enableCloseConsole();
+    }
+
+    private void resetConsoleInProgressFlags() {
+        playerGotTakenDownInProgress = false;
+        playersTargetGotTakenDownInProgress = false;
+        takedownSuccessInProgress = false;
     }
 
     private void enableCloseConsole() {
@@ -40,6 +54,29 @@ public class ConsoleView implements IConsoleView {
             @Override
             public void onClick(View view) {
                 overlay.setVisibility(View.GONE);
+                resetConsoleInProgressFlags();
+            }
+        });
+        showCloseButton();
+    }
+
+    private void enableCloseConsoleWithoutOverride() {
+        consoleCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                overlay.setVisibility(View.GONE);
+                if (playerGotTakenDownInProgress) {
+                    playerGotTakenDownPrompt(currentHomeBeacon);
+                }
+                else if (playersTargetGotTakenDownInProgress) {
+                    playersTargetTakenDownPrompt(currentHomeBeacon);
+                }
+                else if (takedownSuccessInProgress) {
+                    takedownSuccessPrompt(currentHomeBeacon);
+                }
+                else {
+                    overlay.setVisibility(View.GONE);
+                }
             }
         });
         showCloseButton();
@@ -62,6 +99,8 @@ public class ConsoleView implements IConsoleView {
     @Override
     public void goToStartBeaconPrompt(String homeBeaconName) {
         //  disableCloseConsole();
+
+        this.currentHomeBeacon = homeBeaconName;
         goToStartBeaconConsoleMessage(homeBeaconName);
         this.interactionInProgress = false;
     }
@@ -75,6 +114,9 @@ public class ConsoleView implements IConsoleView {
     @Override
     public void playersTargetTakenDownPrompt(String homeBeaconName) {
         disableCloseConsole();
+
+        this.currentHomeBeacon = homeBeaconName;
+        this.playersTargetGotTakenDownInProgress = true;
         playersTargetGotTakenDownConsoleMessage(homeBeaconName);
         this.interactionInProgress = false;
     }
@@ -88,6 +130,9 @@ public class ConsoleView implements IConsoleView {
     @Override
     public void playerGotTakenDownPrompt(String homeBeaconName) {
         disableCloseConsole();
+
+        this.playerGotTakenDownInProgress = true;
+        this.currentHomeBeacon = homeBeaconName;
         playerTakenDownConsoleMessage(homeBeaconName);
         this.interactionInProgress = false;
     }
@@ -125,6 +170,9 @@ public class ConsoleView implements IConsoleView {
     @Override
     public void takedownSuccessPrompt(String homeBeaconName) {
         disableCloseConsole();
+
+        this.currentHomeBeacon = homeBeaconName;
+        this.takedownSuccessInProgress = true;
         String message = "TAKEDOWN_SUCCESS\n\nReturn to $HOME for new target.";
         message = message.replace("$HOME", homeBeaconName);
         this.interactionInProgress = false;
@@ -138,14 +186,15 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void takedownNotYourTargetPrompt() {
-        enableCloseConsole();
+        enableCloseConsoleWithoutOverride();
+
         this.interactionInProgress = false;
         consoleMessage("TAKEDOWN_FAILURE\n\nNot your target");
     }
 
     @Override
     public void takedownInsufficientIntelPrompt() {
-        enableCloseConsole();
+        enableCloseConsoleWithoutOverride();
 
         this.interactionInProgress = false;
         consoleMessage("TAKEDOWN_FAILURE\n\nInsufficient Intel");
@@ -161,20 +210,23 @@ public class ConsoleView implements IConsoleView {
     @Override
     public void exchangeRequestedPrompt() {
         disableCloseConsole();
+
         this.interactionInProgress = true;
         consoleMessage("EXCHANGE_REQUESTED\n\nWaiting for handshake");
     }
 
     @Override
     public void exchangeSuccessPrompt() {
-        enableCloseConsole();
+        enableCloseConsoleWithoutOverride();
+
         this.interactionInProgress = false;
         consoleMessage("EXCHANGE_SUCCESS\n\nIntel gained");
     }
 
     @Override
     public void exchangeFailedPrompt() {
-        enableCloseConsole();
+        enableCloseConsoleWithoutOverride();
+
         this.interactionInProgress = false;
         consoleMessage("EXCHANGE_FAIL\n\nHandshake incomplete");
     }
