@@ -95,10 +95,12 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void setNearestBeaconMajor(String major) {
-        this.nearestBeaconMajor = major;
-        Log.i("NMajor", "New Nearest Major. Major: " + major);
-        if (onNearestBeaconHomeRunnable != null && nearestBeaconMajor.equals(homeBeaconMajor)) {
-            onNearestBeaconHomeRunnable.run();
+        if (major != this.nearestBeaconMajor) {
+            this.nearestBeaconMajor = major;
+            Log.i("NMajor", "New Nearest Major. Major: " + major);
+            if (onNearestBeaconHomeRunnable != null && nearestBeaconMajor.equals(homeBeaconMajor)) {
+                onNearestBeaconHomeRunnable.run();
+            }
         }
     }
 
