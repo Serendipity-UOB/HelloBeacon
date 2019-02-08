@@ -13,6 +13,7 @@
     <string name="start_info_request">/startInfo</string>
     <string name="new_target_request">/newTarget</string>
     <string name="player_update_request">/playerUpdate</string>
+    <string name="home_beacon_request">/atHomeBeacon</string>
     <string name="exchange_request">/exchange</string>
     <string name="takedown_request">/takeDown</string>
 

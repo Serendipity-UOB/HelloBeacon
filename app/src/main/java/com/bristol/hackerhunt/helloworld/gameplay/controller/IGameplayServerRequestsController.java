@@ -23,6 +23,12 @@ public interface IGameplayServerRequestsController {
     void startInfoRequest() throws JSONException;
 
     /**
+     * Checks if a player is at their home beacon.
+     * @throws JSONException
+     */
+    void isAtHomeBeaconRequest() throws JSONException;
+
+    /**
      * Submits a new target request to the server:
      * POST /newTarget { player_id }
      *

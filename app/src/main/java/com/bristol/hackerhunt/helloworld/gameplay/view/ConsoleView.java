@@ -38,7 +38,7 @@ public class ConsoleView implements IConsoleView {
         this.interactionInProgress = false;
         this.playerGotTakenDownInProgress = false;
         this.playersTargetGotTakenDownInProgress = false;
-        this.takedownSuccessInProgress = true;
+        this.takedownSuccessInProgress = false;
 
         enableCloseConsole();
     }

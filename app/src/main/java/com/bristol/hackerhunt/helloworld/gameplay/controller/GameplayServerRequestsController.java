@@ -73,6 +73,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyStartInfoRequest());
     }
 
+
+
     private JsonObjectRequest volleyStartInfoRequest() {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
@@ -367,4 +369,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     public void registerTakedownSuccessRunnable(Runnable runnable) {
         this.takedownSuccessRunnable = runnable;
     }
+
+    @Override
+    public void isAtHomeBeaconRequest() {
+        // todo
+    };
 }
