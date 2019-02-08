@@ -193,22 +193,37 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void playerUpdate(JSONObject obj) throws JSONException {
+        updateNearbyPlayers(obj);
+        updatePlayerPoints(obj);
+        updateLeaderboardPosition(obj);
+        checkForPlayerStatusChanges(obj);
+        checkGameOver(obj);
+    }
+
+    private void updateNearbyPlayers(JSONObject obj) throws JSONException {
         JSONArray nearbyPlayerIdsJson = obj.getJSONArray("nearby_players");
         List<String> nearbyPlayerIds = new ArrayList<>();
         for (int i = 0; i < nearbyPlayerIdsJson.length(); i++) {
             nearbyPlayerIds.add(nearbyPlayerIdsJson.getString(i));
         }
         gameStateController.updateNearbyPlayers(nearbyPlayerIds);
+    }
 
+    private void updatePlayerPoints(JSONObject obj) throws JSONException {
         if (obj.has("points")) {
             int points = obj.getInt("points");
             gameStateController.updatePoints(points);
         }
+    }
+
+    private void updateLeaderboardPosition(JSONObject obj) throws JSONException {
         if (obj.has("position")) {
             String position = obj.getString("position");
             gameStateController.updateLeaderboardPosition(position);
         }
+    }
 
+    private void checkForPlayerStatusChanges(JSONObject obj) throws JSONException {
         List<PlayerUpdate> updates = new ArrayList<>();
         if (obj.has("taken_down")) {
             boolean takenDown = obj.getInt("taken_down") == 1;
@@ -224,6 +239,15 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         }
 
         gameStateController.updateStatus(updates);
+    }
+
+    private void checkGameOver(JSONObject obj) throws JSONException {
+        if (obj.has("game_over")) {
+            boolean gameOver = obj.getBoolean("game_over");
+            if (gameOver) {
+                gameStateController.setGameOver();
+            }
+        }
     }
 
     private JSONObject playerUpdateRequestBody() throws JSONException {

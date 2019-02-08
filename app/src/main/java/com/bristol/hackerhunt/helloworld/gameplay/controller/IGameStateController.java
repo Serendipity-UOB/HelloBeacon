@@ -165,5 +165,18 @@ public interface IGameStateController {
      */
     void setOnNearestBeaconBeingHomeBeaconListener(Runnable runnable);
 
+    /**
+     * Initiates change in game state when the player is at their home beacon.
+     */
     void playerIsAtHomeBeacon();
+
+    /**
+     * States that the game has ended.
+     */
+    void setGameOver();
+
+    /**
+     * @return true if game over, false otherwise.
+     */
+    boolean gameHasEnded();
 }

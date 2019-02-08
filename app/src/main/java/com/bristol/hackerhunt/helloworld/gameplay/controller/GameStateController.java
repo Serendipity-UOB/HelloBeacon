@@ -35,6 +35,8 @@ public class GameStateController implements IGameStateController {
     private List<String> nearbyPlayerIds;
     private String targetPlayerId;
 
+    private boolean gameOver;
+
     public GameStateController(IPlayerListView playerListController,
                                IPlayerStatusBarView playerStatusBarController,
                                PlayerIdentifiers playerIdentifiers,
@@ -55,6 +57,8 @@ public class GameStateController implements IGameStateController {
         this.points = 0;
         this.leaderboardPosition = "Loading...";
         nearestBeaconMajor = "none";
+
+        this.gameOver = false;
     }
 
     private class PlayerDetails {
@@ -277,5 +281,15 @@ public class GameStateController implements IGameStateController {
             Map<String, Integer> minorMap = beaconMajorMinorRssiMap.get(major);
             minorMap.remove(minor);
         }
+    }
+
+    @Override
+    public void setGameOver() {
+        gameOver = true;
+    }
+
+    @Override
+    public boolean gameHasEnded() {
+        return gameOver;
     }
 }

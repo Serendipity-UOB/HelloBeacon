@@ -16,7 +16,7 @@ public class ConsoleView implements IConsoleView {
     private final View overlay;
     private final View consoleView;
     private final TextView consoleViewText;
-    private final TextView consoleCloseButton;
+    private final TextView consoleTapToCloseMessage;
 
     private final Typewriter typewriter;
 
@@ -31,7 +31,7 @@ public class ConsoleView implements IConsoleView {
         this.overlay = consolePromptContainer;
         this.consoleView = overlay.findViewById(R.id.gameplay_console);
         this.consoleViewText = overlay.findViewById(R.id.gameplay_console_text);
-        this.consoleCloseButton = overlay.findViewById(R.id.console_close_button);
+        this.consoleTapToCloseMessage = overlay.findViewById(R.id.console_close_message);
 
         this.typewriter = new Typewriter(TYPEWRITER_SPEED);
 
@@ -50,18 +50,20 @@ public class ConsoleView implements IConsoleView {
     }
 
     private void enableCloseConsole() {
-        consoleCloseButton.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 overlay.setVisibility(View.GONE);
                 resetConsoleInProgressFlags();
             }
-        });
-        showCloseButton();
+        };
+
+        setCloseOnClickListener(listener);
+        consoleTapToCloseMessage.setVisibility(View.VISIBLE);
     }
 
     private void enableCloseConsoleWithoutOverride() {
-        consoleCloseButton.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 overlay.setVisibility(View.GONE);
@@ -78,27 +80,26 @@ public class ConsoleView implements IConsoleView {
                     overlay.setVisibility(View.GONE);
                 }
             }
-        });
-        showCloseButton();
+        };
+
+        setCloseOnClickListener(listener);
+        consoleTapToCloseMessage.setVisibility(View.VISIBLE);
+    }
+
+    void setCloseOnClickListener(View.OnClickListener listener) {
+        overlay.setOnClickListener(listener);
+        consoleView.setOnClickListener(listener);
+        consoleViewText.setOnClickListener(listener);
     }
 
     private void disableCloseConsole() {
-        consoleCloseButton.setOnClickListener(null);
-        consoleViewText.setOnClickListener(null);
-        hideCloseButton();
-    }
-
-    private void showCloseButton() {
-        consoleCloseButton.setText("X");
-    }
-
-    private void hideCloseButton() {
-        consoleCloseButton.setText(" ");
+        setCloseOnClickListener(null);
+        consoleTapToCloseMessage.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void goToStartBeaconPrompt(String homeBeaconName) {
-        disableCloseConsole();
+        // disableCloseConsole();
 
         this.currentHomeBeacon = homeBeaconName;
         goToStartBeaconConsoleMessage(homeBeaconName);

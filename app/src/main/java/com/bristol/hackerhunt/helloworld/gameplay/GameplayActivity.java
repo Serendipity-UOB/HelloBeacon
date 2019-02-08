@@ -1,7 +1,6 @@
 package com.bristol.hackerhunt.helloworld.gameplay;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -161,8 +160,9 @@ public class GameplayActivity extends AppCompatActivity {
                     beaconController.stopScanning();
                     serverRequestsController.cancelAllRequests();
                 }
-
-                pollServerTask();
+                else {
+                    pollServerTask();
+                }
             }
         };
     }
@@ -172,22 +172,26 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    serverRequestsController.playerUpdateRequest();
-                    serverRequestsController.isAtHomeBeaconRequest();
-
-                    if (gameStateController.playerHasBeenTakenDown()) {
-                        closeConsoleOnHomeBeaconNearby = true;
-                        consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
-                        gameStateController.loseHalfOfPlayersIntel();
-                        gameStateController.resetPlayerTakenDown();
+                    if (gameStateController.gameHasEnded()) {
+                        gameOver();
                     }
-                    if (gameStateController.playersTargetHasBeenTakenDown()) {
-                        newTargetRequested = true;
-                        closeConsoleOnHomeBeaconNearby = true;
-                        consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
-                        gameStateController.resetPlayersTargetHasBeenTakenDown();
-                    }
+                    else {
+                        serverRequestsController.playerUpdateRequest();
+                        serverRequestsController.isAtHomeBeaconRequest();
 
+                        if (gameStateController.playerHasBeenTakenDown()) {
+                            closeConsoleOnHomeBeaconNearby = true;
+                            consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
+                            gameStateController.loseHalfOfPlayersIntel();
+                            gameStateController.resetPlayerTakenDown();
+                        }
+                        if (gameStateController.playersTargetHasBeenTakenDown()) {
+                            newTargetRequested = true;
+                            closeConsoleOnHomeBeaconNearby = true;
+                            consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
+                            gameStateController.resetPlayersTargetHasBeenTakenDown();
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -344,7 +348,6 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private void startGameTimer() {
-        final Context thisContext = this;
         long duration = (long) (GAMEPLAY_DURATION * 60 * 1000);
 
         // Starting timer thread
@@ -358,16 +361,20 @@ public class GameplayActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                gameOver = true;
-                Intent intent = new Intent(GameplayActivity.this, LeaderboardActivity.class);
-                intent.putExtra(getString(R.string.player_identifiers_intent_key), playerIdentifiers);
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(String.valueOf(R.string.all_players_map_intent_key), gameStateController.getPlayerIdRealNameMap() );
-                intent.putExtras(bundle);
-                consoleView.endOfGamePrompt(thisContext, intent);
+                gameStateController.setGameOver();
             }
         }.start();
+    }
+
+    private void gameOver() {
+        gameOver = true;
+        Intent intent = new Intent(GameplayActivity.this, LeaderboardActivity.class);
+        intent.putExtra(getString(R.string.player_identifiers_intent_key), playerIdentifiers);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(String.valueOf(R.string.all_players_map_intent_key), gameStateController.getPlayerIdRealNameMap() );
+        intent.putExtras(bundle);
+        consoleView.endOfGamePrompt(this, intent);
     }
 
     private void updateTimeLeftUntilGameOver(String formattedTime) {

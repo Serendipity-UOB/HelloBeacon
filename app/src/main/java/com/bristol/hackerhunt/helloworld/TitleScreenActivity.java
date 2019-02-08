@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -43,10 +44,23 @@ public class TitleScreenActivity extends AppCompatActivity {
     //Since Android Marshmallow starting a Bluetooth Low Energy scan requires permission from location group.
     private void checkPermissions() {
         int checkSelfPermissionResult = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int checkBluetoothPermissionResult = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH);
+
         if (PackageManager.PERMISSION_GRANTED != checkSelfPermissionResult) {
             //Permission not granted so we ask for it. Results are handled in onRequestPermissionsResult() callback.
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_PERMISSIONS);
         }
+        else {
+            Log.d("Permissions", "Fine location detection is switched on.");
+        }
+
+        if (PackageManager.PERMISSION_GRANTED != checkBluetoothPermissionResult) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH}, REQUEST_CODE_PERMISSIONS);
+        }
+        else {
+            Log.d("Permissions", "Bluetooth is switched on.");
+        }
+
     }
 
     @Override

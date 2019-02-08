@@ -5,19 +5,19 @@
     <!-- SERVER REQUEST URLS -->
     <string name="server_address">https://serendipity-game-controller.herokuapp.com</string>
 
-    <string name="register_player_request">/registerPlayer</string>
+    <string name="register_player_request">/registerPlayerTest</string>
 
-    <string name="game_info_request">/gameInfo</string>
-    <string name="join_game_request">/joinGame</string>
+    <string name="game_info_request">/gameInfoTest</string>
+    <string name="join_game_request">/joinGameTest</string>
 
-    <string name="start_info_request">/startInfo</string>
-    <string name="new_target_request">/newTarget</string>
-    <string name="player_update_request">/playerUpdate</string>
-    <string name="home_beacon_request">/atHomeBeacon</string>
-    <string name="exchange_request">/exchange</string>
-    <string name="takedown_request">/takeDown</string>
+    <string name="start_info_request">/startInfoTest</string>
+    <string name="new_target_request">/newTargetTest</string>
+    <string name="player_update_request">/playerUpdateTest</string>
+    <string name="home_beacon_request">/atHomeBeaconTest</string>
+    <string name="exchange_request">/exchangeTest</string>
+    <string name="takedown_request">/takeDownTest</string>
 
-    <string name="get_info_request">/endInfo</string>
+    <string name="get_info_request">/endInfoTest</string>
 
     <!-- INTENT KEYS -->
     <string name="all_players_map_intent_key">all_players_map</string>
@@ -60,4 +60,5 @@
     <string name="leaderboard_title">Leaderboard</string>
     <string name="exit_leaderboard_button_text">exit(EXIT_SUCCESS);</string>
     <string name="console_close_button">X </string>
+    <string name="console_tap_to_close_message">Tap to close</string>
 </resources>
