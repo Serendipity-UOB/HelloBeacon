@@ -29,6 +29,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private final String START_INFO_URL;
     private final String NEW_TARGET_URL;
     private final String PLAYER_UPDATE_URL;
+    private final String PLAYER_AT_HOME_URL;
     private final String EXCHANGE_URL;
     private final String TAKE_DOWN_URL;
 
@@ -54,6 +55,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         this.PLAYER_UPDATE_URL = context.getString(R.string.player_update_request);
         this.EXCHANGE_URL = context.getString(R.string.exchange_request);
         this.TAKE_DOWN_URL = context.getString(R.string.takedown_request);
+        this.PLAYER_AT_HOME_URL = context.getString(R.string.home_beacon_request);
     }
 
 
@@ -371,7 +373,37 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void isAtHomeBeaconRequest() {
-        // todo
-    };
+    public void isAtHomeBeaconRequest() throws JSONException {
+        requestQueue.add(volleyIsAtHomeBeaconRequest());
+    }
+
+    private JsonObjectRequest volleyIsAtHomeBeaconRequest() throws JSONException {
+        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                atHomeUpdate(response);
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                throw new IllegalStateException("Error: " + error.getMessage());
+            }
+        };
+
+        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + PLAYER_AT_HOME_URL,
+                playerUpdateRequestBody(), listener, errorListener);
+    }
+
+    private void atHomeUpdate(JSONObject response) {
+        try {
+            Boolean playerIsAtHome = response.getBoolean("home");
+            if (playerIsAtHome) {
+                gameStateController.playerIsAtHomeBeacon();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

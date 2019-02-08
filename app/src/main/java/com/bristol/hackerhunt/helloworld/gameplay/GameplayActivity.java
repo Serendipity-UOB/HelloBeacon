@@ -173,6 +173,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 try {
                     serverRequestsController.playerUpdateRequest();
+                    serverRequestsController.isAtHomeBeaconRequest();
 
                     if (gameStateController.playerHasBeenTakenDown()) {
                         closeConsoleOnHomeBeaconNearby = true;

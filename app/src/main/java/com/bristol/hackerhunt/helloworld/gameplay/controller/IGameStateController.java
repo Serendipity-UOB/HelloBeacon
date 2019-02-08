@@ -164,4 +164,6 @@ public interface IGameStateController {
      * @param runnable a runnable that contains the task to run.
      */
     void setOnNearestBeaconBeingHomeBeaconListener(Runnable runnable);
+
+    void playerIsAtHomeBeacon();
 }
