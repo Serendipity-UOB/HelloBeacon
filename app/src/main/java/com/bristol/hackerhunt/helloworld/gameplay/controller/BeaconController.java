@@ -1,6 +1,7 @@
 package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.kontakt.sdk.android.ble.configuration.ActivityCheckConfiguration;
 import com.kontakt.sdk.android.ble.configuration.ForceScanConfiguration;
@@ -101,6 +102,10 @@ public class BeaconController implements IBeaconController {
                         if (rssi > nearestRssi && rssi < 0) {
                             nearestRssi = rssi;
                             nearestMajor = major;
+                            Log.i("NBeacon", "Nearest. Major: " + major + " Minor: " + minor + " RSSI: " + Integer.toString(rssi));
+                        }
+                        else{
+                            Log.i("OBeacon", "Other. Major: " + major + " Minor: " + minor + " RSSI: " + Integer.toString(rssi));
                         }
 
                     gameStateController.updateBeacon(major, minor, rssi);
@@ -118,6 +123,7 @@ public class BeaconController implements IBeaconController {
                 String minor = Integer.toString(ibeacon.getMinor());
                 // gameStateController.updateBeacon(major, minor, 0);
                 gameStateController.removeBeacon(major, minor);
+                Log.i("Lost Beacon" , "Lost. Major: " + major + " Minor: " + minor);
 
 
                 // Update nearest major.

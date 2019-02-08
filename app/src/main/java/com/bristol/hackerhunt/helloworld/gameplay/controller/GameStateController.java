@@ -1,5 +1,7 @@
 package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
+import android.util.Log;
+
 import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
@@ -94,7 +96,7 @@ public class GameStateController implements IGameStateController {
     @Override
     public void setNearestBeaconMajor(String major) {
         this.nearestBeaconMajor = major;
-
+        Log.i("NMajor", "New Nearest Major. Major: " + major);
         if (onNearestBeaconHomeRunnable != null && nearestBeaconMajor.equals(homeBeaconMajor)) {
             onNearestBeaconHomeRunnable.run();
         }
