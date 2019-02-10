@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:textSize="13pt"
         android:text="@string/join_game_welcome_message"
         android:textColor="@color/mainText"
         android:fontFamily="@font/vt323"/>
@@ -23,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:textSize="12pt"
         android:text="@string/join_game_players_in_game"
         android:textColor="@color/mainText"
         android:fontFamily="@font/vt323"
@@ -33,6 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:textSize="12pt"
         android:text="@string/join_game_time_until_game"
         android:textColor="@color/mainText"
         android:fontFamily="@font/vt323"
@@ -45,7 +48,7 @@
         android:fontFamily="@font/vt323"
         android:text="join_game();"
         android:textAllCaps="false"
-        android:textSize="10pt" />
+        android:textSize="12pt" />
 
     <TextView
         android:id="@+id/join_game_success"
@@ -55,7 +58,7 @@
         android:text="@string/join_game_success"
         android:textColor="@color/mainText"
         android:fontFamily="@font/vt323"
-        android:textSize="10pt"
+        android:textSize="12pt"
         android:visibility="gone"/>
 
 
