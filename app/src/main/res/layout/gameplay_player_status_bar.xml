@@ -47,15 +47,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/gameplay_player_target"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/vt323"
-            android:textColor="#ead1dc"
-            android:text="@string/gameplay_player_target"
-            android:textSize="14pt"
-            android:layout_marginBottom="4pt" />
-        <TextView
             android:id="@+id/gameplay_player_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,6 +54,18 @@
             android:textColor="#ead1dc"
             android:text=""
             android:textSize="14pt"
+            android:layout_alignParentLeft="true"
             android:layout_marginBottom="4pt"/>
+        <TextView
+            android:id="@+id/gameplay_player_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/vt323"
+            android:textColor="#ead1dc"
+            android:text="@string/gameplay_player_target"
+            android:textSize="14pt"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="4pt" />
+
     </RelativeLayout>
 </LinearLayout>

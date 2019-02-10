@@ -89,6 +89,7 @@ public class GameplayActivity extends AppCompatActivity {
         });
 
         startGameTimer();
+        initializeStatusBarPlayerName();
 
         // First task: player needs to head to their home beacon.
         closeConsoleOnHomeBeaconNearby = true;
@@ -406,5 +407,9 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void getPlayerIdentifiers() {
         this.playerIdentifiers = getIntent().getParcelableExtra(getString(R.string.player_identifiers_intent_key));
+    }
+
+    private void initializeStatusBarPlayerName(){
+        this.playerStatusBarView.setPlayerName(this.playerIdentifiers.getRealName());
     }
 }
