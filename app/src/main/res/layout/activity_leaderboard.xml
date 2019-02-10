@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/leaderboard_title"
-        android:textSize="12pt"
+        android:textSize="14pt"
         android:textColor="@color/mainText"
         android:fontFamily="@font/vt323"
         android:layout_marginBottom="5pt"/>
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:textAllCaps="false"
         android:fontFamily="@font/vt323"
-        android:textSize="10pt"
+        android:textSize="11pt"
         android:backgroundTint="@color/gameplay_exchange_button"
         android:textColor="@android:color/white"
         android:text="@string/exit_leaderboard_button_text" />
