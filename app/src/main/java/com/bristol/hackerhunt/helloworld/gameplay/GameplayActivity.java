@@ -82,7 +82,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 if (!gameOver && closeConsoleOnHomeBeaconNearby) {
                     Log.d("App", "Closing console, home beacon nearby");
-                    consoleView.enableTapToClose();
+                    //gitconsoleView.enableTapToClose();
                     closeConsoleAfterDelay();
                     closeConsoleOnHomeBeaconNearby = false;
                 }
@@ -114,7 +114,7 @@ public class GameplayActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                consoleView.closeConsole();
+                consoleView.enableTapToClose();
                 if (newTargetRequested) {
                     try {
                         serverRequestsController.newTargetRequest();
