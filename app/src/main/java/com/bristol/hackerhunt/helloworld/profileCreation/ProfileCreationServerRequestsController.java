@@ -25,6 +25,8 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     private StringInputRunnable onProfileValidRunnable;
     private Runnable onProfileInvalidRunnable;
 
+    private int statusCode = 0;
+
     ProfileCreationServerRequestsController(Context context) {
         this.requestQueue = Volley.newRequestQueue(context);
 
