@@ -57,7 +57,7 @@ public class GameplayActivity extends AppCompatActivity {
     private IBeaconController beaconController;
 
     private boolean gameOver = false;
-    private boolean closeConsoleOnHomeBeaconNearby = true;
+    private boolean closeConsoleOnHomeBeaconNearby = false;
     private boolean newTargetRequested = true;
 
     @Override
@@ -82,7 +82,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 if (!gameOver && closeConsoleOnHomeBeaconNearby) {
                     Log.d("App", "Closing console, home beacon nearby");
-                    //gitconsoleView.enableTapToClose();
+                    //consoleView.enableTapToClose();
                     closeConsoleAfterDelay();
                     closeConsoleOnHomeBeaconNearby = false;
                 }
