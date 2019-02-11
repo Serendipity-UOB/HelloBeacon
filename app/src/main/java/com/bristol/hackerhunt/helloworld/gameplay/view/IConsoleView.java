@@ -74,4 +74,9 @@ public interface IConsoleView {
      * Reveals a console prompt that tells the the player that their exchange has failed.
      */
     void exchangeFailedPrompt();
+
+    /**
+     * Enables user to tap console pop up to close.
+     */
+    void enableTapToClose();
 }

@@ -231,4 +231,9 @@ public class ConsoleView implements IConsoleView {
         this.interactionInProgress = false;
         consoleMessage("EXCHANGE_FAIL\n\nHandshake incomplete");
     }
+
+    @Override
+    public void enableTapToClose()  {
+        enableCloseConsole();
+    }
 }

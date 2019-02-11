@@ -82,7 +82,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 if (!gameOver && closeConsoleOnHomeBeaconNearby) {
                     Log.d("App", "Closing console, home beacon nearby");
-                    closeConsoleAfterDelay();
+                    consoleView.enableTapToClose();
                     closeConsoleOnHomeBeaconNearby = false;
                 }
             }
