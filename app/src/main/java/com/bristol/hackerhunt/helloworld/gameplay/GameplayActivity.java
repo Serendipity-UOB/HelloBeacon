@@ -247,6 +247,24 @@ public class GameplayActivity extends AppCompatActivity {
         }
     }
 
+    private StringInputRunnable beginSelectedInterceptOnClickRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String interacteeId) {
+                consoleView.executingInterceptPrompt();
+                try {
+                    serverRequestsController.interceptRequest(interacteeId); //TODO Define
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                interactionButtonsView.showInteractionButtons();
+                interactionButtonsView.hideInterceptSelectPlayerButton(); //TODO Define
+                playerListView.resumeGameplayAfterInteraction();
+            }
+        };
+    }
+
     private StringInputRunnable beginSelectedTakedownOnClickRunner() {
         return new StringInputRunnable() {
             @Override
