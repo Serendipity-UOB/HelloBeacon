@@ -61,6 +61,7 @@ public class PlayerListView implements IPlayerListView {
 
         this.beginSelectedTakedownOnClickRunner = beginSelectedTakedownOnClickRunner;
         this.beginSelectedExchangeOnClickRunner = beginSelectedExchangeOnClickRunner;
+        this.beginSelectedInterceptOnClickRunner = beginSelectedInterceptOnClickRunner;
 
         this.uiHandler = new Handler(playerList.getContext().getMainLooper());
     }
@@ -183,6 +184,9 @@ public class PlayerListView implements IPlayerListView {
                 }
                 if (takedownStarted) {
                     setTakedownOnClickListener(playerId);
+                }
+                if (interceptStarted) {
+                    setInterceptOnClickListener((playerId));
                 }
             }
 
