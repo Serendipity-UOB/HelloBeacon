@@ -169,6 +169,11 @@ public class ConsoleView implements IConsoleView {
     }
 
     @Override
+    public void executingInterceptPrompt(){
+        
+    }
+
+    @Override
     public void takedownSuccessPrompt(String homeBeaconName) {
         disableCloseConsole();
 

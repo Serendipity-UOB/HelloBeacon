@@ -251,7 +251,7 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(String interacteeId) {
-                consoleView.executingInterceptPrompt();
+                consoleView.executingInterceptPrompt(); //TODO Define
                 try {
                     serverRequestsController.interceptRequest(interacteeId); //TODO Define
                 } catch (JSONException e) {

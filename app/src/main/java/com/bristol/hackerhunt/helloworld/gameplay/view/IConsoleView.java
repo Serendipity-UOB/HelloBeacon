@@ -37,6 +37,12 @@ public interface IConsoleView {
     void executingTakedownPrompt();
 
     /**
+     * Reveals a console prompt that tells the player that intercept is being executed. Tap out
+     * enabled.
+     */
+    void executingInterceptPrompt();
+
+    /**
      * Reveals a console prompt that tells the player that their takedown was a success, and that
      * they need to return to their home beacon. Tap out enabled.
      * @param homeBeaconName the home beacon name.
