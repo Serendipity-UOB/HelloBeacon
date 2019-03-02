@@ -30,7 +30,7 @@
     <string name="go_back_home">go back home</string>
     <string name="test_request">Test request</string>
 
-    <string name="title_screen_start_button">start();</string>
+    <string name="title_screen_start_button">Start</string>
 
     <string name="create_profile_real_name">Real name</string>
     <string name="create_profile_hacker_name">Hacker name</string>

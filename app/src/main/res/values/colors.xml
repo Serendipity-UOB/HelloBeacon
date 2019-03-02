@@ -5,7 +5,7 @@
     <color name="colorAccent">#1ed6cc</color>
     <color name="myBackgroundColor">#9b7eff</color>
     <color name="titleScreenBackground">#000000</color>
-    <color name="titleScreenText">#000000</color>
+    <color name="titleScreenText">#b6eaff</color>
     <color name="mainBackground">#2E2E41</color>
     <color name="mainText">#fff</color>
     <color name="attentionText">#d25252</color>

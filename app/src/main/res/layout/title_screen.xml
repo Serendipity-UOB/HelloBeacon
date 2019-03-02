@@ -12,18 +12,20 @@
     <pl.droidsonroids.gif.GifImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/title_logo" />
+            android:layout_height="450dp"
+            android:src="@drawable/title_screen"
+        android:paddingBottom="50dp"/>
 
     <Button
         android:id="@+id/title_screen_start_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="190dp"
+        android:layout_height="56dp"
         android:textAllCaps="false"
         android:layout_gravity="center"
         android:text="@string/title_screen_start_button"
-        android:fontFamily="@font/vt323"
+        android:fontFamily="@font/sharetech"
         android:textColor="@color/titleScreenText"
-        android:textSize="10pt"/>
+        android:textSize="10pt"
+        android:background="@drawable/start_button" />
 
 </LinearLayout>
