@@ -36,6 +36,7 @@ public class PlayerListView implements IPlayerListView {
 
     private boolean exchangeStarted = false;
     private boolean takedownStarted = false;
+    private boolean interceptStarted = false;
 
     /**
      * Constructor
@@ -45,6 +46,8 @@ public class PlayerListView implements IPlayerListView {
      *                                           on a selected player when run.
      * @param beginSelectedExchangeOnClickRunner A Runner that will initialize the mutual exchange
      *                                           process on a selected player when run.
+     * @param beginSelectedInterceptOnClickRunner A Runner that initialize the intercept process
+     *                                            on a selected player when run.
      */
     public PlayerListView(LayoutInflater inflater, LinearLayout playerList,
                    StringInputRunnable beginSelectedTakedownOnClickRunner,
@@ -283,6 +286,7 @@ public class PlayerListView implements IPlayerListView {
         }
         this.takedownStarted = false;
         this.exchangeStarted = false;
+        this.interceptStarted = false;
     }
 
     private void restoreFarAwayPlayerEntry(String playerId) {
@@ -319,6 +323,21 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
+    @Override
+    public void beginIntercept() {
+        this.interceptStarted = true;
+        for (String playerId : playerIdListItemIdMap.keySet()) {
+            if (!nearbyPlayerIds.contains(playerId)) {
+                darkenFarAwayPlayerEntries(playerId);
+            }
+            else {
+                setInterceptOnClickListener(playerId);
+            }
+        }
+
+
+    }
+
     private void setExchangeOnClickListener(final String playerId) {
         int viewId = playerIdListItemIdMap.get(playerId);
         View entry = playerList.findViewById(viewId);
@@ -326,6 +345,17 @@ public class PlayerListView implements IPlayerListView {
             @Override
             public void onClick(View view) {
                 beginSelectedExchangeOnClickRunner.run(playerId);
+            }
+        });
+    }
+
+    private void setInterceptOnClickListener(final String playerId) {
+        int viewId = playerIdListItemIdMap.get(playerId);
+        View entry = playerList.findViewById(viewId);
+        entry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                beginSelectedInterceptOnClickRunner.run(playerId);
             }
         });
     }

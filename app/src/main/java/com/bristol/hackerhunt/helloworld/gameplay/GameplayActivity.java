@@ -238,6 +238,15 @@ public class GameplayActivity extends AppCompatActivity {
         };
     }
 
+    private Runnable interceptButtonOnClickRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                playerListView.beginIntercept();
+            }
+        }
+    }
+
     private StringInputRunnable beginSelectedTakedownOnClickRunner() {
         return new StringInputRunnable() {
             @Override
