@@ -78,5 +78,12 @@
     <string name="exit_leaderboard_button_text">exit(EXIT_SUCCESS);</string>
     <string name="console_close_button">X </string>
     <string name="console_tap_to_close_message">Tap to close</string>
-    <string name="player_status_bar_name_placeholder">Agent Jack Jones</string>
+    <string name="player_status_bar_name_placeholder">Jack Jones</string>
+    <string name="leaderboard_status_bar_placeholder">#1</string>
+    <string name="player_status_info_separator">|</string>
+    <string name="score_status_bar_placeholder">240 rep</string>
+    <string name="player_target_title">Target: </string>
+    <string name="player_target_placeholder">CookingKing</string>
+    <string name="time_left_placeholder">8:00</string>
+    <string name="player_name_title">Agent</string>
 </resources>
