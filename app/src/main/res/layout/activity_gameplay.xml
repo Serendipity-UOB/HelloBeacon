@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="5pt"
-        android:background="@color/mainBackground">
+        android:background="#001c31">
 
         <include layout="@layout/gameplay_player_status_bar" />
 
