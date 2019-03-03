@@ -424,7 +424,8 @@ public class GameplayActivity extends AppCompatActivity {
     private void initializePlayerListView() {
         this.playerListView = new PlayerListView(LayoutInflater.from(this),
                 (LinearLayout) findViewById(R.id.gameplay_player_list),
-                beginSelectedTakedownOnClickRunner(), beginSelectedExchangeOnClickRunnable());
+                beginSelectedTakedownOnClickRunner(), beginSelectedExchangeOnClickRunnable(),
+                beginSelectedInterceptOnClickRunnable());
     }
 
     private void goToLeaderboardActivity() {

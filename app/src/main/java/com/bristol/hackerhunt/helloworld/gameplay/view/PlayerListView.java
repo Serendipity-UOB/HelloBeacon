@@ -33,6 +33,7 @@ public class PlayerListView implements IPlayerListView {
 
     private StringInputRunnable beginSelectedTakedownOnClickRunner;
     private StringInputRunnable beginSelectedExchangeOnClickRunner;
+    private StringInputRunnable beginSelectedInterceptOnClickRunner;
 
     private boolean exchangeStarted = false;
     private boolean takedownStarted = false;
@@ -51,7 +52,8 @@ public class PlayerListView implements IPlayerListView {
      */
     public PlayerListView(LayoutInflater inflater, LinearLayout playerList,
                    StringInputRunnable beginSelectedTakedownOnClickRunner,
-                   StringInputRunnable beginSelectedExchangeOnClickRunner) {
+                   StringInputRunnable beginSelectedExchangeOnClickRunner,
+                   StringInputRunnable beginSelectedInterceptOnClickRunner) {
         this.inflater = inflater;
         this.playerList  = playerList;
         this.playerIdListItemIdMap = new HashMap<>();

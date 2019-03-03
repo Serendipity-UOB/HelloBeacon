@@ -31,4 +31,14 @@ public interface IInteractionButtonsView {
      * Shows the takedown select prompt.
      */
     void showExchangeSelectPlayerButton();
+
+    /**
+     * Hides the intercept select prompt
+     */
+    void hideInterceptSelectPlayerButton();
+
+    /**
+     * Shows the intercept select prompt
+     */
+    void showInterceptSelectPlayerButton();
 }

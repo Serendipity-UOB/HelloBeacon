@@ -70,6 +70,18 @@ public class InteractionButtonsView implements IInteractionButtonsView {
         });
     }
 
+    private void initializeInterceptButton(final Runnable runnable) {
+        Button interceptButton = activity.findViewById(R.id.gameplay_intercept_button);
+        interceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideInteractionButtons();
+                showInterceptSelectPlayerButton();
+                runnable.run();
+            }
+        });
+    }
+
     @Override
     public void hideInteractionButtons() {
         LinearLayout buttons =  activity.findViewById(R.id.interaction_buttons);
@@ -104,5 +116,17 @@ public class InteractionButtonsView implements IInteractionButtonsView {
     public void showExchangeSelectPlayerButton() {
         Button takedownSelectPlayerButton = activity.findViewById(R.id.gameplay_exchange_select_player_button);
         takedownSelectPlayerButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideInterceptSelectPlayerButton() {
+        Button interceptSelectPlayerButton = activity.findViewById(R.id.gameplay_intercept_select_player_button);
+        interceptSelectPlayerButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showInterceptSelectPlayerButton() {
+        Button interceptSelectPlayerButton = activity.findViewById(R.id.gameplay_intercept_select_player_button);
+        interceptSelectPlayerButton.setVisibility(View.VISIBLE);
     }
 }
