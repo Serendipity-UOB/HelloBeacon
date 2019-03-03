@@ -43,14 +43,14 @@
             android:fontFamily="@font/sharetech_mono"
             android:text="CookingKing"
             android:textColor="#fff"
-            android:background="#b3e06666"
+            android:background="@color/player_is_not_target_codename"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_alignParentRight="true"
             android:layout_marginTop="7dp"
-            android:layout_marginBottom="7dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginStart="15dp"
             android:visibility="visible"/>
 

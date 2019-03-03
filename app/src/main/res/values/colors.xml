@@ -28,6 +28,9 @@
     <color name="progress_bar_background">#ffffff</color>
     <color name="progress_bar_background_far_interaction">#484848</color>
 
+    <color name="player_is_target_codename">#b3e06666</color>
+    <color name="player_is_not_target_codename">#8900a6ee</color>
+
     <!-- LEADERBOARD UI -->
     <color name="leaderboard_current_player_name">#fff</color>
 </resources>
