@@ -61,7 +61,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         this.INTERCEPT_URL = "/intercept";
     }
 
-
+    //TODO Define new exchange request and response behaviour
     @Override
     public void cancelAllRequests() {
         requestQueue.stop();
