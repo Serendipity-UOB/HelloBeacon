@@ -23,13 +23,22 @@
     <color name="gameplay_far_player_name">#000</color>
     <color name="gameplay_far_player_background">#5e5e86</color>
 
-    <color name="progress_bar">#6aa84f</color>
     <color name="progress_bar_far_interaction">#1e3016</color>
-    <color name="progress_bar_background">#ffffff</color>
     <color name="progress_bar_background_far_interaction">#484848</color>
 
+
+    <color name="player_card_name">#84aed9</color>
     <color name="player_is_target_codename">#b3e06666</color>
     <color name="player_is_not_target_codename">#8900a6ee</color>
+
+    <color name="progress_bar">#dfe8ec</color>
+    <color name="progress_bar_background">#04334f</color>
+    <color name="progress_bar_text">#b6eaff</color>
+    <color name="progress_bar_far">#a6a4a5</color>
+    <color name="progress_bar_background_far">#051b2e</color>
+    <color name="progress_bar_text_far">#86aca3</color>
+    <color name="progress_bar_complete_evidence">#00a654</color>
+    <color name="progress_bar_complete_evidence_text">#b6d7a8</color>
 
     <!-- LEADERBOARD UI -->
     <color name="leaderboard_current_player_name">#fff</color>

@@ -16,7 +16,7 @@
         cpb:backgroundColor="#033755"
         cpb:strokeWidth="3"
         cpb:backgroundWidth="3"
-        cpb:textSize="20sp"
+        cpb:textSize="18sp"
         cpb:roundedCorners="true"
         cpb:suffix="%"
         cpb:maxValue="100"
