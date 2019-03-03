@@ -199,6 +199,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         updateNearbyPlayers(obj);
         updatePlayerPoints(obj);
         updateLeaderboardPosition(obj);
+        updateExchangeReceive(obj);
         checkForPlayerStatusChanges(obj);
         checkGameOver(obj);
     }
@@ -223,6 +224,13 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         if (obj.has("position")) {
             String position = obj.getString("position");
             gameStateController.updateLeaderboardPosition(position);
+        }
+    }
+
+    private void updateExchangeReceive(JSONObject obj) throws JSONException {
+        if(obj.has("exchange_pending")) {
+            String reqId = obj.getString("exchange_pending");
+            gameStateController.updateExchangeReceive(reqId);
         }
     }
 
@@ -357,14 +365,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     @Override
     public void interceptRequest(String interacteeId) throws JSONException {
-        requestQueue.add(volleyInterceptRequest(interacteeId)); //TODO Define
+        requestQueue.add(volleyInterceptRequest(interacteeId));
     }
 
     private JsonObjectRequest volleyInterceptRequest(String interacteeId) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                interceptSuccessRunnable.run(); //TODO Define
+                interceptSuccessRunnable.run();
             }
         };
 

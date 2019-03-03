@@ -137,6 +137,12 @@ public interface IGameStateController {
     void updateLeaderboardPosition(String position);
 
     /**
+     * Notifies UI of received exchange request from
+     * @param reqId the requester's ID
+     */
+    void updateExchangeReceive(String reqId);
+
+    /**
      * Update nearby beacon.
      * @param major major of beacon.
      * @param rssi recorded rssi of beacon.

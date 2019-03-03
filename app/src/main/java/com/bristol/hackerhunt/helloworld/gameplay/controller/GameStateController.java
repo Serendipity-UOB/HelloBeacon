@@ -223,6 +223,11 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
+    public void updateExchangeReceive(String reqId) {
+        //TODO Define behaviour, likely a "console view" thing
+    }
+
+    @Override
     public void updateBeacon(String major, String minor, int rssi) {
         if (beaconMajorMinorRssiMap.containsKey(major)) {
             beaconMajorMinorRssiMap.get(major).put(minor, rssi);
