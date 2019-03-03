@@ -12,61 +12,110 @@
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:src="@drawable/globe"
-        android:paddingBottom="50dp"/>
+        android:layout_height="300dp"
+        android:src="@drawable/globe"/>
 
-    <TextView
-        android:id="@+id/join_game_welcome_text"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/fancy_popup"
+        android:layout_margin="10pt"
+        android:orientation="vertical"
         android:gravity="center"
-        android:textSize="13pt"
-        android:text="@string/join_game_welcome_message"
-        android:textColor="@color/mainText"
-        android:fontFamily="@font/vt323"/>
+        android:padding="30dp">
 
-    <TextView
-        android:id="@+id/join_game_players_in_game"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="12pt"
-        android:text="@string/join_game_players_in_game"
-        android:textColor="@color/mainText"
-        android:fontFamily="@font/vt323"
-        android:layout_marginTop="10pt"/>
+        <TextView
+            android:id="@+id/join_game_welcome_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="10pt"
+            android:text="@string/join_game_welcome_message"
+            android:fontFamily="@font/sharetech"
+            android:textColor="@color/titleScreenText"
+            android:textStyle="italic" />
 
-    <TextView
-        android:id="@+id/join_game_time_until_game"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="12pt"
-        android:text="@string/join_game_time_until_game"
-        android:textColor="@color/mainText"
-        android:fontFamily="@font/vt323"
-        android:layout_marginBottom="40pt"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
 
-    <Button
-        android:id="@+id/join_game_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/vt323"
-        android:text="join_game();"
-        android:textAllCaps="false"
-        android:textSize="12pt" />
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/join_game_players_in_game"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="8pt"
+                    android:text="@string/join_game_players_in_game"
+                    android:textColor="@color/titleScreenText"
+                    android:fontFamily="@font/sharetech"/>
 
-    <TextView
-        android:id="@+id/join_game_success"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/join_game_success"
-        android:textColor="@color/mainText"
-        android:fontFamily="@font/vt323"
-        android:textSize="12pt"
-        android:visibility="gone"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="25pt"
+                    android:text="@string/players_in_game_placeholder"
+                    android:textColor="@color/titleScreenText"
+                    android:fontFamily="@font/sharetech_mono"/>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/join_game_time_until_game"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="8pt"
+                    android:text="@string/join_game_time_until_game"
+                    android:textColor="@color/titleScreenText"
+                    android:fontFamily="@font/sharetech"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="25pt"
+                    android:text="@string/time_to_game_start_placeholder"
+                    android:textColor="@color/titleScreenText"
+                    android:fontFamily="@font/sharetech_mono"/>
+            </LinearLayout>
+        </LinearLayout>
 
+        <Button
+            android:id="@+id/join_game_button"
+            android:layout_width="wrap_content"
+            android:fontFamily="@font/sharetech"
+            android:text="@string/join_game_button"
+            android:textAllCaps="false"
+            android:textSize="8pt"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            android:background="@drawable/start_button"
+            android:layout_marginTop="20dp"
+            android:layout_height="56dp"
+            android:textColor="@color/titleScreenText"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/join_game_success"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/join_game_success"
+            android:textColor="@color/titleScreenText"
+            android:fontFamily="@font/sharetech"
+            android:textSize="10pt"
+            android:visibility="gone"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold" />
+    </LinearLayout>
 </LinearLayout>

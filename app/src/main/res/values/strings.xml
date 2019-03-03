@@ -23,10 +23,13 @@
     <string name="all_players_map_intent_key">all_players_map</string>
     <string name="player_identifiers_intent_key">player_identifiers</string>
 
-    <!--*********************-->
-    <!--         UI          -->
-    <!--*********************-->
 
+
+
+
+    <!--*********************-->
+    <!--*        UI         *-->
+    <!--*********************-->
     <string name="app_name">Hacker Hunt</string>
     <string name="go_to_test_request">Go to test request</string>
     <string name="this_is_the_test_request_page">This is the test request page.</string>
@@ -47,10 +50,13 @@
 
     <!-- Join Game screen -->
     <string name="join_game_players_in_game">Players in game: </string>
-    <string name="join_game_time_until_game">Time until game:</string>
-    <string name="join_game_welcome_message">Welcome, $PLAYER_NAME.</string>
-    <string name="join_game_success">JOIN_SUCCESS</string>
-    <string name="join_game_loading">JOIN_GAME_LOADING</string>
+    <string name="join_game_time_until_game">Time to next game:</string>
+    <string name="join_game_welcome_message">Welcome, agent $PLAYER_NAME.</string>
+    <string name="join_game_success">Join game successful</string>
+    <string name="join_game_loading">Join game loading</string>
+    <string name="join_game_button">Join game</string>
+    <string name="players_in_game_placeholder">3</string>
+    <string name="time_to_game_start_placeholder">4:32</string>
 
     <string name="gameplay_player_leaderboard_position">Pos:</string>
     <string name="gameplay_player_leaderboard_points">Points:</string>
