@@ -6,8 +6,15 @@
     tools:context=".joinGame.JoinGameActivity"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/mainBackground"
+    android:background="#000"
     android:screenOrientation="portrait">
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:src="@drawable/globe"
+        android:paddingBottom="50dp"/>
 
     <TextView
         android:id="@+id/join_game_welcome_text"

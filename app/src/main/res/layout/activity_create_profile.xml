@@ -9,6 +9,15 @@
     android:background="#000"
     android:screenOrientation="portrait">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_profile_prompt_message"
+        android:textColor="#b6eaff"
+        android:fontFamily="@font/sharetech"
+        android:textSize="8pt"
+        android:textStyle="italic"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,42 +25,52 @@
         android:layout_margin="10pt"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="20dp">
+        android:padding="30dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/mainText"
-            android:fontFamily="@font/vt323"
-            android:textSize="13pt"
-            android:text="// create your profile"/>
-
+            android:text="@string/enter_your_name_prompt"
+            android:textColor="#b6eaff"
+            android:fontFamily="@font/sharetech"
+            android:textSize="8pt"
+            android:textAlignment="textStart"/>
         <EditText
             android:id="@+id/create_profile_real_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/create_profile_textbox"
             android:hint="@string/create_profile_real_name"
-            android:fontFamily="@font/vt323"
+            android:fontFamily="@font/sharetech"
             android:inputType="text"
-            android:textSize="12pt"
-            android:layout_marginHorizontal="10pt"
-            android:layout_marginVertical="5pt"
-            android:paddingLeft="10pt" />
+            android:textSize="10pt"
+            android:layout_marginTop="5pt"
+            android:layout_marginBottom="30dp"
+            android:paddingStart="10pt"
+            android:paddingEnd="10pt"
+            android:backgroundTint="#05293a"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_code_name_prompt"
+            android:textColor="#b6eaff"
+            android:fontFamily="@font/sharetech"
+            android:textSize="8pt"
+            android:textAlignment="textStart"/>
         <EditText
             android:id="@+id/create_profile_hacker_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/create_profile_textbox"
             android:hint="@string/create_profile_hacker_name"
-            android:fontFamily="@font/vt323"
+            android:fontFamily="@font/sharetech"
             android:inputType="text"
-            android:textSize="12pt"
-            android:layout_marginHorizontal="10pt"
-            android:layout_marginVertical="5pt"
-            android:paddingLeft="10pt"/>
+            android:textSize="10pt"
+            android:layout_marginTop="5pt"
+            android:paddingStart="10pt"
+            android:paddingEnd="10pt"
+            android:backgroundTint="#05293a" />
 
         <TextView
             android:id="@+id/create_profile_error"
@@ -60,21 +79,23 @@
             android:gravity="center"
             android:textColor="@color/attentionText"
             android:fontFamily="@font/vt323"
-            android:text="Error: this is an error"
-            android:layout_marginBottom="11pt"
-            android:visibility="invisible"/>
+            android:text="@string/create_profile_error_placeholder"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/create_profile_button"
             android:layout_width="wrap_content"
             android:textAllCaps="false"
             android:fontFamily="@font/sharetech"
-            android:text="Create profile"
-            android:paddingHorizontal="40dp"
+            android:text="@string/create_profile_button"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
             android:background="@drawable/start_button"
+            android:layout_marginTop="30dp"
             android:layout_height="56dp"
-            android:textSize="10pt"
-            android:textColor="@color/titleScreenText"/>
-
+            android:textSize="8pt"
+            android:textColor="@color/titleScreenText"
+            android:textStyle="bold"/>
     </LinearLayout>
 </LinearLayout>

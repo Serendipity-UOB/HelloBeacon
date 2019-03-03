@@ -23,18 +23,29 @@
     <string name="all_players_map_intent_key">all_players_map</string>
     <string name="player_identifiers_intent_key">player_identifiers</string>
 
-    <!-- UI -->
+    <!--*********************-->
+    <!--         UI          -->
+    <!--*********************-->
+
     <string name="app_name">Hacker Hunt</string>
     <string name="go_to_test_request">Go to test request</string>
     <string name="this_is_the_test_request_page">This is the test request page.</string>
     <string name="go_back_home">go back home</string>
     <string name="test_request">Test request</string>
 
+    <!-- Title screen -->
     <string name="title_screen_start_button">Start</string>
 
-    <string name="create_profile_real_name">Real name</string>
-    <string name="create_profile_hacker_name">Hacker name</string>
+    <!-- Create Profile screen -->
+    <string name="create_profile_real_name">e.g. Jane</string>
+    <string name="create_profile_hacker_name">e.g. Anonymous</string>
+    <string name="create_profile_prompt_message">Create your profile, agent.</string>
+    <string name="enter_your_name_prompt">Enter your real name:</string>
+    <string name="enter_code_name_prompt">Enter your secret code name:</string>
+    <string name="create_profile_error_placeholder">Error: this is an error</string>
+    <string name="create_profile_button">Create profile</string>
 
+    <!-- Join Game screen -->
     <string name="join_game_players_in_game">Players in game: </string>
     <string name="join_game_time_until_game">Time until game:</string>
     <string name="join_game_welcome_message">Welcome, $PLAYER_NAME.</string>
