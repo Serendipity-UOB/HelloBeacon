@@ -95,8 +95,8 @@
         android:id="@+id/gameplay_console_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#CCFFFFFF"
-        android:visibility="gone">
+        android:background="#CD000000"
+        android:visibility="visible">
 
         <include layout="@layout/gameplay_console" />
     </RelativeLayout>

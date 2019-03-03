@@ -40,6 +40,11 @@
     <color name="progress_bar_complete_evidence">#00a654</color>
     <color name="progress_bar_complete_evidence_text">#b6d7a8</color>
 
+    <!-- GAMEPLAY UI: full screen notifications -->
+    <color name="neutral_full_screen_notif_title">#00c9d9</color>
+    <color name="bad_full_screen_notif_title">#d31c04</color>
+    <color name="good_full_screen_notif_title">#48be2e</color>
+
     <!-- LEADERBOARD UI -->
     <color name="leaderboard_current_player_name">#fff</color>
 </resources>
