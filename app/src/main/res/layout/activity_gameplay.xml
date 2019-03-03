@@ -25,7 +25,10 @@
                 android:id="@+id/gameplay_player_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical">
+                <include layout="@layout/gameplay_player_list_item" />
+                <include layout="@layout/gameplay_player_list_item" />
+            </LinearLayout>
         </ScrollView>
 
         <LinearLayout

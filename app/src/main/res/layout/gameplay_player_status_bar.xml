@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:showIn="@layout/activity_gameplay">
+    tools:showIn="@layout/activity_gameplay"
+    android:layout_marginBottom="15dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
