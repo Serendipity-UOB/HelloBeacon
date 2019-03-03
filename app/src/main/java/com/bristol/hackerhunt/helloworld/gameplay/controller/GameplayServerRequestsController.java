@@ -32,6 +32,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private final String PLAYER_AT_HOME_URL;
     private final String EXCHANGE_URL;
     private final String TAKE_DOWN_URL;
+    private final String INTERCEPT_URL;
 
     private final RequestQueue requestQueue;
     private final IGameStateController gameStateController;
@@ -39,6 +40,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private int statusCode = 0;
 
     private Runnable takedownSuccessRunnable;
+    private Runnable interceptSuccessRunnable;
 
     /**
      * Class constructor.
@@ -56,6 +58,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         this.EXCHANGE_URL = context.getString(R.string.exchange_request);
         this.TAKE_DOWN_URL = context.getString(R.string.takedown_request);
         this.PLAYER_AT_HOME_URL = context.getString(R.string.home_beacon_request);
+        this.INTERCEPT_URL = "/intercept";
     }
 
 
@@ -350,6 +353,41 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
         // Log.d("Network", requestBody.toString());
         return requestBody;
+    }
+
+    @Override
+    public void interceptRequest(String interacteeId) throws JSONException {
+        requestQueue.add(volleyInterceptRequest(interacteeId)); //TODO Define
+    }
+
+    private JsonObjectRequest volleyInterceptRequest(String interacteeId) throws JSONException {
+        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                interceptSuccessRunnable.run(); //TODO Define
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //do nothing
+            }
+        };
+
+        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + INTERCEPT_URL,
+                interceptRequestBody(interacteeId), listener, errorListener);
+    }
+
+    private JSONObject interceptRequestBody(String interacteeId) throws JSONException {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("target_id", interacteeId);
+        return requestBody;
+    }
+
+    @Override
+    public void registerInterceptSuccessRunnable(Runnable runnable) {
+        this.interceptSuccessRunnable = runnable;
     }
 
     @Override

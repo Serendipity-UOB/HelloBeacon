@@ -49,7 +49,7 @@ public interface IGameplayServerRequestsController {
      * status of the exchange:
      * POST /exchange { interacter_id, interactee_id }
      *
-     * @param interacteeId the NFC ID of the player that the current player is interacting with.
+     * @param interacteeId the ID of the player that the current player is interacting with.
      * @param details a class outlining the current status of the exchange.
      * @throws JSONException if the server JSON response cannot be parsed.
      */
@@ -59,10 +59,26 @@ public interface IGameplayServerRequestsController {
      * Submits a player take down request to the server:
      * POST /takeDown { player_id, target_id }
      *
-     * @param targetId the NFC ID of the player that the current player is attempting to take down.
+     * @param targetId the ID of the player that the current player is attempting to take down.
      * @throws JSONException if the server JSON response cannot be parsed.
      */
     void takeDownRequest(String targetId) throws JSONException;
+
+    /**
+     * Submits a player intercept request to the server:
+     * POST /intercept { target_id }
+     *
+     * @param interacteeId the ID of the player that the current player is attempting to intercept
+     *                     an exchange from.
+     * @throws JSONException
+     */
+    void interceptRequest(String interacteeId) throws JSONException;
+
+    /**
+     * Registers a runnable that is run when an intercept is successful.
+     * @param interceptSuccessRunnable a runnable
+     */
+    void registerInterceptSuccessRunnable(Runnable interceptSuccessRunnable);
 
     /**
      * Registers a runnable that is run when a takedown is successful.
