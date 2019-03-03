@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class GameStateController implements IGameStateController {
-
+    //TODO Consider changing to 10 to better show quantum
     private static final int INTEL_INCREMENT = 20; // a percentage
 
     private final IPlayerListView playerListController;
@@ -135,11 +135,11 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
-    public void increasePlayerIntel(String playerId) {
+    public void increasePlayerIntel(String playerId, int intelIncrement) {
         if (!playerId.equals("0") && allPlayersMap.get(playerId) != null) {
             PlayerDetails pd = allPlayersMap.get(playerId);
-            pd.intel = Math.min(100, pd.intel + INTEL_INCREMENT);
-            playerListController.increasePlayerIntel(playerId, INTEL_INCREMENT);
+            pd.intel = Math.min(100, pd.intel + intelIncrement);
+            playerListController.increasePlayerIntel(playerId, intelIncrement);
             if (playerHasFullIntel(playerId)) {
                 playerListController.revealPlayerHackerName(playerId, pd.hackerName);
             }

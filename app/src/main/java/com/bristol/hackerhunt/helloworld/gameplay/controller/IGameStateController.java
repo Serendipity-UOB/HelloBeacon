@@ -79,8 +79,9 @@ public interface IGameStateController {
     /**
      * Increases the intel learned about the given player.
      * @param playerId the NFC ID of the target player.
+     * @param intelIncrement the amount to increase intel by as a percentage
      */
-    void increasePlayerIntel(String playerId);
+    void increasePlayerIntel(String playerId, int intelIncrement);
 
     /**
      * @param targetId ID of the desired player.
