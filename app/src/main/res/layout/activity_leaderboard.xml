@@ -33,10 +33,7 @@
             android:id="@+id/leaderboard_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <include layout="@layout/leaderboard_list_item" />
-            <include layout="@layout/leaderboard_list_item" />
-        </LinearLayout>
+            android:orientation="vertical"/>
     </ScrollView>
 
     <RelativeLayout
@@ -61,7 +58,7 @@
         android:textAllCaps="false"
         android:fontFamily="@font/sharetech"
         android:textSize="10pt"
-        android:textColor="@android:color/white"
+        android:textColor="#9fc5e8"
         android:textStyle="bold"
         android:text="Exit" />
 
