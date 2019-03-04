@@ -11,19 +11,19 @@
     <!--*******************************-->
     <string name="server_address">https://serendipity-game-controller.herokuapp.com</string>
 
-    <string name="register_player_request">/registerPlayer</string>
+    <string name="register_player_request">/registerPlayerTest</string>
 
-    <string name="game_info_request">/gameInfo</string>
-    <string name="join_game_request">/joinGame</string>
+    <string name="game_info_request">/gameInfoTest</string>
+    <string name="join_game_request">/joinGameTest</string>
 
-    <string name="start_info_request">/startInfo</string>
-    <string name="new_target_request">/newTarget</string>
-    <string name="player_update_request">/playerUpdate</string>
-    <string name="home_beacon_request">/atHomeBeacon</string>
-    <string name="exchange_request">/exchange</string>
-    <string name="takedown_request">/takeDown</string>
+    <string name="start_info_request">/startInfoTest</string>
+    <string name="new_target_request">/newTargetTest</string>
+    <string name="player_update_request">/playerUpdateTest</string>
+    <string name="home_beacon_request">/atHomeBeaconTest</string>
+    <string name="exchange_request">/exchangeTest</string>
+    <string name="takedown_request">/takeDownTest</string>
 
-    <string name="get_info_request">/endInfo</string>
+    <string name="get_info_request">/endInfoTest</string>
 
 
 
@@ -55,6 +55,10 @@
     <string name="enter_code_name_prompt">Enter your secret code name:</string>
     <string name="create_profile_error_placeholder">Error: this is an error</string>
     <string name="create_profile_button">Create profile</string>
+    <string name="create_profile_button_loading">Loading…</string>
+    <string name="create_profile_codename_exists_error">Codename already exists.</string>
+    <string name="create_profile_empty_real_name_error">Please provide a real name.</string>
+    <string name="create_profile_empty_code_name_error">Please provide a codename.</string>
 
     <!-- Join Game screen -->
     <string name="join_game_players_in_game">Players in game: </string>

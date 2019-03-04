@@ -40,11 +40,11 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     }
 
     @Override
-    public void registerPlayerRequest(String realName, String hackerName) throws JSONException {
-       // this is a placeholder.
-        //onProfileValidRunnable.run("100");
+    public void registerPlayerRequest(String realName, String codeName) throws JSONException {
+        // this is for testing.
+        onProfileValidRunnable.run("100");
 
-        requestQueue.add(volleyRegisterPlayerRequest(realName, hackerName));
+        // requestQueue.add(volleyRegisterPlayerRequest(realName, codeName));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
         this.onProfileInvalidRunnable = runnable;
     }
 
-    private JsonObjectRequest volleyRegisterPlayerRequest(String realName, String hackerName) throws JSONException {
+    private JsonObjectRequest volleyRegisterPlayerRequest(String realName, String codeName) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -73,18 +73,27 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
+                if (error.networkResponse != null) {
+                    Log.d("Network", "Status code: " + String.valueOf(error.networkResponse.statusCode) +
+                            ", Message:" + error.getMessage());
+                }
+                else {
+                    Log.d("Network","Message:" + error.getCause().toString());
+                }
+
                 onProfileInvalidRunnable.run();
             }
         };
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + REGISTER_PLAYER_URL,
-                playerIdentifiersToJson(realName, hackerName), listener, errorListener);
+                playerIdentifiersToJson(realName, codeName), listener, errorListener);
     }
 
-    private JSONObject playerIdentifiersToJson(String realName, String hackerName) throws JSONException {
+    private JSONObject playerIdentifiersToJson(String realName, String codeName) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("real_name", realName);
-        obj.put("hacker_name", hackerName);
+        obj.put("code_name", codeName);
         return obj;
     }
 }
