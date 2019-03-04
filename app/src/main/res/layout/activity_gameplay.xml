@@ -5,63 +5,36 @@
     android:layout_height="match_parent"
     tools:context=".gameplay.GameplayActivity"
     android:orientation="vertical"
-    android:screenOrientation="portrait">
+    android:screenOrientation="portrait"
+    android:clipChildren="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="5pt"
-        android:background="@drawable/tile_background">
+        android:background="@drawable/tile_background"
+        android:clipChildren="false">
 
         <include layout="@layout/gameplay_player_status_bar" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:clipChildren="false">
 
             <LinearLayout
                 android:id="@+id/gameplay_player_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clipChildren="false">
                 <include layout="@layout/gameplay_player_list_item" />
                 <include layout="@layout/gameplay_player_list_item" />
             </LinearLayout>
         </ScrollView>
 
-        <LinearLayout
-            android:id="@+id/interaction_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1.0"
-            android:layout_marginTop="5pt">
-            <Button
-                android:id="@+id/gameplay_exchange_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="false"
-                android:fontFamily="@font/vt323"
-                android:textSize="14pt"
-                android:layout_weight=".5"
-                android:text="@string/gamplay_exchange_button"
-                android:textColor="@android:color/white"
-                android:background="@color/gameplay_exchange_button"
-                android:layout_marginEnd="2pt" />
-            <Button
-                android:id="@+id/gameplay_takedown_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="false"
-                android:fontFamily="@font/vt323"
-                android:textSize="14pt"
-                android:layout_weight=".5"
-                android:text="@string/gameplay_take_down_button"
-                android:textColor="@android:color/white"
-                android:background="@color/gameplay_takedown_button"
-                android:layout_marginStart="2pt"/>
-        </LinearLayout>
         <Button
             android:visibility="gone"
             android:layout_marginTop="5pt"
@@ -96,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#CD000000"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <include layout="@layout/gameplay_console" />
     </RelativeLayout>
@@ -201,4 +174,12 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
+
+    <!-- Greyed-out overlay -->
+    <RelativeLayout
+        android:id="@+id/emphasis_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CD05091c"
+        android:visibility="visible"/>
 </RelativeLayout>
