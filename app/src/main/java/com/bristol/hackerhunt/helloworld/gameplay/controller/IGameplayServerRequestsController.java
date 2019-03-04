@@ -55,6 +55,19 @@ public interface IGameplayServerRequestsController {
      */
     void exchangeRequest(String interacteeId, InteractionDetails details) throws JSONException;
 
+
+    /**
+     * Handles an exchange response from player concerning an exchange offered to them
+     * @param interacteeId the ID of the player that current player is interacting with
+     * @param response the response to the exchange,
+     *                 0 = Wait
+     *                 1 = Accept
+     *                 2 = Reject
+     * @param details a class outlining the current status of exchange
+     * @throws JSONException if unparseable JSON
+     */
+    void exchangeResponse(String interacteeId, int response, InteractionDetails details) throws JSONException;
+
     /**
      * Submits a player take down request to the server:
      * POST /takeDown { player_id, target_id }

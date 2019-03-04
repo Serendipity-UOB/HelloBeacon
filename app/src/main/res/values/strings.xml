@@ -14,8 +14,11 @@
     <string name="new_target_request">/newTarget</string>
     <string name="player_update_request">/playerUpdate</string>
     <string name="home_beacon_request">/atHomeBeacon</string>
-    <string name="exchange_request">/exchange</string>
+    <string name="exchange_request">/exchangeRequest</string>
+    <string name="exchange_response">/exchangeResponse</string>
     <string name="takedown_request">/takeDown</string>
+    <string name="intercept_request">/intercept</string>
+    <string name="mission_update_request">/missionUpdate</string>
 
     <string name="get_info_request">/endInfo</string>
 

@@ -30,9 +30,10 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private final String NEW_TARGET_URL;
     private final String PLAYER_UPDATE_URL;
     private final String PLAYER_AT_HOME_URL;
-    private final String EXCHANGE_URL;
+    private final String EXCHANGE_REQUEST_URL;
     private final String TAKE_DOWN_URL;
     private final String INTERCEPT_URL;
+    private final String EXCHANGE_RESPONSE_URL;
 
     private final RequestQueue requestQueue;
     private final IGameStateController gameStateController;
@@ -55,10 +56,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         this.START_INFO_URL = context.getString(R.string.start_info_request);
         this.NEW_TARGET_URL = context.getString(R.string.new_target_request);
         this.PLAYER_UPDATE_URL = context.getString(R.string.player_update_request);
-        this.EXCHANGE_URL = context.getString(R.string.exchange_request);
+        this.EXCHANGE_REQUEST_URL = context.getString(R.string.exchange_request);#
+        this.EXCHANGE_RESPONSE_URL = context.getString(R.string.exchange_response);
         this.TAKE_DOWN_URL = context.getString(R.string.takedown_request);
         this.PLAYER_AT_HOME_URL = context.getString(R.string.home_beacon_request);
-        this.INTERCEPT_URL = "/intercept";
+        this.INTERCEPT_URL = context.getString(R.string.intercept_request);
     }
 
     //TODO Define new exchange request and response behaviour
@@ -344,10 +346,84 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         details.status = InteractionStatus.FAILED;
     }
 
+    private void pendingExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
+        int timeRemaining = obj.getInt("time_remaining"); //TODO Define what happens here
+    }
+
     private JSONObject exchangeRequestBody(String interacteeId) throws JSONException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("interacter_id", gameStateController.getPlayerId());
         requestBody.put("interactee_id", interacteeId);
+
+        JSONArray contactIds = new JSONArray();
+        for (String playerId : gameStateController.getPlayerIdRealNameMap().keySet()) {
+            if (gameStateController.playerHasNonZeroIntel(playerId)) {
+                JSONObject contactId = new JSONObject();
+                contactId.put("contact_id", playerId);
+                contactIds.put(contactId);
+            }
+        }
+        requestBody.put("contact_ids", contactIds);
+
+        // Log.d("Network", requestBody.toString());
+        return requestBody;
+    }
+
+    @Override
+    public void exchangeResponse(String interacteeId, int response, InteractionDetails details) throws JSONException {
+        requestQueue.add(volleyExchangeResponse(interacteeId, response, details));
+    }
+
+    private JsonObjectRequest volleyExchangeResponse(final String interacteeId, int playerResponse, final InteractionDetails details) throws JSONException {
+        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (statusCode == 200){
+                    try {
+                        successfulExchange(interacteeId, details, response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if (statusCode == 204){
+                    try {
+                        pendingExchange(interacteeId, details, response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                statusCode = 0;
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (statusCode == 400) {
+                    // Log.d("Network", "400 Error received");
+                    unsuccessfulExchange(details);
+                }
+                else if (statusCode == 408) {
+                    // Log.d("Network", "408 Error received");
+                    unsuccessfulExchange(details);
+                }
+                else if (statusCode != 201 && statusCode != 202){
+                    // Log.d("Network", "Different server error received: " + Integer.toString(statusCode));
+                    unsuccessfulExchange(details);
+                }
+                statusCode = 0;
+            }
+        };
+
+        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_RESPONSE_URL,
+                exchangeResponseBody(interacteeId, playerResponse), listener, errorListener);
+    }
+
+    private JSONObject exchangeResponseBody(String interacteeId, int response) throws JSONException {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("player_id", gameStateController.getPlayerId());
+        requestBody.put("exchanger_id", interacteeId);
+        requestBody.put("response", response);
 
         JSONArray contactIds = new JSONArray();
         for (String playerId : gameStateController.getPlayerIdRealNameMap().keySet()) {
