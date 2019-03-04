@@ -36,6 +36,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private final String EXCHANGE_RESPONSE_URL;
     private final String MISSION_URL;
 
+    private final int EXCHANGE_PRIMARY_INCREMENT = 10;
+    private final int EXCHANGE_SECONDARY_INCREMENT = 20;
+    private final int INTERCEPT_PRIMARY_INCREMENT = 30;
+    private final int INTERCEPT_SECONDARY_INCREMENT = 10;
+
     private final RequestQueue requestQueue;
     private final IGameStateController gameStateController;
 
@@ -417,18 +422,18 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void successfulExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
         String secondaryId = obj.getString("secondary_id");
+        /*
         details.gainedIntelPlayerIds.add(interacteeId);
         if (!secondaryId.equals("0"))
             details.gainedIntelPlayerIds.add(secondaryId);
+        */
+        gameStateController.increasePlayerIntel(interacteeId, EXCHANGE_PRIMARY_INCREMENT);
+        gameStateController.increasePlayerIntel(secondaryId, EXCHANGE_SECONDARY_INCREMENT);
         details.status = InteractionStatus.SUCCESSFUL;
     }
 
     private void unsuccessfulExchange(InteractionDetails details) {
         details.status = InteractionStatus.FAILED;
-    }
-
-    private void pendingExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
-        int timeRemaining = obj.getInt("time_remaining"); //TODO Define what happens here
     }
 
     private JSONObject exchangeRequestBody(String interacteeId) throws JSONException {
@@ -448,6 +453,10 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
         // Log.d("Network", requestBody.toString());
         return requestBody;
+    }
+
+    private void pendingExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
+        int timeRemaining = obj.getInt("time_remaining"); //TODO Define what happens here
     }
 
     @Override

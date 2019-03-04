@@ -325,9 +325,10 @@ public class GameplayActivity extends AppCompatActivity {
                     try {
                         if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
                             cancel();
+                            /* REPLACING BY INCREASING INTEL IN SERVER REQUESTS
                             for (String id : details.gainedIntelPlayerIds) {
                                 gameStateController.increasePlayerIntel(id);
-                            }
+                            }*/
 
                             that.runOnUiThread(new Runnable() {
                                 @Override
