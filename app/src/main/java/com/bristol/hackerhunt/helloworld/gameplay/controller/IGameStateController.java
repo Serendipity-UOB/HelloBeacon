@@ -143,8 +143,8 @@ public interface IGameStateController {
     void updateExchangeReceive(String reqId);
 
     /**
-     * Handles a new mission coming in with description Mission ID
-     * @param missionId mission description
+     * Handles a new mission coming in with description missionId
+     * @param missionId mission description string
      */
     void handleNewMission(String missionId);
 

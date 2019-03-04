@@ -34,6 +34,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private final String TAKE_DOWN_URL;
     private final String INTERCEPT_URL;
     private final String EXCHANGE_RESPONSE_URL;
+    private final String MISSION_URL;
 
     private final RequestQueue requestQueue;
     private final IGameStateController gameStateController;
@@ -61,6 +62,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         this.TAKE_DOWN_URL = context.getString(R.string.takedown_request);
         this.PLAYER_AT_HOME_URL = context.getString(R.string.home_beacon_request);
         this.INTERCEPT_URL = context.getString(R.string.intercept_request);
+        this.MISSION_URL = context.getString(R.string.mission_update_request);
     }
 
     //TODO Define new exchange request and response behaviour
@@ -203,6 +205,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         updateLeaderboardPosition(obj);
         updateExchangeReceive(obj);
         checkForPlayerStatusChanges(obj);
+        checkForMission(obj);
         checkGameOver(obj);
     }
 
@@ -290,6 +293,77 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
+    public void missionUpdateRequest() throws JSONException {
+        requestQueue.add(volleyMissionUpdateRequest());
+    }
+
+    private JsonObjectRequest volleyMissionUpdateRequest() throws JSONException {
+        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (statusCode == 200) {
+                    try {
+                        missionSuccess(response); //TODO Define
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if(statusCode == 100){
+                    if(response.has("time_remaining")){
+                        int timeRemaining = response.getInt("time_remaining");
+                        missionPending(timeRemaining, response); //TODO Define
+                    }
+                }
+                else if(statusCode == 204){
+                    missionFailure(response); //TODO Define
+                }
+                statusCode = 0;
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if(statusCode == 400) {
+                    // Log.d("Network", "400 Error received");
+                    //TODO Correct Behaviour?
+                }
+                statusCode = 0;
+            }
+        };
+
+        return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + MISSION_URL, new JSONObject(), listener, errorListener) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                if (response != null) {
+                    statusCode = response.statusCode;
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
+    }
+
+    private void missionSuccess(JSONObject obj) throws JSONException {
+        if(obj.has("rewards")){
+            JSONArray rewardArray = obj.getJSONArray("rewards");
+            for(int i = 0; i < rewardArray.length(); i++){
+                JSONObject rewardRow = rewardArray.getJSONObject(i);
+                String rewardId = rewardRow.getString("player_id");
+                int rewardAmount = rewardRow.getInt("evidence");
+                gameStateController.increasePlayerIntel(rewardId, rewardAmount);
+            }
+        }
+    }
+
+    private void missionPending(int timeRemaining, JSONObject obj) throws JSONException {
+        //TODO Define, probably tell gameStateController something
+    }
+
+    private void missionFailure(JSONObject obj) throws JSONException {
+        //TODO Define probably tell gameStateController something
+    }
+
+    @Override
     public void exchangeRequest(String interacteeId, InteractionDetails details) throws JSONException {
         // this is just a placeholder (assuming success).
         // String response = "{\"secondary_id\":\"1\"}";
@@ -329,7 +403,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         };
 
-        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_URL,
+        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_REQUEST_URL,
                 exchangeRequestBody(interacteeId), listener, errorListener) {
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {

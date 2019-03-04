@@ -98,4 +98,6 @@ public interface IGameplayServerRequestsController {
      * @param takedownSuccessRunnable a runnable.
      */
     void registerTakedownSuccessRunnable(Runnable takedownSuccessRunnable);
+
+    void missionUpdateRequest() throws JSONException;
 }
