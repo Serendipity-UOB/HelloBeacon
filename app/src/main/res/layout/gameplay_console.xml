@@ -26,20 +26,29 @@
         android:orientation="horizontal"
         android:background="@drawable/neutral_full_pop_up"
         android:layout_marginTop="8pt"
-        android:layout_marginBottom="5pt">
+        android:layout_marginBottom="5pt"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/agency_logo"
+            android:layout_width="35pt"
+            android:layout_height="35pt"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/agency_spy_logo"/>
 
         <TextView
+            android:layout_weight="1"
             android:id="@+id/gameplay_console_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sharetech"
             android:textColor="#fff"
             android:textSize="9pt"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
-            android:text="Welcome, agent.\nGo to game zone Valor for your first target."/>
+            android:text="Welcome, agent.\nGo to game zone Valor to get your first target."/>
     </LinearLayout>
 
     <TextView

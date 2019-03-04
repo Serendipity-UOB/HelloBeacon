@@ -96,7 +96,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#CD000000"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <include layout="@layout/gameplay_console" />
     </RelativeLayout>
@@ -115,17 +115,27 @@
             android:orientation="horizontal"
             android:layout_alignParentBottom="true"
             android:background="@drawable/neutral_full_pop_up"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
-            android:layout_margin="7pt">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:layout_margin="7pt"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="28pt"
+                android:layout_height="28pt"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/agency_spy_logo" />
+
             <TextView
-                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sharetech"
                 android:textColor="#fff"
                 android:textSize="9pt"
+                android:gravity="center"
                 android:text="Exchange with Tilly requested."/>
         </LinearLayout>
     </RelativeLayout>
@@ -135,7 +145,7 @@
         android:id="@+id/exchange_request_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/exchange_request"
