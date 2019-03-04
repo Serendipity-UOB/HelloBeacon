@@ -236,6 +236,13 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         }
     }
 
+    private void checkForMission(JSONObject obj) throws JSONException {
+        if(obj.has("mission_description")) {
+            String missionId = obj.getString("mission_description");
+            gameStateController.handleNewMission(missionId); //TODO Define
+        }
+    }
+
     private void checkForPlayerStatusChanges(JSONObject obj) throws JSONException {
         List<PlayerUpdate> updates = new ArrayList<>();
         if (obj.has("taken_down")) {
