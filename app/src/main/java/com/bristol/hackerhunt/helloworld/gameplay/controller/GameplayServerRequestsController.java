@@ -538,19 +538,63 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                interceptSuccessRunnable.run();
+                if (statusCode == 200){
+                    try {
+                        interceptSuccess(response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if (statusCode == 204){
+                    try {
+                        interceptFailure(interacteeId, response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                statusCode = 0;
             }
         };
 
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //do nothing
+                if (statusCode == 400) {
+                    // Log.d("Network", "400 Error received");
+                    interceptError(error);
+                }
+                statusCode = 0;
             }
         };
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + INTERCEPT_URL,
                 interceptRequestBody(interacteeId), listener, errorListener);
+    }
+
+    private void interceptSuccess(JSONObject obj) throws JSONException {
+        if(obj.has("primary_id")){
+            String primaryId = obj.getString("primary_id");
+            if(obj.has("primary_evidence")){
+                int primaryEvidence = obj.getInt("primary_evidence");
+                gameStateController.increasePlayerIntel(primaryId,primaryEvidence);
+            }
+        }
+        if(obj.has("secondary_id")){
+            String secondaryId = obj.getString("secondary_id");
+            if(obj.has("secondary_evidence")){
+                int secondaryEvidence = obj.getInt("secondary_evidence");
+                gameStateController.increasePlayerIntel(secondaryId,secondaryEvidence);
+            }
+        }
+
+    }
+
+    private void interceptFailure(String interacteeId, JSONObject obj) throws JSONException {
+        //TODO Define behaviour
+    }
+
+    private void interceptError(VolleyError error) {
+        //TODO Define if need be
     }
 
     private JSONObject interceptRequestBody(String interacteeId) throws JSONException {
