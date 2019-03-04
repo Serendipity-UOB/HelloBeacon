@@ -91,7 +91,7 @@ public class PlayerListView implements IPlayerListView {
         listItem.setId(playerItemId);
 
         TextView playerNameView = listItem.findViewById(R.id.player_name);
-        ProgressBar intelGathered = listItem.findViewById(R.id.player_intel_bar);
+        ProgressBar intelGathered = listItem.findViewById(R.id.player_intel_circle);
 
         String playerName = playerIdNameMap.get(playerId);
         setTextOfView(playerNameView, playerName);
@@ -128,7 +128,7 @@ public class PlayerListView implements IPlayerListView {
         else {
             int id = playerIdListItemIdMap.get(playerId);
             LinearLayout listItem = playerList.findViewById(id);
-            ProgressBar intelBar = listItem.findViewById(R.id.player_intel_bar);
+            ProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
             int intel = intelBar.getProgress();
             intelBar.setProgress(intel + intelIncrement);
@@ -143,7 +143,7 @@ public class PlayerListView implements IPlayerListView {
         else {
             int id = playerIdListItemIdMap.get(playerId);
             LinearLayout listItem = playerList.findViewById(id);
-            ProgressBar intelBar = listItem.findViewById(R.id.player_intel_bar);
+            ProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
             int intel = intelBar.getProgress();
             TextView hackerName = listItem.findViewById(R.id.player_hacker_name);
@@ -194,7 +194,7 @@ public class PlayerListView implements IPlayerListView {
         else {
             int id = playerIdListItemIdMap.get(playerId);
             LinearLayout ll = playerList.findViewById(id);
-            ProgressBar ib = ll.findViewById(R.id.player_intel_bar);
+            ProgressBar ib = ll.findViewById(R.id.player_intel_circle);
             return ib.getProgress();
         }
     }
@@ -253,7 +253,7 @@ public class PlayerListView implements IPlayerListView {
         entry.findViewById(R.id.player_item_background).setBackgroundColor(ContextCompat.getColor(context,
                 R.color.gameplay_nearby_player_background_interaction));
 
-        ProgressBar pb = entry.findViewById(R.id.player_intel_bar);
+        ProgressBar pb = entry.findViewById(R.id.player_intel_circle);
         pb.setProgressBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context,
                 R.color.progress_bar_background_far_interaction)));
         pb.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(context,
@@ -293,7 +293,7 @@ public class PlayerListView implements IPlayerListView {
         entry.findViewById(R.id.player_item_background).setBackgroundColor(ContextCompat.getColor(context,
                 R.color.gameplay_far_player_background));
 
-        ProgressBar pb = entry.findViewById(R.id.player_intel_bar);
+        ProgressBar pb = entry.findViewById(R.id.player_intel_circle);
         pb.setProgressBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(pb.getContext(),
                 R.color.progress_bar_background)));
         pb.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(pb.getContext(),

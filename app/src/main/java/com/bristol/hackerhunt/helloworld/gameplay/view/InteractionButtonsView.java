@@ -59,7 +59,7 @@ public class InteractionButtonsView implements IInteractionButtonsView {
     }
 
     private void initializeTakeDownButton(final Runnable runnable) {
-        Button takeDownButton = activity.findViewById(R.id.gameplay_takedown_button);
+        Button takeDownButton = activity.findViewById(R.id.gameplay_expose_button);
         takeDownButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

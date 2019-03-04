@@ -46,9 +46,12 @@
             android:textSize="10pt"
             android:layout_marginTop="5pt"
             android:layout_marginBottom="30dp"
+            android:paddingTop="2pt"
+            android:paddingBottom="2pt"
             android:paddingStart="10pt"
             android:paddingEnd="10pt"
-            android:backgroundTint="#05293a"/>
+            android:backgroundTint="#05293a"
+            android:textColor="#b6eaff"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -68,9 +71,12 @@
             android:inputType="text"
             android:textSize="10pt"
             android:layout_marginTop="5pt"
+            android:paddingTop="2pt"
+            android:paddingBottom="2pt"
             android:paddingStart="10pt"
             android:paddingEnd="10pt"
-            android:backgroundTint="#05293a" />
+            android:backgroundTint="#05293a"
+            android:textColor="#b6eaff"/>
 
         <TextView
             android:id="@+id/create_profile_error"
@@ -78,8 +84,9 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/attentionText"
-            android:fontFamily="@font/vt323"
+            android:fontFamily="@font/sharetech"
             android:text="@string/create_profile_error_placeholder"
+            android:textSize="7pt"
             android:layout_marginTop="10dp"
             android:visibility="gone"/>
 
