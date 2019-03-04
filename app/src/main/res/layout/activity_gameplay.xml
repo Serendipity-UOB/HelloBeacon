@@ -181,5 +181,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#CD05091c"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 </RelativeLayout>

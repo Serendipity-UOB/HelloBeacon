@@ -72,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2pt"
-        android:visibility="visible">
+        android:visibility="gone">
         <Button
             android:id="@+id/gameplay_exchange_button"
             android:layout_weight="1"

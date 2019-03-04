@@ -7,30 +7,36 @@
     android:orientation="vertical"
     android:padding="5pt"
     android:gravity="center"
-    android:background="@color/mainBackground"
+    android:background="@drawable/tile_background"
     android:screenOrientation="portrait">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="28pt"
         android:gravity="center"
         android:text="@string/leaderboard_title"
-        android:textSize="14pt"
-        android:textColor="@color/mainText"
-        android:fontFamily="@font/vt323"
-        android:layout_marginBottom="5pt"/>
+        android:textSize="12pt"
+        android:textColor="#9fc5e8"
+        android:fontFamily="@font/sharetech"
+        android:background="@drawable/leaderboard_title"
+        android:textStyle="italic"
+        android:layout_marginBottom="10pt"
+        android:layout_marginTop="5pt"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/leaderboard_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical">
+            <include layout="@layout/leaderboard_list_item" />
+            <include layout="@layout/leaderboard_list_item" />
+        </LinearLayout>
     </ScrollView>
 
     <RelativeLayout
@@ -38,7 +44,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center" >
+        android:gravity="center"
+        android:visibility="gone">
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -48,13 +55,14 @@
 
     <Button
         android:id="@+id/return_to_title_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:background="@drawable/start_button"
+        android:layout_width="90pt"
+        android:layout_height="26pt"
         android:textAllCaps="false"
-        android:fontFamily="@font/vt323"
-        android:textSize="11pt"
-        android:backgroundTint="@color/gameplay_exchange_button"
+        android:fontFamily="@font/sharetech"
+        android:textSize="10pt"
         android:textColor="@android:color/white"
-        android:text="@string/exit_leaderboard_button_text" />
+        android:textStyle="bold"
+        android:text="Exit" />
 
 </LinearLayout>
