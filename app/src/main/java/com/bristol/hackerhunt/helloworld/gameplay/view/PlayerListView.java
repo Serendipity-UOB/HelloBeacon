@@ -1,15 +1,16 @@
 package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
@@ -80,7 +81,7 @@ public class PlayerListView implements IPlayerListView {
 
         playerIdHackerNameMap.put(playerId, hackerName);
         int id = playerIdListItemIdMap.get(playerId);
-        LinearLayout listItem = playerList.findViewById(id);
+        RelativeLayout listItem = playerList.findViewById(id);
         final TextView nameView = listItem.findViewById(R.id.player_hacker_name);
 
         setTextOfView(nameView, hackerName);
@@ -95,14 +96,13 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
-    private View.OnClickListener playerCardOnClickListener(final LinearLayout playerCard) {
+    private View.OnClickListener playerCardOnClickListener(final RelativeLayout playerCard) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 View buttons = playerCard.findViewById(R.id.interaction_buttons);
                 buttons.setVisibility(View.VISIBLE);
-                emphasisOverlay.setVisibility(View.VISIBLE);
-                playerCard.setZ(1000000);
+                darken();
             }
         };
     }
@@ -114,7 +114,7 @@ public class PlayerListView implements IPlayerListView {
     }
 
     private void insertPlayer(String playerId, boolean nearby, int progress) {
-        LinearLayout listItem = (LinearLayout) inflater.inflate(R.layout.gameplay_player_list_item, null);
+        RelativeLayout listItem = (RelativeLayout) inflater.inflate(R.layout.gameplay_player_list_item, null);
         listItem.setOnClickListener(playerCardOnClickListener(listItem));
 
         int playerItemId = View.generateViewId();
@@ -157,7 +157,7 @@ public class PlayerListView implements IPlayerListView {
         }
         else {
             int id = playerIdListItemIdMap.get(playerId);
-            LinearLayout listItem = playerList.findViewById(id);
+            RelativeLayout listItem = playerList.findViewById(id);
             CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
             float intel = intelBar.getProgress();
@@ -181,7 +181,7 @@ public class PlayerListView implements IPlayerListView {
         }
         else {
             int id = playerIdListItemIdMap.get(playerId);
-            LinearLayout listItem = playerList.findViewById(id);
+            RelativeLayout listItem = playerList.findViewById(id);
             CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
             float intel = intelBar.getProgress();
@@ -229,7 +229,7 @@ public class PlayerListView implements IPlayerListView {
         }
         else {
             int id = playerIdListItemIdMap.get(playerId);
-            LinearLayout ll = playerList.findViewById(id);
+            RelativeLayout ll = playerList.findViewById(id);
             CircleProgressBar ib = ll.findViewById(R.id.player_intel_circle);
             return (int) ib.getProgress();
         }
@@ -237,7 +237,7 @@ public class PlayerListView implements IPlayerListView {
 
     private void removeListItemEntry(String playerId) {
         int id = playerIdListItemIdMap.get(playerId);
-        LinearLayout view = playerList.findViewById(id);
+        RelativeLayout view = playerList.findViewById(id);
         playerList.removeView(view);
     }
 
@@ -368,5 +368,42 @@ public class PlayerListView implements IPlayerListView {
                 beginSelectedExchangeOnClickRunner.run(playerId);
             }
         });
+    }
+
+    public void darken() {
+
+        for (String playerId : playerIdListItemIdMap.keySet()) {
+            int id = playerIdListItemIdMap.get(playerId);
+            RelativeLayout playerCard = playerList.findViewById(id);
+            View background = playerCard.findViewById(R.id.player_item_background);
+            background.getBackground().setColorFilter(new PorterDuffColorFilter(Color.BLACK, PorterDuff.Mode.MULTIPLY));
+
+            ((TextView) playerCard.findViewById(R.id.player_name))
+                    .setTextColor(getColor(R.color.player_card_name_darkened));
+            ((TextView) playerCard.findViewById(R.id.player_hacker_name))
+                    .setTextColor(getColor(R.color.player_card_target_codename_text_darkened));
+
+            // handle evidence:
+            CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.player_intel_circle);
+            int progressBarColor = getColor(R.color.progress_bar_darkened);
+            int progressBarBackgroundColor = getColor(R.color.progress_bar_background_darkened);
+            int progressBarTextColor = getColor(R.color.progress_bar_text_darkened);
+
+            if (getPlayerIntel(playerId) == 100) {
+                // todo
+            }
+            else if (!nearbyPlayerIds.contains(playerId)) {
+                progressBarColor = getColor(R.color.progress_bar_far_darkened);
+                progressBarBackgroundColor = getColor(R.color.progress_bar_background_far_darkened);
+                progressBarTextColor = getColor(R.color.progress_bar_text_far_darkened);
+            }
+            circleProgressBar.setProgressColor(progressBarColor);
+            circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
+            circleProgressBar.setTextColor(progressBarTextColor);
+        }
+    }
+
+    private int getColor(int id) {
+        return playerList.getResources().getColor(id);
     }
 }

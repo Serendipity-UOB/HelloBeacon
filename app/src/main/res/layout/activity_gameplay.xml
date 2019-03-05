@@ -29,7 +29,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:clipChildren="false" />
+                android:clipChildren="false" >
+                <include layout="@layout/gameplay_player_list_item" />
+                <include layout="@layout/gameplay_player_list_item" />
+            </LinearLayout>
         </ScrollView>
 
         <Button
