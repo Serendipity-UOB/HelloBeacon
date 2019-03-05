@@ -77,12 +77,12 @@
     <string name="gameplay_player_target">Target:</string>
     <string name="player_status_bar_name_placeholder">Jack Jones</string>
     <string name="leaderboard_status_bar_placeholder">#1</string>
-    <string name="player_status_info_separator">|</string>
+    <string name="player_status_info_separator">|\u00A0</string>
     <string name="score_status_bar_placeholder">240 rep</string>
     <string name="player_target_title">Target: </string>
     <string name="player_target_placeholder">CookingKing</string>
     <string name="time_left_placeholder">8:00</string>
-    <string name="player_name_title">Agent</string>
+    <string name="player_name_title">Agent\u00A0</string>
 
     <!-- Player cards -->
 

@@ -195,7 +195,7 @@ public class GameStateController implements IGameStateController {
     public void updateTargetPlayer(String targetPlayerId) {
         this.targetPlayerId = targetPlayerId;
         String hackerName = allPlayersMap.get(targetPlayerId).hackerName;
-        playerStatusBarController.setPlayerTargetHackerName(hackerName);
+        playerStatusBarController.setPlayerTargetCodeName(hackerName);
     }
 
     @Override

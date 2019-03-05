@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_marginBottom="2pt"
+    android:paddingBottom="3pt"
     tools:showIn="@layout/activity_gameplay"
     android:clipChildren="false"
     android:elevation="5dp">

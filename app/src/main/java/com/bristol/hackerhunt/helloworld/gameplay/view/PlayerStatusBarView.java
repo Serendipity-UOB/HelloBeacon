@@ -4,7 +4,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
-import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
 
 public class PlayerStatusBarView implements IPlayerStatusBarView {
 
@@ -15,30 +14,26 @@ public class PlayerStatusBarView implements IPlayerStatusBarView {
     }
 
     @Override
-    public void setPlayerTargetHackerName(String targetHackerName) {
-        TextView targetHackerNameView = playerStatusBar.findViewById(R.id.gameplay_player_target);
-        String prefix = playerStatusBar.getContext().getString(R.string.gameplay_player_target);
-        targetHackerNameView.setText(prefix + " " + targetHackerName);
+    public void setPlayerTargetCodeName(String targetCodeName) {
+        TextView targetCodeNameView = playerStatusBar.findViewById(R.id.gameplay_player_target);
+        targetCodeNameView.setText(targetCodeName);
     }
 
     @Override
     public void setPlayerPoints(String points) {
         TextView pointsTextView = playerStatusBar.findViewById(R.id.gameplay_player_leaderboard_points);
-        String prefix = playerStatusBar.getContext().getString(R.string.gameplay_player_leaderboard_points);
-        pointsTextView.setText(prefix + " " + points);
+        pointsTextView.setText(points + " rep\u00A0");
     }
 
     @Override
     public void setPlayerLeaderboardPosition(String position) {
         TextView positionTextView = playerStatusBar.findViewById(R.id.gameplay_player_leaderboard_position);
-        String prefix = playerStatusBar.getContext().getString(R.string.gameplay_player_leaderboard_position);
-        positionTextView.setText(prefix + " #" + position);
+        positionTextView.setText("#" + position + "\u00A0");
     }
 
     @Override
     public void setPlayerName(String playerName){
         TextView nameTextView = playerStatusBar.findViewById(R.id.gameplay_player_name);
-        String prefix = "";
-        nameTextView.setText(prefix + " " + playerName);
+        nameTextView.setText(playerName + "\u00A0");
     }
 }

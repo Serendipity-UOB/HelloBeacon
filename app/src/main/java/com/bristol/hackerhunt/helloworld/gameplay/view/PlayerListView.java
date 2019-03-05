@@ -98,15 +98,6 @@ public class PlayerListView implements IPlayerListView {
         setTextOfView(playerNameView, playerName);
         intelGathered.setProgress(progress);
 
-        if (nearby) {
-            listItem.findViewById(R.id.player_item_background)
-                    .setBackgroundColor(ContextCompat.getColor(playerList.getContext(),
-                            R.color.gameplay_nearby_player_background));
-            playerNameView
-                    .setTextColor(ContextCompat.getColor(playerList.getContext(),
-                            R.color.gameplay_nearby_player_name));
-        }
-
         if (playerIdHackerNameMap.containsKey(playerId)) {
             TextView hackerNameView = listItem.findViewById(R.id.player_hacker_name);
             String hackerName = playerIdHackerNameMap.get(playerId);
@@ -119,6 +110,14 @@ public class PlayerListView implements IPlayerListView {
         }
 
         playerList.addView(listItem, 0);
+
+        // update the look of the player card depending on where the player is.
+        if (nearby) {
+            restoreFarAwayPlayerEntry(playerId);
+        }
+        else {
+            darkenFarAwayPlayerEntries(playerId);
+        }
     }
 
     @Override
@@ -246,21 +245,6 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
-    private void darkenFarAwayPlayerEntries(String playerId) {
-        Context context = playerList.getContext();
-
-        int viewId = playerIdListItemIdMap.get(playerId);
-        View entry = playerList.findViewById(viewId);
-        entry.findViewById(R.id.player_item_background).setBackgroundColor(ContextCompat.getColor(context,
-                R.color.gameplay_nearby_player_background_interaction));
-
-        CircleProgressBar pb = entry.findViewById(R.id.player_intel_circle);
-        pb.setBackgroundColor(ContextCompat.getColor(context,
-                R.color.progress_bar_background_far_interaction));
-        pb.setProgressColor(ContextCompat.getColor(context,
-                R.color.progress_bar_far_interaction));
-    }
-
     private void setTakedownOnClickListener(final String playerId) {
         int viewId = playerIdListItemIdMap.get(playerId);
         View entry = playerList.findViewById(viewId);
@@ -291,14 +275,33 @@ public class PlayerListView implements IPlayerListView {
 
         int viewId = playerIdListItemIdMap.get(playerId);
         View entry = playerList.findViewById(viewId);
-        entry.findViewById(R.id.player_item_background).setBackgroundColor(ContextCompat.getColor(context,
-                R.color.gameplay_far_player_background));
+        entry.findViewById(R.id.player_item_background)
+                .setBackgroundResource(R.drawable.player_card);
 
         CircleProgressBar pb = entry.findViewById(R.id.player_intel_circle);
-        pb.setBackgroundColor(ContextCompat.getColor(pb.getContext(),
+        pb.setBackgroundColor(ContextCompat.getColor(context,
                 R.color.progress_bar_background));
-        pb.setProgressColor(ContextCompat.getColor(pb.getContext(),
+        pb.setProgressColor(ContextCompat.getColor(context,
                 R.color.progress_bar));
+        pb.setTextColor(ContextCompat.getColor(context,
+                R.color.progress_bar_text));
+    }
+
+    private void darkenFarAwayPlayerEntries(String playerId) {
+        Context context = playerList.getContext();
+
+        int viewId = playerIdListItemIdMap.get(playerId);
+        View entry = playerList.findViewById(viewId);
+        entry.findViewById(R.id.player_item_background)
+                .setBackgroundResource(R.drawable.player_card_far);
+
+        CircleProgressBar pb = entry.findViewById(R.id.player_intel_circle);
+        pb.setBackgroundColor(ContextCompat.getColor(context,
+                R.color.progress_bar_background_far));
+        pb.setProgressColor(ContextCompat.getColor(context,
+                R.color.progress_bar_far));
+        pb.setTextColor(ContextCompat.getColor(context,
+                R.color.progress_bar_text_far));
     }
 
     private void clearOnClickListener(String playerId) {
