@@ -214,10 +214,15 @@ public class ConsoleView implements IConsoleView {
 
         this.currentHomeBeacon = homeBeaconName;
         this.takedownSuccessInProgress = true;
-        String message = "TAKEDOWN_SUCCESS\n\nReturn to $HOME for new target.";
+
+        setGoodConsole();
+        setConsoleTitle(R.string.console_expose_success_title);
+        String message = consoleView.getResources()
+                .getString(R.string.console_expose_success_message);
         message = message.replace("$HOME", homeBeaconName);
-        this.interactionInProgress = false;
         consoleMessage(message);
+        
+        this.interactionInProgress = false;
     }
 
     private void consoleMessage(String message) {

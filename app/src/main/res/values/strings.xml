@@ -104,6 +104,13 @@
         Return to $BEACON, agent.
     </string>
 
+    <string name="console_expose_success_title">Exchange Success</string>
+    <string name="console_expose_success_message">
+        Good work, agent. Return to $BEACON for your next target.
+        \n\n
+        Reward: 10 reputation.
+    </string>
+
     <string name="game_over_console_title">Game Over</string>
     <string name="game_over_console_message">
         Good work, agent. Touch to view the agent leaderboard.
