@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -123,7 +124,7 @@ public class PlayerListView implements IPlayerListView {
     @Override
     public void increasePlayerIntel(String playerId, int intelIncrement) {
         if (!playerIdListItemIdMap.containsKey(playerId)) {
-            throw new IllegalArgumentException("Error: player is not listed as playing the game.");
+            Log.e("Error","Error: player is not listed as playing the game.");
         }
         else {
             int id = playerIdListItemIdMap.get(playerId);
@@ -132,7 +133,16 @@ public class PlayerListView implements IPlayerListView {
 
             float intel = intelBar.getProgress();
             intelBar.setProgress(intel + intelIncrement);
+
+            if (intel == 100) {
+                setFullIntelCircleProgressBarColours(intelBar);
+            }
         }
+    }
+
+    private void setFullIntelCircleProgressBarColours(CircleProgressBar progressBar) {
+        progressBar.setTextColor(R.color.progress_bar_complete_evidence_text);
+        progressBar.setProgressColor(R.color.progress_bar_complete_evidence);
     }
 
     @Override
