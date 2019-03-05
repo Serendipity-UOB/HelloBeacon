@@ -7,6 +7,7 @@
     tools:showIn="@layout/activity_leaderboard">
 
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/leaderboard_list_item_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/player_card_far"
@@ -58,10 +59,12 @@
                     android:textStyle="bold"/>
             </LinearLayout>
 
-            <RelativeLayout
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="@drawable/leaderboard_card_divider"/>
+                android:layout_height="4px"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                android:src="@drawable/leaderboard_card_divider" />
 
             <TextView
                 android:id="@+id/player_score"

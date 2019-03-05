@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -107,17 +108,33 @@ public class LeaderboardActivity extends AppCompatActivity {
 
         TextView playerName = itemView.findViewById(R.id.player_name);
         TextView playerScore = itemView.findViewById(R.id.player_score);
+        TextView playerPosition = itemView.findViewById(R.id.leaderboard_position);
+        View itemViewBackground = itemView.findViewById(R.id.leaderboard_list_item_background);
+        ImageView crown = itemView.findViewById(R.id.crown);
 
-        String name = "#" + Integer.toString(position) + " " + item.playerName;
-        String score = Integer.toString(item.score);
+        String name = item.playerName;
+        String score = Integer.toString(item.score) + " dep";
 
         playerName.setText(name);
         playerScore.setText(score);
+        playerPosition.setText("#" + String.valueOf(position));
 
         if (this.playerIdentifiers.getPlayerId().equals(item.playerId)) {
-            int color = ContextCompat.getColor(this, R.color.leaderboard_current_player_name);
-            playerName.setTextColor(color);
-            playerScore.setTextColor(color);
+            itemViewBackground.setBackgroundResource(R.drawable.player_card);
+        }
+
+        // set position crowns.
+        if (position == 1) {
+            crown.setImageResource(R.drawable.gold_crown);
+        }
+        else if (position == 2) {
+            crown.setImageResource(R.drawable.silver_crown);
+        }
+        else if (position == 3) {
+            crown.setImageResource(R.drawable.bronze_crown);
+        }
+        else {
+            crown.setVisibility(View.INVISIBLE);
         }
 
         leaderboardList.addView(itemView);
