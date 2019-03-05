@@ -63,4 +63,10 @@ public interface IPlayerListView {
      * listeners to nearby players
      */
     void beginExchange();
+
+    /**
+     * Darkens every element in the list apart from the player card of the given player ID.
+     * @param exemptPlayerId the player ID to ignore.
+     */
+    void darken(String exemptPlayerId);
 }

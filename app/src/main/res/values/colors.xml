@@ -26,6 +26,13 @@
     <color name="progress_bar_far_interaction">#1e3016</color>
     <color name="progress_bar_background_far_interaction">#484848</color>
 
+    <!-- GAMEPLAY UI: player status bar -->
+    <color name="gameplay_player_name">#9fc5e8</color>
+    <color name="gameplay_player_stats">#00a6ee</color>
+    <color name="gameplay_target_prefix">#e06666</color>
+    <color name="gameplay_target">#f4cccc</color>
+    <color name="gameplay_time_left">#9fc5e8</color>
+
     <!-- GAMEPLAY UI: player card names -->
     <color name="player_card_name">#84aed9</color>
     <color name="player_card_target_codename_text">#fff</color>

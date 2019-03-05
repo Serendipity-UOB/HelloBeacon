@@ -371,11 +371,11 @@ public class PlayerListView implements IPlayerListView {
         });
     }
 
-    // Used to darken every element in the player list apart from the given player id's card.
-    public void darken(String excemptPlayerId) {
+    @Override
+    public void darken(String exemptPlayerId) {
 
         for (String playerId : playerIdListItemIdMap.keySet()) {
-            if (!playerId.equals(excemptPlayerId)) {
+            if (!playerId.equals(exemptPlayerId)) {
                 int id = playerIdListItemIdMap.get(playerId);
                 RelativeLayout playerCard = playerList.findViewById(id);
 
