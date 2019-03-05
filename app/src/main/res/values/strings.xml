@@ -84,18 +84,24 @@
     <string name="time_left_placeholder">8:00</string>
     <string name="player_name_title">Agent\u00A0</string>
 
+    <!-- Full screen pop up -->
+    <string name="console_start_title">Game Start</string>
+    <string name="console_start_beacon_message">
+        Welcome, agent.\nGo to game zone $BEACON for your first target.
+    </string>
+
+    <string name="console_target_taken_down_title">Too Slow</string>
+    <string name="console_target_taken_down_message">
+        Your target was exposed by another agent.\n\nReturn to $BEACON to be assigned a new target.
+    </string>
+
     <!-- Player cards -->
-
-
-
-
     <string name="gamplay_exchange_button">exchange();</string>
     <string name="gameplay_take_down_button">take_down();</string>
     <string name="exchange_select_player_button">cancel(EXCHANGE);</string>
     <string name="takedown_select_player_button">cancel(TAKEDOWN);</string>
 
     <string name="game_over_console_message">Incoming message…  \n\nGame Over!\n\nGood work!</string>
-    <string name="console_start_beacon_message">Welcome, agent.\nGo to game zone $BEACON for your first target.</string>
     <string name="exchange_failed_message">EXCHANGE_FAILED</string>
     <string name="exchange_success_message">EXCHANGE_SUCCESS</string>
     <string name="not_enough_intel_take_down_message">Error: not enough intel has been collected.</string>

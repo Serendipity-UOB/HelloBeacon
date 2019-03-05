@@ -15,6 +15,8 @@ public class ConsoleView implements IConsoleView {
 
     private final View overlay;
     private final View consoleView;
+    private final View consoleWrapper;
+    private final TextView consoleViewTitle;
     private final TextView consoleViewText;
     private final TextView consoleTapToCloseMessage;
 
@@ -30,8 +32,10 @@ public class ConsoleView implements IConsoleView {
     public ConsoleView(View consolePromptContainer) {
         this.overlay = consolePromptContainer;
         this.consoleView = overlay.findViewById(R.id.gameplay_console);
+        this.consoleViewTitle = overlay.findViewById(R.id.full_pop_up_title);
         this.consoleViewText = overlay.findViewById(R.id.gameplay_console_text);
         this.consoleTapToCloseMessage = overlay.findViewById(R.id.console_close_message);
+        this.consoleWrapper = overlay.findViewById(R.id.full_pop_up_wrapper);
 
         this.typewriter = new Typewriter(TYPEWRITER_SPEED);
 
@@ -102,8 +106,29 @@ public class ConsoleView implements IConsoleView {
         // disableCloseConsole();
 
         this.currentHomeBeacon = homeBeaconName;
+        setNeutralConsole();
+
+        setConsoleTitle(R.string.console_start_title);
         goToStartBeaconConsoleMessage(homeBeaconName);
         this.interactionInProgress = false;
+    }
+
+    private void setNeutralConsole() {
+        consoleViewTitle.setTextColor(consoleView.getResources()
+                .getColor(R.color.neutral_full_screen_notif_title));
+        consoleWrapper.setBackgroundResource(R.drawable.neutral_full_pop_up);
+    }
+
+    private void setGoodConsole() {
+        consoleViewTitle.setTextColor(consoleView.getResources()
+                .getColor(R.color.good_full_screen_notif_title));
+        consoleWrapper.setBackgroundResource(R.drawable.good_full_pop_up);
+    }
+
+    private void setBadConsole() {
+        consoleViewTitle.setTextColor(consoleView.getResources()
+                .getColor(R.color.bad_full_screen_notif_title));
+        consoleWrapper.setBackgroundResource(R.drawable.bad_full_pop_up);
     }
 
     private void goToStartBeaconConsoleMessage(String homeBeaconName) {
@@ -118,12 +143,20 @@ public class ConsoleView implements IConsoleView {
 
         this.currentHomeBeacon = homeBeaconName;
         this.playersTargetGotTakenDownInProgress = true;
+        setNeutralConsole();
+        setConsoleTitle(R.string.console_target_taken_down_title);
         playersTargetGotTakenDownConsoleMessage(homeBeaconName);
         this.interactionInProgress = false;
     }
 
+    private void setConsoleTitle(int id) {
+        String title = consoleView.getResources().getString(id);
+        consoleViewTitle.setText(title);
+    }
+
     private void playersTargetGotTakenDownConsoleMessage(String homeBeaconName) {
-        String message = "Too slow; your target has been taken down.\n\nReturn to $BEACON to receive your new target";
+        String message = consoleView.getResources()
+                .getString(R.string.console_target_taken_down_message);
         message = message.replace("$BEACON", homeBeaconName);
         consoleMessage(message);
     }
@@ -181,7 +214,7 @@ public class ConsoleView implements IConsoleView {
     }
 
     private void consoleMessage(String message) {
-        typewriter.animateText(consoleViewText, message);
+        consoleViewText.setText(message);
         overlay.setVisibility(View.VISIBLE);
     }
 

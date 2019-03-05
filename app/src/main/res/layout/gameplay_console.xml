@@ -10,6 +10,7 @@
     tools:showIn="@layout/activity_gameplay">
 
     <TextView
+        android:id="@+id/full_pop_up_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Game Start"
@@ -17,10 +18,11 @@
         android:fontFamily="@font/sharetech"
         android:textStyle="italic"
         android:textAlignment="center"
-        android:textColor="#00c9d9"
+        android:textColor="@color/neutral_full_pop_up_title"
         android:textSize="35sp"/>
 
     <LinearLayout
+        android:id="@+id/full_pop_up_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
