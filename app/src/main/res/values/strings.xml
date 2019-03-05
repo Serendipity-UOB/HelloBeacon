@@ -92,8 +92,23 @@
 
     <string name="console_target_taken_down_title">Too Slow</string>
     <string name="console_target_taken_down_message">
-        Your target was exposed by another agent.\n\nReturn to $BEACON to be assigned a new target.
+        Your target was exposed by another agent.
+        \n\n
+        Return to $BEACON to be assigned a new target.
     </string>
+
+    <string name="console_taken_down_title">Security Breach</string>
+    <string name="console_taken_down_message">
+        Your mission has been exposed, you have lost 50% of your gathered evidence.
+        \n\n
+        Return to $BEACON, agent.
+    </string>
+
+    <string name="game_over_console_title">Game Over</string>
+    <string name="game_over_console_message">
+        Good work, agent. Touch to view the agent leaderboard.
+    </string>
+
 
     <!-- Player cards -->
     <string name="gamplay_exchange_button">exchange();</string>
@@ -101,7 +116,6 @@
     <string name="exchange_select_player_button">cancel(EXCHANGE);</string>
     <string name="takedown_select_player_button">cancel(TAKEDOWN);</string>
 
-    <string name="game_over_console_message">Incoming message…  \n\nGame Over!\n\nGood work!</string>
     <string name="exchange_failed_message">EXCHANGE_FAILED</string>
     <string name="exchange_success_message">EXCHANGE_SUCCESS</string>
     <string name="not_enough_intel_take_down_message">Error: not enough intel has been collected.</string>

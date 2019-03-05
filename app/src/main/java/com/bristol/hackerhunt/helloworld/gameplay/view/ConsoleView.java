@@ -167,12 +167,15 @@ public class ConsoleView implements IConsoleView {
 
         this.playerGotTakenDownInProgress = true;
         this.currentHomeBeacon = homeBeaconName;
+        setBadConsole();
+        setConsoleTitle(R.string.console_taken_down_title);
         playerTakenDownConsoleMessage(homeBeaconName);
         this.interactionInProgress = false;
     }
 
     private void playerTakenDownConsoleMessage(String homeBeaconName) {
-        String message = "You have been taken down.\n\nReturn to $BEACON.";
+        String message = consoleView.getResources()
+                .getString(R.string.console_taken_down_message);
         message = message.replace("$BEACON", homeBeaconName);
         consoleMessage(message);
     }
@@ -180,8 +183,13 @@ public class ConsoleView implements IConsoleView {
     @Override
     public void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent) {
         disableCloseConsole();
+
+        setNeutralConsole();
         consoleMessage(context.getString(R.string.game_over_console_message));
+        setConsoleTitle(R.string.game_over_console_title);
+
         this.interactionInProgress = false;
+
         View.OnClickListener cl = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,7 +197,6 @@ public class ConsoleView implements IConsoleView {
                 context.startActivity(goToLeaderboardIntent);
             }
         };
-
         consoleViewText.setOnClickListener(cl);
         consoleView.setOnClickListener(cl);
     }
