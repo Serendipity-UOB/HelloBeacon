@@ -59,7 +59,7 @@
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginStart="15dp"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
         </LinearLayout>
 
         <include layout="@layout/gameplay_player_list_intel_bar"

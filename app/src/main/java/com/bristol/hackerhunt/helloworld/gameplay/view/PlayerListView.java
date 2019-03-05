@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.StringInputRunnable;
+import com.emredavarci.circleprogressbar.CircleProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,7 +92,7 @@ public class PlayerListView implements IPlayerListView {
         listItem.setId(playerItemId);
 
         TextView playerNameView = listItem.findViewById(R.id.player_name);
-        ProgressBar intelGathered = listItem.findViewById(R.id.player_intel_circle);
+        CircleProgressBar intelGathered = listItem.findViewById(R.id.player_intel_circle);
 
         String playerName = playerIdNameMap.get(playerId);
         setTextOfView(playerNameView, playerName);
@@ -128,9 +129,9 @@ public class PlayerListView implements IPlayerListView {
         else {
             int id = playerIdListItemIdMap.get(playerId);
             LinearLayout listItem = playerList.findViewById(id);
-            ProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
+            CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
-            int intel = intelBar.getProgress();
+            float intel = intelBar.getProgress();
             intelBar.setProgress(intel + intelIncrement);
         }
     }
@@ -143,9 +144,9 @@ public class PlayerListView implements IPlayerListView {
         else {
             int id = playerIdListItemIdMap.get(playerId);
             LinearLayout listItem = playerList.findViewById(id);
-            ProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
+            CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
-            int intel = intelBar.getProgress();
+            float intel = intelBar.getProgress();
             TextView hackerName = listItem.findViewById(R.id.player_hacker_name);
             hackerName.setVisibility(View.GONE);
             playerIdHackerNameMap.remove(playerId);
@@ -194,8 +195,8 @@ public class PlayerListView implements IPlayerListView {
         else {
             int id = playerIdListItemIdMap.get(playerId);
             LinearLayout ll = playerList.findViewById(id);
-            ProgressBar ib = ll.findViewById(R.id.player_intel_circle);
-            return ib.getProgress();
+            CircleProgressBar ib = ll.findViewById(R.id.player_intel_circle);
+            return (int) ib.getProgress();
         }
     }
 
@@ -253,11 +254,11 @@ public class PlayerListView implements IPlayerListView {
         entry.findViewById(R.id.player_item_background).setBackgroundColor(ContextCompat.getColor(context,
                 R.color.gameplay_nearby_player_background_interaction));
 
-        ProgressBar pb = entry.findViewById(R.id.player_intel_circle);
-        pb.setProgressBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context,
-                R.color.progress_bar_background_far_interaction)));
-        pb.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(context,
-                R.color.progress_bar_far_interaction)));
+        CircleProgressBar pb = entry.findViewById(R.id.player_intel_circle);
+        pb.setBackgroundColor(ContextCompat.getColor(context,
+                R.color.progress_bar_background_far_interaction));
+        pb.setProgressColor(ContextCompat.getColor(context,
+                R.color.progress_bar_far_interaction));
     }
 
     private void setTakedownOnClickListener(final String playerId) {
@@ -293,11 +294,11 @@ public class PlayerListView implements IPlayerListView {
         entry.findViewById(R.id.player_item_background).setBackgroundColor(ContextCompat.getColor(context,
                 R.color.gameplay_far_player_background));
 
-        ProgressBar pb = entry.findViewById(R.id.player_intel_circle);
-        pb.setProgressBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(pb.getContext(),
-                R.color.progress_bar_background)));
-        pb.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(pb.getContext(),
-                R.color.progress_bar)));
+        CircleProgressBar pb = entry.findViewById(R.id.player_intel_circle);
+        pb.setBackgroundColor(ContextCompat.getColor(pb.getContext(),
+                R.color.progress_bar_background));
+        pb.setProgressColor(ContextCompat.getColor(pb.getContext(),
+                R.color.progress_bar));
     }
 
     private void clearOnClickListener(String playerId) {

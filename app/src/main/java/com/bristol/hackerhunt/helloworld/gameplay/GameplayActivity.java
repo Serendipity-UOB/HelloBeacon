@@ -70,7 +70,7 @@ public class GameplayActivity extends AppCompatActivity {
 
         initializePlayerListView();
         initializePlayerStatusBarView();
-        initializeInteractionButtonsView();
+        // initializeInteractionButtonsView();
 
         initializeGameStateController();
         initializeServerRequestController();
@@ -205,11 +205,11 @@ public class GameplayActivity extends AppCompatActivity {
         this.playerStatusBarView = new PlayerStatusBarView(findViewById(R.id.gameplay_player_status_bar));
     }
 
-    private void initializeInteractionButtonsView() {
+    /*private void initializeInteractionButtonsView() {
         this.interactionButtonsView = new InteractionButtonsView(this, exchangeButtonOnClickRunnable(),
                 takedownButtonOnClickRunnable(), resumeGameAfterInteractionRunnable(),
                 resumeGameAfterInteractionRunnable());
-    }
+    }*/
 
     private Runnable resumeGameAfterInteractionRunnable() {
         return new Runnable() {
@@ -220,16 +220,16 @@ public class GameplayActivity extends AppCompatActivity {
         };
     }
 
-    private Runnable takedownButtonOnClickRunnable() {
+    /*private Runnable takedownButtonOnClickRunnable() {
         return new Runnable() {
             @Override
             public void run() {
                 playerListView.beginTakedown();
             }
         };
-    }
+    }*/
 
-    private Runnable exchangeButtonOnClickRunnable() {
+    /*private Runnable exchangeButtonOnClickRunnable() {
         return new Runnable() {
             @Override
             public void run() {
@@ -262,7 +262,7 @@ public class GameplayActivity extends AppCompatActivity {
                 playerListView.resumeGameplayAfterInteraction();
             }
         };
-    }
+    }*/
 
     private StringInputRunnable beginSelectedExchangeOnClickRunnable() {
         return new StringInputRunnable() {
@@ -325,8 +325,8 @@ public class GameplayActivity extends AppCompatActivity {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                interactionButtonsView.showInteractionButtons();
-                interactionButtonsView.hideExchangeSelectPlayerButton();
+                // interactionButtonsView.showInteractionButtons();
+                // interactionButtonsView.hideExchangeSelectPlayerButton();
                 playerListView.resumeGameplayAfterInteraction();
             }
         });
@@ -397,7 +397,12 @@ public class GameplayActivity extends AppCompatActivity {
     private void initializePlayerListView() {
         this.playerListView = new PlayerListView(LayoutInflater.from(this),
                 (LinearLayout) findViewById(R.id.gameplay_player_list),
-                beginSelectedTakedownOnClickRunner(), beginSelectedExchangeOnClickRunnable());
+                /*beginSelectedTakedownOnClickRunner()*/ new StringInputRunnable() {
+            @Override
+            public void run(String s) {
+                // do nothing
+            }
+        }, beginSelectedExchangeOnClickRunnable());
     }
 
     private void goToLeaderboardActivity() {
