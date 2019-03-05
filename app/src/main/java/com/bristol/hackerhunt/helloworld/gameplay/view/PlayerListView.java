@@ -40,6 +40,7 @@ public class PlayerListView implements IPlayerListView {
 
     private StringInputRunnable beginSelectedTakedownOnClickRunner;
     private StringInputRunnable beginSelectedExchangeOnClickRunner;
+    private StringInputRunnable darkenOnCardPressRunnable;
 
     private boolean exchangeStarted = false;
     private boolean takedownStarted = false;
@@ -55,7 +56,8 @@ public class PlayerListView implements IPlayerListView {
      */
     public PlayerListView(LayoutInflater inflater, LinearLayout playerList,
                    StringInputRunnable beginSelectedTakedownOnClickRunner,
-                   StringInputRunnable beginSelectedExchangeOnClickRunner) {
+                   StringInputRunnable beginSelectedExchangeOnClickRunner,
+                   StringInputRunnable darkenOnCardPressRunnable) {
         this.inflater = inflater;
         this.playerList  = playerList;
         this.playerIdListItemIdMap = new HashMap<>();
@@ -67,6 +69,7 @@ public class PlayerListView implements IPlayerListView {
 
         this.beginSelectedTakedownOnClickRunner = beginSelectedTakedownOnClickRunner;
         this.beginSelectedExchangeOnClickRunner = beginSelectedExchangeOnClickRunner;
+        this.darkenOnCardPressRunnable = darkenOnCardPressRunnable;
 
         this.uiHandler = new Handler(playerList.getContext().getMainLooper());
     }
@@ -97,13 +100,14 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
-    private View.OnClickListener playerCardOnClickListener(final String playerId, final RelativeLayout playerCard) {
+    private View.OnClickListener playerCardOnClickListener(final String playerId,
+                                                           final RelativeLayout playerCard) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 View buttons = playerCard.findViewById(R.id.interaction_buttons);
                 buttons.setVisibility(View.VISIBLE);
-                darken(playerId);
+                darkenOnCardPressRunnable.run(playerId);
             }
         };
     }

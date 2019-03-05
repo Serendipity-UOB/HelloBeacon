@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -401,7 +402,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(String s) {
                 // do nothing
             }
-        }, beginSelectedExchangeOnClickRunnable());
+        }, beginSelectedExchangeOnClickRunnable(), darkenScreenOnPlayerCardPressRunnable());
     }
 
     private void goToLeaderboardActivity() {
@@ -416,5 +417,18 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeStatusBarPlayerName(){
         this.playerStatusBarView.setPlayerName(this.playerIdentifiers.getRealName());
+    }
+
+    private StringInputRunnable darkenScreenOnPlayerCardPressRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String exemptPlayerId) {
+                playerListView.darken(exemptPlayerId);
+                playerStatusBarView.darken();
+                findViewById(R.id.gameplay_background)
+                        .setBackgroundColor(ContextCompat.getColor(getApplicationContext(),
+                                R.color.gameplay_background_darkened));
+            }
+        };
     }
 }
