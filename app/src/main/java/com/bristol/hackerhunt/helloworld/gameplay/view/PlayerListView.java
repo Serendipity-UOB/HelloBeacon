@@ -27,6 +27,7 @@ public class PlayerListView implements IPlayerListView {
     private final Handler uiHandler;      // This is used to run changes to the UI on the UI thread.
 
     private final LinearLayout playerList;
+    private final View emphasisOverlay;
 
     private String targetCodeName;
 
@@ -60,6 +61,8 @@ public class PlayerListView implements IPlayerListView {
         this.playerIdHackerNameMap = new HashMap<>();
         this.nearbyPlayerIds = new ArrayList<>();
 
+        this.emphasisOverlay = playerList.getRootView().findViewById(R.id.emphasis_overlay);
+
         this.beginSelectedTakedownOnClickRunner = beginSelectedTakedownOnClickRunner;
         this.beginSelectedExchangeOnClickRunner = beginSelectedExchangeOnClickRunner;
 
@@ -92,6 +95,18 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
+    private View.OnClickListener playerCardOnClickListener(final LinearLayout playerCard) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View buttons = playerCard.findViewById(R.id.interaction_buttons);
+                buttons.setVisibility(View.VISIBLE);
+                emphasisOverlay.setVisibility(View.VISIBLE);
+                playerCard.setZ(1000000);
+            }
+        };
+    }
+
     @Override
     public void insertPlayer(String playerId, String playerName) {
         playerIdNameMap.put(playerId, playerName);
@@ -100,6 +115,7 @@ public class PlayerListView implements IPlayerListView {
 
     private void insertPlayer(String playerId, boolean nearby, int progress) {
         LinearLayout listItem = (LinearLayout) inflater.inflate(R.layout.gameplay_player_list_item, null);
+        listItem.setOnClickListener(playerCardOnClickListener(listItem));
 
         int playerItemId = View.generateViewId();
         playerIdListItemIdMap.put(playerId, playerItemId);
