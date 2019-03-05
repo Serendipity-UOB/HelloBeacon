@@ -69,6 +69,7 @@
     <string name="join_game_button">Join game</string>
     <string name="players_in_game_placeholder">3</string>
     <string name="time_to_game_start_placeholder">4:32</string>
+    <string name="join_game_no_game_available">No game available to join.</string>
 
     <!-- Player status bar -->
     <string name="gameplay_player_leaderboard_position">Pos:</string>

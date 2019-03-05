@@ -45,10 +45,11 @@
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="12pt"
                 android:gravity="center"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/join_game_players_in_game"
+                    android:id="@+id/join_game_players_in_game_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="8pt"
@@ -57,9 +58,10 @@
                     android:fontFamily="@font/sharetech"/>
 
                 <TextView
+                    android:id="@+id/join_game_players_in_game"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="25pt"
+                    android:textSize="20pt"
                     android:text="@string/players_in_game_placeholder"
                     android:textColor="@color/titleScreenText"
                     android:fontFamily="@font/sharetech_mono"/>
@@ -72,7 +74,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/join_game_time_until_game"
+                    android:id="@+id/join_game_time_until_game_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="8pt"
@@ -80,9 +82,10 @@
                     android:textColor="@color/titleScreenText"
                     android:fontFamily="@font/sharetech"/>
                 <TextView
+                    android:id="@+id/join_game_time_until_game"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="25pt"
+                    android:textSize="20pt"
                     android:text="@string/time_to_game_start_placeholder"
                     android:textColor="@color/titleScreenText"
                     android:fontFamily="@font/sharetech_mono"/>
