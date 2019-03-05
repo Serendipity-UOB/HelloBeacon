@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:showIn="@layout/activity_gameplay"
-    android:layout_marginBottom="15dp">
+    android:layout_marginBottom="5pt">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -103,7 +103,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/target_status_bar_border"
             android:gravity="center"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="5pt">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -131,15 +131,14 @@
             android:orientation="horizontal"
             android:layout_height="match_parent"
             android:background="@drawable/time_status_bar_border"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="3dp"
+            android:layout_marginTop="5pt"
+            android:layout_marginStart="2pt"
             android:layout_width="80dp">
             <TextView
                 android:id="@+id/gameplay_time_left"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAlignment="center"
-                android:layout_marginEnd="5pt"
                 android:gravity="center"
                 android:fontFamily="@font/sharetech"
                 android:text="@string/time_left_placeholder"

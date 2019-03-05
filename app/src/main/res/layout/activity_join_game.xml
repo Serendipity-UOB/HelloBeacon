@@ -95,6 +95,7 @@
         <Button
             android:id="@+id/join_game_button"
             android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:fontFamily="@font/sharetech"
             android:text="@string/join_game_button"
             android:textAllCaps="false"
@@ -103,7 +104,6 @@
             android:paddingEnd="40dp"
             android:background="@drawable/start_button"
             android:layout_marginTop="20dp"
-            android:layout_height="56dp"
             android:textColor="@color/titleScreenText"
             android:textStyle="bold"
             android:visibility="visible" />
@@ -118,7 +118,6 @@
             android:fontFamily="@font/sharetech"
             android:textSize="10pt"
             android:visibility="gone"
-            android:layout_marginTop="20dp"
-            android:textStyle="bold" />
+            android:layout_marginTop="20dp" />
     </LinearLayout>
 </LinearLayout>

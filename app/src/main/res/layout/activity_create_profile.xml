@@ -93,6 +93,7 @@
         <Button
             android:id="@+id/create_profile_button"
             android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:textAllCaps="false"
             android:fontFamily="@font/sharetech"
             android:text="@string/create_profile_button"
@@ -100,7 +101,6 @@
             android:paddingEnd="40dp"
             android:background="@drawable/start_button"
             android:layout_marginTop="30dp"
-            android:layout_height="56dp"
             android:textSize="8pt"
             android:textColor="@color/titleScreenText"
             android:textStyle="bold"/>

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:paddingBottom="3pt"
+    android:paddingBottom="2pt"
     tools:showIn="@layout/activity_gameplay"
     android:clipChildren="false"
     android:elevation="5dp">
@@ -39,7 +39,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="3dp"
+                    android:layout_height="1pt"
                     android:background="@drawable/player_card_divider"/>
             </LinearLayout>
 
@@ -51,8 +51,8 @@
                 android:text="CookingKing"
                 android:textColor="#fff"
                 android:background="@color/player_is_not_target_codename"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:layout_alignParentRight="true"
