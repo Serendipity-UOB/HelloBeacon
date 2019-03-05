@@ -8,6 +8,12 @@ import java.util.List;
 public interface IPlayerListView {
 
     /**
+     * Sets the codename of the player's target.
+     * @param codeName codename.
+     */
+    void setTargetCodeName(String codeName);
+
+    /**
      * Reveal the hacker name of a player on the list.
      * @param playerId the ID of the player.
      * @param hackerName the hacker name of the player to be revealed.

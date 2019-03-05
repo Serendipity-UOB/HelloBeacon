@@ -28,6 +28,8 @@ public class PlayerListView implements IPlayerListView {
 
     private final LinearLayout playerList;
 
+    private String targetCodeName;
+
     private final Map<String, Integer> playerIdListItemIdMap;
     private final Map<String, String> playerIdNameMap;
     private final Map<String, String> playerIdHackerNameMap;
@@ -65,17 +67,28 @@ public class PlayerListView implements IPlayerListView {
     }
 
     @Override
+    public void setTargetCodeName(String codename) {
+        this.targetCodeName = codename;
+    }
+
+    @Override
     public void revealPlayerHackerName(String playerId, final String hackerName) {
+        Context context = playerList.getContext();
+
         playerIdHackerNameMap.put(playerId, hackerName);
         int id = playerIdListItemIdMap.get(playerId);
         LinearLayout listItem = playerList.findViewById(id);
         final TextView nameView = listItem.findViewById(R.id.player_hacker_name);
 
-        if (!nearbyPlayerIds.contains(playerId)) {
-            setTextOfView(nameView, hackerName, R.color.gameplay_far_player_name);
+        setTextOfView(nameView, hackerName);
+
+        if (hackerName.equals(targetCodeName)) {
+            nameView.setBackgroundColor(ContextCompat.getColor(context,
+                    R.color.player_is_target_codename));
         }
         else {
-            setTextOfView(nameView, hackerName);
+            nameView.setBackgroundColor(ContextCompat.getColor(context,
+                    R.color.player_is_not_target_codename));
         }
     }
 
@@ -156,9 +169,6 @@ public class PlayerListView implements IPlayerListView {
             CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
             float intel = intelBar.getProgress();
-            TextView hackerName = listItem.findViewById(R.id.player_hacker_name);
-            hackerName.setVisibility(View.GONE);
-            playerIdHackerNameMap.remove(playerId);
             intelBar.setProgress(intel - intelIncrement);
         }
     }
@@ -233,7 +243,7 @@ public class PlayerListView implements IPlayerListView {
         uiHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (view.getVisibility() == View.GONE) {
+                if (view.getVisibility() == View.GONE || view.getVisibility() == View.VISIBLE) {
                     view.setVisibility(View.VISIBLE);
                 }
                 view.setText(text);
