@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -96,13 +97,13 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
-    private View.OnClickListener playerCardOnClickListener(final RelativeLayout playerCard) {
+    private View.OnClickListener playerCardOnClickListener(final String playerId, final RelativeLayout playerCard) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 View buttons = playerCard.findViewById(R.id.interaction_buttons);
                 buttons.setVisibility(View.VISIBLE);
-                darken();
+                darken(playerId);
             }
         };
     }
@@ -115,7 +116,7 @@ public class PlayerListView implements IPlayerListView {
 
     private void insertPlayer(String playerId, boolean nearby, int progress) {
         RelativeLayout listItem = (RelativeLayout) inflater.inflate(R.layout.gameplay_player_list_item, null);
-        listItem.setOnClickListener(playerCardOnClickListener(listItem));
+        listItem.setOnClickListener(playerCardOnClickListener(playerId, listItem));
 
         int playerItemId = View.generateViewId();
         playerIdListItemIdMap.put(playerId, playerItemId);
@@ -370,36 +371,55 @@ public class PlayerListView implements IPlayerListView {
         });
     }
 
-    public void darken() {
+    // Used to darken every element in the player list apart from the given player id's card.
+    public void darken(String excemptPlayerId) {
 
         for (String playerId : playerIdListItemIdMap.keySet()) {
-            int id = playerIdListItemIdMap.get(playerId);
-            RelativeLayout playerCard = playerList.findViewById(id);
-            View background = playerCard.findViewById(R.id.player_item_background);
-            background.getBackground().setColorFilter(new PorterDuffColorFilter(Color.BLACK, PorterDuff.Mode.MULTIPLY));
+            if (!playerId.equals(excemptPlayerId)) {
+                int id = playerIdListItemIdMap.get(playerId);
+                RelativeLayout playerCard = playerList.findViewById(id);
 
-            ((TextView) playerCard.findViewById(R.id.player_name))
-                    .setTextColor(getColor(R.color.player_card_name_darkened));
-            ((TextView) playerCard.findViewById(R.id.player_hacker_name))
-                    .setTextColor(getColor(R.color.player_card_target_codename_text_darkened));
+                // handle core of the player card:
+                ((TextView) playerCard.findViewById(R.id.player_name))
+                        .setTextColor(getColor(R.color.player_card_name_darkened));
+                ((ImageView) playerCard.findViewById(R.id.player_card_divider))
+                        .setImageResource(R.drawable.player_card_divider_darkened);
 
-            // handle evidence:
-            CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.player_intel_circle);
-            int progressBarColor = getColor(R.color.progress_bar_darkened);
-            int progressBarBackgroundColor = getColor(R.color.progress_bar_background_darkened);
-            int progressBarTextColor = getColor(R.color.progress_bar_text_darkened);
+                View background = playerCard.findViewById(R.id.player_item_background);
+                int cardBackground = R.drawable.player_card_far_darkened;
+                if (nearbyPlayerIds.contains(playerId)) {
+                    cardBackground = R.drawable.player_card_darkened;
+                }
+                background.setBackgroundResource(cardBackground);
 
-            if (getPlayerIntel(playerId) == 100) {
-                // todo
+                // handle any revealed codenames:
+                TextView codename = playerCard.findViewById(R.id.player_hacker_name);
+                codename.setTextColor(getColor(R.color.player_card_target_codename_text_darkened));
+                int codenameBackground = getColor(R.color.player_is_not_target_codename_darkened);
+                if (playerIdHackerNameMap.containsKey(playerId) &&
+                        targetCodeName.equals(playerIdHackerNameMap.get(playerId))) {
+                    codenameBackground = getColor(R.color.player_is_target_codename_darkened);
+                }
+                codename.setBackgroundColor(codenameBackground);
+
+                // handle evidence bars:
+                CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.player_intel_circle);
+                int progressBarColor = getColor(R.color.progress_bar_darkened);
+                int progressBarBackgroundColor = getColor(R.color.progress_bar_background_darkened);
+                int progressBarTextColor = getColor(R.color.progress_bar_text_darkened);
+
+                if (getPlayerIntel(playerId) == 100) {
+                    progressBarColor = getColor(R.color.progress_bar_complete_evidence_darkened);
+                    progressBarTextColor = getColor(R.color.progress_bar_complete_evidence_text_darkened);
+                } else if (!nearbyPlayerIds.contains(playerId)) {
+                    progressBarColor = getColor(R.color.progress_bar_far_darkened);
+                    progressBarBackgroundColor = getColor(R.color.progress_bar_background_far_darkened);
+                    progressBarTextColor = getColor(R.color.progress_bar_text_far_darkened);
+                }
+                circleProgressBar.setProgressColor(progressBarColor);
+                circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
+                circleProgressBar.setTextColor(progressBarTextColor);
             }
-            else if (!nearbyPlayerIds.contains(playerId)) {
-                progressBarColor = getColor(R.color.progress_bar_far_darkened);
-                progressBarBackgroundColor = getColor(R.color.progress_bar_background_far_darkened);
-                progressBarTextColor = getColor(R.color.progress_bar_text_far_darkened);
-            }
-            circleProgressBar.setProgressColor(progressBarColor);
-            circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
-            circleProgressBar.setTextColor(progressBarTextColor);
         }
     }
 

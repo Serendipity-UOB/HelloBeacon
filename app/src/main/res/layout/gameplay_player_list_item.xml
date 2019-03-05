@@ -40,6 +40,7 @@
                     android:paddingStart="15dp"/>
 
                 <ImageView
+                    android:id="@+id/player_card_divider"
                     android:layout_width="match_parent"
                     android:layout_height="4px"
                     android:scaleType="fitXY"

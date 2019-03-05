@@ -28,11 +28,14 @@
 
     <!-- GAMEPLAY UI: player card names -->
     <color name="player_card_name">#84aed9</color>
+    <color name="player_card_target_codename_text">#fff</color>
     <color name="player_is_target_codename">#b3e06666</color>
     <color name="player_is_not_target_codename">#8900a6ee</color>
 
     <color name="player_card_name_darkened">#222d3f</color>
     <color name="player_card_target_codename_text_darkened">#2b2b38</color>
+    <color name="player_is_target_codename_darkened">#1b1525</color>
+    <color name="player_is_not_target_codename_darkened">#03152b</color>
 
     <!-- GAMEPLAY UI: player card intel circle -->
     <color name="progress_bar">#dfe8ec</color>
@@ -50,8 +53,8 @@
     <color name="progress_bar_far_darkened">#131624</color>
     <color name="progress_bar_background_far_darkened">#040918</color>
     <color name="progress_bar_text_far_darkened">#091426</color>
-    <color name="progress_bar_complete_evidence_darkened">#00a654</color>
-    <color name="progress_bar_complete_evidence_text_darkened">#b6d7a8</color>
+    <color name="progress_bar_complete_evidence_darkened">#042123</color>
+    <color name="progress_bar_complete_evidence_text_darkened">#1f2830</color>
 
     <!-- GAMEPLAY UI: full screen notifications -->
     <color name="neutral_full_screen_notif_title">#00c9d9</color>
