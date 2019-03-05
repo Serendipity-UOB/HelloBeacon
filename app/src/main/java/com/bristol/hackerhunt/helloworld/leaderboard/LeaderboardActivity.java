@@ -113,7 +113,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         ImageView crown = itemView.findViewById(R.id.crown);
 
         String name = item.playerName;
-        String score = Integer.toString(item.score) + " dep";
+        String score = Integer.toString(item.score) + " rep";
 
         playerName.setText(name);
         playerScore.setText(score);
