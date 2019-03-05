@@ -5,21 +5,23 @@
     android:weightSum="1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    tools:showIn="@layout/activity_gameplay">
+    tools:showIn="@layout/activity_gameplay"
+    android:gravity="center">
 
     <com.emredavarci.circleprogressbar.CircleProgressBar
         android:id="@+id/player_intel_circle"
         xmlns:cpb="http://schemas.android.com/apk/res-auto"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         cpb:progressColor="#e7eef2"
         cpb:backgroundColor="#033755"
         cpb:strokeWidth="2"
         cpb:backgroundWidth="2"
-        cpb:textSize="18sp"
+        cpb:textSize="14sp"
         cpb:roundedCorners="true"
         cpb:suffix="%"
         cpb:maxValue="100"
         cpb:progressText="0"
-        cpb:progressTextColor="#b6eaff"/>
+        cpb:progressTextColor="#b6eaff"
+        android:layout_margin="-10dp"/>
 </LinearLayout>

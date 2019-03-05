@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:clipChildren="false"/>
+                android:clipChildren="false" />
         </ScrollView>
 
         <Button
@@ -133,10 +133,8 @@
                 android:fontFamily="@font/sharetech"
                 android:textColor="#fff"
                 android:textSize="8pt"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
-                android:paddingStart="25dp"
-                android:paddingEnd="25dp"
+                android:paddingTop="13dp"
+                android:paddingBottom="13dp"
                 android:text="Tilly wants to exchange evidence with you."/>
 
             <LinearLayout
@@ -149,7 +147,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="22pt"
                     android:background="@drawable/accept_exchange_button"
-                    android:layout_marginStart="3pt"
+                    android:layout_marginStart="2pt"
                     android:layout_marginBottom="2pt"
                     android:text="Accept"
                     android:textColor="#fff"
@@ -161,7 +159,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="22pt"
                     android:background="@drawable/reject_exchange_button"
-                    android:layout_marginEnd="3pt"
+                    android:layout_marginEnd="2pt"
                     android:layout_marginBottom="2pt"
                     android:layout_marginStart="2pt"
                     android:text="Reject"

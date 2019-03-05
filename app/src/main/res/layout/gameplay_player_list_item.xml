@@ -20,7 +20,9 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -34,13 +36,16 @@
                     android:text="Tilly"
                     android:textColor="#b6eaff"
                     android:textSize="8pt"
-                    android:paddingStart="15dp"
-                    android:padding="7dp"/>
+                    android:paddingStart="15dp"/>
 
-                <RelativeLayout
+                <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="1pt"
-                    android:background="@drawable/player_card_divider"/>
+                    android:layout_height="4px"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/player_card_divider"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="7dp"/>
             </LinearLayout>
 
             <TextView
@@ -51,19 +56,21 @@
                 android:text="CookingKing"
                 android:textColor="#fff"
                 android:background="@color/player_is_not_target_codename"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="7dp"
-                android:layout_marginBottom="10dp"
                 android:layout_marginStart="15dp"
-                android:visibility="gone"/>
+                android:textSize="6pt"
+                android:visibility="invisible"/>
         </LinearLayout>
 
         <include layout="@layout/gameplay_player_list_intel_bar"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_marginEnd="4dp"/>
     </LinearLayout>
 
     <!-- Interaction buttons -->
@@ -71,7 +78,7 @@
         android:id="@+id/interaction_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2pt"
+        android:layout_marginTop="3dp"
         android:visibility="gone">
         <Button
             android:id="@+id/gameplay_exchange_button"
@@ -81,7 +88,7 @@
             android:layout_height="30pt"
             android:text="Exchange"
             android:textAllCaps="false"
-            android:fontFamily="@font/sharetech_mono"
+            android:fontFamily="@font/sharetech"
             android:textStyle="bold"
             android:textColor="#fff"
             android:textSize="8pt"/>
@@ -93,12 +100,12 @@
             android:layout_height="30pt"
             android:text="Intercept"
             android:textAllCaps="false"
-            android:fontFamily="@font/sharetech_mono"
+            android:fontFamily="@font/sharetech"
             android:textStyle="bold"
             android:textColor="#fff"
             android:textSize="8pt"
             android:layout_marginStart="3dp"
-            android:layout_marginEnd="4dp"/>
+            android:layout_marginEnd="3dp"/>
         <Button
             android:id="@+id/gameplay_expose_button"
             android:layout_weight="1"
@@ -107,7 +114,7 @@
             android:layout_height="30pt"
             android:text="Expose"
             android:textAllCaps="false"
-            android:fontFamily="@font/sharetech_mono"
+            android:fontFamily="@font/sharetech"
             android:textStyle="bold"
             android:textColor="#fff"
             android:textSize="8pt" />
