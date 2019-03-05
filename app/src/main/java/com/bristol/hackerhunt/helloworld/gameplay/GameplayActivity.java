@@ -25,7 +25,6 @@ import com.bristol.hackerhunt.helloworld.gameplay.view.IConsoleView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IInteractionButtonsView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
-import com.bristol.hackerhunt.helloworld.gameplay.view.InteractionButtonsView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.PlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.PlayerStatusBarView;
 import com.bristol.hackerhunt.helloworld.leaderboard.LeaderboardActivity;
