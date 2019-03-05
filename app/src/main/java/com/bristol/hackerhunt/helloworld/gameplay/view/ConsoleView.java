@@ -202,6 +202,21 @@ public class ConsoleView implements IConsoleView {
     }
 
     @Override
+    public void missionUpdatePrompt(String beaconName, String missionStatement) {
+        // TODO
+    }
+
+    @Override
+    public void missionSuccessPrompt(String missionSuccessMessage) {
+        // TODO
+    }
+
+    @Override
+    public void missionFailedPrompt(String missionFailedMessage) {
+        // TODO
+    }
+
+    @Override
     public void executingTakedownPrompt() {
         disableCloseConsole();
         consoleMessage("TAKEDOWN_INIT\n\nExecuting attack...");
@@ -221,7 +236,7 @@ public class ConsoleView implements IConsoleView {
                 .getString(R.string.console_expose_success_message);
         message = message.replace("$HOME", homeBeaconName);
         consoleMessage(message);
-        
+
         this.interactionInProgress = false;
     }
 
