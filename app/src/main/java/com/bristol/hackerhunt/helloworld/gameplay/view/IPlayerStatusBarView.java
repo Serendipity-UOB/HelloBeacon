@@ -28,4 +28,9 @@ public interface IPlayerStatusBarView {
      * @param playerName the player's name
      */
     void setPlayerName(String playerName);
+
+    /**
+     * Darken all of the elements in the status bar.
+     */
+    void darken();
 }

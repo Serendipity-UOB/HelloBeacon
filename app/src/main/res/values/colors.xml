@@ -33,6 +33,12 @@
     <color name="gameplay_target">#f4cccc</color>
     <color name="gameplay_time_left">#9fc5e8</color>
 
+    <color name="gameplay_player_name_darkened">#212c41</color>
+    <color name="gameplay_player_stats_darkened">#042541</color>
+    <color name="gameplay_target_prefix_darkened">#281525</color>
+    <color name="gameplay_target_darkened">#2e2b3a</color>
+    <color name="gameplay_time_left_darkened">#20293f</color>
+
     <!-- GAMEPLAY UI: player card names -->
     <color name="player_card_name">#84aed9</color>
     <color name="player_card_target_codename_text">#fff</color>

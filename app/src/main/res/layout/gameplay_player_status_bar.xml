@@ -38,6 +38,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/gameplay_player_stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -101,6 +102,7 @@
         android:baselineAligned="false">
 
         <LinearLayout
+            android:id="@+id/status_target_wrapper"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:orientation="horizontal"
@@ -133,6 +135,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/status_time_wrapper"
             android:orientation="horizontal"
             android:layout_height="match_parent"
             android:background="@drawable/time_status_bar_border"
