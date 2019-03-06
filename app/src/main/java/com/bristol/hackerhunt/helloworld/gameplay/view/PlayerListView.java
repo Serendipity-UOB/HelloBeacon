@@ -41,6 +41,7 @@ public class PlayerListView implements IPlayerListView {
     private StringInputRunnable beginSelectedTakedownOnClickRunner;
     private StringInputRunnable beginSelectedExchangeOnClickRunner;
     private StringInputRunnable darkenOnCardPressRunnable;
+    private StringInputRunnable restoreOnBackgroundPressRunnable;
 
     private boolean exchangeStarted = false;
     private boolean takedownStarted = false;
@@ -57,7 +58,8 @@ public class PlayerListView implements IPlayerListView {
     public PlayerListView(LayoutInflater inflater, LinearLayout playerList,
                    StringInputRunnable beginSelectedTakedownOnClickRunner,
                    StringInputRunnable beginSelectedExchangeOnClickRunner,
-                   StringInputRunnable darkenOnCardPressRunnable) {
+                   StringInputRunnable darkenOnCardPressRunnable,
+                   StringInputRunnable restoreOnBackgroundPressRunnable) {
         this.inflater = inflater;
         this.playerList  = playerList;
         this.playerIdListItemIdMap = new HashMap<>();
@@ -70,6 +72,7 @@ public class PlayerListView implements IPlayerListView {
         this.beginSelectedTakedownOnClickRunner = beginSelectedTakedownOnClickRunner;
         this.beginSelectedExchangeOnClickRunner = beginSelectedExchangeOnClickRunner;
         this.darkenOnCardPressRunnable = darkenOnCardPressRunnable;
+        this.restoreOnBackgroundPressRunnable = restoreOnBackgroundPressRunnable;
 
         this.uiHandler = new Handler(playerList.getContext().getMainLooper());
     }
@@ -100,6 +103,27 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
+    private View.OnClickListener cancelInteractionOnClickListener(final String playerId,
+                                                                  final RelativeLayout playerCard) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                restoreOnBackgroundPressRunnable.run(playerId);
+
+                restoreOnClickListenersForPlayerCards();
+                emphasisOverlay.setVisibility(View.GONE);
+                View buttons = playerCard.findViewById(R.id.interaction_buttons);
+                buttons.setVisibility(View.GONE);
+            }
+        };
+    }
+
+    private void enableTapToCancelInteraction(final String playerId,
+                                              final RelativeLayout playerCard) {
+        emphasisOverlay.setVisibility(View.VISIBLE);
+        emphasisOverlay.setOnClickListener(cancelInteractionOnClickListener(playerId, playerCard));
+    }
+
     private View.OnClickListener playerCardOnClickListener(final String playerId,
                                                            final RelativeLayout playerCard) {
         return new View.OnClickListener() {
@@ -109,6 +133,7 @@ public class PlayerListView implements IPlayerListView {
                 buttons.setVisibility(View.VISIBLE);
                 darkenOnCardPressRunnable.run(playerId);
                 removeOnClickListenersOnAllCardsApartFromPlayerId(playerId);
+                enableTapToCancelInteraction(playerId, playerCard);
             }
         };
     }
@@ -446,6 +471,7 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
+    @Override
     public void restore() {
         for (String playerId : playerIdListItemIdMap.keySet()) {
             int id = playerIdListItemIdMap.get(playerId);

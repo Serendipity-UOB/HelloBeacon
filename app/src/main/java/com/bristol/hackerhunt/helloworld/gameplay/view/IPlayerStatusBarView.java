@@ -33,4 +33,9 @@ public interface IPlayerStatusBarView {
      * Darken all of the elements in the status bar.
      */
     void darken();
+
+    /**
+     * Restore the status bar colors after being darkened.
+     */
+    void restore();
 }

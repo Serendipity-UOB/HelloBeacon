@@ -402,7 +402,9 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(String s) {
                 // do nothing
             }
-        }, beginSelectedExchangeOnClickRunnable(), darkenScreenOnPlayerCardPressRunnable());
+        }, beginSelectedExchangeOnClickRunnable(),
+                darkenScreenOnPlayerCardPressRunnable(),
+                restoreScreenOnPlayerCardPressRunnable());
     }
 
     private void goToLeaderboardActivity() {
@@ -428,6 +430,18 @@ public class GameplayActivity extends AppCompatActivity {
                 findViewById(R.id.gameplay_background)
                         .setBackgroundColor(ContextCompat.getColor(getApplicationContext(),
                                 R.color.gameplay_background_darkened));
+            }
+        };
+    }
+
+    private StringInputRunnable restoreScreenOnPlayerCardPressRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String exemptPlayerId) {
+                playerListView.restore();
+                playerStatusBarView.restore();
+                findViewById(R.id.gameplay_background)
+                        .setBackgroundResource(R.drawable.tile_background);
             }
         };
     }

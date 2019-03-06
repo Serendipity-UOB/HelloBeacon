@@ -70,6 +70,38 @@ public class PlayerStatusBarView implements IPlayerStatusBarView {
                 .setTextColor(getColor(R.color.gameplay_time_left_darkened));
     }
 
+    @Override
+    public void restore() {
+        // agent name:
+        ((TextView) playerStatusBar.findViewById(R.id.gameplay_player_name_title))
+                .setTextColor(getColor(R.color.gameplay_player_name));
+        ((TextView) playerStatusBar.findViewById(R.id.gameplay_player_name))
+                .setTextColor(getColor(R.color.gameplay_player_name));
+
+        // stats:
+        LinearLayout stats = playerStatusBar.findViewById(R.id.gameplay_player_stats);
+        for (int i = 0; i < stats.getChildCount(); i++) {
+            View child = stats.getChildAt(i);
+            if (child instanceof TextView) {
+                ((TextView) child).setTextColor(getColor(R.color.gameplay_player_stats));
+            }
+        }
+
+        // target:
+        View targetWrapper = playerStatusBar.findViewById(R.id.status_target_wrapper);
+        targetWrapper.setBackgroundResource(R.drawable.target_status_bar_border);
+        ((TextView) targetWrapper.findViewById(R.id.status_target_prefix))
+                .setTextColor(getColor(R.color.gameplay_target_prefix));
+        ((TextView) targetWrapper.findViewById(R.id.gameplay_player_target))
+                .setTextColor(getColor(R.color.gameplay_target));
+
+        // time left:
+        View timeWrapper = playerStatusBar.findViewById(R.id.status_time_wrapper);
+        timeWrapper.setBackgroundResource(R.drawable.time_status_bar_border);
+        ((TextView) timeWrapper.findViewById(R.id.gameplay_time_left))
+                .setTextColor(getColor(R.color.gameplay_time_left));
+    }
+
     private int getColor(int id) {
         return playerStatusBar.getResources().getColor(id);
     }

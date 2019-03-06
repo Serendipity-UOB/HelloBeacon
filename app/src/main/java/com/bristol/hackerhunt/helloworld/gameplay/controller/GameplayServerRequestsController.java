@@ -210,8 +210,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void updatePlayerPoints(JSONObject obj) throws JSONException {
-        if (obj.has("points")) {
-            int points = obj.getInt("points");
+        if (obj.has("reputation")) {
+            int points = obj.getInt("reputation");
             gameStateController.updatePoints(points);
         }
     }
@@ -225,8 +225,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void checkForPlayerStatusChanges(JSONObject obj) throws JSONException {
         List<PlayerUpdate> updates = new ArrayList<>();
-        if (obj.has("taken_down")) {
-            boolean takenDown = obj.getInt("taken_down") == 1;
+        if (obj.has("exposed")) {
+            boolean takenDown = obj.getInt("exposed") == 1;
             if (takenDown) {
                 updates.add(PlayerUpdate.TAKEN_DOWN);
             }
