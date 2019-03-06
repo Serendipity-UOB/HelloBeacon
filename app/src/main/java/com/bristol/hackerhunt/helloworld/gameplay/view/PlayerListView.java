@@ -146,7 +146,6 @@ public class PlayerListView implements IPlayerListView {
 
     private void insertPlayer(String playerId, boolean nearby, int progress) {
         RelativeLayout listItem = (RelativeLayout) inflater.inflate(R.layout.gameplay_player_list_item, null);
-        listItem.setOnClickListener(playerCardOnClickListener(playerId, listItem));
 
         int playerItemId = View.generateViewId();
         playerIdListItemIdMap.put(playerId, playerItemId);
@@ -175,9 +174,11 @@ public class PlayerListView implements IPlayerListView {
         // update the look of the player card depending on where the player is.
         if (nearby) {
             restoreFarAwayPlayerEntry(playerId);
+            listItem.setOnClickListener(playerCardOnClickListener(playerId, listItem));
         }
         else {
             darkenFarAwayPlayerEntries(playerId);
+            listItem.setOnClickListener(null);
         }
     }
 
@@ -230,10 +231,8 @@ public class PlayerListView implements IPlayerListView {
                     removeListItemEntry(playerId);
                     insertPlayer(playerId, false, intel);
 
-                    if (exchangeStarted || takedownStarted) {
-                        clearOnClickListener(playerId);
-                        darkenFarAwayPlayerEntries(playerId);
-                    }
+                    clearOnClickListener(playerId);
+                    darkenFarAwayPlayerEntries(playerId);
                 }
             }
 
@@ -404,16 +403,14 @@ public class PlayerListView implements IPlayerListView {
     private void removeOnClickListenersOnAllCardsApartFromPlayerId(String exemptPlayerId) {
         for (String playerId : playerIdListItemIdMap.keySet()) {
             if (!playerId.equals(exemptPlayerId)) {
-                int id = playerIdListItemIdMap.get(playerId);
-                RelativeLayout playerCard = playerList.findViewById(id);
-                playerCard.setOnClickListener(null);
+                clearOnClickListener(playerId);
             }
         }
     }
 
     private void restoreOnClickListenersForPlayerCards() {
-        for (String playerId : playerIdListItemIdMap.keySet()) {
-            int id = playerIdListItemIdMap.get(playerId);
+        for( String playerId : nearbyPlayerIds) {
+           int id = playerIdListItemIdMap.get(playerId);
             RelativeLayout playerCard = playerList.findViewById(id);
             playerCard.setOnClickListener(playerCardOnClickListener(playerId, playerCard));
         }
