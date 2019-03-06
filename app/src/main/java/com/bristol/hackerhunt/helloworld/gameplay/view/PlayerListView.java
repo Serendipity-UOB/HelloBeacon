@@ -169,6 +169,7 @@ public class PlayerListView implements IPlayerListView {
             restoreFarAwayPlayerEntry(playerId);
             listItem.setOnClickListener(playerCardOnClickListener(playerId, listItem));
             setExposeOnClickListener(playerId);
+            setExchangeOnClickListener(playerId);
         }
         else {
             darkenFarAwayPlayerEntries(playerId);
@@ -305,47 +306,6 @@ public class PlayerListView implements IPlayerListView {
         });
     }
 
-    @Override
-    @Deprecated
-    public void beginTakedown() {
-        this.exposeStarted = true;
-        for (String playerId : playerIdListItemIdMap.keySet()) {
-            if (!nearbyPlayerIds.contains(playerId)) {
-                darkenFarAwayPlayerEntries(playerId);
-            }
-            else {
-                setTakedownOnClickListener(playerId);
-            }
-        }
-    }
-
-    @Deprecated
-    private void setTakedownOnClickListener(final String playerId) {
-        int viewId = playerIdListItemIdMap.get(playerId);
-        View entry = playerList.findViewById(viewId);
-        entry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                beginExposeOnClickRunner.run(playerId);
-            }
-        });
-    }
-
-    @Override
-    @Deprecated
-    public void resumeGameplayAfterInteraction() {
-        for (String playerId : playerIdListItemIdMap.keySet()) {
-            if (!nearbyPlayerIds.contains(playerId)) {
-                restoreFarAwayPlayerEntry(playerId);
-            }
-            else {
-                clearOnClickListener(playerId);
-            }
-        }
-        this.exposeStarted = false;
-        this.exchangeStarted = false;
-    }
-
     private void restoreFarAwayPlayerEntry(String playerId) {
         Context context = playerList.getContext();
 
@@ -386,25 +346,9 @@ public class PlayerListView implements IPlayerListView {
         entry.setOnClickListener(null);
     }
 
-    @Override
-    @Deprecated
-    public void beginExchange() {
-        this.exchangeStarted = true;
-        for (String playerId : playerIdListItemIdMap.keySet()) {
-            if (!nearbyPlayerIds.contains(playerId)) {
-                darkenFarAwayPlayerEntries(playerId);
-            }
-            else {
-                setExchangeOnClickListener(playerId);
-            }
-        }
-    }
-
-    @Deprecated
     private void setExchangeOnClickListener(final String playerId) {
-        int viewId = playerIdListItemIdMap.get(playerId);
-        View entry = playerList.findViewById(viewId);
-        entry.setOnClickListener(new View.OnClickListener() {
+        Button exchangeButton = getPlayerCard(playerId).findViewById(R.id.gameplay_exchange_button);
+        exchangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 beginExchangeOnClickRunner.run(playerId);

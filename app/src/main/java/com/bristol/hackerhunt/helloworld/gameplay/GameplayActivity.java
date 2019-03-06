@@ -23,7 +23,6 @@ import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameStateControlle
 import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameplayServerRequestsController;
 import com.bristol.hackerhunt.helloworld.gameplay.view.ConsoleView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IConsoleView;
-import com.bristol.hackerhunt.helloworld.gameplay.view.IInteractionButtonsView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.PlayerListView;
@@ -50,7 +49,6 @@ public class GameplayActivity extends AppCompatActivity {
     private IPlayerListView playerListView;
     private IPlayerStatusBarView playerStatusBarView;
     private IConsoleView consoleView;
-    private IInteractionButtonsView interactionButtonsView;
 
     private IGameplayServerRequestsController serverRequestsController;
     private IGameStateController gameStateController;
@@ -70,7 +68,6 @@ public class GameplayActivity extends AppCompatActivity {
 
         initializePlayerListView();
         initializePlayerStatusBarView();
-        // initializeInteractionButtonsView();
 
         initializeGameStateController();
         initializeServerRequestController();
@@ -146,7 +143,7 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeServerRequestController() {
         this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
-        serverRequestsController.registerTakedownSuccessRunnable(takedownSuccessfulRunnable());
+        serverRequestsController.registerTakedownSuccessRunnable(exposeSuccessfulRunnable());
     }
 
     private void initializeBeaconController() {
@@ -205,39 +202,6 @@ public class GameplayActivity extends AppCompatActivity {
         this.playerStatusBarView = new PlayerStatusBarView(findViewById(R.id.gameplay_player_status_bar));
     }
 
-    /*private void initializeInteractionButtonsView() {
-        this.interactionButtonsView = new InteractionButtonsView(this, exchangeButtonOnClickRunnable(),
-                takedownButtonOnClickRunnable(), resumeGameAfterInteractionRunnable(),
-                resumeGameAfterInteractionRunnable());
-    }*/
-
-    private Runnable resumeGameAfterInteractionRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                playerListView.resumeGameplayAfterInteraction();
-            }
-        };
-    }
-
-    /*private Runnable takedownButtonOnClickRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                playerListView.beginTakedown();
-            }
-        };
-    }*/
-
-    /*private Runnable exchangeButtonOnClickRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                playerListView.beginExchange();
-            }
-        };
-    }
-*/
     private StringInputRunnable beginExposeOnClickRunner() {
         return new StringInputRunnable() {
             @Override
@@ -258,12 +222,7 @@ public class GameplayActivity extends AppCompatActivity {
                     }
                 }
 
-                restoreScreenOnPlayerCardPress(targetId);
-
-                // TODO: get rid of these lines, they're depreciated.
-                // interactionButtonsView.showInteractionButtons();
-                // interactionButtonsView.hideTakedownSelectPlayerButton();
-                // playerListView.resumeGameplayAfterInteraction();
+                restoreScreenOnPlayerCardPress();
             }
         };
     }
@@ -274,6 +233,8 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(String interacteeId) {
                 consoleView.exchangeRequestedPrompt();
                 beginExchangeServerPolling(interacteeId);
+
+                restoreScreenOnPlayerCardPress();
             }
         };
     }
@@ -293,7 +254,6 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             consoleView.exchangeFailedPrompt();
-                            finishExchange();
                         }
                     });
                     cancel();
@@ -310,7 +270,6 @@ public class GameplayActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     consoleView.exchangeSuccessPrompt();
-                                    finishExchange();
                                 }
                             });
                         }
@@ -325,18 +284,7 @@ public class GameplayActivity extends AppCompatActivity {
         }, 0, EXCHANGE_POLLING_PERIOD * 1000);
     }
 
-    private void finishExchange() {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // interactionButtonsView.showInteractionButtons();
-                // interactionButtonsView.hideExchangeSelectPlayerButton();
-                playerListView.resumeGameplayAfterInteraction();
-            }
-        });
-    }
-
-    private Runnable takedownSuccessfulRunnable() {
+    private Runnable exposeSuccessfulRunnable() {
         return new Runnable() {
             @Override
             public void run() {
@@ -438,7 +386,7 @@ public class GameplayActivity extends AppCompatActivity {
         };
     }
 
-    private void restoreScreenOnPlayerCardPress(String exemptPlayerId) {
+    private void restoreScreenOnPlayerCardPress() {
         playerListView.restore();
         playerStatusBarView.restore();
 
@@ -453,7 +401,7 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(String exemptPlayerId) {
-                restoreScreenOnPlayerCardPress(exemptPlayerId);
+                restoreScreenOnPlayerCardPress();
             }
         };
     }

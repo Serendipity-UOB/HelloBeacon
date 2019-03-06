@@ -48,23 +48,6 @@ public interface IPlayerListView {
     void updateNearbyPlayers(List<String> newNearbyPlayerIds);
 
     /**
-     * Begins process of takedown; greys out far away players, and add select on-click listeners to
-     * nearby players
-     */
-    void beginTakedown();
-
-    /**
-     * Resumes gameplay after interaction, by returning the player list to how it was before.
-     */
-    void resumeGameplayAfterInteraction();
-
-    /**
-     * Begins process of mutual takedown; greys out far away players, and add select on-click
-     * listeners to nearby players
-     */
-    void beginExchange();
-
-    /**
      * Darkens every element in the list apart from the player card of the given player ID.
      * @param exemptPlayerId the player ID to ignore.
      */
