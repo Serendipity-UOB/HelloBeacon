@@ -42,9 +42,9 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     @Override
     public void registerPlayerRequest(String realName, String codeName) throws JSONException {
         // this is for testing.
-        onProfileValidRunnable.run("100");
+        // onProfileValidRunnable.run("100");
 
-        // requestQueue.add(volleyRegisterPlayerRequest(realName, codeName));
+        requestQueue.add(volleyRegisterPlayerRequest(realName, codeName));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
                             ", Message:" + error.getMessage());
                 }
                 else {
-                    Log.d("Network","Message:" + error.getCause().toString());
+                    Log.d("Network","Message:" + error.toString());
                 }
 
                 onProfileInvalidRunnable.run();
