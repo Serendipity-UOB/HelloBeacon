@@ -56,7 +56,7 @@ public class LeaderboardServerRequestController implements ILeaderboardServerReq
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Log.d("Network","200 response recieved.");
+                    Log.d("Network","200 response received.");
                     addLeaderboardItems(response, leaderboardList);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -89,6 +89,7 @@ public class LeaderboardServerRequestController implements ILeaderboardServerReq
             item.playerId = itemJson.getString("player_id");
             item.playerName = getPlayerName(item.playerId);
             item.score = itemJson.getInt("score");
+            item.position = itemJson.getInt("position");
 
             items.add(item);
         }

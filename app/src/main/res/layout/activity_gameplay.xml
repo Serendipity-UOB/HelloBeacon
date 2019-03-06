@@ -177,5 +177,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#0005091c"
-        android:visibility="visible"/>
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:fontFamily="@font/sharetech_mono"
+            android:textAlignment="center"
+            android:textColor="#fff"
+            android:textStyle="italic"
+            android:text="(tap to cancel)"
+            android:textSize="7pt"
+            android:layout_marginBottom="15dp"/>
+    </RelativeLayout>
 </RelativeLayout>

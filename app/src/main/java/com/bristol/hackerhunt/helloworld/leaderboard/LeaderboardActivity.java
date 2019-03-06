@@ -99,11 +99,11 @@ public class LeaderboardActivity extends AppCompatActivity {
 
     private void insertLeaderboard() {
         for (int i = 1; i <= leaderboardItems.size(); i++) {
-            insertLeaderboardItem(i, leaderboardItems.get(i-1));
+            insertLeaderboardItem(leaderboardItems.get(i-1));
         }
     }
 
-    private void insertLeaderboardItem(int position, LeaderboardItem item) {
+    private void insertLeaderboardItem(LeaderboardItem item) {
         LinearLayout itemView = (LinearLayout) inflater.inflate(R.layout.leaderboard_list_item, null);
 
         TextView playerName = itemView.findViewById(R.id.player_name);
@@ -114,6 +114,7 @@ public class LeaderboardActivity extends AppCompatActivity {
 
         String name = item.playerName;
         String score = Integer.toString(item.score) + " rep";
+        int position = item.position;
 
         playerName.setText(name);
         playerScore.setText(score);
