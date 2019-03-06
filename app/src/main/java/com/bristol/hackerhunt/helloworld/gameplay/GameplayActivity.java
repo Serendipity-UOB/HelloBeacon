@@ -237,8 +237,8 @@ public class GameplayActivity extends AppCompatActivity {
             }
         };
     }
-
-    private StringInputRunnable beginSelectedTakedownOnClickRunner() {
+*/
+    private StringInputRunnable beginExposeOnClickRunner() {
         return new StringInputRunnable() {
             @Override
             public void run(String targetId) {
@@ -257,12 +257,13 @@ public class GameplayActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                interactionButtonsView.showInteractionButtons();
-                interactionButtonsView.hideTakedownSelectPlayerButton();
-                playerListView.resumeGameplayAfterInteraction();
+                // TODO: get rid of these lines, they're depreciated.
+                // interactionButtonsView.showInteractionButtons();
+                // interactionButtonsView.hideTakedownSelectPlayerButton();
+                // playerListView.resumeGameplayAfterInteraction();
             }
         };
-    }*/
+    }
 
     private StringInputRunnable beginSelectedExchangeOnClickRunnable() {
         return new StringInputRunnable() {
@@ -397,12 +398,8 @@ public class GameplayActivity extends AppCompatActivity {
     private void initializePlayerListView() {
         this.playerListView = new PlayerListView(LayoutInflater.from(this),
                 (LinearLayout) findViewById(R.id.gameplay_player_list),
-                /*beginSelectedTakedownOnClickRunner()*/ new StringInputRunnable() {
-            @Override
-            public void run(String s) {
-                // do nothing
-            }
-        }, beginSelectedExchangeOnClickRunnable(),
+                beginExposeOnClickRunner(),
+                beginSelectedExchangeOnClickRunnable(),
                 darkenScreenOnPlayerCardPressRunnable(),
                 restoreScreenOnPlayerCardPressRunnable());
     }
@@ -421,27 +418,46 @@ public class GameplayActivity extends AppCompatActivity {
         this.playerStatusBarView.setPlayerName(this.playerIdentifiers.getRealName());
     }
 
+    // a runnable used to darken the screen after a player card has been selected, excluding the one that was pressed.
     private StringInputRunnable darkenScreenOnPlayerCardPressRunnable() {
         return new StringInputRunnable() {
             @Override
-            public void run(String exemptPlayerId) {
+            public void run(final String exemptPlayerId) {
                 playerListView.darken(exemptPlayerId);
                 playerStatusBarView.darken();
-                findViewById(R.id.gameplay_background)
-                        .setBackgroundColor(ContextCompat.getColor(getApplicationContext(),
+
+                View background = findViewById(R.id.gameplay_background);
+                background.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),
                                 R.color.gameplay_background_darkened));
+                background.setOnClickListener(cancelInteractionButtonsOnClickListener(exemptPlayerId));
+                findViewById(R.id.gameplay_player_list).setOnClickListener(cancelInteractionButtonsOnClickListener(exemptPlayerId));
             }
         };
     }
 
+    // a runnable used to cancel/"tap-out" after the interaction buttons have appeared.
     private StringInputRunnable restoreScreenOnPlayerCardPressRunnable() {
         return new StringInputRunnable() {
             @Override
             public void run(String exemptPlayerId) {
                 playerListView.restore();
                 playerStatusBarView.restore();
-                findViewById(R.id.gameplay_background)
-                        .setBackgroundResource(R.drawable.tile_background);
+
+                View background = findViewById(R.id.gameplay_background);
+                background.setBackgroundResource(R.drawable.tile_background);
+                background.setOnClickListener(null);
+                findViewById(R.id.gameplay_player_list).setOnClickListener(null);
+            }
+        };
+    }
+
+    // an on-click listener used to restore the screen after the interaction buttons have appeared, to cancel.
+    private View.OnClickListener cancelInteractionButtonsOnClickListener(final String exemptPlayerId) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Click", "Background pressed.");
+                restoreScreenOnPlayerCardPressRunnable().run(exemptPlayerId);
             }
         };
     }

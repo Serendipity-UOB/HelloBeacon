@@ -1,14 +1,12 @@
 package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -35,42 +33,42 @@ public class PlayerListView implements IPlayerListView {
 
     private final Map<String, Integer> playerIdListItemIdMap;
     private final Map<String, String> playerIdNameMap;
-    private final Map<String, String> playerIdHackerNameMap;
+    private final Map<String, String> playerIdCodeNameMap;
     private List<String> nearbyPlayerIds;
 
-    private StringInputRunnable beginSelectedTakedownOnClickRunner;
-    private StringInputRunnable beginSelectedExchangeOnClickRunner;
+    private StringInputRunnable beginExposeOnClickRunner;
+    private StringInputRunnable beginExchangeOnClickRunner;
     private StringInputRunnable darkenOnCardPressRunnable;
     private StringInputRunnable restoreOnBackgroundPressRunnable;
 
     private boolean exchangeStarted = false;
-    private boolean takedownStarted = false;
+    private boolean exposeStarted = false;
 
     /**
      * Constructor
      * @param inflater Inflater used to insert and render new UI components.
      * @param playerList The view that wraps the list of players in the UI.
-     * @param beginSelectedTakedownOnClickRunner A Runner that will initialize the takedown process
+     * @param beginExposeOnClickRunner A Runner that will initialize the takedown process
      *                                           on a selected player when run.
-     * @param beginSelectedExchangeOnClickRunner A Runner that will initialize the mutual exchange
+     * @param beginExchangeOnClickRunner A Runner that will initialize the mutual exchange
      *                                           process on a selected player when run.
      */
     public PlayerListView(LayoutInflater inflater, LinearLayout playerList,
-                   StringInputRunnable beginSelectedTakedownOnClickRunner,
-                   StringInputRunnable beginSelectedExchangeOnClickRunner,
+                   StringInputRunnable beginExposeOnClickRunner,
+                   StringInputRunnable beginExchangeOnClickRunner,
                    StringInputRunnable darkenOnCardPressRunnable,
                    StringInputRunnable restoreOnBackgroundPressRunnable) {
         this.inflater = inflater;
         this.playerList  = playerList;
         this.playerIdListItemIdMap = new HashMap<>();
         this.playerIdNameMap = new HashMap<>();
-        this.playerIdHackerNameMap = new HashMap<>();
+        this.playerIdCodeNameMap = new HashMap<>();
         this.nearbyPlayerIds = new ArrayList<>();
 
         this.emphasisOverlay = playerList.getRootView().findViewById(R.id.emphasis_overlay);
 
-        this.beginSelectedTakedownOnClickRunner = beginSelectedTakedownOnClickRunner;
-        this.beginSelectedExchangeOnClickRunner = beginSelectedExchangeOnClickRunner;
+        this.beginExposeOnClickRunner = beginExposeOnClickRunner;
+        this.beginExchangeOnClickRunner = beginExchangeOnClickRunner;
         this.darkenOnCardPressRunnable = darkenOnCardPressRunnable;
         this.restoreOnBackgroundPressRunnable = restoreOnBackgroundPressRunnable;
 
@@ -86,7 +84,7 @@ public class PlayerListView implements IPlayerListView {
     public void revealPlayerHackerName(String playerId, final String hackerName) {
         Context context = playerList.getContext();
 
-        playerIdHackerNameMap.put(playerId, hackerName);
+        playerIdCodeNameMap.put(playerId, hackerName);
         int id = playerIdListItemIdMap.get(playerId);
         RelativeLayout listItem = playerList.findViewById(id);
         final TextView nameView = listItem.findViewById(R.id.player_hacker_name);
@@ -103,27 +101,17 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
-    private View.OnClickListener cancelInteractionOnClickListener(final String playerId,
-                                                                  final RelativeLayout playerCard) {
+    // an on-click listener that should be run when the user "taps-out" of the interaction buttons.
+    private View.OnClickListener cancelInteractionOnClickListener(final String playerId) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 restoreOnBackgroundPressRunnable.run(playerId);
-
-                restoreOnClickListenersForPlayerCards();
-                emphasisOverlay.setVisibility(View.GONE);
-                View buttons = playerCard.findViewById(R.id.interaction_buttons);
-                buttons.setVisibility(View.GONE);
             }
         };
     }
 
-    private void enableTapToCancelInteraction(final String playerId,
-                                              final RelativeLayout playerCard) {
-        emphasisOverlay.setVisibility(View.VISIBLE);
-        emphasisOverlay.setOnClickListener(cancelInteractionOnClickListener(playerId, playerCard));
-    }
-
+    // an on-click listener run when a player card is clicked, causing the interaction buttons to appear.
     private View.OnClickListener playerCardOnClickListener(final String playerId,
                                                            final RelativeLayout playerCard) {
         return new View.OnClickListener() {
@@ -131,9 +119,9 @@ public class PlayerListView implements IPlayerListView {
             public void onClick(View view) {
                 View buttons = playerCard.findViewById(R.id.interaction_buttons);
                 buttons.setVisibility(View.VISIBLE);
+                emphasisOverlay.setVisibility(View.VISIBLE);
                 darkenOnCardPressRunnable.run(playerId);
-                removeOnClickListenersOnAllCardsApartFromPlayerId(playerId);
-                enableTapToCancelInteraction(playerId, playerCard);
+                tapToCancelOnClickListenersOnAllCardsApartFromPlayerId(playerId);
             }
         };
     }
@@ -144,7 +132,9 @@ public class PlayerListView implements IPlayerListView {
         insertPlayer(playerId, false, 0);
     }
 
+    // inserts a player into the list.
     private void insertPlayer(String playerId, boolean nearby, int progress) {
+        // initialize new player card.
         RelativeLayout listItem = (RelativeLayout) inflater.inflate(R.layout.gameplay_player_list_item, null);
 
         int playerItemId = View.generateViewId();
@@ -152,34 +142,54 @@ public class PlayerListView implements IPlayerListView {
         listItem.setId(playerItemId);
 
         TextView playerNameView = listItem.findViewById(R.id.player_name);
-        CircleProgressBar intelGathered = listItem.findViewById(R.id.player_intel_circle);
+        CircleProgressBar evidenceGathered = listItem.findViewById(R.id.player_intel_circle);
 
+        // set player name and evidence.
         String playerName = playerIdNameMap.get(playerId);
         setTextOfView(playerNameView, playerName);
-        intelGathered.setProgress(progress);
+        evidenceGathered.setProgress(progress);
 
-        if (playerIdHackerNameMap.containsKey(playerId)) {
-            TextView hackerNameView = listItem.findViewById(R.id.player_hacker_name);
-            String hackerName = playerIdHackerNameMap.get(playerId);
+        // if the code name of the player is known, reveal it.
+        if (playerIdCodeNameMap.containsKey(playerId)) {
+            TextView codeNameView = listItem.findViewById(R.id.player_hacker_name);
+            String codeName = playerIdCodeNameMap.get(playerId);
             if (nearby) {
-                setTextOfView(hackerNameView, hackerName);
+                setTextOfView(codeNameView, codeName);
             }
             else {
-                setTextOfView(hackerNameView, hackerName, R.color.gameplay_far_player_name);
+                setTextOfView(codeNameView, codeName, R.color.gameplay_far_player_name);
             }
         }
 
+        // load the player card into the list.
         playerList.addView(listItem, 0);
 
-        // update the look of the player card depending on where the player is.
+        // update the look & behavior of the player card depending on where the player is.
         if (nearby) {
             restoreFarAwayPlayerEntry(playerId);
             listItem.setOnClickListener(playerCardOnClickListener(playerId, listItem));
+            setExposeOnClickListener(playerId);
         }
         else {
             darkenFarAwayPlayerEntries(playerId);
             listItem.setOnClickListener(null);
         }
+    }
+
+    private View getPlayerCard(String playerId) {
+        int id = playerIdListItemIdMap.get(playerId);
+        return playerList.findViewById(id);
+    }
+
+    // sets the on-click listener to be run when the expose button for a player card is pressed.
+    private void setExposeOnClickListener(final String playerId) {
+        Button exposeButton = getPlayerCard(playerId).findViewById(R.id.gameplay_expose_button);
+        exposeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                beginExposeOnClickRunner.run(playerId);
+            }
+        });
     }
 
     @Override
@@ -244,9 +254,6 @@ public class PlayerListView implements IPlayerListView {
                 if (exchangeStarted) {
                     setExchangeOnClickListener(playerId);
                 }
-                if (takedownStarted) {
-                    setTakedownOnClickListener(playerId);
-                }
             }
 
             this.nearbyPlayerIds = newNearbyPlayerIds;
@@ -299,8 +306,9 @@ public class PlayerListView implements IPlayerListView {
     }
 
     @Override
+    @Deprecated
     public void beginTakedown() {
-        this.takedownStarted = true;
+        this.exposeStarted = true;
         for (String playerId : playerIdListItemIdMap.keySet()) {
             if (!nearbyPlayerIds.contains(playerId)) {
                 darkenFarAwayPlayerEntries(playerId);
@@ -311,18 +319,20 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
+    @Deprecated
     private void setTakedownOnClickListener(final String playerId) {
         int viewId = playerIdListItemIdMap.get(playerId);
         View entry = playerList.findViewById(viewId);
         entry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                beginSelectedTakedownOnClickRunner.run(playerId);
+                beginExposeOnClickRunner.run(playerId);
             }
         });
     }
 
     @Override
+    @Deprecated
     public void resumeGameplayAfterInteraction() {
         for (String playerId : playerIdListItemIdMap.keySet()) {
             if (!nearbyPlayerIds.contains(playerId)) {
@@ -332,7 +342,7 @@ public class PlayerListView implements IPlayerListView {
                 clearOnClickListener(playerId);
             }
         }
-        this.takedownStarted = false;
+        this.exposeStarted = false;
         this.exchangeStarted = false;
     }
 
@@ -377,6 +387,7 @@ public class PlayerListView implements IPlayerListView {
     }
 
     @Override
+    @Deprecated
     public void beginExchange() {
         this.exchangeStarted = true;
         for (String playerId : playerIdListItemIdMap.keySet()) {
@@ -389,21 +400,23 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
+    @Deprecated
     private void setExchangeOnClickListener(final String playerId) {
         int viewId = playerIdListItemIdMap.get(playerId);
         View entry = playerList.findViewById(viewId);
         entry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                beginSelectedExchangeOnClickRunner.run(playerId);
+                beginExchangeOnClickRunner.run(playerId);
             }
         });
     }
 
-    private void removeOnClickListenersOnAllCardsApartFromPlayerId(String exemptPlayerId) {
+    private void tapToCancelOnClickListenersOnAllCardsApartFromPlayerId(String exemptPlayerId) {
         for (String playerId : playerIdListItemIdMap.keySet()) {
             if (!playerId.equals(exemptPlayerId)) {
-                clearOnClickListener(playerId);
+                View playerCard = getPlayerCard(playerId);
+                playerCard.setOnClickListener(cancelInteractionOnClickListener(exemptPlayerId));
             }
         }
     }
@@ -441,8 +454,8 @@ public class PlayerListView implements IPlayerListView {
                 TextView codename = playerCard.findViewById(R.id.player_hacker_name);
                 codename.setTextColor(getColor(R.color.player_card_target_codename_text_darkened));
                 int codenameBackground = getColor(R.color.player_is_not_target_codename_darkened);
-                if (playerIdHackerNameMap.containsKey(playerId) &&
-                        targetCodeName.equals(playerIdHackerNameMap.get(playerId))) {
+                if (playerIdCodeNameMap.containsKey(playerId) &&
+                        targetCodeName.equals(playerIdCodeNameMap.get(playerId))) {
                     codenameBackground = getColor(R.color.player_is_target_codename_darkened);
                 }
                 codename.setBackgroundColor(codenameBackground);
@@ -471,50 +484,59 @@ public class PlayerListView implements IPlayerListView {
     @Override
     public void restore() {
         for (String playerId : playerIdListItemIdMap.keySet()) {
-            int id = playerIdListItemIdMap.get(playerId);
-            RelativeLayout playerCard = playerList.findViewById(id);
+            View playerCard = getPlayerCard(playerId);
 
-            // handle core of the player card:
-            ((TextView) playerCard.findViewById(R.id.player_name))
-                    .setTextColor(getColor(R.color.player_card_name));
-            ((ImageView) playerCard.findViewById(R.id.player_card_divider))
-                    .setImageResource(R.drawable.player_card_divider);
-
-            View background = playerCard.findViewById(R.id.player_item_background);
-            int cardBackground = R.drawable.player_card_far;
-            if (nearbyPlayerIds.contains(playerId)) {
-                cardBackground = R.drawable.player_card;
-            }
-            background.setBackgroundResource(cardBackground);
-
-            // handle any revealed codenames:
-            TextView codename = playerCard.findViewById(R.id.player_hacker_name);
-            codename.setTextColor(getColor(R.color.player_card_target_codename_text));
-            int codenameBackground = getColor(R.color.player_is_not_target_codename);
-            if (playerIdHackerNameMap.containsKey(playerId) &&
-                    targetCodeName.equals(playerIdHackerNameMap.get(playerId))) {
-                codenameBackground = getColor(R.color.player_is_target_codename);
-            }
-            codename.setBackgroundColor(codenameBackground);
-
-            // handle evidence bars:
-            CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.player_intel_circle);
-            int progressBarColor = getColor(R.color.progress_bar);
-            int progressBarBackgroundColor = getColor(R.color.progress_bar_background);
-            int progressBarTextColor = getColor(R.color.progress_bar_text);
-
-            if (getPlayerIntel(playerId) == 100) {
-                progressBarColor = getColor(R.color.progress_bar_complete_evidence);
-                progressBarTextColor = getColor(R.color.progress_bar_complete_evidence_text);
-            } else if (!nearbyPlayerIds.contains(playerId)) {
-                progressBarColor = getColor(R.color.progress_bar_far);
-                progressBarBackgroundColor = getColor(R.color.progress_bar_background_far);
-                progressBarTextColor = getColor(R.color.progress_bar_text_far);
-            }
-            circleProgressBar.setProgressColor(progressBarColor);
-            circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
-            circleProgressBar.setTextColor(progressBarTextColor);
+            restoreUiColours(playerId);
+            restoreOnClickListenersForPlayerCards();
+            emphasisOverlay.setVisibility(View.GONE);
+            View buttons = playerCard.findViewById(R.id.interaction_buttons);
+            buttons.setVisibility(View.GONE);
         }
+    }
+
+    private void restoreUiColours(String playerId) {
+        View playerCard = getPlayerCard(playerId);
+
+        // handle core of the player card:
+        ((TextView) playerCard.findViewById(R.id.player_name))
+                .setTextColor(getColor(R.color.player_card_name));
+        ((ImageView) playerCard.findViewById(R.id.player_card_divider))
+                .setImageResource(R.drawable.player_card_divider);
+
+        View background = playerCard.findViewById(R.id.player_item_background);
+        int cardBackground = R.drawable.player_card_far;
+        if (nearbyPlayerIds.contains(playerId)) {
+            cardBackground = R.drawable.player_card;
+        }
+        background.setBackgroundResource(cardBackground);
+
+        // handle any revealed codenames:
+        TextView codename = playerCard.findViewById(R.id.player_hacker_name);
+        codename.setTextColor(getColor(R.color.player_card_target_codename_text));
+        int codenameBackground = getColor(R.color.player_is_not_target_codename);
+        if (playerIdCodeNameMap.containsKey(playerId) &&
+                targetCodeName.equals(playerIdCodeNameMap.get(playerId))) {
+            codenameBackground = getColor(R.color.player_is_target_codename);
+        }
+        codename.setBackgroundColor(codenameBackground);
+
+        // handle evidence bars:
+        CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.player_intel_circle);
+        int progressBarColor = getColor(R.color.progress_bar);
+        int progressBarBackgroundColor = getColor(R.color.progress_bar_background);
+        int progressBarTextColor = getColor(R.color.progress_bar_text);
+
+        if (getPlayerIntel(playerId) == 100) {
+            progressBarColor = getColor(R.color.progress_bar_complete_evidence);
+            progressBarTextColor = getColor(R.color.progress_bar_complete_evidence_text);
+        } else if (!nearbyPlayerIds.contains(playerId)) {
+            progressBarColor = getColor(R.color.progress_bar_far);
+            progressBarBackgroundColor = getColor(R.color.progress_bar_background_far);
+            progressBarTextColor = getColor(R.color.progress_bar_text_far);
+        }
+        circleProgressBar.setProgressColor(progressBarColor);
+        circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
+        circleProgressBar.setTextColor(progressBarTextColor);
     }
 
     private int getColor(int id) {

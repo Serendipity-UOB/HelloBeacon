@@ -226,13 +226,13 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private void checkForPlayerStatusChanges(JSONObject obj) throws JSONException {
         List<PlayerUpdate> updates = new ArrayList<>();
         if (obj.has("exposed")) {
-            boolean takenDown = obj.getInt("exposed") == 1;
+            boolean takenDown = obj.getBoolean("exposed");
             if (takenDown) {
                 updates.add(PlayerUpdate.TAKEN_DOWN);
             }
         }
         if (obj.has("req_new_target")) {
-            boolean reqNewTarget = obj.getInt("req_new_target") == 1;
+            boolean reqNewTarget = obj.getBoolean("exposed");
             if (reqNewTarget) {
                 updates.add(PlayerUpdate.REQ_NEW_TARGET);
             }

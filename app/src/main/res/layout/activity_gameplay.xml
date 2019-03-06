@@ -20,17 +20,18 @@
         <include layout="@layout/gameplay_player_status_bar" />
 
         <ScrollView
+            android:id="@+id/scroll_player_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:clipChildren="false">
-
+            android:clipChildren="false"
+            android:fillViewport="true">
             <LinearLayout
                 android:id="@+id/gameplay_player_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:clipChildren="false" />
+                android:clipChildren="false"/>
         </ScrollView>
 
         <Button
