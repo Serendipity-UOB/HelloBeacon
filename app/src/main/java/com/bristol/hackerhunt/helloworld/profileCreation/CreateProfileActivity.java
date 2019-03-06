@@ -64,12 +64,12 @@ public class CreateProfileActivity extends AppCompatActivity {
         };
     }
 
-    private Runnable profileInvalidRunnable() {
-        return new Runnable() {
+    private StringInputRunnable profileInvalidRunnable() {
+        return new StringInputRunnable() {
             @Override
-            public void run() {
+            public void run(String errorMessage) {
                 initializeNewProfileButton();
-                setFormErrorMessage(getString(R.string.create_profile_codename_exists_error));
+                setFormErrorMessage(errorMessage);
 
             }
         };

@@ -23,7 +23,7 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     private final RequestQueue requestQueue;
 
     private StringInputRunnable onProfileValidRunnable;
-    private Runnable onProfileInvalidRunnable;
+    private StringInputRunnable onProfileInvalidRunnable;
 
     private int statusCode = 0;
 
@@ -53,7 +53,7 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     }
 
     @Override
-    public void registerOnProfileInvalidRunnable(Runnable runnable) {
+    public void registerOnProfileInvalidRunnable(StringInputRunnable runnable) {
         this.onProfileInvalidRunnable = runnable;
     }
 
@@ -74,15 +74,17 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                if (error.networkResponse != null) {
-                    Log.d("Network", "Status code: " + String.valueOf(error.networkResponse.statusCode) +
-                            ", Message:" + error.getMessage());
+                if (error.networkResponse != null && error.networkResponse.statusCode == 204) {
+                    onProfileInvalidRunnable.run("There is currently no game available to join.");
+                }
+                else if (error.networkResponse != null && error.networkResponse.statusCode == 400) {
+                    onProfileInvalidRunnable.run("Codename already exists.");
                 }
                 else {
                     Log.d("Network","Message:" + error.toString());
+                    onProfileInvalidRunnable.run("Network error.");
                 }
 
-                onProfileInvalidRunnable.run();
             }
         };
 

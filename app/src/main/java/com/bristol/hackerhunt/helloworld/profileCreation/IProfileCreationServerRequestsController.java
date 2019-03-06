@@ -31,5 +31,5 @@ public interface IProfileCreationServerRequestsController {
      * Registers a runnable to run a method upon receiving that the submitted profile is invalid.
      * @param runnable A runnable.
      */
-    void registerOnProfileInvalidRunnable(Runnable runnable);
+    void registerOnProfileInvalidRunnable(StringInputRunnable runnable);
 }
