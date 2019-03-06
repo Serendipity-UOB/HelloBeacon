@@ -257,6 +257,9 @@ public class GameplayActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
+
+                restoreScreenOnPlayerCardPress(targetId);
+
                 // TODO: get rid of these lines, they're depreciated.
                 // interactionButtonsView.showInteractionButtons();
                 // interactionButtonsView.hideTakedownSelectPlayerButton();
@@ -435,18 +438,22 @@ public class GameplayActivity extends AppCompatActivity {
         };
     }
 
+    private void restoreScreenOnPlayerCardPress(String exemptPlayerId) {
+        playerListView.restore();
+        playerStatusBarView.restore();
+
+        View background = findViewById(R.id.gameplay_background);
+        background.setBackgroundResource(R.drawable.tile_background);
+        background.setOnClickListener(null);
+        findViewById(R.id.gameplay_player_list).setOnClickListener(null);
+    }
+
     // a runnable used to cancel/"tap-out" after the interaction buttons have appeared.
     private StringInputRunnable restoreScreenOnPlayerCardPressRunnable() {
         return new StringInputRunnable() {
             @Override
             public void run(String exemptPlayerId) {
-                playerListView.restore();
-                playerStatusBarView.restore();
-
-                View background = findViewById(R.id.gameplay_background);
-                background.setBackgroundResource(R.drawable.tile_background);
-                background.setOnClickListener(null);
-                findViewById(R.id.gameplay_player_list).setOnClickListener(null);
+                restoreScreenOnPlayerCardPress(exemptPlayerId);
             }
         };
     }
