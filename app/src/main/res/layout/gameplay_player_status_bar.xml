@@ -5,67 +5,153 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:showIn="@layout/activity_gameplay">
+    tools:showIn="@layout/activity_gameplay"
+    android:layout_marginBottom="5pt">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/gameplay_player_leaderboard_position"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/vt323"
-            android:textColor="@color/mainText"
-            android:layout_alignParentStart="true"
-            android:text="@string/gameplay_player_leaderboard_position"
-            android:textSize="12pt"/>
+            android:layout_alignParentStart="true">
+            <TextView
+                android:id="@+id/gameplay_player_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textSize="10pt"
+                android:textColor="@color/gameplay_player_name"
+                android:text="@string/player_name_title"
+                android:textStyle="italic"/>
+            <TextView
+                android:id="@+id/gameplay_player_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textSize="10pt"
+                android:textColor="@color/gameplay_player_name"
+                android:text="@string/player_status_bar_name_placeholder"
+                android:textStyle="italic"
+                android:paddingEnd="7dp"/>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/gameplay_player_leaderboard_points"
+        <LinearLayout
+            android:id="@+id/gameplay_player_stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/vt323"
-            android:textColor="@color/mainText"
-            android:text="@string/gameplay_player_leaderboard_points"
-            android:textSize="12pt"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:id="@+id/gameplay_time_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/vt323"
-            android:textColor="@color/mainText"
-            android:layout_alignParentEnd="true"
-            android:text=""
-            android:textSize="12pt"/>
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true">
+            <TextView
+                android:id="@+id/gameplay_player_leaderboard_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="@color/gameplay_player_stats"
+                android:text="@string/leaderboard_status_bar_placeholder"
+                android:textSize="10pt"
+                android:textStyle="italic"/>
+            <TextView
+                android:id="@+id/status_divider_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="@color/gameplay_player_stats"
+                android:text="@string/player_status_info_separator"
+                android:textSize="10pt"
+                android:textStyle="italic"/>
+            <TextView
+                android:id="@+id/gameplay_player_leaderboard_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="@color/gameplay_player_stats"
+                android:text="@string/score_status_bar_placeholder"
+                android:textSize="10pt"
+                android:layout_gravity="center"
+                android:textStyle="italic" />
+            <TextView
+                android:id="@+id/status_divider_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="@color/gameplay_player_stats"
+                android:text="@string/player_status_info_separator"
+                android:textSize="10pt"
+                android:textStyle="italic"
+                android:layout_marginEnd="2pt"/>
+            <RelativeLayout
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/current_game_zone_logo"
+                    android:layout_width="9pt"
+                    android:layout_height="9pt"
+                    android:src="@drawable/beacon_valor"
+                    android:contentDescription="Current game zone." />
+            </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/gameplay_player_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/vt323"
-            android:textColor="#ead1dc"
-            android:text=""
-            android:textSize="14pt"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="4pt"/>
-        <TextView
-            android:id="@+id/gameplay_player_target"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/vt323"
-            android:textColor="#ead1dc"
-            android:text="@string/gameplay_player_target"
-            android:textSize="14pt"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="4pt" />
+        android:orientation="horizontal"
+        android:layout_height="53dp"
+        android:baselineAligned="false">
 
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/status_target_wrapper"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:background="@drawable/target_status_bar_border"
+            android:gravity="center"
+            android:layout_marginTop="5pt">
+            <TextView
+                android:id="@+id/status_target_prefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="@color/gameplay_target_prefix"
+                android:text="@string/player_target_title"
+                android:textSize="10pt"
+                android:layout_marginBottom="4pt"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="10dp"/>
+            <TextView
+                android:id="@+id/gameplay_player_target"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="@color/gameplay_target"
+                android:text="@string/player_target_placeholder"
+                android:textStyle="bold"
+                android:textSize="10pt"
+                android:layout_marginBottom="4pt"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/status_time_wrapper"
+            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:background="@drawable/time_status_bar_border"
+            android:layout_marginTop="5pt"
+            android:layout_marginStart="2pt"
+            android:layout_width="80dp">
+            <TextView
+                android:id="@+id/gameplay_time_left"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:fontFamily="@font/sharetech"
+                android:text="@string/time_left_placeholder"
+                android:textColor="@color/gameplay_time_left"
+                android:textSize="10pt"/>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
