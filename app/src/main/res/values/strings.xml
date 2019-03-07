@@ -20,8 +20,8 @@
     <string name="new_target_request">/newTargetTest</string>
     <string name="player_update_request">/playerUpdateTest</string>
     <string name="home_beacon_request">/atHomeBeaconTest</string>
-    <string name="exchange_request">/exchangeTest</string>
-    <string name="takedown_request">/takeDownTest</string>
+    <string name="exchange_request">/exchangeRequestTest</string>
+    <string name="takedown_request">/exposeTest</string>
 
     <string name="get_info_request">/endInfoTest</string>
 

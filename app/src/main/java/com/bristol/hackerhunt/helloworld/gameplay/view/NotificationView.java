@@ -1,11 +1,14 @@
 package com.bristol.hackerhunt.helloworld.gameplay.view;
 
+import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
 
 public class NotificationView implements INotificationView {
+
+    private static final long NOTIFICATION_DURATION = 3000; // given in milliseconds.
 
     private final View notificationOverlay;
 
@@ -15,23 +18,33 @@ public class NotificationView implements INotificationView {
 
     @Override
     public void exposeFailedInsufficientEvidence(String playerRealName) {
-        notificationOverlay.setVisibility(View.VISIBLE);
         setBadNotificationCard();
         setNotificationText("Exchange failed\nInsufficient evidence on " + playerRealName + ".");
+        popUpNotification();
     }
 
     @Override
     public void exposeFailedNotYourTarget(String playerCodeName) {
-        notificationOverlay.setVisibility(View.VISIBLE);
         setBadNotificationCard();
         setNotificationText("Exchange failed\n" + playerCodeName + " is not your target.");
+        popUpNotification();
     }
 
     @Override
     public void exposeFailedNetworkError(String playerRealName) {
-        notificationOverlay.setVisibility(View.VISIBLE);
         setBadNotificationCard();
         setNotificationText("Exchange failed\nNetwork error.");
+        popUpNotification();
+    }
+
+    private void popUpNotification() {
+        notificationOverlay.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                notificationOverlay.setVisibility(View.GONE);
+            }
+        }, NOTIFICATION_DURATION);
     }
 
     private View getNotificationCard() {
