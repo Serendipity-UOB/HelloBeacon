@@ -169,11 +169,39 @@ public class PlayerListView implements IPlayerListView {
             restoreFarAwayPlayerEntry(playerId);
             listItem.setOnClickListener(playerCardOnClickListener(playerId, listItem));
             setExposeOnClickListener(playerId);
-            setExchangeOnClickListener(playerId);
+
+            if (exchangeStarted) {
+                disableExchangeButton(playerId);
+            }
+            else {
+                enableExchangeButton(playerId);
+            }
         }
         else {
             darkenFarAwayPlayerEntries(playerId);
             listItem.setOnClickListener(null);
+        }
+    }
+
+    private void enableExchangeButton(String playerId) {
+        getExchangeButton(playerId).setBackgroundResource(R.drawable.exchange_button);
+        setExchangeOnClickListener(playerId);
+    }
+
+    private void enableAllExchangeButtons() {
+        for (String playerId : nearbyPlayerIds) {
+            enableExchangeButton(playerId);
+        }
+    }
+
+    private void disableExchangeButton(String playerId) {
+        getExchangeButton(playerId).setBackgroundResource(R.drawable.exchange_button_greyed);
+        removeExchangeOnClickListener(playerId);
+    }
+
+    private void disableAllExchangeButtons() {
+        for (String playerId : nearbyPlayerIds) {
+            disableExchangeButton(playerId);
         }
     }
 
@@ -360,14 +388,23 @@ public class PlayerListView implements IPlayerListView {
         entry.setOnClickListener(null);
     }
 
+    public View getExchangeButton(String playerId) {
+        return getPlayerCard(playerId).findViewById(R.id.gameplay_exchange_button);
+    }
+
     private void setExchangeOnClickListener(final String playerId) {
-        Button exchangeButton = getPlayerCard(playerId).findViewById(R.id.gameplay_exchange_button);
-        exchangeButton.setOnClickListener(new View.OnClickListener() {
+        getExchangeButton(playerId).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                exchangeStarted = true;
                 beginExchangeOnClickRunner.run(playerId);
+                disableAllExchangeButtons();
             }
         });
+    }
+
+    private void removeExchangeOnClickListener(String playerId) {
+        getExchangeButton(playerId).setOnClickListener(null);
     }
 
     private void tapToCancelOnClickListenersOnAllCardsApartFromPlayerId(String exemptPlayerId) {
