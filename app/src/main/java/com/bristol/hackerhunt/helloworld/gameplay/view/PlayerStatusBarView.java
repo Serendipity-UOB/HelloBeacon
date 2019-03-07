@@ -1,6 +1,8 @@
 package com.bristol.hackerhunt.helloworld.gameplay.view;
 
+import android.graphics.PorterDuff;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -68,6 +70,11 @@ public class PlayerStatusBarView implements IPlayerStatusBarView {
         timeWrapper.setBackgroundResource(R.drawable.time_status_bar_border_darkened);
         ((TextView) timeWrapper.findViewById(R.id.gameplay_time_left))
                 .setTextColor(getColor(R.color.gameplay_time_left_darkened));
+
+        // game zone logo:
+        ((ImageView) playerStatusBar.findViewById(R.id.current_game_zone_logo))
+                .setColorFilter(getColor(R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
+
     }
 
     @Override
@@ -100,6 +107,8 @@ public class PlayerStatusBarView implements IPlayerStatusBarView {
         timeWrapper.setBackgroundResource(R.drawable.time_status_bar_border);
         ((TextView) timeWrapper.findViewById(R.id.gameplay_time_left))
                 .setTextColor(getColor(R.color.gameplay_time_left));
+
+        ((ImageView) playerStatusBar.findViewById(R.id.current_game_zone_logo)).clearColorFilter();
     }
 
     private int getColor(int id) {
