@@ -37,7 +37,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private int statusCode = 0;
 
-    private Runnable takedownSuccessRunnable;
+    private Runnable exposeSuccessRunnable;
+    private Runnable exposeFailedRunnable;
 
     /**
      * Class constructor.
@@ -360,14 +361,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                takedownSuccessRunnable.run();
+                exposeSuccessRunnable.run();
             }
         };
 
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // do nothing.
+                exposeFailedRunnable.run();
             }
         };
 
@@ -391,8 +392,13 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void registerTakedownSuccessRunnable(Runnable runnable) {
-        this.takedownSuccessRunnable = runnable;
+    public void registerExposeSuccessRunnable(Runnable exposeSuccessRunnable) {
+        this.exposeSuccessRunnable = exposeSuccessRunnable;
+    }
+
+    @Override
+    public void registerExposeFailedRunnable(Runnable exposeFailedRunnable) {
+        this.exposeFailedRunnable = exposeFailedRunnable;
     }
 
     @Override

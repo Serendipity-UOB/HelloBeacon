@@ -4,7 +4,7 @@ public interface INotificationView {
 
     public void exposeFailedInsufficientEvidence(String playerRealName);
 
-    public void exposeFailedNotYourTarget(String playerCodeName);
+    public void exposeFailedNotYourTarget(String playerCodName);
 
-    public void exposeFailedNetworkError(String playerRealName);
+    public void exposeFailedNetworkError();
 }

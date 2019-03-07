@@ -31,7 +31,7 @@ public class NotificationView implements INotificationView {
     }
 
     @Override
-    public void exposeFailedNetworkError(String playerRealName) {
+    public void exposeFailedNetworkError() {
         setBadNotificationCard();
         setNotificationText("Exchange failed\nNetwork error.");
         popUpNotification();

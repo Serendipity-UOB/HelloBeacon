@@ -261,6 +261,20 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
+    @Override
+    public void displayExchangeRequested(String playerId) {
+        getExchangeRequestedFlag(playerId).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideExchangeRequested(String playerId) {
+        getExchangeRequestedFlag(playerId).setVisibility(View.INVISIBLE);
+    }
+
+    private View getExchangeRequestedFlag(String playerId) {
+        return getPlayerCard(playerId).findViewById(R.id.exchange_requested);
+    }
+
     private int getPlayerIntel(String playerId) {
         if (!playerIdListItemIdMap.containsKey(playerId)) {
             throw new IllegalArgumentException("Error: player is not listed as playing the game.");

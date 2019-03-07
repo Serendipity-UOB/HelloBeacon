@@ -147,7 +147,31 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeServerRequestController() {
         this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
-        serverRequestsController.registerTakedownSuccessRunnable(exposeSuccessfulRunnable());
+        serverRequestsController.registerExposeSuccessRunnable(exposeSuccessfulRunnable());
+        serverRequestsController.registerExposeFailedRunnable(exposeFailedRunnable());
+    }
+
+    private Runnable exposeSuccessfulRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                String homeBeaconName = gameStateController.getHomeBeaconName();
+                closeConsoleOnHomeBeaconNearby = true;
+                consoleView.takedownSuccessPrompt(homeBeaconName);
+                newTargetRequested = true;
+            }
+        };
+    }
+
+    // This should never be called because the client should pick up on invalid requests, but if it
+    // does it indicates either a network error or a client error.
+    private Runnable exposeFailedRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                notificationView.exposeFailedNetworkError();
+            }
+        };
     }
 
     private void initializeBeaconController() {
@@ -245,6 +269,7 @@ public class GameplayActivity extends AppCompatActivity {
                 consoleView.exchangeRequestedPrompt();
                 beginExchangeServerPolling(interacteeId);
 
+                playerListView.displayExchangeRequested(interacteeId);
                 restoreScreenOnPlayerCardPress();
             }
         };
@@ -293,18 +318,6 @@ public class GameplayActivity extends AppCompatActivity {
                 }
             }
         }, 0, EXCHANGE_POLLING_PERIOD * 1000);
-    }
-
-    private Runnable exposeSuccessfulRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                String homeBeaconName = gameStateController.getHomeBeaconName();
-                closeConsoleOnHomeBeaconNearby = true;
-                consoleView.takedownSuccessPrompt(homeBeaconName);
-                newTargetRequested = true;
-            }
-        };
     }
 
     private void initializeConsoleView() {

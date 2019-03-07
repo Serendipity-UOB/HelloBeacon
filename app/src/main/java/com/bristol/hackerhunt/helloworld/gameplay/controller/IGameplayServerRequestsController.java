@@ -66,7 +66,9 @@ public interface IGameplayServerRequestsController {
 
     /**
      * Registers a runnable that is run when a takedown is successful.
-     * @param takedownSuccessRunnable a runnable.
+     * @param exposeSuccessRunnable a runnable.
      */
-    void registerTakedownSuccessRunnable(Runnable takedownSuccessRunnable);
+    void registerExposeSuccessRunnable(Runnable exposeSuccessRunnable);
+
+    void registerExposeFailedRunnable(Runnable exposeFailedRunnable);
 }

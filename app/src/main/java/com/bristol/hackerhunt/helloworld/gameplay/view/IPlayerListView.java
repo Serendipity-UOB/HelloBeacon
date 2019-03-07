@@ -48,6 +48,18 @@ public interface IPlayerListView {
     void updateNearbyPlayers(List<String> newNearbyPlayerIds);
 
     /**
+     * Display the flag in the player card to indicate that an exchange has been requested.
+     * @param playerId The player ID that an exchange was requested from.
+     */
+    void displayExchangeRequested(String playerId);
+
+    /**
+     * Hide the flag in the player card to indicate that an exchange has been completed.
+     * @param playerId The player ID that an exchange was requested from.
+     */
+    void hideExchangeRequested(String playerId);
+
+    /**
      * Darkens every element in the list apart from the player card of the given player ID.
      * @param exemptPlayerId the player ID to ignore.
      */
