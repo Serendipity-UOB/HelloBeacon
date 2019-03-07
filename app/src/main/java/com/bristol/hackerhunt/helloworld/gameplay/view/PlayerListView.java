@@ -1,12 +1,12 @@
 package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -212,7 +212,7 @@ public class PlayerListView implements IPlayerListView {
 
     // sets the on-click listener to be run when the expose button for a player card is pressed.
     private void setExposeOnClickListener(final String playerId) {
-        Button exposeButton = getPlayerCard(playerId).findViewById(R.id.gameplay_expose_button);
+        View exposeButton = getPlayerCard(playerId).findViewById(R.id.gameplay_expose_button);
         exposeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -472,6 +472,12 @@ public class PlayerListView implements IPlayerListView {
                 circleProgressBar.setProgressColor(progressBarColor);
                 circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
                 circleProgressBar.setTextColor(progressBarTextColor);
+
+
+                ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
+                        .setTextColor(getColor(R.color.player_card_name_darkened));
+                ((ImageView) playerCard.findViewById(R.id.exchange_requested_icon))
+                        .setColorFilter(getColor(R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
             }
         }
     }
@@ -532,6 +538,10 @@ public class PlayerListView implements IPlayerListView {
         circleProgressBar.setProgressColor(progressBarColor);
         circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
         circleProgressBar.setTextColor(progressBarTextColor);
+
+        ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
+                .setTextColor(getColor(R.color.player_card_name));
+        ((ImageView) playerCard.findViewById(R.id.exchange_requested_icon)).clearColorFilter();
     }
 
     private int getColor(int id) {
