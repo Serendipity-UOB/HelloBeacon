@@ -23,8 +23,10 @@ import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameStateControlle
 import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameplayServerRequestsController;
 import com.bristol.hackerhunt.helloworld.gameplay.view.ConsoleView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IConsoleView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.INotificationView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.NotificationView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.PlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.PlayerStatusBarView;
 import com.bristol.hackerhunt.helloworld.leaderboard.LeaderboardActivity;
@@ -49,6 +51,7 @@ public class GameplayActivity extends AppCompatActivity {
     private IPlayerListView playerListView;
     private IPlayerStatusBarView playerStatusBarView;
     private IConsoleView consoleView;
+    private INotificationView notificationView;
 
     private IGameplayServerRequestsController serverRequestsController;
     private IGameStateController gameStateController;
@@ -68,6 +71,7 @@ public class GameplayActivity extends AppCompatActivity {
 
         initializePlayerListView();
         initializePlayerStatusBarView();
+        initializeNotificationView();
 
         initializeGameStateController();
         initializeServerRequestController();
@@ -150,6 +154,10 @@ public class GameplayActivity extends AppCompatActivity {
         this.beaconController = new BeaconController(this, gameStateController);
     }
 
+    private void initializeNotificationView() {
+        this.notificationView = new NotificationView(findViewById(R.id.gameplay_notification_overlay));
+    }
+
     private TimerTask pollServer() {
         return new TimerTask() {
             @Override
@@ -207,21 +215,24 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run(String targetId) {
                 if (!gameStateController.playerHasFullIntel(targetId)) {
-                    consoleView.takedownInsufficientIntelPrompt();
+                    String targetRealName = gameStateController.getPlayerIdRealNameMap().get(targetId);
+                    notificationView.exposeFailedInsufficientEvidence(targetRealName);
                 }
                 else if (gameStateController.getTargetPlayerId() == null ||
-                !gameStateController.getTargetPlayerId().equals(targetId)) {
-                    consoleView.takedownNotYourTargetPrompt();
+                        !gameStateController.getTargetPlayerId().equals(targetId)) {
+                    String targetRealName = gameStateController.getPlayerIdRealNameMap().get(targetId);
+                    notificationView.exposeFailedNotYourTarget(targetRealName);
                 }
                 else {
                     consoleView.executingTakedownPrompt();
                     try {
-                        serverRequestsController.takeDownRequest(targetId);
+                        serverRequestsController.exposeRequest(targetId);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
 
+                // navigate away from the interaction buttons:
                 restoreScreenOnPlayerCardPress();
             }
         };

@@ -62,7 +62,7 @@ public interface IGameplayServerRequestsController {
      * @param targetId the NFC ID of the player that the current player is attempting to take down.
      * @throws JSONException if the server JSON response cannot be parsed.
      */
-    void takeDownRequest(String targetId) throws JSONException;
+    void exposeRequest(String targetId) throws JSONException;
 
     /**
      * Registers a runnable that is run when a takedown is successful.

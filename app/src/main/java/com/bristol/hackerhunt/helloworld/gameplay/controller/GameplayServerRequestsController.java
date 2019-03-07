@@ -1,7 +1,6 @@
 package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -353,11 +352,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void takeDownRequest(String targetId) throws JSONException {
-        requestQueue.add(volleyTakeDownRequest(targetId));
+    public void exposeRequest(String targetId) throws JSONException {
+        requestQueue.add(volleyExposeRequest(targetId));
     }
 
-    private JsonObjectRequest volleyTakeDownRequest(String targetId) throws JSONException {
+    private JsonObjectRequest volleyExposeRequest(String targetId) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -373,10 +372,10 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + TAKE_DOWN_URL,
-                takeDownRequestBody(targetId), listener, errorListener);
+                exposeRequestBody(targetId), listener, errorListener);
     }
 
-    private JSONObject takeDownRequestBody(String targetId) throws JSONException {
+    private JSONObject exposeRequestBody(String targetId) throws JSONException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("player_id", gameStateController.getPlayerId());
         requestBody.put("target_id", targetId);
