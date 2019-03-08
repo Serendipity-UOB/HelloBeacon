@@ -8,6 +8,12 @@ import java.util.List;
 public interface IPlayerListView {
 
     /**
+     * Sets the codename of the player's target.
+     * @param codeName codename.
+     */
+    void setTargetCodeName(String codeName);
+
+    /**
      * Reveal the hacker name of a player on the list.
      * @param playerId the ID of the player.
      * @param hackerName the hacker name of the player to be revealed.
@@ -42,19 +48,27 @@ public interface IPlayerListView {
     void updateNearbyPlayers(List<String> newNearbyPlayerIds);
 
     /**
-     * Begins process of takedown; greys out far away players, and add select on-click listeners to
-     * nearby players
+     * Display the flag in the player card to indicate that an exchange has been requested.
+     * @param playerId The player ID that an exchange was requested from.
      */
-    void beginTakedown();
+    void displayExchangeRequested(String playerId);
 
     /**
-     * Resumes gameplay after interaction, by returning the player list to how it was before.
+     * Hide the flag in the player card to indicate that an exchange has been completed.
+     * @param playerId The player ID that an exchange was requested from.
      */
-    void resumeGameplayAfterInteraction();
+    void hideExchangeRequested(String playerId);
 
     /**
-     * Begins process of mutual takedown; greys out far away players, and add select on-click
-     * listeners to nearby players
+     * Darkens every element in the list apart from the player card of the given player ID.
+     * @param exemptPlayerId the player ID to ignore.
      */
-    void beginExchange();
+    void darken(String exemptPlayerId);
+
+    /**
+     * Restore the player card elements after being darkened.
+     */
+    void restore();
+
+    void beginIntercept();
 }

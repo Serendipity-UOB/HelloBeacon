@@ -31,6 +31,25 @@ public interface IConsoleView {
     void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent);
 
     /**
+     * Prompt to give the player an extra mission to complete.
+     * @param beaconName The name of the beacon that the player needs to go to.
+     * @param missionStatement The mission they need to complete.
+     */
+    void missionUpdatePrompt(String beaconName, String missionStatement);
+
+    /**
+     * Prompt that the mission was successful
+     * @param missionSuccessMessage success message.
+     */
+    void missionSuccessPrompt(String missionSuccessMessage);
+
+    /**
+     * Prompt that the mission had failed.
+     * @param missionFailedMessage failed message.
+     */
+    void missionFailedPrompt(String missionFailedMessage);
+
+    /**
      * Reveals a console prompt that tells the player that takedown is being executed. Tap out
      * is disabled.
      */

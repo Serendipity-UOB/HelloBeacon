@@ -3,33 +3,83 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/leaderboard_list_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/activity_leaderboard">
+
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/leaderboard_list_item_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/gameplay_far_player_background"
-        android:padding="3pt"
+        android:background="@drawable/player_card_far"
         android:layout_marginBottom="3pt"
+        android:orientation="horizontal"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        tools:showIn="@layout/activity_leaderboard">
-        <TextView
-            android:id="@+id/player_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12pt"
-            android:text="#1 Tilly"
-            android:layout_alignParentLeft="true"
-            android:textColor="@color/gameplay_far_player_name"
-            android:fontFamily="@font/vt323" />
+        tools:showIn="@layout/activity_leaderboard"
+        android:gravity="center">
 
         <TextView
-            android:id="@+id/player_score"
-            android:layout_width="wrap_content"
+            android:id="@+id/leaderboard_position"
+            android:gravity="center"
+            android:layout_width="23pt"
+            android:layout_height="23pt"
+            android:textColor="#b6eaff"
+            android:fontFamily="@font/sharetech"
+            android:textSize="10pt"
+            android:background="@drawable/circle"
+            android:layout_marginStart="5pt"
+            android:text="#1"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="12pt"
-            android:text="265"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/gameplay_far_player_name"
-            android:fontFamily="@font/vt323" />
-    </RelativeLayout>
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end">
+                <ImageView
+                    android:id="@+id/crown"
+                    android:layout_width="10pt"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/gold_crown" />
+                <TextView
+                    android:id="@+id/player_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="viewEnd"
+                    android:fontFamily="@font/sharetech"
+                    android:text="Tilly"
+                    android:textColor="#b6eaff"
+                    android:textSize="9pt"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="15dp"
+                    android:padding="7dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="4px"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                android:src="@drawable/leaderboard_card_divider" />
+
+            <TextView
+                android:id="@+id/player_score"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="viewEnd"
+                android:textSize="8pt"
+                android:text="265 rep"
+                android:textColor="#b6eaff"
+                android:fontFamily="@font/sharetech"
+                android:paddingEnd="15dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="9dp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 </LinearLayout>

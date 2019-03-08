@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="4pt"
+<LinearLayout android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:weightSum="1.0"
-    android:layout_marginTop="3pt"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_gameplay"
+    android:gravity="center">
 
-    <ProgressBar
-        android:id="@+id/player_intel_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
-        android:progressTint="@color/progress_bar"
-        android:progressBackgroundTint="@color/progress_bar_background"
-        android:progress="30"/>
+    <com.emredavarci.circleprogressbar.CircleProgressBar
+        android:id="@+id/player_intel_circle"
+        xmlns:cpb="http://schemas.android.com/apk/res-auto"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        cpb:progressColor="#e7eef2"
+        cpb:backgroundColor="#033755"
+        cpb:strokeWidth="2"
+        cpb:backgroundWidth="2"
+        cpb:textSize="14sp"
+        cpb:roundedCorners="true"
+        cpb:suffix="%"
+        cpb:maxValue="100"
+        cpb:progressText="0"
+        cpb:progressTextColor="#b6eaff"
+        android:layout_margin="-10dp"/>
 </LinearLayout>

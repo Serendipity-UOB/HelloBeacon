@@ -23,7 +23,7 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     private final RequestQueue requestQueue;
 
     private StringInputRunnable onProfileValidRunnable;
-    private Runnable onProfileInvalidRunnable;
+    private StringInputRunnable onProfileInvalidRunnable;
 
     private int statusCode = 0;
 
@@ -40,11 +40,11 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     }
 
     @Override
-    public void registerPlayerRequest(String realName, String hackerName) throws JSONException {
-       // this is a placeholder.
-        //onProfileValidRunnable.run("100");
+    public void registerPlayerRequest(String realName, String codeName) throws JSONException {
+        // this is for testing.
+        // onProfileValidRunnable.run("100");
 
-        requestQueue.add(volleyRegisterPlayerRequest(realName, hackerName));
+        requestQueue.add(volleyRegisterPlayerRequest(realName, codeName));
     }
 
     @Override
@@ -53,11 +53,11 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
     }
 
     @Override
-    public void registerOnProfileInvalidRunnable(Runnable runnable) {
+    public void registerOnProfileInvalidRunnable(StringInputRunnable runnable) {
         this.onProfileInvalidRunnable = runnable;
     }
 
-    private JsonObjectRequest volleyRegisterPlayerRequest(String realName, String hackerName) throws JSONException {
+    private JsonObjectRequest volleyRegisterPlayerRequest(String realName, String codeName) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -73,18 +73,29 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                onProfileInvalidRunnable.run();
+
+                if (error.networkResponse != null && error.networkResponse.statusCode == 204) {
+                    onProfileInvalidRunnable.run("There is currently no game available to join.");
+                }
+                else if (error.networkResponse != null && error.networkResponse.statusCode == 400) {
+                    onProfileInvalidRunnable.run("Codename already exists.");
+                }
+                else {
+                    Log.d("Network","Message:" + error.toString());
+                    onProfileInvalidRunnable.run("Network error.");
+                }
+
             }
         };
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + REGISTER_PLAYER_URL,
-                playerIdentifiersToJson(realName, hackerName), listener, errorListener);
+                playerIdentifiersToJson(realName, codeName), listener, errorListener);
     }
 
-    private JSONObject playerIdentifiersToJson(String realName, String hackerName) throws JSONException {
+    private JSONObject playerIdentifiersToJson(String realName, String codeName) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("real_name", realName);
-        obj.put("hacker_name", hackerName);
+        obj.put("code_name", codeName);
         return obj;
     }
 }

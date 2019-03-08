@@ -2,37 +2,69 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/gameplay_console"
-    android:layout_width="250dp"
+    android:layout_width="match_parent"
     android:layout_height="250dp"
-    android:background="@android:color/black"
     android:layout_centerInParent="true"
-    android:orientation="vertical">
+    android:layout_margin="10pt"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_gameplay">
 
     <TextView
-        android:id="@+id/gameplay_console_text"
+        android:id="@+id/full_pop_up_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:fontFamily="@font/vt323"
-        android:textColor="#4ad661"
-        android:textSize="11pt"
-        android:padding="15dp"
-        android:text="Incoming message..."/>
-    <RelativeLayout
+        android:text="Game Start"
+        android:textAllCaps="true"
+        android:fontFamily="@font/sharetech"
+        android:textStyle="italic"
+        android:textAlignment="center"
+        android:textColor="@color/neutral_full_pop_up_title"
+        android:textSize="35sp"/>
+
+    <LinearLayout
+        android:id="@+id/full_pop_up_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/neutral_full_pop_up"
+        android:layout_marginTop="8pt"
+        android:layout_marginBottom="5pt"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/agency_logo"
+            android:layout_width="35pt"
+            android:layout_height="35pt"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/agency_spy_logo"/>
+
         <TextView
-            android:id="@+id/console_close_message"
+            android:layout_weight="1"
+            android:id="@+id/gameplay_console_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/vt323"
-            android:textColor="#b7b7b7"
-            android:padding="1pt"
-            android:textSize="11pt"
-            android:text="@string/console_tap_to_close_message"
-            android:textAlignment="center"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="3pt"
-            android:layout_marginTop="1.5pt"/>
-    </RelativeLayout>
+            android:fontFamily="@font/sharetech"
+            android:textColor="#fff"
+            android:textSize="9pt"
+            android:text="Welcome, agent.\nGo to game zone Valor to get your first target."/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/console_close_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sharetech"
+        android:textStyle="italic"
+        android:textColor="#666666"
+        android:padding="1pt"
+        android:textSize="9pt"
+        android:text="@string/console_tap_to_close_message"
+        android:textAlignment="center"
+        android:layout_marginTop="1.5pt"
+        android:visibility="gone"/>
+
 </LinearLayout>

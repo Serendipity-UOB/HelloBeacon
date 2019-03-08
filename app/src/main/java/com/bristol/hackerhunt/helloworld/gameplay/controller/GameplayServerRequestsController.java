@@ -1,7 +1,6 @@
 package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -25,28 +24,29 @@ import java.util.List;
 
 public class GameplayServerRequestsController implements IGameplayServerRequestsController {
 
-    private final String SERVER_ADDRESS;
-    private final String START_INFO_URL;
-    private final String NEW_TARGET_URL;
-    private final String PLAYER_UPDATE_URL;
-    private final String PLAYER_AT_HOME_URL;
-    private final String EXCHANGE_REQUEST_URL;
-    private final String TAKE_DOWN_URL;
-    private final String INTERCEPT_URL;
-    private final String EXCHANGE_RESPONSE_URL;
-    private final String MISSION_URL;
+    private String SERVER_ADDRESS;
+    private String START_INFO_URL;
+    private String NEW_TARGET_URL;
+    private String PLAYER_UPDATE_URL;
+    private String PLAYER_AT_HOME_URL;
+    private String EXCHANGE_REQUEST_URL;
+    private String TAKE_DOWN_URL;
+    private String INTERCEPT_URL;
+    private String EXCHANGE_RESPONSE_URL;
+    private String MISSION_URL;
 
     private final int EXCHANGE_PRIMARY_INCREMENT = 10;
     private final int EXCHANGE_SECONDARY_INCREMENT = 20;
     private final int INTERCEPT_PRIMARY_INCREMENT = 30;
     private final int INTERCEPT_SECONDARY_INCREMENT = 10;
 
-    private final RequestQueue requestQueue;
-    private final IGameStateController gameStateController;
+    private RequestQueue requestQueue;
+    private IGameStateController gameStateController;
 
     private int statusCode = 0;
 
-    private Runnable takedownSuccessRunnable;
+    private Runnable exposeSuccessRunnable;
+    private Runnable exposeFailedRunnable;
     private Runnable interceptSuccessRunnable;
 
     /**
@@ -62,7 +62,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         this.START_INFO_URL = context.getString(R.string.start_info_request);
         this.NEW_TARGET_URL = context.getString(R.string.new_target_request);
         this.PLAYER_UPDATE_URL = context.getString(R.string.player_update_request);
-        this.EXCHANGE_REQUEST_URL = context.getString(R.string.exchange_request);#
+        this.EXCHANGE_REQUEST_URL = context.getString(R.string.exchange_request);
         this.EXCHANGE_RESPONSE_URL = context.getString(R.string.exchange_response);
         this.TAKE_DOWN_URL = context.getString(R.string.takedown_request);
         this.PLAYER_AT_HOME_URL = context.getString(R.string.home_beacon_request);
@@ -108,7 +108,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         };
 
-        return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + START_INFO_URL, null,
+        return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + START_INFO_URL, new JSONObject(),
                 listener, errorListener);
     }
 
@@ -224,8 +224,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void updatePlayerPoints(JSONObject obj) throws JSONException {
-        if (obj.has("points")) {
-            int points = obj.getInt("points");
+        if (obj.has("reputation")) {
+            int points = obj.getInt("reputation");
             gameStateController.updatePoints(points);
         }
     }
@@ -253,14 +253,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void checkForPlayerStatusChanges(JSONObject obj) throws JSONException {
         List<PlayerUpdate> updates = new ArrayList<>();
-        if (obj.has("taken_down")) {
-            boolean takenDown = obj.getInt("taken_down") == 1;
+        if (obj.has("exposed")) {
+            boolean takenDown = obj.getBoolean("exposed");
             if (takenDown) {
                 updates.add(PlayerUpdate.TAKEN_DOWN);
             }
         }
         if (obj.has("req_new_target")) {
-            boolean reqNewTarget = obj.getInt("req_new_target") == 1;
+            boolean reqNewTarget = obj.getBoolean("exposed");
             if (reqNewTarget) {
                 updates.add(PlayerUpdate.REQ_NEW_TARGET);
             }
@@ -315,12 +315,20 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 }
                 else if(statusCode == 100){
                     if(response.has("time_remaining")){
-                        int timeRemaining = response.getInt("time_remaining");
-                        missionPending(timeRemaining, response); //TODO Define
+                        try {
+                            int timeRemaining = response.getInt("time_remaining");
+                            missionPending(timeRemaining, response); //TODO Define
+                        } catch (JSONException e) {
+                            // TODO: handle.
+                        }
                     }
                 }
                 else if(statusCode == 204){
-                    missionFailure(response); //TODO Define
+                    try {
+                        missionFailure(response); //TODO Define
+                    } catch (JSONException e) {
+                        // TODO: handle
+                    }
                 }
                 statusCode = 0;
             }
@@ -534,7 +542,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyInterceptRequest(interacteeId));
     }
 
-    private JsonObjectRequest volleyInterceptRequest(String interacteeId) throws JSONException {
+    private JsonObjectRequest volleyInterceptRequest(final String interacteeId) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -609,30 +617,30 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void takeDownRequest(String targetId) throws JSONException {
-        requestQueue.add(volleyTakeDownRequest(targetId));
+    public void exposeRequest(String targetId) throws JSONException {
+        requestQueue.add(volleyExposeRequest(targetId));
     }
 
-    private JsonObjectRequest volleyTakeDownRequest(String targetId) throws JSONException {
+    private JsonObjectRequest volleyExposeRequest(String targetId) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                takedownSuccessRunnable.run();
+                exposeSuccessRunnable.run();
             }
         };
 
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // do nothing.
+                exposeFailedRunnable.run();
             }
         };
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + TAKE_DOWN_URL,
-                takeDownRequestBody(targetId), listener, errorListener);
+                exposeRequestBody(targetId), listener, errorListener);
     }
 
-    private JSONObject takeDownRequestBody(String targetId) throws JSONException {
+    private JSONObject exposeRequestBody(String targetId) throws JSONException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("player_id", gameStateController.getPlayerId());
         requestBody.put("target_id", targetId);
@@ -648,8 +656,13 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void registerTakedownSuccessRunnable(Runnable runnable) {
-        this.takedownSuccessRunnable = runnable;
+    public void registerExposeSuccessRunnable(Runnable exposeSuccessRunnable) {
+        this.exposeSuccessRunnable = exposeSuccessRunnable;
+    }
+
+    @Override
+    public void registerExposeFailedRunnable(Runnable exposeFailedRunnable) {
+        this.exposeFailedRunnable = exposeFailedRunnable;
     }
 
     @Override

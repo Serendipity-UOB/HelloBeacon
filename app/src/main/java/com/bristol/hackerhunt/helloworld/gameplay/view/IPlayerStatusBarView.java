@@ -9,7 +9,7 @@ public interface IPlayerStatusBarView {
      * Set the hacker name of the player's target.
      * @param targetHackerName the target hacker name.
      */
-    void setPlayerTargetHackerName(String targetHackerName);
+    void setPlayerTargetCodeName(String targetHackerName);
 
     /**
      * Set the player's points.
@@ -28,4 +28,14 @@ public interface IPlayerStatusBarView {
      * @param playerName the player's name
      */
     void setPlayerName(String playerName);
+
+    /**
+     * Darken all of the elements in the status bar.
+     */
+    void darken();
+
+    /**
+     * Restore the status bar colors after being darkened.
+     */
+    void restore();
 }

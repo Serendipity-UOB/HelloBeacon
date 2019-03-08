@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,10 +23,10 @@ import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameStateControlle
 import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameplayServerRequestsController;
 import com.bristol.hackerhunt.helloworld.gameplay.view.ConsoleView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IConsoleView;
-import com.bristol.hackerhunt.helloworld.gameplay.view.IInteractionButtonsView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.INotificationView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
-import com.bristol.hackerhunt.helloworld.gameplay.view.InteractionButtonsView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.NotificationView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.PlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.PlayerStatusBarView;
 import com.bristol.hackerhunt.helloworld.leaderboard.LeaderboardActivity;
@@ -41,7 +42,7 @@ import java.util.TimerTask;
 public class GameplayActivity extends AppCompatActivity {
 
     private static final int POLLING_PERIOD = 1;                // given in seconds
-    private static final double GAMEPLAY_DURATION = 5;          // given in minutes.
+    private static final double GAMEPLAY_DURATION = 8;          // given in minutes.
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
     private static final int CONSOLE_POPUP_DELAY_PERIOD = 3;    // given in seconds.
 
@@ -50,7 +51,7 @@ public class GameplayActivity extends AppCompatActivity {
     private IPlayerListView playerListView;
     private IPlayerStatusBarView playerStatusBarView;
     private IConsoleView consoleView;
-    private IInteractionButtonsView interactionButtonsView;
+    private INotificationView notificationView;
 
     private IGameplayServerRequestsController serverRequestsController;
     private IGameStateController gameStateController;
@@ -70,7 +71,7 @@ public class GameplayActivity extends AppCompatActivity {
 
         initializePlayerListView();
         initializePlayerStatusBarView();
-        initializeInteractionButtonsView();
+        initializeNotificationView();
 
         initializeGameStateController();
         initializeServerRequestController();
@@ -146,11 +147,39 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeServerRequestController() {
         this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
-        serverRequestsController.registerTakedownSuccessRunnable(takedownSuccessfulRunnable());
+        serverRequestsController.registerExposeSuccessRunnable(exposeSuccessfulRunnable());
+        serverRequestsController.registerExposeFailedRunnable(exposeFailedRunnable());
+    }
+
+    private Runnable exposeSuccessfulRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                String homeBeaconName = gameStateController.getHomeBeaconName();
+                closeConsoleOnHomeBeaconNearby = true;
+                consoleView.takedownSuccessPrompt(homeBeaconName);
+                newTargetRequested = true;
+            }
+        };
+    }
+
+    // This should never be called because the client should pick up on invalid requests, but if it
+    // does it indicates either a network error or a client error.
+    private Runnable exposeFailedRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                notificationView.exposeFailedNetworkError();
+            }
+        };
     }
 
     private void initializeBeaconController() {
         this.beaconController = new BeaconController(this, gameStateController);
+    }
+
+    private void initializeNotificationView() {
+        this.notificationView = new NotificationView(findViewById(R.id.gameplay_notification_overlay));
     }
 
     private TimerTask pollServer() {
@@ -205,48 +234,6 @@ public class GameplayActivity extends AppCompatActivity {
         this.playerStatusBarView = new PlayerStatusBarView(findViewById(R.id.gameplay_player_status_bar));
     }
 
-    private void initializeInteractionButtonsView() {
-        this.interactionButtonsView = new InteractionButtonsView(this, exchangeButtonOnClickRunnable(),
-                takedownButtonOnClickRunnable(), resumeGameAfterInteractionRunnable(),
-                resumeGameAfterInteractionRunnable());
-    }
-
-    private Runnable resumeGameAfterInteractionRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                playerListView.resumeGameplayAfterInteraction();
-            }
-        };
-    }
-
-    private Runnable takedownButtonOnClickRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                playerListView.beginTakedown();
-            }
-        };
-    }
-
-    private Runnable exchangeButtonOnClickRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                playerListView.beginExchange();
-            }
-        };
-    }
-
-    private Runnable interceptButtonOnClickRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                playerListView.beginIntercept();
-            }
-        }
-    }
-
     private StringInputRunnable beginSelectedInterceptOnClickRunnable() {
         return new StringInputRunnable() {
             @Override
@@ -258,35 +245,35 @@ public class GameplayActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                interactionButtonsView.showInteractionButtons();
-                interactionButtonsView.hideInterceptSelectPlayerButton(); //TODO Define
-                playerListView.resumeGameplayAfterInteraction();
+                // TODO: hook up with UI buttons.
             }
         };
     }
 
-    private StringInputRunnable beginSelectedTakedownOnClickRunner() {
+    private StringInputRunnable beginExposeOnClickRunner() {
         return new StringInputRunnable() {
             @Override
             public void run(String targetId) {
                 if (!gameStateController.playerHasFullIntel(targetId)) {
-                    consoleView.takedownInsufficientIntelPrompt();
+                    String targetRealName = gameStateController.getPlayerIdRealNameMap().get(targetId);
+                    notificationView.exposeFailedInsufficientEvidence(targetRealName);
                 }
                 else if (gameStateController.getTargetPlayerId() == null ||
-                !gameStateController.getTargetPlayerId().equals(targetId)) {
-                    consoleView.takedownNotYourTargetPrompt();
+                        !gameStateController.getTargetPlayerId().equals(targetId)) {
+                    String targetRealName = gameStateController.getPlayerIdRealNameMap().get(targetId);
+                    notificationView.exposeFailedNotYourTarget(targetRealName);
                 }
                 else {
                     consoleView.executingTakedownPrompt();
                     try {
-                        serverRequestsController.takeDownRequest(targetId);
+                        serverRequestsController.exposeRequest(targetId);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-                interactionButtonsView.showInteractionButtons();
-                interactionButtonsView.hideTakedownSelectPlayerButton();
-                playerListView.resumeGameplayAfterInteraction();
+
+                // navigate away from the interaction buttons:
+                restoreScreenOnPlayerCardPress();
             }
         };
     }
@@ -297,6 +284,9 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(String interacteeId) {
                 consoleView.exchangeRequestedPrompt();
                 beginExchangeServerPolling(interacteeId);
+
+                playerListView.displayExchangeRequested(interacteeId);
+                restoreScreenOnPlayerCardPress();
             }
         };
     }
@@ -316,7 +306,6 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             consoleView.exchangeFailedPrompt();
-                            finishExchange();
                         }
                     });
                     cancel();
@@ -334,7 +323,6 @@ public class GameplayActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     consoleView.exchangeSuccessPrompt();
-                                    finishExchange();
                                 }
                             });
                         }
@@ -347,29 +335,6 @@ public class GameplayActivity extends AppCompatActivity {
                 }
             }
         }, 0, EXCHANGE_POLLING_PERIOD * 1000);
-    }
-
-    private void finishExchange() {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                interactionButtonsView.showInteractionButtons();
-                interactionButtonsView.hideExchangeSelectPlayerButton();
-                playerListView.resumeGameplayAfterInteraction();
-            }
-        });
-    }
-
-    private Runnable takedownSuccessfulRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                String homeBeaconName = gameStateController.getHomeBeaconName();
-                closeConsoleOnHomeBeaconNearby = true;
-                consoleView.takedownSuccessPrompt(homeBeaconName);
-                newTargetRequested = true;
-            }
-        };
     }
 
     private void initializeConsoleView() {
@@ -425,8 +390,11 @@ public class GameplayActivity extends AppCompatActivity {
     private void initializePlayerListView() {
         this.playerListView = new PlayerListView(LayoutInflater.from(this),
                 (LinearLayout) findViewById(R.id.gameplay_player_list),
-                beginSelectedTakedownOnClickRunner(), beginSelectedExchangeOnClickRunnable(),
-                beginSelectedInterceptOnClickRunnable());
+                beginExposeOnClickRunner(),
+                beginSelectedExchangeOnClickRunnable(),
+                beginSelectedInterceptOnClickRunnable(),
+                darkenScreenOnPlayerCardPressRunnable(),
+                restoreScreenOnPlayerCardPressRunnable());
     }
 
     private void goToLeaderboardActivity() {
@@ -441,5 +409,53 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeStatusBarPlayerName(){
         this.playerStatusBarView.setPlayerName(this.playerIdentifiers.getRealName());
+    }
+
+    // a runnable used to darken the screen after a player card has been selected, excluding the one that was pressed.
+    private StringInputRunnable darkenScreenOnPlayerCardPressRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(final String exemptPlayerId) {
+                playerListView.darken(exemptPlayerId);
+                playerStatusBarView.darken();
+
+                View background = findViewById(R.id.gameplay_background);
+                background.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),
+                                R.color.gameplay_background_darkened));
+                background.setOnClickListener(cancelInteractionButtonsOnClickListener(exemptPlayerId));
+                findViewById(R.id.gameplay_player_list).setOnClickListener(cancelInteractionButtonsOnClickListener(exemptPlayerId));
+            }
+        };
+    }
+
+    private void restoreScreenOnPlayerCardPress() {
+        playerListView.restore();
+        playerStatusBarView.restore();
+
+        View background = findViewById(R.id.gameplay_background);
+        background.setBackgroundResource(R.drawable.tile_background);
+        background.setOnClickListener(null);
+        findViewById(R.id.gameplay_player_list).setOnClickListener(null);
+    }
+
+    // a runnable used to cancel/"tap-out" after the interaction buttons have appeared.
+    private StringInputRunnable restoreScreenOnPlayerCardPressRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String exemptPlayerId) {
+                restoreScreenOnPlayerCardPress();
+            }
+        };
+    }
+
+    // an on-click listener used to restore the screen after the interaction buttons have appeared, to cancel.
+    private View.OnClickListener cancelInteractionButtonsOnClickListener(final String exemptPlayerId) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Click", "Background pressed.");
+                restoreScreenOnPlayerCardPressRunnable().run(exemptPlayerId);
+            }
+        };
     }
 }

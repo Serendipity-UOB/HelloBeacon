@@ -24,6 +24,7 @@ public interface IGameplayServerRequestsController {
 
     /**
      * Checks if a player is at their home beacon.
+     *
      * @throws JSONException
      */
     void isAtHomeBeaconRequest() throws JSONException;
@@ -50,7 +51,7 @@ public interface IGameplayServerRequestsController {
      * POST /exchange { interacter_id, interactee_id }
      *
      * @param interacteeId the ID of the player that the current player is interacting with.
-     * @param details a class outlining the current status of the exchange.
+     * @param details      a class outlining the current status of the exchange.
      * @throws JSONException if the server JSON response cannot be parsed.
      */
     void exchangeRequest(String interacteeId, InteractionDetails details) throws JSONException;
@@ -58,12 +59,13 @@ public interface IGameplayServerRequestsController {
 
     /**
      * Handles an exchange response from player concerning an exchange offered to them
+     *
      * @param interacteeId the ID of the player that current player is interacting with
-     * @param response the response to the exchange,
-     *                 0 = Wait
-     *                 1 = Accept
-     *                 2 = Reject
-     * @param details a class outlining the current status of exchange
+     * @param response     the response to the exchange,
+     *                     0 = Wait
+     *                     1 = Accept
+     *                     2 = Reject
+     * @param details      a class outlining the current status of exchange
      * @throws JSONException if unparseable JSON
      */
     void exchangeResponse(String interacteeId, int response, InteractionDetails details) throws JSONException;
@@ -75,7 +77,7 @@ public interface IGameplayServerRequestsController {
      * @param targetId the ID of the player that the current player is attempting to take down.
      * @throws JSONException if the server JSON response cannot be parsed.
      */
-    void takeDownRequest(String targetId) throws JSONException;
+    void exposeRequest(String targetId) throws JSONException;
 
     /**
      * Submits a player intercept request to the server:
@@ -89,15 +91,19 @@ public interface IGameplayServerRequestsController {
 
     /**
      * Registers a runnable that is run when an intercept is successful.
+     *
      * @param interceptSuccessRunnable a runnable
      */
     void registerInterceptSuccessRunnable(Runnable interceptSuccessRunnable);
 
+    void missionUpdateRequest() throws JSONException;
+
     /**
      * Registers a runnable that is run when a takedown is successful.
-     * @param takedownSuccessRunnable a runnable.
+     *
+     * @param exposeSuccessRunnable a runnable.
      */
-    void registerTakedownSuccessRunnable(Runnable takedownSuccessRunnable);
+    void registerExposeSuccessRunnable(Runnable exposeSuccessRunnable);
 
-    void missionUpdateRequest() throws JSONException;
+    void registerExposeFailedRunnable(Runnable exposeFailedRunnable);
 }

@@ -4,4 +4,5 @@ public class LeaderboardItem {
     String playerId;
     String playerName;
     int score;
+    int position;
 }

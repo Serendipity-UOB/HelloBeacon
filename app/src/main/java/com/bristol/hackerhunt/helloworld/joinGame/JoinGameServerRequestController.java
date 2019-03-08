@@ -44,7 +44,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
     }
 
     @Override
-    public void gameInfoRequest() throws JSONException {
+    public void gameInfoRequest() {
          // this is a placeholder
         // String response = "{\"start_time\":\"17:59:50\",\"number_players\":2}";
         // JSONObject obj = new JSONObject(response);
@@ -53,7 +53,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         requestQueue.add(volleyGameInfoRequest());
     }
 
-    private JsonObjectRequest volleyGameInfoRequest() throws JSONException {
+    private JsonObjectRequest volleyGameInfoRequest() {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -76,8 +76,11 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // throw new IllegalStateException("Error: " + error.getMessage());
                 Log.d("Network", error.getMessage());
+
+                // an error indicates that there's no game available to join.
+                gameInfo.minutesToStart = -1.0;
+                gameInfo.numberOfPlayers = -1;
             }
         };
 
@@ -151,7 +154,10 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Network", Integer.toString(error.networkResponse.statusCode));
+                if (error.networkResponse != null) {
+                    Log.d("Network", Integer.toString(error.networkResponse.statusCode));
+                }
+                noGameAvailableToJoin();
             }
         };
 
@@ -160,5 +166,10 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + JOIN_GAME_URL, requestBody,
                 listener, errorListener);
+    }
+
+    private void noGameAvailableToJoin() {
+        gameInfo.minutesToStart = -1.0;
+        gameInfo.numberOfPlayers = -1;
     }
 }

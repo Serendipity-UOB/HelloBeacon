@@ -1,60 +1,130 @@
 <resources>
-    <!-- KONTAKT API KEY-->
+    <!--*******************************-->
+    <!--*      KONTAKT API KEY        *-->
+    <!--*******************************-->
     <string name="kontakt_io_api_key">pNqcUiJPjCLoeibtwzmjKkZwoPBPGXYS</string>
 
-    <!-- SERVER REQUEST URLS -->
+
+
+    <!--*******************************-->
+    <!--*     SERVER REQUEST URLS     *-->
+    <!--*******************************-->
     <string name="server_address">https://serendipity-game-controller.herokuapp.com</string>
 
-    <string name="register_player_request">/registerPlayer</string>
+    <string name="register_player_request">/registerPlayerTest</string>
 
-    <string name="game_info_request">/gameInfo</string>
-    <string name="join_game_request">/joinGame</string>
+    <string name="game_info_request">/gameInfoTest</string>
+    <string name="join_game_request">/joinGameTest</string>
 
-    <string name="start_info_request">/startInfo</string>
-    <string name="new_target_request">/newTarget</string>
-    <string name="player_update_request">/playerUpdate</string>
-    <string name="home_beacon_request">/atHomeBeacon</string>
-    <string name="exchange_request">/exchangeRequest</string>
+    <string name="start_info_request">/startInfoTest</string>
+    <string name="new_target_request">/newTargetTest</string>
+    <string name="player_update_request">/playerUpdateTest</string>
+    <string name="home_beacon_request">/atHomeBeaconTest</string>
+    <string name="exchange_request">/exchangeRequestTest</string>
     <string name="exchange_response">/exchangeResponse</string>
-    <string name="takedown_request">/takeDown</string>
-    <string name="intercept_request">/intercept</string>
-    <string name="mission_update_request">/missionUpdate</string>
+    <string name="takedown_request">/exposeTest</string>
+    <string name="intercept_request">/interceptTest</string>
+    <string name="mission_update_request">/missionUpdateTest</string>
+    <string name="get_info_request">/endInfoTest</string>
 
-    <string name="get_info_request">/endInfo</string>
 
-    <!-- INTENT KEYS -->
+
+    <!--*******************************-->
+    <!--*         INTENT KEYS         *-->
+    <!--*******************************-->
     <string name="all_players_map_intent_key">all_players_map</string>
     <string name="player_identifiers_intent_key">player_identifiers</string>
 
-    <!-- UI -->
+
+
+    <!--*******************************-->
+    <!--*              UI             *-->
+    <!--*******************************-->
     <string name="app_name">Hacker Hunt</string>
     <string name="go_to_test_request">Go to test request</string>
     <string name="this_is_the_test_request_page">This is the test request page.</string>
     <string name="go_back_home">go back home</string>
     <string name="test_request">Test request</string>
 
-    <string name="title_screen_start_button">start();</string>
+    <!-- Title screen -->
+    <string name="title_screen_start_button">Start</string>
 
-    <string name="create_profile_real_name">Real name</string>
-    <string name="create_profile_hacker_name">Hacker name</string>
+    <!-- Create Profile screen -->
+    <string name="create_profile_real_name">e.g. Jane</string>
+    <string name="create_profile_hacker_name">e.g. Anonymous</string>
+    <string name="create_profile_prompt_message">Create your profile, agent.</string>
+    <string name="enter_your_name_prompt">Enter your real name:</string>
+    <string name="enter_code_name_prompt">Enter your secret code name:</string>
+    <string name="create_profile_error_placeholder">Error: this is an error</string>
+    <string name="create_profile_button">Create profile</string>
+    <string name="create_profile_button_loading">Loading…</string>
+    <string name="create_profile_codename_exists_error">Codename already exists.</string>
+    <string name="create_profile_empty_real_name_error">Please provide a real name.</string>
+    <string name="create_profile_empty_code_name_error">Please provide a codename.</string>
 
+    <!-- Join Game screen -->
     <string name="join_game_players_in_game">Players in game: </string>
-    <string name="join_game_time_until_game">Time until game:</string>
-    <string name="join_game_welcome_message">Welcome, $PLAYER_NAME.</string>
-    <string name="join_game_success">JOIN_SUCCESS</string>
-    <string name="join_game_loading">JOIN_GAME_LOADING</string>
+    <string name="join_game_time_until_game">Time to next game:</string>
+    <string name="join_game_welcome_message">Welcome, agent $PLAYER_NAME.</string>
+    <string name="join_game_success">Join game successful</string>
+    <string name="join_game_loading">Join game loading</string>
+    <string name="join_game_button">Join game</string>
+    <string name="players_in_game_placeholder">3</string>
+    <string name="time_to_game_start_placeholder">4:32</string>
+    <string name="join_game_no_game_available">No game available to join.</string>
 
+    <!-- Player status bar -->
     <string name="gameplay_player_leaderboard_position">Pos:</string>
     <string name="gameplay_player_leaderboard_points">Points:</string>
     <string name="gameplay_player_target">Target:</string>
+    <string name="player_status_bar_name_placeholder">Jack Jones</string>
+    <string name="leaderboard_status_bar_placeholder">#1</string>
+    <string name="player_status_info_separator">|\u00A0</string>
+    <string name="score_status_bar_placeholder">240 rep</string>
+    <string name="player_target_title">Target: </string>
+    <string name="player_target_placeholder">Loading...</string>
+    <string name="time_left_placeholder">8:00</string>
+    <string name="player_name_title">Agent\u00A0</string>
 
+    <!-- Full screen pop up -->
+    <string name="console_start_title">Game Start</string>
+    <string name="console_start_beacon_message">
+        Welcome, agent.\nGo to game zone $BEACON for your first target.
+    </string>
+
+    <string name="console_target_taken_down_title">Too Slow</string>
+    <string name="console_target_taken_down_message">
+        Your target was exposed by another agent.
+        \n\n
+        Return to $BEACON to be assigned a new target.
+    </string>
+
+    <string name="console_taken_down_title">Security Breach</string>
+    <string name="console_taken_down_message">
+        Your mission has been exposed, you have lost 50% of your gathered evidence.
+        \n\n
+        Return to $BEACON, agent.
+    </string>
+
+    <string name="console_expose_success_title">Exchange Success</string>
+    <string name="console_expose_success_message">
+        Good work, agent. Return to $BEACON for your next target.
+        \n\n
+        Reward: 10 reputation.
+    </string>
+
+    <string name="game_over_console_title">Game Over</string>
+    <string name="game_over_console_message">
+        Good work, agent. Touch to view the agent leaderboard.
+    </string>
+
+
+    <!-- Player cards -->
     <string name="gamplay_exchange_button">exchange();</string>
     <string name="gameplay_take_down_button">take_down();</string>
     <string name="exchange_select_player_button">cancel(EXCHANGE);</string>
     <string name="takedown_select_player_button">cancel(TAKEDOWN);</string>
 
-    <string name="game_over_console_message">Incoming message…  \n\nGame Over!\n\nGood work!</string>
-    <string name="console_start_beacon_message">Incoming message…  \n\nGo to $BEACON to receive your first target.\n\n\n- Anon</string>
     <string name="exchange_failed_message">EXCHANGE_FAILED</string>
     <string name="exchange_success_message">EXCHANGE_SUCCESS</string>
     <string name="not_enough_intel_take_down_message">Error: not enough intel has been collected.</string>

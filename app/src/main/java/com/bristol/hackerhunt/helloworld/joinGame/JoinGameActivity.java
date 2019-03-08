@@ -39,11 +39,10 @@ public class JoinGameActivity extends AppCompatActivity {
         this.playerIdentifiers = getIntent().getParcelableExtra("player_identifiers");
 
         replaceStringInTextView(R.id.join_game_welcome_text, "$PLAYER_NAME", playerIdentifiers.getRealName());
-        updateNumberOfPlayersInGame("Loading...");
-        updateTimeLeftUntilGame("Loading...");
+        updateNumberOfPlayersInGame("--");
+        updateTimeLeftUntilGame("--:--");
 
         initializeJoinGameButton();
-
 
         Timer timer = new Timer(true);
         TimerTask task = pollServer(playerIdentifiers, timer);
@@ -86,7 +85,7 @@ public class JoinGameActivity extends AppCompatActivity {
                                     joinGameButton.setVisibility(View.GONE);
                                     TextView joinStatus = findViewById(R.id.join_game_success);
                                     joinStatus.setVisibility(View.VISIBLE);
-                                    joinStatus.setText("NO_GAME_AVAILABLE");
+                                    joinStatus.setText(R.string.join_game_no_game_available);
                                 }
                             }
                     );
@@ -145,7 +144,7 @@ public class JoinGameActivity extends AppCompatActivity {
                 TextView joinStatus = findViewById(R.id.join_game_success);
                 findViewById(R.id.join_game_success).setVisibility(View.VISIBLE);
 
-                (new Timer()).schedule(checkHomeBeaconHasBeenRecieved(joinStatus), 1000);
+                (new Timer()).schedule(checkHomeBeaconHasBeenReceived(joinStatus), 1000);
             }
         });
     }
@@ -170,7 +169,7 @@ public class JoinGameActivity extends AppCompatActivity {
         });
     }
 
-    private TimerTask checkHomeBeaconHasBeenRecieved(final TextView joinStatus) {
+    private TimerTask checkHomeBeaconHasBeenReceived(final TextView joinStatus) {
         final Activity that = this;
         return new TimerTask() {
             @Override
@@ -211,12 +210,22 @@ public class JoinGameActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void updateNumberOfPlayersInGame(String players) {
-        appendStringToTextView(R.id.join_game_players_in_game, getResources().getString(R.string.join_game_players_in_game), players);
+    private void updateNumberOfPlayersInGame(final String players) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((TextView) findViewById(R.id.join_game_players_in_game)).setText(players);
+            }
+        });
     }
 
-    private void updateTimeLeftUntilGame(String time) {
-        appendStringToTextView(R.id.join_game_time_until_game, getResources().getString(R.string.join_game_time_until_game), time);
+    private void updateTimeLeftUntilGame(final String time) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((TextView) findViewById(R.id.join_game_time_until_game)).setText(time);
+            }
+        });
     }
 
     private void replaceStringInTextView(final int viewId, final String oldString, final String newString) {
@@ -231,15 +240,5 @@ public class JoinGameActivity extends AppCompatActivity {
                     }
                 }
         );
-    }
-
-    private void appendStringToTextView(final int viewId, final String text, final String suffix) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextView textView = findViewById(viewId);
-                textView.setText(text + " " + suffix);
-            }
-        });
     }
 }
