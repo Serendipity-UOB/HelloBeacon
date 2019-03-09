@@ -51,6 +51,55 @@ public class NotificationView implements INotificationView {
         popUpNotification();
     }
 
+    @Override
+    public void interceptFailedNoExchange(String playerRealName) {
+        setBadNotificationCard();
+        setNotificationText(insertPlayerName(R.string.notification_intercept_failed_no_exchanging, playerRealName));
+        popUpNotification();
+    }
+
+    @Override
+    public void interceptFailedNoEvidenceShared() {
+        setBadNotificationCard();
+        setNotificationText(R.string.notification_intercept_failed_no_evidence);
+        popUpNotification();
+    }
+
+    @Override
+    public void interceptSucceeded(String targetName, String mutualContactName) {
+        setPositiveNotificationCard();
+        setNotificationText(insertTwoPlayerNames(R.string.notification_intercept_succeeded, targetName, mutualContactName));
+        popUpNotification();
+    }
+
+    @Override
+    public void exchangeSuccessful(String interacteeName, String mutualContactName) {
+        setPositiveNotificationCard();
+        setNotificationText(insertTwoPlayerNames(R.string.notification_exchange_successful, interacteeName,
+                mutualContactName));
+        popUpNotification();
+    }
+
+    @Override
+    public void exchangeFailedRejection(String interacteeName) {
+        setBadNotificationCard();
+        setNotificationText(insertPlayerName(R.string.notification_exchange_rejected, interacteeName));
+        popUpNotification();
+    }
+
+    @Override
+    public void exchangeFailedTimedOut(String interacteeName) {
+        setBadNotificationCard();
+        setNotificationText(insertPlayerName(R.string.notification_exchange_timed_out, interacteeName));
+        popUpNotification();
+    }
+
+
+    private String insertTwoPlayerNames(int stringId, String playerName1, String playerName2) {
+        String text = notificationOverlay.getContext().getResources().getString(stringId);
+        return text.replace("$PLAYER_NAME_1", playerName1).replace("$PLAYER_NAME_2", playerName2);
+    }
+
     private String insertPlayerName(int stringId, String playerName) {
         String text = notificationOverlay.getContext().getResources().getString(stringId);
         return text.replace("$PLAYER_NAME", playerName);

@@ -10,5 +10,18 @@ public interface INotificationView {
 
     void exchangeRequested(String playerRealName);
 
+    void exchangeSuccessful(String interacteeName, String mutualContactName);
+
+    void exchangeFailedRejection(String interacteeName);
+
+    void exchangeFailedTimedOut(String interacteeName);
+
     void attemptingToIntercept(String playerRealName);
+
+    void interceptFailedNoExchange(String playerRealName);
+
+    void interceptFailedNoEvidenceShared();
+
+    void interceptSucceeded(String targetName, String mutualContactName);
+
 }

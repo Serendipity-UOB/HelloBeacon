@@ -265,7 +265,6 @@ public class GameplayActivity extends AppCompatActivity {
                     notificationView.exposeFailedNotYourTarget(targetRealName);
                 }
                 else {
-                    consoleView.executingTakedownPrompt();
                     try {
                         serverRequestsController.exposeRequest(targetId);
                     } catch (JSONException e) {
@@ -306,7 +305,7 @@ public class GameplayActivity extends AppCompatActivity {
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            consoleView.exchangeFailedPrompt();
+                            notificationView.exchangeFailedTimedOut(getPlayerName(interacteeId));
                         }
                     });
                     cancel();
@@ -323,7 +322,8 @@ public class GameplayActivity extends AppCompatActivity {
                             that.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    consoleView.exchangeSuccessPrompt();
+                                    notificationView.exchangeSuccessful(getPlayerName(interacteeId),
+                                            getPlayerName(details.gainedIntelPlayerIds.get(1)));
                                 }
                             });
                         }
