@@ -156,7 +156,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 String homeBeaconName = gameStateController.getHomeBeaconName();
                 closeConsoleOnHomeBeaconNearby = true;
-                consoleView.takedownSuccessPrompt(homeBeaconName);
+                consoleView.exposeSuccessPrompt(homeBeaconName);
                 newTargetRequested = true;
             }
         };

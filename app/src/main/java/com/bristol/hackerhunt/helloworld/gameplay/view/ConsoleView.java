@@ -78,7 +78,7 @@ public class ConsoleView implements IConsoleView {
                     playersTargetTakenDownPrompt(currentHomeBeacon);
                 }
                 else if (takedownSuccessInProgress) {
-                    takedownSuccessPrompt(currentHomeBeacon);
+                    exposeSuccessPrompt(currentHomeBeacon);
                 }
                 else {
                     overlay.setVisibility(View.GONE);
@@ -227,14 +227,7 @@ public class ConsoleView implements IConsoleView {
     }
 
     @Override
-    public void executingTakedownPrompt() {
-        disableCloseConsole();
-        setConsoleMessage("TAKEDOWN_INIT\n\nExecuting attack...");
-        this.interactionInProgress = false;
-    }
-
-    @Override
-    public void takedownSuccessPrompt(String homeBeaconName) {
+    public void exposeSuccessPrompt(String homeBeaconName) {
         disableCloseConsole();
 
         this.currentHomeBeacon = homeBeaconName;
@@ -256,50 +249,10 @@ public class ConsoleView implements IConsoleView {
     }
 
     @Override
-    public void takedownNotYourTargetPrompt() {
-        enableCloseConsoleWithoutOverride();
-
-        this.interactionInProgress = false;
-        setConsoleMessage("TAKEDOWN_FAILURE\n\nNot your target");
-    }
-
-    @Override
-    public void takedownInsufficientIntelPrompt() {
-        enableCloseConsoleWithoutOverride();
-
-        this.interactionInProgress = false;
-        setConsoleMessage("TAKEDOWN_FAILURE\n\nInsufficient Intel");
-    }
-
-    @Override
     public void closeConsole() {
         if (overlay.getVisibility() != View.GONE && !interactionInProgress) {
             overlay.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void exchangeRequestedPrompt() {
-        disableCloseConsole();
-
-        this.interactionInProgress = true;
-        setConsoleMessage("EXCHANGE_REQUESTED\n\nWaiting for handshake");
-    }
-
-    @Override
-    public void exchangeSuccessPrompt() {
-        enableCloseConsoleWithoutOverride();
-
-        this.interactionInProgress = false;
-        setConsoleMessage("EXCHANGE_SUCCESS\n\nIntel gained");
-    }
-
-    @Override
-    public void exchangeFailedPrompt() {
-        enableCloseConsoleWithoutOverride();
-
-        this.interactionInProgress = false;
-        setConsoleMessage("EXCHANGE_FAIL\n\nHandshake incomplete");
     }
 
     @Override
