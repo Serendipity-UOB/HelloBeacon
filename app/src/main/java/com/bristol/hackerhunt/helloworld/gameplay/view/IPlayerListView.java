@@ -48,16 +48,15 @@ public interface IPlayerListView {
     void updateNearbyPlayers(List<String> newNearbyPlayerIds);
 
     /**
-     * Display the flag in the player card to indicate that an exchange has been requested.
-     * @param playerId The player ID that an exchange was requested from.
+     * Reverts the player cards and buttons back to a state where no exchanges are taking place.
      */
-    void displayExchangeRequested(String playerId);
+    void exchangeRequestComplete(String playerId);
+
 
     /**
-     * Hide the flag in the player card to indicate that an exchange has been completed.
-     * @param playerId The player ID that an exchange was requested from.
+     * Reverts the player cards and buttons back to a state where no intercepts are taking place.
      */
-    void hideExchangeRequested(String playerId);
+    void interceptAttemptComplete();
 
     /**
      * Darkens every element in the list apart from the player card of the given player ID.
@@ -70,5 +69,4 @@ public interface IPlayerListView {
      */
     void restore();
 
-    void beginIntercept();
 }

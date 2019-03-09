@@ -283,8 +283,6 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(String interacteeId) {
                 notificationView.exchangeRequested(getPlayerName(interacteeId));
                 beginExchangeServerPolling(interacteeId);
-
-                playerListView.displayExchangeRequested(interacteeId);
                 restoreScreenOnPlayerCardPress();
             }
         };
@@ -308,11 +306,14 @@ public class GameplayActivity extends AppCompatActivity {
                         }
                     });
                     cancel();
+                    playerListView.exchangeRequestComplete(interacteeId);
                 }
                 else {
                     try {
                         if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
                             cancel();
+                            playerListView.exchangeRequestComplete(interacteeId);
+
                             /* REPLACING BY INCREASING INTEL IN SERVER REQUESTS
                             for (String id : details.gainedIntelPlayerIds) {
                                 gameStateController.increasePlayerIntel(id);

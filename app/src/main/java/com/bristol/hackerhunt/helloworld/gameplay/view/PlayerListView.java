@@ -234,7 +234,6 @@ public class PlayerListView implements IPlayerListView {
         });
     }
 
-    // TODO: attach to intercept button.
     private void setInterceptOnClickListener(final String playerId) {
         getInterceptButton(playerId).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -293,6 +292,7 @@ public class PlayerListView implements IPlayerListView {
             @Override
             public void onClick(View view) {
                 exchangeStarted = true;
+                displayExchangeRequested(playerId);
                 beginExchangeOnClickRunner.run(playerId);
                 disableAllExchangeButtons();
             }
@@ -348,12 +348,10 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
-    @Override
     public void displayExchangeRequested(String playerId) {
         getExchangeRequestedFlag(playerId).setVisibility(View.VISIBLE);
     }
 
-    @Override
     public void hideExchangeRequested(String playerId) {
         getExchangeRequestedFlag(playerId).setVisibility(View.INVISIBLE);
     }
@@ -547,19 +545,6 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
-    @Override
-    public void beginIntercept() {
-        this.interceptStarted = true;
-        for (String playerId : playerIdListItemIdMap.keySet()) {
-            if (!nearbyPlayerIds.contains(playerId)) {
-                darkenFarAwayPlayerEntries(playerId);
-            }
-            else {
-                setInterceptOnClickListener(playerId);
-            }
-        }
-    }
-
     private void restoreUiColours(String playerId) {
         View playerCard = getPlayerCard(playerId);
 
@@ -607,6 +592,19 @@ public class PlayerListView implements IPlayerListView {
         ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
                 .setTextColor(getColor(R.color.player_card_name));
         ((ImageView) playerCard.findViewById(R.id.exchange_requested_icon)).clearColorFilter();
+    }
+
+    @Override
+    public void exchangeRequestComplete(String playerId) {
+        exchangeStarted = false;
+        enableAllExchangeButtons();
+        hideExchangeRequested(playerId);
+    }
+
+    @Override
+    public void interceptAttemptComplete() {
+        interceptStarted = false;
+        enableAllInterceptButtons();
     }
 
     private int getColor(int id) {
