@@ -238,8 +238,7 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(String interacteeId) {
-                String name = gameStateController.getPlayerIdRealNameMap().get(interacteeId);
-                notificationView.attemptingToIntercept(name);
+                notificationView.attemptingToIntercept(getPlayerName(interacteeId));
 
                 try {
                     serverRequestsController.interceptRequest(interacteeId); //TODO Define
@@ -284,7 +283,7 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(String interacteeId) {
-                consoleView.exchangeRequestedPrompt();
+                notificationView.exchangeRequested(getPlayerName(interacteeId));
                 beginExchangeServerPolling(interacteeId);
 
                 playerListView.displayExchangeRequested(interacteeId);
@@ -459,5 +458,9 @@ public class GameplayActivity extends AppCompatActivity {
                 restoreScreenOnPlayerCardPressRunnable().run(exemptPlayerId);
             }
         };
+    }
+
+    private String getPlayerName(String playerId) {
+        return gameStateController.getPlayerIdRealNameMap().get(playerId);
     }
 }

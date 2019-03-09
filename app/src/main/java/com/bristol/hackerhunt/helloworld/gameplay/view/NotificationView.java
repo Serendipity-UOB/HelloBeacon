@@ -38,6 +38,13 @@ public class NotificationView implements INotificationView {
     }
 
     @Override
+    public void exchangeRequested(String playerRealName) {
+        setNeutralNotificationCard();
+        setNotificationText(insertPlayerName(R.string.notification_exchange_requested, playerRealName));
+        popUpNotification();
+    }
+
+    @Override
     public void attemptingToIntercept(String playerRealName) {
         setNeutralNotificationCard();
         setNotificationText(insertPlayerName(R.string.notification_attempting_intercept, playerRealName));

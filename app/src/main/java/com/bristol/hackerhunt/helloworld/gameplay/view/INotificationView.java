@@ -2,11 +2,13 @@ package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 public interface INotificationView {
 
-    public void exposeFailedInsufficientEvidence(String playerRealName);
+    void exposeFailedInsufficientEvidence(String playerRealName);
 
-    public void exposeFailedNotYourTarget(String playerCodName);
+    void exposeFailedNotYourTarget(String playerCodName);
 
-    public void exposeFailedNetworkError();
+    void exposeFailedNetworkError();
 
-    public void attemptingToIntercept(String playerRealName);
+    void exchangeRequested(String playerRealName);
+
+    void attemptingToIntercept(String playerRealName);
 }
