@@ -118,6 +118,54 @@
         Good work, agent. Touch to view the agent leaderboard.
     </string>
 
+    <!-- Little notifications -->
+    <string name="notification_exchange_requested">
+        Exchange with $PLAYER_NAME requested.
+    </string>
+
+    <string name="notification_exchange_successful">
+        Exchange successful.\n
+        $PLAYER_NAME_1 gave you evidence on $PLAYER_NAME_2.
+        You also found some on $PLAYER_NAME_1.
+    </string>
+
+    <string name="notification_exchange_rejected">
+        Exchange failed.\n
+        $PLAYER_NAME has rejected your request.
+    </string>
+
+    <string name="notification_exchange_timed_out">
+        Exchange failed.\n
+        $PLAYER_NAME didn't respond fast enough.
+    </string>
+
+    <string name="notification_attempting_intercept">
+        Attempting to intercept $PLAYER_NAME\'s Exchange.
+    </string>
+
+    <string name="notification_expose_insufficient_evidence">
+        Expose failed.\n
+        Insufficient evidence on $PLAYER_NAME.
+    </string>
+
+    <string name="notification_expose_wrong_target">
+        Expose failed.\n
+        $PLAYER_NAME is not your target.
+    </string>
+
+    <string name="notification_intercept_failed_no_exchanging">
+        Intercept on $PLAYER_NAME failed, $PLAYER_NAME wasn\'t exchanging.
+    </string>
+
+    <string name="notification_intercept_failed_no_evidence">
+        Intercept failed, no evidence was shared.
+    </string>
+
+    <string name="notification_intercept_succeeded">
+        Intercept on $PLAYER_NAME_1 succeeded.\n
+        You also gained evidence about $PLAYER_NAME_2.
+    </string>
+
 
     <!-- Player cards -->
     <string name="gamplay_exchange_button">exchange();</string>
