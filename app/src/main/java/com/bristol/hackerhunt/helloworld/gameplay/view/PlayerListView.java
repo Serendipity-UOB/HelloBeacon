@@ -227,6 +227,39 @@ public class PlayerListView implements IPlayerListView {
         });
     }
 
+    // TODO: attach to intercept button.
+    private void setInterceptOnClickListener(final String playerId) {
+        getInterceptButton(playerId).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                beginSelectedInterceptOnClickRunner.run(playerId);
+            }
+        });
+    }
+
+    private void enableInterceptButton(String playerId) {
+        getInterceptButton(playerId).setBackgroundResource(R.drawable.intercept_button);
+        setInterceptOnClickListener(playerId);
+    }
+
+    private void enableAllInterceptButtons() {
+        for (String playerId : nearbyPlayerIds) {
+            enableExchangeButton(playerId);
+        }
+    }
+
+    private void disableInterceptButton(String playerId) {
+        View button = getInterceptButton(playerId);
+        button.setBackgroundResource(R.drawable.intercept_button_greyed);
+        button.setOnClickListener(null);
+    }
+
+    private void disableAllInterceptButtons() {
+        for (String playerId : nearbyPlayerIds) {
+            disableInterceptButton(playerId);
+        }
+    }
+
     @Override
     public void increasePlayerIntel(String playerId, int intelIncrement) {
         if (!playerIdListItemIdMap.containsKey(playerId)) {
@@ -409,6 +442,10 @@ public class PlayerListView implements IPlayerListView {
         return getPlayerCard(playerId).findViewById(R.id.gameplay_exchange_button);
     }
 
+    public View getInterceptButton(String playerId) {
+        return getPlayerCard(playerId).findViewById(R.id.gameplay_intercept_button);
+    }
+
     private void removeExchangeOnClickListener(String playerId) {
         getExchangeButton(playerId).setOnClickListener(null);
     }
@@ -567,15 +604,4 @@ public class PlayerListView implements IPlayerListView {
         return playerList.getResources().getColor(id);
     }
 
-    // TODO: attach to intercept button.
-    private void setInterceptOnClickListener(final String playerId) {
-        int viewId = playerIdListItemIdMap.get(playerId);
-        View entry = playerList.findViewById(viewId);
-        entry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                beginSelectedInterceptOnClickRunner.run(playerId);
-            }
-        });
-    }
 }
