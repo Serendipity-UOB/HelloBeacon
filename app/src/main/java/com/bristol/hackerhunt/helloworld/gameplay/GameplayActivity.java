@@ -238,14 +238,15 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(String interacteeId) {
-                consoleView.executingInterceptPrompt(); //TODO Define
+                String name = gameStateController.getPlayerIdRealNameMap().get(interacteeId);
+                notificationView.attemptingToIntercept(name);
+
                 try {
                     serverRequestsController.interceptRequest(interacteeId); //TODO Define
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                // TODO: hook up with UI buttons.
                 restoreScreenOnPlayerCardPress();
             }
         };

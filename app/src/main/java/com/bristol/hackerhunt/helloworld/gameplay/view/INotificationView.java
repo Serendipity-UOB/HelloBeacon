@@ -7,4 +7,6 @@ public interface INotificationView {
     public void exposeFailedNotYourTarget(String playerCodName);
 
     public void exposeFailedNetworkError();
+
+    public void attemptingToIntercept(String playerRealName);
 }

@@ -37,6 +37,18 @@ public class NotificationView implements INotificationView {
         popUpNotification();
     }
 
+    @Override
+    public void attemptingToIntercept(String playerRealName) {
+        setNeutralNotificationCard();
+        setNotificationText(insertPlayerName(R.string.notification_attempting_intercept, playerRealName));
+        popUpNotification();
+    }
+
+    private String insertPlayerName(int stringId, String playerName) {
+        String text = notificationOverlay.getContext().getResources().getString(stringId);
+        return text.replace("$PLAYER_NAME", playerName);
+    }
+
     private void popUpNotification() {
         notificationOverlay.setVisibility(View.VISIBLE);
         new Handler().postDelayed(new Runnable() {
