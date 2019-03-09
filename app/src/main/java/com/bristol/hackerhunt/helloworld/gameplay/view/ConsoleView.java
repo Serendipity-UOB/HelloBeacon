@@ -20,8 +20,6 @@ public class ConsoleView implements IConsoleView {
     private final TextView consoleViewText;
     private final TextView consoleTapToCloseMessage;
 
-    private final Typewriter typewriter;
-
     // status flags
     private String currentHomeBeacon = "";
     private boolean interactionInProgress;
@@ -36,8 +34,6 @@ public class ConsoleView implements IConsoleView {
         this.consoleViewText = overlay.findViewById(R.id.gameplay_console_text);
         this.consoleTapToCloseMessage = overlay.findViewById(R.id.console_close_message);
         this.consoleWrapper = overlay.findViewById(R.id.full_pop_up_wrapper);
-
-        this.typewriter = new Typewriter(TYPEWRITER_SPEED);
 
         this.interactionInProgress = false;
         this.playerGotTakenDownInProgress = false;

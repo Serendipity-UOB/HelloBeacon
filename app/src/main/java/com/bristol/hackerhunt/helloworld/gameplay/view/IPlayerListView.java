@@ -52,7 +52,6 @@ public interface IPlayerListView {
      */
     void exchangeRequestComplete(String playerId);
 
-
     /**
      * Reverts the player cards and buttons back to a state where no intercepts are taking place.
      */
