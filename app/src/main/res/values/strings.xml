@@ -170,6 +170,11 @@
         You also gained evidence about $PLAYER_NAME_2.
     </string>
 
+    <!-- Exchange request dialogue box -->
+    <string name="exchange_request_message">
+        $PLAYER_NAME wants to exchange evidence with you.
+    </string>
+
 
     <!-- Player cards -->
     <string name="gamplay_exchange_button">exchange();</string>

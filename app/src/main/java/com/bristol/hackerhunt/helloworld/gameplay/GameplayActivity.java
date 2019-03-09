@@ -22,7 +22,9 @@ import com.bristol.hackerhunt.helloworld.gameplay.controller.IBeaconController;
 import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameStateController;
 import com.bristol.hackerhunt.helloworld.gameplay.controller.IGameplayServerRequestsController;
 import com.bristol.hackerhunt.helloworld.gameplay.view.ConsoleView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.ExchangeRequestView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IConsoleView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.IExchangeRequestView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.INotificationView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
@@ -52,6 +54,7 @@ public class GameplayActivity extends AppCompatActivity {
     private IPlayerStatusBarView playerStatusBarView;
     private IConsoleView consoleView;
     private INotificationView notificationView;
+    private IExchangeRequestView exchangeRequestView;
 
     private IGameplayServerRequestsController serverRequestsController;
     private IGameStateController gameStateController;
@@ -72,6 +75,7 @@ public class GameplayActivity extends AppCompatActivity {
         initializePlayerListView();
         initializePlayerStatusBarView();
         initializeNotificationView();
+        initializeExchangeRequestView();
 
         initializeGameStateController();
         initializeServerRequestController();
@@ -179,6 +183,30 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeNotificationView() {
         this.notificationView = new NotificationView(findViewById(R.id.gameplay_notification_overlay));
+    }
+
+    private void initializeExchangeRequestView() {
+        this.exchangeRequestView = new ExchangeRequestView(findViewById(R.id.exchange_request_overlay),
+                onAcceptExchangeRequestRunnable(),
+                onRejectExchangeRequestRunnable());
+    }
+
+    private StringInputRunnable onAcceptExchangeRequestRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String playerId) {
+                // TODO: code that runs when the player accepts an exchange request from playerId.
+            }
+        };
+    }
+
+    private StringInputRunnable onRejectExchangeRequestRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String playerId) {
+                // TODO: code that runs when the player rejects an exchange request from playerId.
+            }
+        };
     }
 
     private TimerTask pollServer() {
