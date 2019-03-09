@@ -21,9 +21,8 @@ public class GameStateController implements IGameStateController {
     private final IPlayerStatusBarView playerStatusBarController;
 
     private final Map<String, Map<String, Integer>> beaconMajorMinorRssiMap;
-    private final Map<String, String> beaconMajorNameMap;
     private String nearestBeaconMajor;
-    private final String homeBeaconMajor;
+    private final String homeBeaconName;
     private Runnable onNearestBeaconHomeRunnable;
 
     private final PlayerIdentifiers playerIdentifiers;
@@ -40,7 +39,6 @@ public class GameStateController implements IGameStateController {
     public GameStateController(IPlayerListView playerListController,
                                IPlayerStatusBarView playerStatusBarController,
                                PlayerIdentifiers playerIdentifiers,
-                               String homeBeaconMajor,
                                String homeBeaconName) {
         this.playerListController = playerListController;
         this.playerStatusBarController = playerStatusBarController;
@@ -50,9 +48,7 @@ public class GameStateController implements IGameStateController {
         this.playerUpdates = new ArrayList<>();
 
         this.beaconMajorMinorRssiMap = new HashMap<>();
-        this.beaconMajorNameMap = new HashMap<>();
-        this.homeBeaconMajor = homeBeaconMajor;
-        this.beaconMajorNameMap.put(homeBeaconMajor, homeBeaconName);
+        this.homeBeaconName = homeBeaconName;
 
         this.points = 0;
         this.leaderboardPosition = "Loading...";
@@ -75,7 +71,7 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public String getHomeBeaconName() {
-        return beaconMajorNameMap.get(homeBeaconMajor);
+        return homeBeaconName;
     }
 
     @Override

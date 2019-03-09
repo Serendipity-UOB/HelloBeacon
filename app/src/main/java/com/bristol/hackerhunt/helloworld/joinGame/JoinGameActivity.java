@@ -200,7 +200,7 @@ public class JoinGameActivity extends AppCompatActivity {
     private void goToGameplayActivity(PlayerIdentifiers playerIdentifiers) {
         Intent intent = new Intent(JoinGameActivity.this, GameplayActivity.class);
         intent.putExtra("player_identifiers", playerIdentifiers);
-        intent.putExtra("start_beacon_major", gameInfo.startBeaconMajor);
+        // intent.putExtra("start_beacon_major", gameInfo.startBeaconMajor);
         intent.putExtra("start_beacon_name", gameInfo.startBeaconName);
         startActivity(intent);
     }
