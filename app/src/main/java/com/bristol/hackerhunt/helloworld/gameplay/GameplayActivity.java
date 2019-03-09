@@ -246,6 +246,7 @@ public class GameplayActivity extends AppCompatActivity {
                 }
 
                 // TODO: hook up with UI buttons.
+                restoreScreenOnPlayerCardPress();
             }
         };
     }

@@ -140,7 +140,7 @@
 
     <string name="notification_exchange_timed_out">
         Exchange failed.\n
-        $PLAYER_NAME didn't respond fast enough.
+        $PLAYER_NAME didn\'t respond fast enough.
     </string>
 
     <string name="notification_attempting_intercept">

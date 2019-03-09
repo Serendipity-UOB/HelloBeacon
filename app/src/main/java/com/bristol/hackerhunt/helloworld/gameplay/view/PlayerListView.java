@@ -182,6 +182,13 @@ public class PlayerListView implements IPlayerListView {
             else {
                 enableExchangeButton(playerId);
             }
+
+            if (interceptStarted) {
+                disableInterceptButton(playerId);
+            }
+            else {
+                enableInterceptButton(playerId);
+            }
         }
         else {
             darkenFarAwayPlayerEntries(playerId);
@@ -232,7 +239,9 @@ public class PlayerListView implements IPlayerListView {
         getInterceptButton(playerId).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                interceptStarted = true;
                 beginSelectedInterceptOnClickRunner.run(playerId);
+                disableAllInterceptButtons();
             }
         });
     }

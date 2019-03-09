@@ -174,7 +174,7 @@ public class JoinGameActivity extends AppCompatActivity {
         return new TimerTask() {
             @Override
             public void run() {
-                if (gameInfo.startBeaconMajor != null) {
+                if (gameInfo.startBeaconName != null) {
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
