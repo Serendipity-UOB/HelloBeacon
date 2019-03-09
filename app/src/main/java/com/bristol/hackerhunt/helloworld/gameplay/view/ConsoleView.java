@@ -134,7 +134,7 @@ public class ConsoleView implements IConsoleView {
     private void goToStartBeaconConsoleMessage(String homeBeaconName) {
         String message = overlay.getContext().getString(R.string.console_start_beacon_message);
         message = message.replace("$BEACON", homeBeaconName);
-        consoleMessage(message);
+        setConsoleMessage(message);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class ConsoleView implements IConsoleView {
         String message = consoleView.getResources()
                 .getString(R.string.console_target_taken_down_message);
         message = message.replace("$BEACON", homeBeaconName);
-        consoleMessage(message);
+        setConsoleMessage(message);
     }
 
     @Override
@@ -177,7 +177,7 @@ public class ConsoleView implements IConsoleView {
         String message = consoleView.getResources()
                 .getString(R.string.console_taken_down_message);
         message = message.replace("$BEACON", homeBeaconName);
-        consoleMessage(message);
+        setConsoleMessage(message);
     }
 
     @Override
@@ -185,7 +185,7 @@ public class ConsoleView implements IConsoleView {
         disableCloseConsole();
 
         setNeutralConsole();
-        consoleMessage(context.getString(R.string.game_over_console_message));
+        setConsoleMessage(context.getString(R.string.game_over_console_message));
         setConsoleTitle(R.string.game_over_console_title);
 
         this.interactionInProgress = false;
@@ -203,23 +203,33 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void missionUpdatePrompt(String beaconName, String missionStatement) {
-        // TODO
+        // TODO: make this update close when the beacon is within range.
+        enableCloseConsole(); // for testing
+        setNeutralConsole();
+        setConsoleMessage(missionStatement);
+        setConsoleTitle(R.string.mission_update_title);
     }
 
     @Override
     public void missionSuccessPrompt(String missionSuccessMessage) {
-        // TODO
+        enableCloseConsole();
+        setGoodConsole();
+        setConsoleMessage(missionSuccessMessage);
+        setConsoleTitle(R.string.mission_success_title);
     }
 
     @Override
     public void missionFailedPrompt(String missionFailedMessage) {
-        // TODO
+        enableCloseConsole();
+        setBadConsole();
+        setConsoleMessage(missionFailedMessage);
+        setConsoleTitle(R.string.mission_failed_title);
     }
 
     @Override
     public void executingTakedownPrompt() {
         disableCloseConsole();
-        consoleMessage("TAKEDOWN_INIT\n\nExecuting attack...");
+        setConsoleMessage("TAKEDOWN_INIT\n\nExecuting attack...");
         this.interactionInProgress = false;
     }
 
@@ -240,12 +250,12 @@ public class ConsoleView implements IConsoleView {
         String message = consoleView.getResources()
                 .getString(R.string.console_expose_success_message);
         message = message.replace("$HOME", homeBeaconName);
-        consoleMessage(message);
+        setConsoleMessage(message);
 
         this.interactionInProgress = false;
     }
 
-    private void consoleMessage(String message) {
+    private void setConsoleMessage(String message) {
         consoleViewText.setText(message);
         overlay.setVisibility(View.VISIBLE);
     }
@@ -255,7 +265,7 @@ public class ConsoleView implements IConsoleView {
         enableCloseConsoleWithoutOverride();
 
         this.interactionInProgress = false;
-        consoleMessage("TAKEDOWN_FAILURE\n\nNot your target");
+        setConsoleMessage("TAKEDOWN_FAILURE\n\nNot your target");
     }
 
     @Override
@@ -263,7 +273,7 @@ public class ConsoleView implements IConsoleView {
         enableCloseConsoleWithoutOverride();
 
         this.interactionInProgress = false;
-        consoleMessage("TAKEDOWN_FAILURE\n\nInsufficient Intel");
+        setConsoleMessage("TAKEDOWN_FAILURE\n\nInsufficient Intel");
     }
 
     @Override
@@ -278,7 +288,7 @@ public class ConsoleView implements IConsoleView {
         disableCloseConsole();
 
         this.interactionInProgress = true;
-        consoleMessage("EXCHANGE_REQUESTED\n\nWaiting for handshake");
+        setConsoleMessage("EXCHANGE_REQUESTED\n\nWaiting for handshake");
     }
 
     @Override
@@ -286,7 +296,7 @@ public class ConsoleView implements IConsoleView {
         enableCloseConsoleWithoutOverride();
 
         this.interactionInProgress = false;
-        consoleMessage("EXCHANGE_SUCCESS\n\nIntel gained");
+        setConsoleMessage("EXCHANGE_SUCCESS\n\nIntel gained");
     }
 
     @Override
@@ -294,7 +304,7 @@ public class ConsoleView implements IConsoleView {
         enableCloseConsoleWithoutOverride();
 
         this.interactionInProgress = false;
-        consoleMessage("EXCHANGE_FAIL\n\nHandshake incomplete");
+        setConsoleMessage("EXCHANGE_FAIL\n\nHandshake incomplete");
     }
 
     @Override

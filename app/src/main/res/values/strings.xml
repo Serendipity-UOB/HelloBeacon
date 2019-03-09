@@ -118,6 +118,10 @@
         Good work, agent. Touch to view the agent leaderboard.
     </string>
 
+    <string name="mission_update_title">Mission update</string>
+    <string name="mission_success_title">Mission success</string>
+    <string name="mission_failed_title">Mission failed</string>
+
     <!-- Little notifications -->
     <string name="notification_exchange_requested">
         Exchange with $PLAYER_NAME requested.
