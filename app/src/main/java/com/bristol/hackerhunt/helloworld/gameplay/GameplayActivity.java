@@ -221,6 +221,8 @@ public class GameplayActivity extends AppCompatActivity {
                                 }
                             });
                         } else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                            final long t0 = System.currentTimeMillis();
+
                             //TODO Do something maybe??
                             //Haven't set this for exchange response
                         }
