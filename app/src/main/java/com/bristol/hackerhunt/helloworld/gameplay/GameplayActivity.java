@@ -196,26 +196,23 @@ public class GameplayActivity extends AppCompatActivity {
     private StringInputRunnable onAcceptExchangeRequestRunnable() {
         final Activity that = this;
         return new StringInputRunnable() {
-            
+
             @Override
             public void run(final String playerId) {
-                // TODO: code that runs when the player accepts an exchange request from playerId.
                 final InteractionDetails details = new InteractionDetails();
-                serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
+                try {
+                    serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
 
-                if (details.status.equals(InteractionStatus.FAILED)) {
-                    that.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            notificationView.exchangeFailedTimedOut(playerId);
-                        }
-                    });
-                }
-                else {
-                    try {
+                    if (details.status.equals(InteractionStatus.FAILED)) {
+                        that.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                notificationView.exchangeFailedTimedOut(playerId);
+                            }
+                        });
+                    } else {
                         if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
-                            playerListView.exchangeRequestComplete(playerId);
-
+                            //playerListView.exchangeRequestComplete(playerId);
                             that.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -223,24 +220,44 @@ public class GameplayActivity extends AppCompatActivity {
                                             getPlayerName(details.gainedIntelPlayerIds.get(1)));
                                 }
                             });
-                        }
-                        else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                        } else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
                             //TODO Do something maybe??
                             //Haven't set this for exchange response
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         };
     }
 
     private StringInputRunnable onRejectExchangeRequestRunnable() {
+        final Activity that = this;
         return new StringInputRunnable() {
             @Override
-            public void run(String playerId) {
-                // TODO: code that runs when the player rejects an exchange request from playerId.
+            public void run(final String playerId) {
+                final InteractionDetails details = new InteractionDetails();
+                try {
+                    serverRequestsController.exchangeResponse(playerId, REJECT, details);
+                    if (details.status.equals(InteractionStatus.REJECTED)) {
+                        that.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                notificationView.exchangeFailedRejection(playerId);
+                                //TODO Maybe sends the wrong message since user rejects not playerId
+                            }
+                        });
+                    }
+                    else {
+                        //Some error in server stuff
+                        //Maybe just let it time out??
+                        //Better than trying again
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         };
     }

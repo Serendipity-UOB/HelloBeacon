@@ -446,10 +446,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         details.status = InteractionStatus.FAILED;
     }
 
+    private void rejectedExchange(InteractionDetails details) {
+        details.status = InteractionStatus.REJECTED;
+    }
+
     private JSONObject exchangeRequestBody(String interacteeId) throws JSONException {
         JSONObject requestBody = new JSONObject();
-        requestBody.put("interacter_id", gameStateController.getPlayerId());
-        requestBody.put("interactee_id", interacteeId);
+        requestBody.put("requester_id", gameStateController.getPlayerId());
+        requestBody.put("responder_id", interacteeId);
 
         JSONArray contactIds = new JSONArray();
         for (String playerId : gameStateController.getPlayerIdRealNameMap().keySet()) {
@@ -478,19 +482,22 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if (statusCode == 200){
+                if (statusCode == 202){
                     try {
                         successfulExchange(interacteeId, details, response);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-                else if (statusCode == 204){
+                else if (statusCode == 206){
                     try {
                         pendingExchange(interacteeId, details, response);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }
+                else if (statusCode == 205){
+                    rejectedExchange(details);
                 }
                 statusCode = 0;
             }
