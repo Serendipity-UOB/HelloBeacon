@@ -78,7 +78,7 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
                     onProfileInvalidRunnable.run("There is currently no game available to join.");
                 }
                 else if (error.networkResponse != null && error.networkResponse.statusCode == 400) {
-                    onProfileInvalidRunnable.run("Codename already exists.");
+                    onProfileInvalidRunnable.run("Code name is taken.");
                 }
                 else {
                     Log.d("Network","Message:" + error.toString());
