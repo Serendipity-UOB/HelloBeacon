@@ -194,12 +194,23 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private StringInputRunnable onAcceptExchangeRequestRunnable() {
-        final Activity that = this;
         return new StringInputRunnable() {
 
             @Override
             public void run(final String playerId) {
-                final InteractionDetails details = new InteractionDetails();
+                beginExchangeResponseServerPolling(playerId);
+            }
+        };
+    }
+
+    private void beginExchangeResponseServerPolling(final String playerId) {
+        final Activity that = this;
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            final InteractionDetails details = new InteractionDetails();
+            @Override
+            public void run() {
                 try {
                     serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
 
@@ -210,6 +221,7 @@ public class GameplayActivity extends AppCompatActivity {
                                 notificationView.exchangeFailedTimedOut(playerId);
                             }
                         });
+                        cancel();
                     } else {
                         if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
                             //playerListView.exchangeRequestComplete(playerId);
@@ -220,6 +232,7 @@ public class GameplayActivity extends AppCompatActivity {
                                             getPlayerName(details.gainedIntelPlayerIds.get(1)));
                                 }
                             });
+                            cancel();
                         } else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
                             final long t0 = System.currentTimeMillis();
 
@@ -231,7 +244,7 @@ public class GameplayActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        };
+        },1000, EXCHANGE_POLLING_PERIOD * 1000);
     }
 
     private StringInputRunnable onRejectExchangeRequestRunnable() {
@@ -397,7 +410,6 @@ public class GameplayActivity extends AppCompatActivity {
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
-            final long t0 = System.currentTimeMillis();
             final InteractionDetails details = new InteractionDetails();
 
             @Override
