@@ -321,7 +321,7 @@ public class GameplayActivity extends AppCompatActivity {
                 notificationView.attemptingToIntercept(getPlayerName(interacteeId));
 
                 try {
-                    serverRequestsController.interceptRequest(interacteeId); //TODO Define
+                    serverRequestsController.interceptRequest(interacteeId);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
