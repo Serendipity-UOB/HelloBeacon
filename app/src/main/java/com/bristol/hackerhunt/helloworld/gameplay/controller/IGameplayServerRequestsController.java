@@ -85,9 +85,10 @@ public interface IGameplayServerRequestsController {
      *
      * @param interacteeId the ID of the player that the current player is attempting to intercept
      *                     an exchange from.
+     * @param details      the interaction details class
      * @throws JSONException
      */
-    void interceptRequest(String interacteeId) throws JSONException;
+    void interceptRequest(String interacteeId, InteractionDetails details) throws JSONException;
 
     /**
      * Registers a runnable that is run when an intercept is successful.

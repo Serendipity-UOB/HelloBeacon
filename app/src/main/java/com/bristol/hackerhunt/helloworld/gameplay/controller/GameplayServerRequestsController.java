@@ -450,6 +450,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         details.status = InteractionStatus.REJECTED;
     }
 
+    //6c - Exchange Request
     private JSONObject exchangeRequestBody(String interacteeId) throws JSONException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("requester_id", gameStateController.getPlayerId());
@@ -526,6 +527,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 exchangeResponseBody(interacteeId, playerResponse), listener, errorListener);
     }
 
+    //6d - Exchange Response
     private JSONObject exchangeResponseBody(String interacteeId, int response) throws JSONException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("player_id", gameStateController.getPlayerId());
@@ -547,24 +549,24 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void interceptRequest(String interacteeId) throws JSONException {
+    public void interceptRequest(String interacteeId, final InteractionDetails details) throws JSONException {
         requestQueue.add(volleyInterceptRequest(interacteeId));
     }
 
-    private JsonObjectRequest volleyInterceptRequest(final String interacteeId) throws JSONException {
+    private JsonObjectRequest volleyInterceptRequest(final String interacteeId, final InteractionDetails details) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 if (statusCode == 200){
                     try {
-                        interceptSuccess(response);
+                        interceptSuccess(response, details);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
                 else if (statusCode == 204){
                     try {
-                        interceptFailure(interacteeId, response);
+                        interceptFailure(details);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -578,7 +580,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             public void onErrorResponse(VolleyError error) {
                 if (statusCode == 400) {
                     // Log.d("Network", "400 Error received");
-                    interceptError(error);
+                    interceptError(error, details);
                 }
                 statusCode = 0;
             }
@@ -588,7 +590,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 interceptRequestBody(interacteeId), listener, errorListener);
     }
 
-    private void interceptSuccess(JSONObject obj) throws JSONException {
+    private void interceptSuccess(JSONObject obj, InteractionDetails details) throws JSONException {
         if(obj.has("primary_id")){
             String primaryId = obj.getString("primary_id");
             if(obj.has("primary_evidence")){
@@ -603,15 +605,15 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 gameStateController.increasePlayerIntel(secondaryId,secondaryEvidence);
             }
         }
-
+        details.status = InteractionStatus.SUCCESSFUL;
     }
 
-    private void interceptFailure(String interacteeId, JSONObject obj) throws JSONException {
-        //TODO Define behaviour
+    private void interceptFailure(InteractionDetails details) throws JSONException {
+        details.status = InteractionStatus.FAILED;
     }
 
-    private void interceptError(VolleyError error) {
-        //TODO Define if need be
+    private void interceptError(VolleyError error, InteractionDetails details) {
+        details.status = InteractionStatus.FAILED;
     }
 
     private JSONObject interceptRequestBody(String interacteeId) throws JSONException {

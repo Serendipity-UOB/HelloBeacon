@@ -318,10 +318,12 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(String interacteeId) {
+                final InteractionDetails details = new InteractionDetails();
                 notificationView.attemptingToIntercept(getPlayerName(interacteeId));
 
                 try {
                     serverRequestsController.interceptRequest(interacteeId);
+                    if (details.status.equals(InteractionStatus.FAILED))
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
