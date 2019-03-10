@@ -47,6 +47,8 @@ public class GameplayActivity extends AppCompatActivity {
     private static final double GAMEPLAY_DURATION = 8;          // given in minutes.
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
     private static final int CONSOLE_POPUP_DELAY_PERIOD = 3;    // given in seconds.
+    private static final int ACCEPT = 1;
+    private static final int REJECT = 2;
 
     private PlayerIdentifiers playerIdentifiers;
 
@@ -192,10 +194,44 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private StringInputRunnable onAcceptExchangeRequestRunnable() {
+        final Activity that = this;
         return new StringInputRunnable() {
+            
             @Override
-            public void run(String playerId) {
+            public void run(final String playerId) {
                 // TODO: code that runs when the player accepts an exchange request from playerId.
+                final InteractionDetails details = new InteractionDetails();
+                serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
+
+                if (details.status.equals(InteractionStatus.FAILED)) {
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationView.exchangeFailedTimedOut(playerId);
+                        }
+                    });
+                }
+                else {
+                    try {
+                        if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
+                            playerListView.exchangeRequestComplete(playerId);
+
+                            that.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    notificationView.exchangeSuccessful(getPlayerName(playerId),
+                                            getPlayerName(details.gainedIntelPlayerIds.get(1)));
+                                }
+                            });
+                        }
+                        else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                            //TODO Do something maybe??
+                            //Haven't set this for exchange response
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         };
     }

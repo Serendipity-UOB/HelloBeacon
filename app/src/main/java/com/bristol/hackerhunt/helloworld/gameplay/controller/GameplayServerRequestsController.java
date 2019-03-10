@@ -436,7 +436,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             details.gainedIntelPlayerIds.add(secondaryId);
         */
         gameStateController.increasePlayerIntel(interacteeId, EXCHANGE_PRIMARY_INCREMENT);
+        details.gainedIntelPlayerIds.add(interacteeId);
         gameStateController.increasePlayerIntel(secondaryId, EXCHANGE_SECONDARY_INCREMENT);
+        details.gainedIntelPlayerIds.add(secondaryId);
         details.status = InteractionStatus.SUCCESSFUL;
     }
 
