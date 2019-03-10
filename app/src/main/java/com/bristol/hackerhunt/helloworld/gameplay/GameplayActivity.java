@@ -315,15 +315,34 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private StringInputRunnable beginSelectedInterceptOnClickRunnable() {
+        final Activity that = this;
         return new StringInputRunnable() {
             @Override
-            public void run(String interacteeId) {
+            public void run(final String playerId) {
                 final InteractionDetails details = new InteractionDetails();
-                notificationView.attemptingToIntercept(getPlayerName(interacteeId));
+                notificationView.attemptingToIntercept(getPlayerName(playerId));
 
                 try {
-                    serverRequestsController.interceptRequest(interacteeId);
-                    if (details.status.equals(InteractionStatus.FAILED))
+                    serverRequestsController.interceptRequest(playerId, details);
+                    if (details.status.equals(InteractionStatus.FAILED)) {
+                        that.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                notificationView.interceptFailedNoExchange(getPlayerName(playerId));
+                                //Not necessarily true but will do for now
+                                //TODO branch based on status code for intercept
+                            }
+                        });
+                    }
+                    else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
+                        that.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                notificationView.interceptSucceeded(getPlayerName(playerId),
+                                        getPlayerName(details.gainedIntelPlayerIds.get(1)));
+                            }
+                        });
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

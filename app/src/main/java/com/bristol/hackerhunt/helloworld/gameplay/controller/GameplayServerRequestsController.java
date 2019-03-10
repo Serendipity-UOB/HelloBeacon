@@ -597,6 +597,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 int primaryEvidence = obj.getInt("primary_evidence");
                 gameStateController.increasePlayerIntel(primaryId,primaryEvidence);
             }
+            details.gainedIntelPlayerIds.add(primaryId);
         }
         if(obj.has("secondary_id")){
             String secondaryId = obj.getString("secondary_id");
@@ -604,6 +605,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 int secondaryEvidence = obj.getInt("secondary_evidence");
                 gameStateController.increasePlayerIntel(secondaryId,secondaryEvidence);
             }
+            details.gainedIntelPlayerIds.add(secondaryId);
         }
         details.status = InteractionStatus.SUCCESSFUL;
     }
