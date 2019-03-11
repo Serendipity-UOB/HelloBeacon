@@ -198,7 +198,7 @@ public class ConsoleView implements IConsoleView {
     }
 
     @Override
-    public void missionUpdatePrompt(String beaconName, String missionStatement) {
+    public void missionUpdatePrompt(String missionStatement) {
         // TODO: make this update close when the beacon is within range.
         enableCloseConsole(); // for testing
         setNeutralConsole();

@@ -371,6 +371,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 int rewardAmount = rewardRow.getInt("evidence");
                 gameStateController.increasePlayerIntel(rewardId, rewardAmount);
             }
+
+            gameStateController.missionSuccessful();
         }
         details.status = InteractionStatus.SUCCESSFUL;
     }
@@ -383,6 +385,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void missionFailure(InteractionDetails details, JSONObject obj) throws JSONException {
         //TODO Define probably tell gameStateController something
+        gameStateController.missionFailed();
         details.status = InteractionStatus.FAILED;
     }
 

@@ -147,8 +147,11 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private void initializeGameStateController() {
-        this.gameStateController = new GameStateController(playerListView, playerStatusBarView,
-                playerIdentifiers, getIntent().getStringExtra("start_beacon_name"));
+        this.gameStateController = new GameStateController(playerListView,
+                playerStatusBarView,
+                consoleView,
+                playerIdentifiers,
+                getIntent().getStringExtra("start_beacon_name"));
     }
 
     private void initializeServerRequestController() {
@@ -366,6 +369,12 @@ public class GameplayActivity extends AppCompatActivity {
                     else {
                         serverRequestsController.playerUpdateRequest();
                         serverRequestsController.isAtHomeBeaconRequest();
+
+                        if (gameStateController.exchangeHasBeenRequested()) {
+                            String id = gameStateController.getExchangeRequesterId();
+                            exchangeRequestView.showDialogueBox(getPlayerName(id), id);
+                            gameStateController.completeExchangeRequest();
+                        }
 
                         if (gameStateController.playerHasBeenTakenDown()) {
                             closeConsoleOnHomeBeaconNearby = true;
