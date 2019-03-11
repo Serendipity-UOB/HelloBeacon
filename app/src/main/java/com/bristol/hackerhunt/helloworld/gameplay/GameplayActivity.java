@@ -149,7 +149,6 @@ public class GameplayActivity extends AppCompatActivity {
         this.gameStateController = new GameStateController(playerListView,
                 playerStatusBarView,
                 consoleView,
-                notificationView,
                 playerIdentifiers,
                 getIntent().getStringExtra("start_beacon_name"));
     }
@@ -165,8 +164,7 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(final String missionDetails) {
-                //TODO Define what happens when a mission update occurs
-                //Nothing in notification view to do here??
+                consoleView.missionUpdatePrompt(missionDetails);
             }
         };
     }
@@ -319,6 +317,12 @@ public class GameplayActivity extends AppCompatActivity {
                     else {
                         serverRequestsController.playerUpdateRequest();
                         serverRequestsController.isAtHomeBeaconRequest();
+
+                        if (gameStateController.exchangeHasBeenRequested()) {
+                            String id = gameStateController.getExchangeRequesterId();
+                            exchangeRequestView.showDialogueBox(getPlayerName(id), id);
+                            gameStateController.completeExchangeRequest();
+                        }
 
                         if (gameStateController.playerHasBeenTakenDown()) {
                             closeConsoleOnHomeBeaconNearby = true;

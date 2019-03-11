@@ -143,12 +143,6 @@ public interface IGameStateController {
     void updateExchangeReceive(String reqId);
 
     /**
-     * Handles a new mission coming in with description missionId
-     * @param missionId mission description string
-     */
-    void handleNewMission(String missionId);
-
-    /**
      * Update nearby beacon.
      * @param major major of beacon.
      * @param rssi recorded rssi of beacon.
@@ -202,4 +196,10 @@ public interface IGameStateController {
      * Mission successful.
      */
     void missionSuccessful();
+
+    boolean exchangeHasBeenRequested();
+
+    void completeExchangeRequest();
+
+    String getExchangeRequesterId();
 }

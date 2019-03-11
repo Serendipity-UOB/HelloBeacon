@@ -368,6 +368,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 int rewardAmount = rewardRow.getInt("evidence");
                 gameStateController.increasePlayerIntel(rewardId, rewardAmount);
             }
+
+            gameStateController.missionSuccessful();
         }
     }
 
@@ -377,6 +379,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void missionFailure(JSONObject obj) throws JSONException {
         //TODO Define probably tell gameStateController something
+        gameStateController.missionFailed();
     }
 
     @Override

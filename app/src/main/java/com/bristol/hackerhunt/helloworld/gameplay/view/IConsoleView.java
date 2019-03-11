@@ -35,7 +35,7 @@ public interface IConsoleView {
      * @param beaconName The name of the beacon that the player needs to go to.
      * @param missionStatement The mission they need to complete.
      */
-    void missionUpdatePrompt(String beaconName, String missionStatement);
+    void missionUpdatePrompt(String missionStatement);
 
     /**
      * Prompt that the mission was successful
