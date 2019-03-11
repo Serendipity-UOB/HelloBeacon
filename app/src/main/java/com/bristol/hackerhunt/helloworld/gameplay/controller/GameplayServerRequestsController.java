@@ -73,7 +73,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         this.MISSION_URL = context.getString(R.string.mission_update_request);
     }
 
-    //TODO Define new exchange request and response behaviour
     @Override
     public void cancelAllRequests() {
         requestQueue.stop();
@@ -256,10 +255,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void checkForPlayerStatusChanges(JSONObject obj) throws JSONException {
         List<PlayerUpdate> updates = new ArrayList<>();
+        String exposedId = "";
         if (obj.has("exposed")) {
             boolean takenDown = obj.getBoolean("exposed");
-            if (takenDown) {
-                updates.add(PlayerUpdate.TAKEN_DOWN);
+            if (obj.has("exposed_id")) {
+                exposedId = obj.getString("exposed_id");
+                if (takenDown) {
+                    updates.add(PlayerUpdate.TAKEN_DOWN);
+                }
             }
         }
         if (obj.has("req_new_target")) {
@@ -269,7 +272,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         }
 
-        gameStateController.updateStatus(updates);
+        gameStateController.updateStatus(updates, exposedId);
     }
 
     private void checkGameOver(JSONObject obj) throws JSONException {

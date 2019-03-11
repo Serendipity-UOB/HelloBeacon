@@ -67,6 +67,17 @@ public interface IGameStateController {
     void resetPlayerTakenDown();
 
     /**
+     * Get the exposerId variable from object
+     * @return The string id of exposer
+     */
+    String getExposerId();
+
+    /**
+     * Resets the exposerId variable from object
+     */
+    void resetExposerId();
+
+    /**
      * @return the playing player's target has been taken down.
      */
     boolean playersTargetHasBeenTakenDown();
@@ -169,8 +180,9 @@ public interface IGameStateController {
     /**
      * Update the player's statuses.
      * @param updates a list of player updates.
+     * @param exposerId the id of the player who exposed user if any
      */
-    void updateStatus(List<PlayerUpdate> updates);
+    void updateStatus(List<PlayerUpdate> updates, String exposerId);
 
     /**
      * Sets a task that runs if the nearest beacon is the home beacon.

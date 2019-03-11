@@ -318,6 +318,11 @@ public class GameplayActivity extends AppCompatActivity {
 
                         if (gameStateController.playerHasBeenTakenDown()) {
                             closeConsoleOnHomeBeaconNearby = true;
+                            String exposerId = gameStateController.getExposerId();
+                            gameStateController.resetExposerId();
+
+                            //TODO Full screen notification call for exposure
+
                             consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
                             gameStateController.loseHalfOfPlayersIntel();
                             gameStateController.resetPlayerTakenDown();
