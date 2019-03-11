@@ -10,9 +10,11 @@ public class InteractionDetails {
 
     public List<String> gainedIntelPlayerIds;
     public InteractionStatus status;
+    public int missionTime; //In Seconds
 
     public InteractionDetails() {
         this.gainedIntelPlayerIds = new ArrayList<>();
         this.status = InteractionStatus.IN_PROGRESS;
+        this.missionTime = 30;
     }
 }

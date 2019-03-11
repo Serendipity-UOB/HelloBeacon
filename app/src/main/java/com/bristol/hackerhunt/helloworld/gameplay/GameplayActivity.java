@@ -47,6 +47,7 @@ public class GameplayActivity extends AppCompatActivity {
     private static final double GAMEPLAY_DURATION = 8;          // given in minutes.
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
     private static final int CONSOLE_POPUP_DELAY_PERIOD = 3;    // given in seconds.
+    private static final int MISSION_POLLING_PERIOD = 1;        // given in seconds.
     private static final int ACCEPT = 1;
     private static final int REJECT = 2;
 
@@ -214,6 +215,55 @@ public class GameplayActivity extends AppCompatActivity {
         };
     }
 
+    private void beginMissionUpdateServerPolling() {
+        final Activity that = this;
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            final InteractionDetails details = new InteractionDetails();
+
+            @Override
+            public void run() {
+                try {
+                    serverRequestsController.missionUpdateRequest(details);
+
+                    if (details.status == InteractionStatus.FAILED){
+                        cancel();
+                        that.runOnUiThread(new Runnable(){
+                            @Override
+                            public void run() {
+                                consoleView.missionFailedPrompt("Mission Failed");
+                                //TODO Right message
+                            }
+                        });
+                    }
+                    else if(details.status == InteractionStatus.SUCCESSFUL){
+                        cancel();
+                        that.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                consoleView.missionSuccessPrompt("Mission Success");
+                                //TODO Right message
+                            }
+                        });
+                    }
+                    else if(details.status == InteractionStatus.IN_PROGRESS){
+                        that.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int timeRemaining = details.missionTime;
+                                //Tell the UI something
+                            }
+                        });
+                    }
+
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        },0, MISSION_POLLING_PERIOD * 1000);
+    }
+
     private void beginExchangeResponseServerPolling(final String playerId) {
         final Activity that = this;
 
@@ -233,7 +283,8 @@ public class GameplayActivity extends AppCompatActivity {
                             }
                         });
                         cancel();
-                    } else {
+                    }
+                    else {
                         if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
                             //playerListView.exchangeRequestComplete(playerId);
                             that.runOnUiThread(new Runnable() {
@@ -244,7 +295,8 @@ public class GameplayActivity extends AppCompatActivity {
                                 }
                             });
                             cancel();
-                        } else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                        }
+                        else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
                             final long t0 = System.currentTimeMillis();
 
                             //TODO Do something maybe??
