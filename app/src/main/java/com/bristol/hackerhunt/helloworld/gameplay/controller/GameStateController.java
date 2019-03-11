@@ -19,6 +19,8 @@ public class GameStateController implements IGameStateController {
     //TODO Consider changing to 10 to better show quantum
     private static final int INTEL_INCREMENT = 20; // a percentage
 
+    private long gameDuration = -1;
+
     private final IPlayerListView playerListController;
     private final IPlayerStatusBarView playerStatusBarController;
     private final IConsoleView consoleView;
@@ -80,6 +82,16 @@ public class GameStateController implements IGameStateController {
             this.hackerName = hackerName;
             this.intel = 0;
         }
+    }
+
+    @Override
+    public long getGameDuration() {
+        return gameDuration;
+    }
+
+    @Override
+    public void setGameDuration(long duration) {
+        this.gameDuration = duration;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -21,7 +22,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class GameplayServerRequestsController implements IGameplayServerRequestsController {
 
@@ -97,6 +100,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             public void onResponse(JSONObject response) {
                 try {
                     setAllPlayers(response);
+                    setEndTime(response);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -114,14 +118,46 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 listener, errorListener);
     }
 
+    private float calculateTimeRemainingInMinutes(String startTime) {
+        Calendar c2 = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
+        int currentHour = c2.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = c2.get(Calendar.MINUTE);
+        int currentSecond = c2.get(Calendar.SECOND);
+
+        int currentTotal = currentSecond + 60 * (currentMinute + 60 * currentHour);
+
+        String[] startTimeArr = startTime.split(":");
+        float startHour = Float.parseFloat(startTimeArr[0]);
+        float startMinute = Float.parseFloat(startTimeArr[1]);
+        float startSecond = Float.parseFloat(startTimeArr[2]);
+        float startTotal = startSecond + 60 * (startMinute + 60 * startHour);
+
+        Log.d("JoinGame", "Time remaining: " + Float.toString((startTotal - currentTotal) / 60));
+        return ((startTotal - currentTotal) / 60);
+    }
+
+    private void setEndTime(JSONObject response) throws JSONException {
+        String endTime = response.getString("end_time");
+        Log.d("StartInfo", "Game duration: " + calculateTimeRemainingInMinutes(endTime));
+        gameStateController.setGameDuration((long) (calculateTimeRemainingInMinutes(endTime)));
+    }
+
     private void setAllPlayers(JSONObject allPlayersJson) throws JSONException {
-        JSONArray allPlayers =  allPlayersJson.getJSONArray("all_players");
+
+        String allPlayersString = allPlayersJson.getString("all_players");
+        JSONArray allPlayers =  new JSONArray(allPlayersString);
+
+        Log.d("StartInfo", "Player JSON: " + allPlayers.toString());
         List<PlayerIdentifiers> allPlayersIdentifiers = new ArrayList<>();
 
         for (int i = 0; i < allPlayers.length(); i++) {
             JSONObject obj = allPlayers.getJSONObject(i);
+            Log.d("StartInfo", "Player added: " + jsonToPlayerIdentifiers(obj).getHackerName());
+
             if (!isCurrentPlayer(obj)) {
                 allPlayersIdentifiers.add(jsonToPlayerIdentifiers(obj));
+                Log.d("StartInfo", "Player added: " + jsonToPlayerIdentifiers(obj).getHackerName());
             }
         }
         gameStateController.setAllPlayers(allPlayersIdentifiers);

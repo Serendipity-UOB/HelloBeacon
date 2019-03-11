@@ -44,7 +44,6 @@ import java.util.TimerTask;
 public class GameplayActivity extends AppCompatActivity {
 
     private static final int POLLING_PERIOD = 1;                // given in seconds
-    private static final double GAMEPLAY_DURATION = 8;          // given in minutes.
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
     private static final int CONSOLE_POPUP_DELAY_PERIOD = 3;    // given in seconds.
     private static final int MISSION_POLLING_PERIOD = 1;        // given in seconds.
@@ -63,6 +62,7 @@ public class GameplayActivity extends AppCompatActivity {
     private IGameStateController gameStateController;
     private IBeaconController beaconController;
 
+    private boolean timerStarted = false;
     private boolean gameOver = false;
     private boolean closeConsoleOnHomeBeaconNearby = false;
     private boolean newTargetRequested = true;
@@ -97,7 +97,6 @@ public class GameplayActivity extends AppCompatActivity {
             }
         });
 
-        startGameTimer();
         initializeStatusBarPlayerName();
 
         // First task: player needs to head to their home beacon.
@@ -367,32 +366,39 @@ public class GameplayActivity extends AppCompatActivity {
                         gameOver();
                     }
                     else {
-                        serverRequestsController.playerUpdateRequest();
-                        serverRequestsController.isAtHomeBeaconRequest();
-
-                        if (gameStateController.exchangeHasBeenRequested()) {
-                            String id = gameStateController.getExchangeRequesterId();
-                            exchangeRequestView.showDialogueBox(getPlayerName(id), id);
-                            gameStateController.completeExchangeRequest();
+                        if (!timerStarted && gameStateController.getGameDuration() > 0) {
+                            startGameTimer(gameStateController.getGameDuration());
+                            timerStarted = true;
                         }
 
-                        if (gameStateController.playerHasBeenTakenDown()) {
-                            closeConsoleOnHomeBeaconNearby = true;
-                            String exposerId = gameStateController.getExposerId();
-                            String exposerName = getPlayerName(exposerId);
-                            gameStateController.resetExposerId();
+                        if (timerStarted) {
+                            serverRequestsController.playerUpdateRequest();
+                            serverRequestsController.isAtHomeBeaconRequest();
 
-                            //TODO Full screen notification call for exposure
+                            if (gameStateController.exchangeHasBeenRequested()) {
+                                String id = gameStateController.getExchangeRequesterId();
+                                exchangeRequestView.showDialogueBox(getPlayerName(id), id);
+                                gameStateController.completeExchangeRequest();
+                            }
 
-                            consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
-                            gameStateController.loseHalfOfPlayersIntel();
-                            gameStateController.resetPlayerTakenDown();
-                        }
-                        if (gameStateController.playersTargetHasBeenTakenDown()) {
-                            newTargetRequested = true;
-                            closeConsoleOnHomeBeaconNearby = true;
-                            consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
-                            gameStateController.resetPlayersTargetHasBeenTakenDown();
+                            if (gameStateController.playerHasBeenTakenDown()) {
+                                closeConsoleOnHomeBeaconNearby = true;
+                                String exposerId = gameStateController.getExposerId();
+                                String exposerName = getPlayerName(exposerId);
+                                gameStateController.resetExposerId();
+
+                                //TODO Full screen notification call for exposure
+
+                                consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
+                                gameStateController.loseHalfOfPlayersIntel();
+                                gameStateController.resetPlayerTakenDown();
+                            }
+                            if (gameStateController.playersTargetHasBeenTakenDown()) {
+                                newTargetRequested = true;
+                                closeConsoleOnHomeBeaconNearby = true;
+                                consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
+                                gameStateController.resetPlayersTargetHasBeenTakenDown();
+                            }
                         }
                     }
                 } catch (JSONException e) {
@@ -542,8 +548,8 @@ public class GameplayActivity extends AppCompatActivity {
         this.consoleView = new ConsoleView(overlay);
     }
 
-    private void startGameTimer() {
-        long duration = (long) (GAMEPLAY_DURATION * 60 * 1000);
+    private void startGameTimer(long durationInMinutes) {
+        long duration = (durationInMinutes * 60 * 1000);
 
         // Starting timer thread
         new CountDownTimer(duration, 1000) {

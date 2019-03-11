@@ -9,6 +9,11 @@ import java.util.Set;
 
 public interface IGameStateController {
 
+
+    long getGameDuration();
+
+    void setGameDuration(long gameDuration);
+
     /**
      * @return the ID of the playing player.
      */
