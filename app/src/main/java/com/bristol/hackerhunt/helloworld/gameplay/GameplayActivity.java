@@ -155,17 +155,7 @@ public class GameplayActivity extends AppCompatActivity {
         this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
         serverRequestsController.registerExposeSuccessRunnable(exposeSuccessfulRunnable());
         serverRequestsController.registerExposeFailedRunnable(exposeFailedRunnable());
-        serverRequestsController.registerMissionUpdateRunnable(missionUpdateRunnable());
-    }
-
-    private StringInputRunnable missionUpdateRunnable() {
-        return new StringInputRunnable() {
-            @Override
-            public void run(final String missionDetails) {
-                //TODO Define what happens when a mission update occurs
-                //Nothing in notification view to do here??
-            }
-        };
+        serverRequestsController.registerMissionUpdateRunnable(handleNewMissionRunnable());
     }
 
     private Runnable exposeSuccessfulRunnable() {
@@ -213,6 +203,15 @@ public class GameplayActivity extends AppCompatActivity {
                 beginExchangeResponseServerPolling(playerId);
             }
         };
+    }
+
+    private StringInputRunnable handleNewMissionRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(final String missionDetails) {
+                beginMissionUpdateServerPolling();
+            }
+        }
     }
 
     private void beginMissionUpdateServerPolling() {
