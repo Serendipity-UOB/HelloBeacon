@@ -308,7 +308,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyMissionUpdateRequest(details));
     }
 
-    private JsonObjectRequest volleyMissionUpdateRequest(InteractionDetails details) throws JSONException {
+    private JsonObjectRequest volleyMissionUpdateRequest(final InteractionDetails details) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
