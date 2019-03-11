@@ -73,7 +73,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         this.MISSION_URL = context.getString(R.string.mission_update_request);
     }
 
-    //TODO Define new exchange request and response behaviour
     @Override
     public void cancelAllRequests() {
         requestQueue.stop();
@@ -256,10 +255,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void checkForPlayerStatusChanges(JSONObject obj) throws JSONException {
         List<PlayerUpdate> updates = new ArrayList<>();
+        String exposedId = "";
         if (obj.has("exposed")) {
             boolean takenDown = obj.getBoolean("exposed");
-            if (takenDown) {
-                updates.add(PlayerUpdate.TAKEN_DOWN);
+            if (obj.has("exposed_id")) {
+                exposedId = obj.getString("exposed_id");
+                if (takenDown) {
+                    updates.add(PlayerUpdate.TAKEN_DOWN);
+                }
             }
         }
         if (obj.has("req_new_target")) {
@@ -269,7 +272,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         }
 
-        gameStateController.updateStatus(updates);
+        gameStateController.updateStatus(updates, exposedId);
     }
 
     private void checkGameOver(JSONObject obj) throws JSONException {
@@ -301,17 +304,17 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void missionUpdateRequest() throws JSONException {
-        requestQueue.add(volleyMissionUpdateRequest());
+    public void missionUpdateRequest(InteractionDetails details) throws JSONException {
+        requestQueue.add(volleyMissionUpdateRequest(details));
     }
 
-    private JsonObjectRequest volleyMissionUpdateRequest() throws JSONException {
+    private JsonObjectRequest volleyMissionUpdateRequest(final InteractionDetails details) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 if (statusCode == 200) {
                     try {
-                        missionSuccess(response); //TODO Define
+                        missionSuccess(details, response); //TODO Define
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -320,7 +323,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                     if(response.has("time_remaining")){
                         try {
                             int timeRemaining = response.getInt("time_remaining");
-                            missionPending(timeRemaining, response); //TODO Define
+                            missionPending(details, timeRemaining, response); //TODO Define
                         } catch (JSONException e) {
                             // TODO: handle.
                         }
@@ -328,7 +331,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 }
                 else if(statusCode == 204){
                     try {
-                        missionFailure(response); //TODO Define
+                        missionFailure(details, response); //TODO Define
                     } catch (JSONException e) {
                         // TODO: handle
                     }
@@ -359,7 +362,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
     }
 
-    private void missionSuccess(JSONObject obj) throws JSONException {
+    private void missionSuccess(InteractionDetails details, JSONObject obj) throws JSONException {
         if(obj.has("rewards")){
             JSONArray rewardArray = obj.getJSONArray("rewards");
             for(int i = 0; i < rewardArray.length(); i++){
@@ -371,15 +374,19 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
             gameStateController.missionSuccessful();
         }
+        details.status = InteractionStatus.SUCCESSFUL;
     }
 
-    private void missionPending(int timeRemaining, JSONObject obj) throws JSONException {
+    private void missionPending(InteractionDetails details, int timeRemaining, JSONObject obj) throws JSONException {
         //TODO Define, probably tell gameStateController something
+        details.status = InteractionStatus.IN_PROGRESS;
+        details.missionTime = timeRemaining;
     }
 
-    private void missionFailure(JSONObject obj) throws JSONException {
+    private void missionFailure(InteractionDetails details, JSONObject obj) throws JSONException {
         //TODO Define probably tell gameStateController something
         gameStateController.missionFailed();
+        details.status = InteractionStatus.FAILED;
     }
 
     @Override
@@ -634,6 +641,12 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void interceptFailure(InteractionDetails details) throws JSONException {
         details.status = InteractionStatus.FAILED;
+        if(statusCode == 204){
+            //No Content
+            //No exchange happened
+            details.status = InteractionStatus.NO_EVIDENCE;
+        }
+
     }
 
     private void interceptError(VolleyError error, InteractionDetails details) {

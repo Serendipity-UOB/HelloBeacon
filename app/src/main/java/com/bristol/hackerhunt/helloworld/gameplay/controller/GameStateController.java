@@ -36,6 +36,7 @@ public class GameStateController implements IGameStateController {
     private final Map<String, PlayerDetails> allPlayersMap; // key: player_id (nfc)
     private List<String> nearbyPlayerIds;
     private String targetPlayerId;
+    private String exposerId;
 
     private boolean exchangeRequestRecieved;
     private String exchangeRequesterId;
@@ -62,6 +63,7 @@ public class GameStateController implements IGameStateController {
         this.points = 0;
         this.leaderboardPosition = "Loading...";
         nearestBeaconMajor = "none";
+        this.exposerId = "";
 
         this.exchangeRequestRecieved = false;
 
@@ -120,6 +122,20 @@ public class GameStateController implements IGameStateController {
     @Override
     public boolean playerHasBeenTakenDown() {
         return playerUpdates.contains(PlayerUpdate.TAKEN_DOWN);
+    }
+
+    @Override
+    public String getExposerId() {
+        String exposerId = "";
+        if(playerUpdates.contains(PlayerUpdate.TAKEN_DOWN)){
+            exposerId = this.exposerId;
+        }
+        return exposerId;
+    }
+
+    @Override
+    public void resetExposerId() {
+        this.exposerId = "";
     }
 
     @Override
@@ -275,7 +291,8 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
-    public void updateStatus(List<PlayerUpdate> updates) {
+    public void updateStatus(List<PlayerUpdate> updates, String exposerId) {
+        this.exposerId = exposerId;
         this.playerUpdates = updates;
     }
 
