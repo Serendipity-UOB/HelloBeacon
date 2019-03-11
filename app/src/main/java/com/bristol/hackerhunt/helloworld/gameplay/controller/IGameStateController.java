@@ -78,6 +78,12 @@ public interface IGameStateController {
     void resetExposerId();
 
     /**
+     * Sets exposerId to exposerId
+     * @param exposerId the id to set to
+     */
+    void setExposerId(String exposerId);
+
+    /**
      * @return the playing player's target has been taken down.
      */
     boolean playersTargetHasBeenTakenDown();

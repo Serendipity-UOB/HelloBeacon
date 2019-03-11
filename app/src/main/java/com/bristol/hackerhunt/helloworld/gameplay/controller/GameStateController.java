@@ -134,6 +134,9 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
+    public void setExposerId(String exposerId) { this.exposerId = exposerId; }
+
+    @Override
     public void resetExposerId() {
         this.exposerId = "";
     }
