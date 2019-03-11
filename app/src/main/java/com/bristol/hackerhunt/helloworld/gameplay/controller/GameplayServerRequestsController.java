@@ -10,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
 import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
@@ -48,6 +49,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private Runnable exposeSuccessRunnable;
     private Runnable exposeFailedRunnable;
     private Runnable interceptSuccessRunnable;
+    private StringInputRunnable missionUpdateRunnable;
+
 
     /**
      * Class constructor.
@@ -247,7 +250,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private void checkForMission(JSONObject obj) throws JSONException {
         if(obj.has("mission_description")) {
             String missionId = obj.getString("mission_description");
-            gameStateController.handleNewMission(missionId); //TODO Define
+            missionUpdateRunnable.run(missionId);
         }
     }
 
@@ -638,6 +641,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         JSONObject requestBody = new JSONObject();
         requestBody.put("target_id", interacteeId);
         return requestBody;
+    }
+
+    @Override
+    public void registerMissionUpdateRunnable(Runnable runnable) {
+        this.missionUpdateRunnable = runnable;
     }
 
     @Override

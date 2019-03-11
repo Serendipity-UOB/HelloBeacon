@@ -71,6 +71,12 @@ public interface IGameplayServerRequestsController {
     void exchangeResponse(String interacteeId, int response, InteractionDetails details) throws JSONException;
 
     /**
+     * Registers a runnable used when a mission update occurs
+     * @param runnable the runnable
+     */
+    void registerMissionUpdateRunnable(Runnable runnable);
+
+    /**
      * Submits a player take down request to the server:
      * POST /takeDown { player_id, target_id }
      *

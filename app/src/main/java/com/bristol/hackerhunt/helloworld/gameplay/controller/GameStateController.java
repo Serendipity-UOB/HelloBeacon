@@ -226,6 +226,7 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void handleNewMission(String missionId) {
+
         //TODO Define behaviour, also likely a console view thing
     }
 
