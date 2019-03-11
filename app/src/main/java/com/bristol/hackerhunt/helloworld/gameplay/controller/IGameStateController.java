@@ -192,4 +192,14 @@ public interface IGameStateController {
      * @return true if game over, false otherwise.
      */
     boolean gameHasEnded();
+
+    /**
+     * Mission failed.
+     */
+    void missionFailed();
+
+    /**
+     * Mission successful.
+     */
+    void missionSuccessful();
 }

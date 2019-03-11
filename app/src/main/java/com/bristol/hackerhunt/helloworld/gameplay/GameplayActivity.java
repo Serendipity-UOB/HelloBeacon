@@ -146,8 +146,12 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private void initializeGameStateController() {
-        this.gameStateController = new GameStateController(playerListView, playerStatusBarView,
-                playerIdentifiers, getIntent().getStringExtra("start_beacon_name"));
+        this.gameStateController = new GameStateController(playerListView,
+                playerStatusBarView,
+                consoleView,
+                notificationView,
+                playerIdentifiers,
+                getIntent().getStringExtra("start_beacon_name"));
     }
 
     private void initializeServerRequestController() {

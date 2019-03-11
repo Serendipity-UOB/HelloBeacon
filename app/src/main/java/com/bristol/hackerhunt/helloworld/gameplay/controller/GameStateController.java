@@ -3,6 +3,8 @@ package com.bristol.hackerhunt.helloworld.gameplay.controller;
 import android.util.Log;
 
 import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
+import com.bristol.hackerhunt.helloworld.gameplay.view.IConsoleView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.INotificationView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
@@ -19,6 +21,8 @@ public class GameStateController implements IGameStateController {
 
     private final IPlayerListView playerListController;
     private final IPlayerStatusBarView playerStatusBarController;
+    private final IConsoleView consoleView;
+    private final INotificationView notificationView;
 
     private final Map<String, Map<String, Integer>> beaconMajorMinorRssiMap;
     private String nearestBeaconMajor;
@@ -38,11 +42,16 @@ public class GameStateController implements IGameStateController {
 
     public GameStateController(IPlayerListView playerListController,
                                IPlayerStatusBarView playerStatusBarController,
+                               IConsoleView consoleView,
+                               INotificationView notificationView,
                                PlayerIdentifiers playerIdentifiers,
                                String homeBeaconName) {
         this.playerListController = playerListController;
         this.playerStatusBarController = playerStatusBarController;
         this.playerIdentifiers = playerIdentifiers;
+        this.notificationView = notificationView;
+        this.consoleView = consoleView;
+
         this.allPlayersMap = new HashMap<>();
         this.nearbyPlayerIds = new ArrayList<>();
         this.playerUpdates = new ArrayList<>();
@@ -299,5 +308,15 @@ public class GameStateController implements IGameStateController {
     @Override
     public boolean gameHasEnded() {
         return gameOver;
+    }
+
+    @Override
+    public void missionFailed() {
+        consoleView.missionFailedPrompt("Mission failed.");
+    }
+
+    @Override
+    public void missionSuccessful() {
+        consoleView.missionSuccessPrompt("Mission successful");
     }
 }
