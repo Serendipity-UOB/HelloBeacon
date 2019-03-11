@@ -368,7 +368,7 @@ public class GameplayActivity extends AppCompatActivity {
                         that.runOnUiThread(new Runnable(){
                             @Override
                             public void run() {
-                                notificationView.interceptFailedNoEvidenceShared(getPlayerName(playerId));
+                                notificationView.interceptFailedNoEvidenceShared();
                             }
                         });
                     }
