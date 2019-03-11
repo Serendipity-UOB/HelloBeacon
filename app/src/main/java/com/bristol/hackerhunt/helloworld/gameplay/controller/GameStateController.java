@@ -33,7 +33,7 @@ public class GameStateController implements IGameStateController {
     private final Map<String, PlayerDetails> allPlayersMap; // key: player_id (nfc)
     private List<String> nearbyPlayerIds;
     private String targetPlayerId;
-    private String exposerId
+    private String exposerId;
 
     private boolean gameOver;
 

@@ -319,6 +319,7 @@ public class GameplayActivity extends AppCompatActivity {
                         if (gameStateController.playerHasBeenTakenDown()) {
                             closeConsoleOnHomeBeaconNearby = true;
                             String exposerId = gameStateController.getExposerId();
+                            String exposerName = getPlayerName(exposerId);
                             gameStateController.resetExposerId();
 
                             //TODO Full screen notification call for exposure
