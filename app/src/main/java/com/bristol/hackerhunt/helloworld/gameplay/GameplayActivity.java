@@ -361,8 +361,14 @@ public class GameplayActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 notificationView.interceptFailedNoExchange(getPlayerName(playerId));
-                                //Not necessarily true but will do for now
-                                //TODO branch based on status code for intercept
+                            }
+                        });
+                    }
+                    else if (details.status.equals(InteractionStatus.NO_EVIDENCE)) {
+                        that.runOnUiThread(new Runnable(){
+                            @Override
+                            public void run() {
+                                notificationView.interceptFailedNoEvidenceShared(getPlayerName(playerId));
                             }
                         });
                     }
