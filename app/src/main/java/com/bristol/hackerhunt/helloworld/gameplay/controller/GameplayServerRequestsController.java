@@ -283,7 +283,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void checkForMission(JSONObject obj) throws JSONException {
+        Log.d("Mission", obj.toString());
         if(obj.has("mission_description")) {
+            Log.d("Mission", obj.getString("mission_description"));
             String missionId = obj.getString("mission_description");
             missionUpdateRunnable.run(missionId);
         }
@@ -300,7 +302,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 }
         }
         if (obj.has("req_new_target")) {
-            boolean reqNewTarget = obj.getBoolean("exposed");
+            boolean reqNewTarget = obj.getBoolean("req_new_target");
             if (reqNewTarget) {
                 updates.add(PlayerUpdate.REQ_NEW_TARGET);
             }

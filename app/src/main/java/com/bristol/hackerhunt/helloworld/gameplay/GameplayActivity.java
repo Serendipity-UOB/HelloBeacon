@@ -211,6 +211,8 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(final String missionDetails) {
+                Log.d("New Mission", missionDetails);
+                consoleView.missionUpdatePrompt(missionDetails);
                 beginMissionUpdateServerPolling();
             }
         };
