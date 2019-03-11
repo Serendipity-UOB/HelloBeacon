@@ -214,7 +214,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(final String missionDetails) {
                 beginMissionUpdateServerPolling();
             }
-        }
+        };
     }
 
     private void beginMissionUpdateServerPolling() {
