@@ -1,6 +1,7 @@
 package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
 
 import org.json.JSONException;
 
@@ -74,7 +75,7 @@ public interface IGameplayServerRequestsController {
      * Registers a runnable used when a mission update occurs
      * @param runnable the runnable
      */
-    void registerMissionUpdateRunnable(Runnable runnable);
+    void registerMissionUpdateRunnable(StringInputRunnable runnable);
 
     /**
      * Submits a player take down request to the server:

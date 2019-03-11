@@ -561,7 +561,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     @Override
     public void interceptRequest(String interacteeId, final InteractionDetails details) throws JSONException {
-        requestQueue.add(volleyInterceptRequest(interacteeId));
+        requestQueue.add(volleyInterceptRequest(interacteeId, details));
     }
 
     private JsonObjectRequest volleyInterceptRequest(final String interacteeId, final InteractionDetails details) throws JSONException {
@@ -644,7 +644,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void registerMissionUpdateRunnable(Runnable runnable) {
+    public void registerMissionUpdateRunnable(StringInputRunnable runnable) {
         this.missionUpdateRunnable = runnable;
     }
 

@@ -164,7 +164,7 @@ public class GameplayActivity extends AppCompatActivity {
                 //TODO Define what happens when a mission update occurs
                 //Nothing in notification view to do here??
             }
-        }
+        };
     }
 
     private Runnable exposeSuccessfulRunnable() {
