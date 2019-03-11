@@ -524,7 +524,15 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_RESPONSE_URL,
-                exchangeResponseBody(interacteeId, playerResponse), listener, errorListener);
+                exchangeResponseBody(interacteeId, playerResponse), listener, errorListener) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                if (response != null) {
+                    statusCode = response.statusCode;
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
     }
 
     //6d - Exchange Response
@@ -587,7 +595,15 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + INTERCEPT_URL,
-                interceptRequestBody(interacteeId), listener, errorListener);
+                interceptRequestBody(interacteeId), listener, errorListener) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                if (response != null) {
+                    statusCode = response.statusCode;
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
     }
 
     private void interceptSuccess(JSONObject obj, InteractionDetails details) throws JSONException {

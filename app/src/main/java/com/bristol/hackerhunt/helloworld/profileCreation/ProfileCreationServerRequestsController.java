@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -61,12 +62,25 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                try {
-                    String id = response.getString("player_id");
-                    onProfileValidRunnable.run(id);
-                } catch (JSONException e) {
-                    Log.d("Network", String.valueOf(e.getCause()));
+                if (statusCode == 200) {
+                    try {
+                        String id = response.getString("player_id");
+                        onProfileValidRunnable.run(id);
+                    } catch (JSONException e) {
+                        Log.d("Network", String.valueOf(e.getCause()));
+                    }
                 }
+                else if (statusCode == 400){
+                    try {
+                        if (response.has("error")){
+                            String errorMessage = response.getString("error");
+                            onProfileInvalidRunnable.run(errorMessage);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                statusCode = 0;
             }
         };
 
@@ -77,19 +91,29 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
                 if (error.networkResponse != null && error.networkResponse.statusCode == 204) {
                     onProfileInvalidRunnable.run("There is currently no game available to join.");
                 }
-                else if (error.networkResponse != null && error.networkResponse.statusCode == 400) {
-                    onProfileInvalidRunnable.run("Code name is taken.");
-                }
+                //else if (error.networkResponse != null && error.networkResponse.statusCode == 400) {
+                //    onProfileInvalidRunnable.run("Code name is taken.");
+                //}
                 else {
                     Log.d("Network","Message:" + error.toString());
                     onProfileInvalidRunnable.run("Network error.");
                 }
 
             }
+
         };
+        statusCode = 0;
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + REGISTER_PLAYER_URL,
-                playerIdentifiersToJson(realName, codeName), listener, errorListener);
+                playerIdentifiersToJson(realName, codeName), listener, errorListener) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                if (response != null) {
+                    statusCode = response.statusCode;
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
     }
 
     private JSONObject playerIdentifiersToJson(String realName, String codeName) throws JSONException {
