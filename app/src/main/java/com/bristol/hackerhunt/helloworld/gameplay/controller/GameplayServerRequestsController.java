@@ -399,6 +399,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void missionSuccess(InteractionDetails details, JSONObject obj) throws JSONException {
+        String success = "";
         if(obj.has("rewards")){
             JSONArray rewardArray = obj.getJSONArray("rewards");
             for(int i = 0; i < rewardArray.length(); i++){
@@ -407,9 +408,12 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 int rewardAmount = rewardRow.getInt("evidence");
                 gameStateController.increasePlayerIntel(rewardId, rewardAmount);
             }
-
-            gameStateController.missionSuccessful();
+            if(obj.has("success_description")){
+                success = obj.getString("success_description");
+            }
+            gameStateController.missionSuccessful(success);
         }
+
         details.status = InteractionStatus.SUCCESSFUL;
     }
 
@@ -422,7 +426,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void missionFailure(InteractionDetails details, JSONObject obj) throws JSONException {
         //TODO Define probably tell gameStateController something
-        gameStateController.missionFailed();
+        String failure = "";
+        if(obj.has("failure_description")){
+            failure = obj.getString("failure_description");
+        }
+        gameStateController.missionFailed(failure);
         details.status = InteractionStatus.FAILED;
     }
 

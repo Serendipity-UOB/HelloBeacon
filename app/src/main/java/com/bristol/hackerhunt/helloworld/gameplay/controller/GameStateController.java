@@ -340,13 +340,13 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
-    public void missionFailed() {
-        consoleView.missionFailedPrompt("Mission failed.");
+    public void missionFailed(String failure) {
+        consoleView.missionFailedPrompt(failure);
     }
 
     @Override
-    public void missionSuccessful() {
-        consoleView.missionSuccessPrompt("Mission successful");
+    public void missionSuccessful(String success) {
+        consoleView.missionSuccessPrompt(success);
     }
 
     @Override

@@ -212,13 +212,15 @@ public interface IGameStateController {
 
     /**
      * Mission failed.
+     * @param failure The string to display.
      */
-    void missionFailed();
+    void missionFailed(String failure);
 
     /**
      * Mission successful.
+     * @param success The string to display
      */
-    void missionSuccessful();
+    void missionSuccessful(String success);
 
     boolean exchangeHasBeenRequested();
 
