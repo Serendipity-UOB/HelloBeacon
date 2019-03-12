@@ -326,7 +326,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                         }
                     }
                 }
-                else if(statusCode == 204){
+                else if(statusCode == 203){
                     try {
                         missionFailure(response); //TODO Define
                     } catch (JSONException e) {
@@ -376,6 +376,10 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void missionFailure(JSONObject obj) throws JSONException {
+        if(obj.has("failure_description")){
+            String failure = obj.getString("failure_description");
+            
+        }
         //TODO Define probably tell gameStateController something
     }
 
