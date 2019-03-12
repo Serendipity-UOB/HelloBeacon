@@ -9,6 +9,11 @@ import java.util.Set;
 
 public interface IGameStateController {
 
+
+    long getGameDuration();
+
+    void setGameDuration(long gameDuration);
+
     /**
      * @return the ID of the playing player.
      */
@@ -65,6 +70,23 @@ public interface IGameStateController {
      * Reset the status of the player; they have now not been taken down.
      */
     void resetPlayerTakenDown();
+
+    /**
+     * Get the exposerId variable from object
+     * @return The string id of exposer
+     */
+    String getExposerId();
+
+    /**
+     * Resets the exposerId variable from object
+     */
+    void resetExposerId();
+
+    /**
+     * Sets exposerId to exposerId
+     * @param exposerId the id to set to
+     */
+    void setExposerId(String exposerId);
 
     /**
      * @return the playing player's target has been taken down.
@@ -143,12 +165,6 @@ public interface IGameStateController {
     void updateExchangeReceive(String reqId);
 
     /**
-     * Handles a new mission coming in with description missionId
-     * @param missionId mission description string
-     */
-    void handleNewMission(String missionId);
-
-    /**
      * Update nearby beacon.
      * @param major major of beacon.
      * @param rssi recorded rssi of beacon.
@@ -169,8 +185,9 @@ public interface IGameStateController {
     /**
      * Update the player's statuses.
      * @param updates a list of player updates.
+     * @param exposerId the id of the player who exposed user if any
      */
-    void updateStatus(List<PlayerUpdate> updates);
+    void updateStatus(List<PlayerUpdate> updates, String exposerId);
 
     /**
      * Sets a task that runs if the nearest beacon is the home beacon.
@@ -192,4 +209,20 @@ public interface IGameStateController {
      * @return true if game over, false otherwise.
      */
     boolean gameHasEnded();
+
+    /**
+     * Mission failed.
+     */
+    void missionFailed();
+
+    /**
+     * Mission successful.
+     */
+    void missionSuccessful();
+
+    boolean exchangeHasBeenRequested();
+
+    void completeExchangeRequest();
+
+    String getExchangeRequesterId();
 }

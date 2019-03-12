@@ -104,7 +104,12 @@ public interface IGameplayServerRequestsController {
      */
     void registerInterceptSuccessRunnable(Runnable interceptSuccessRunnable);
 
-    void missionUpdateRequest() throws JSONException;
+    /**
+     * Handles a mission update request
+     * @param details interaction details of update
+     * @throws JSONException
+     */
+    void missionUpdateRequest(InteractionDetails details) throws JSONException;
 
     /**
      * Registers a runnable that is run when a takedown is successful.

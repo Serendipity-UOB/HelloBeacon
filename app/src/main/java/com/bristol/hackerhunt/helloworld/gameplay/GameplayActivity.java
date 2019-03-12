@@ -44,9 +44,9 @@ import java.util.TimerTask;
 public class GameplayActivity extends AppCompatActivity {
 
     private static final int POLLING_PERIOD = 1;                // given in seconds
-    private static final double GAMEPLAY_DURATION = 8;          // given in minutes.
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
     private static final int CONSOLE_POPUP_DELAY_PERIOD = 3;    // given in seconds.
+    private static final int MISSION_POLLING_PERIOD = 1;        // given in seconds.
     private static final int ACCEPT = 1;
     private static final int REJECT = 2;
 
@@ -62,6 +62,7 @@ public class GameplayActivity extends AppCompatActivity {
     private IGameStateController gameStateController;
     private IBeaconController beaconController;
 
+    private boolean timerStarted = false;
     private boolean gameOver = false;
     private boolean closeConsoleOnHomeBeaconNearby = false;
     private boolean newTargetRequested = true;
@@ -96,7 +97,6 @@ public class GameplayActivity extends AppCompatActivity {
             }
         });
 
-        startGameTimer();
         initializeStatusBarPlayerName();
 
         // First task: player needs to head to their home beacon.
@@ -146,25 +146,18 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private void initializeGameStateController() {
-        this.gameStateController = new GameStateController(playerListView, playerStatusBarView,
-                playerIdentifiers, getIntent().getStringExtra("start_beacon_name"));
+        this.gameStateController = new GameStateController(playerListView,
+                playerStatusBarView,
+                consoleView,
+                playerIdentifiers,
+                getIntent().getStringExtra("start_beacon_name"));
     }
 
     private void initializeServerRequestController() {
         this.serverRequestsController = new GameplayServerRequestsController(this, gameStateController);
         serverRequestsController.registerExposeSuccessRunnable(exposeSuccessfulRunnable());
         serverRequestsController.registerExposeFailedRunnable(exposeFailedRunnable());
-        serverRequestsController.registerMissionUpdateRunnable(missionUpdateRunnable());
-    }
-
-    private StringInputRunnable missionUpdateRunnable() {
-        return new StringInputRunnable() {
-            @Override
-            public void run(final String missionDetails) {
-                //TODO Define what happens when a mission update occurs
-                //Nothing in notification view to do here??
-            }
-        };
+        serverRequestsController.registerMissionUpdateRunnable(handleNewMissionRunnable());
     }
 
     private Runnable exposeSuccessfulRunnable() {
@@ -214,6 +207,66 @@ public class GameplayActivity extends AppCompatActivity {
         };
     }
 
+    private StringInputRunnable handleNewMissionRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(final String missionDetails) {
+                Log.d("New Mission", missionDetails);
+                consoleView.missionUpdatePrompt(missionDetails);
+                beginMissionUpdateServerPolling();
+            }
+        };
+    }
+
+    private void beginMissionUpdateServerPolling() {
+        final Activity that = this;
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            final InteractionDetails details = new InteractionDetails();
+
+            @Override
+            public void run() {
+                try {
+                    serverRequestsController.missionUpdateRequest(details);
+
+                    if (details.status == InteractionStatus.FAILED){
+                        cancel();
+                        that.runOnUiThread(new Runnable(){
+                            @Override
+                            public void run() {
+                                consoleView.missionFailedPrompt("Mission Failed");
+                                //TODO Right message
+                            }
+                        });
+                    }
+                    else if(details.status == InteractionStatus.SUCCESSFUL){
+                        cancel();
+                        that.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                consoleView.missionSuccessPrompt("Mission Success");
+                                //TODO Right message
+                            }
+                        });
+                    }
+                    else if(details.status == InteractionStatus.IN_PROGRESS){
+                        that.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int timeRemaining = details.missionTime;
+                                //Tell the UI something
+                            }
+                        });
+                    }
+
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        },0, MISSION_POLLING_PERIOD * 1000);
+    }
+
     private void beginExchangeResponseServerPolling(final String playerId) {
         final Activity that = this;
 
@@ -233,7 +286,8 @@ public class GameplayActivity extends AppCompatActivity {
                             }
                         });
                         cancel();
-                    } else {
+                    }
+                    else {
                         if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
                             //playerListView.exchangeRequestComplete(playerId);
                             that.runOnUiThread(new Runnable() {
@@ -244,7 +298,8 @@ public class GameplayActivity extends AppCompatActivity {
                                 }
                             });
                             cancel();
-                        } else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                        }
+                        else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
                             final long t0 = System.currentTimeMillis();
 
                             //TODO Do something maybe??
@@ -313,20 +368,39 @@ public class GameplayActivity extends AppCompatActivity {
                         gameOver();
                     }
                     else {
-                        serverRequestsController.playerUpdateRequest();
-                        serverRequestsController.isAtHomeBeaconRequest();
-
-                        if (gameStateController.playerHasBeenTakenDown()) {
-                            closeConsoleOnHomeBeaconNearby = true;
-                            consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
-                            gameStateController.loseHalfOfPlayersIntel();
-                            gameStateController.resetPlayerTakenDown();
+                        if (!timerStarted && gameStateController.getGameDuration() > 0) {
+                            startGameTimer(gameStateController.getGameDuration());
+                            timerStarted = true;
                         }
-                        if (gameStateController.playersTargetHasBeenTakenDown()) {
-                            newTargetRequested = true;
-                            closeConsoleOnHomeBeaconNearby = true;
-                            consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
-                            gameStateController.resetPlayersTargetHasBeenTakenDown();
+
+                        if (timerStarted) {
+                            serverRequestsController.playerUpdateRequest();
+                            serverRequestsController.isAtHomeBeaconRequest();
+
+                            if (gameStateController.exchangeHasBeenRequested()) {
+                                String id = gameStateController.getExchangeRequesterId();
+                                exchangeRequestView.showDialogueBox(getPlayerName(id), id);
+                                gameStateController.completeExchangeRequest();
+                            }
+
+                            if (gameStateController.playerHasBeenTakenDown()) {
+                                closeConsoleOnHomeBeaconNearby = true;
+                                String exposerId = gameStateController.getExposerId();
+                                String exposerName = getPlayerName(exposerId);
+                                gameStateController.resetExposerId();
+
+                                //TODO Full screen notification call for exposure
+
+                                consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
+                                gameStateController.loseHalfOfPlayersIntel();
+                                gameStateController.resetPlayerTakenDown();
+                            }
+                            if (gameStateController.playersTargetHasBeenTakenDown()) {
+                                newTargetRequested = true;
+                                closeConsoleOnHomeBeaconNearby = true;
+                                consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
+                                gameStateController.resetPlayersTargetHasBeenTakenDown();
+                            }
                         }
                     }
                 } catch (JSONException e) {
@@ -355,8 +429,14 @@ public class GameplayActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 notificationView.interceptFailedNoExchange(getPlayerName(playerId));
-                                //Not necessarily true but will do for now
-                                //TODO branch based on status code for intercept
+                            }
+                        });
+                    }
+                    else if (details.status.equals(InteractionStatus.NO_EVIDENCE)) {
+                        that.runOnUiThread(new Runnable(){
+                            @Override
+                            public void run() {
+                                notificationView.interceptFailedNoEvidenceShared();
                             }
                         });
                     }
@@ -470,8 +550,8 @@ public class GameplayActivity extends AppCompatActivity {
         this.consoleView = new ConsoleView(overlay);
     }
 
-    private void startGameTimer() {
-        long duration = (long) (GAMEPLAY_DURATION * 60 * 1000);
+    private void startGameTimer(long durationInMinutes) {
+        long duration = (durationInMinutes * 60 * 1000);
 
         // Starting timer thread
         new CountDownTimer(duration, 1000) {

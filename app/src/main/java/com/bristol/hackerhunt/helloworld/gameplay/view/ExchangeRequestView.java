@@ -23,10 +23,12 @@ public class ExchangeRequestView implements IExchangeRequestView {
 
     @Override
     public void showDialogueBox(String playerRealName, String playerId) {
-        setDialogText(playerRealName);
-        setAcceptButtonOnClickListener(playerId);
-        setRejectButtonOnClickListener(playerId);
-        exchangeRequestWrapper.setVisibility(View.VISIBLE);
+        if (playerRealName != null && playerId != null) {
+            setDialogText(playerRealName);
+            setAcceptButtonOnClickListener(playerId);
+            setRejectButtonOnClickListener(playerId);
+            exchangeRequestWrapper.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

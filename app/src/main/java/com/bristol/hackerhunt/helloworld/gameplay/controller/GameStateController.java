@@ -3,6 +3,8 @@ package com.bristol.hackerhunt.helloworld.gameplay.controller;
 import android.util.Log;
 
 import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
+import com.bristol.hackerhunt.helloworld.gameplay.view.IConsoleView;
+import com.bristol.hackerhunt.helloworld.gameplay.view.INotificationView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerListView;
 import com.bristol.hackerhunt.helloworld.gameplay.view.IPlayerStatusBarView;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
@@ -17,8 +19,11 @@ public class GameStateController implements IGameStateController {
     //TODO Consider changing to 10 to better show quantum
     private static final int INTEL_INCREMENT = 20; // a percentage
 
+    private long gameDuration = -1;
+
     private final IPlayerListView playerListController;
     private final IPlayerStatusBarView playerStatusBarController;
+    private final IConsoleView consoleView;
 
     private final Map<String, Map<String, Integer>> beaconMajorMinorRssiMap;
     private String nearestBeaconMajor;
@@ -33,16 +38,23 @@ public class GameStateController implements IGameStateController {
     private final Map<String, PlayerDetails> allPlayersMap; // key: player_id (nfc)
     private List<String> nearbyPlayerIds;
     private String targetPlayerId;
+    private String exposerId;
+
+    private boolean exchangeRequestRecieved;
+    private String exchangeRequesterId;
 
     private boolean gameOver;
 
     public GameStateController(IPlayerListView playerListController,
                                IPlayerStatusBarView playerStatusBarController,
+                               IConsoleView consoleView,
                                PlayerIdentifiers playerIdentifiers,
                                String homeBeaconName) {
         this.playerListController = playerListController;
         this.playerStatusBarController = playerStatusBarController;
         this.playerIdentifiers = playerIdentifiers;
+        this.consoleView = consoleView;
+
         this.allPlayersMap = new HashMap<>();
         this.nearbyPlayerIds = new ArrayList<>();
         this.playerUpdates = new ArrayList<>();
@@ -53,6 +65,9 @@ public class GameStateController implements IGameStateController {
         this.points = 0;
         this.leaderboardPosition = "Loading...";
         nearestBeaconMajor = "none";
+        this.exposerId = "";
+
+        this.exchangeRequestRecieved = false;
 
         this.gameOver = false;
     }
@@ -67,6 +82,16 @@ public class GameStateController implements IGameStateController {
             this.hackerName = hackerName;
             this.intel = 0;
         }
+    }
+
+    @Override
+    public long getGameDuration() {
+        return gameDuration;
+    }
+
+    @Override
+    public void setGameDuration(long duration) {
+        this.gameDuration = duration;
     }
 
     @Override
@@ -109,6 +134,23 @@ public class GameStateController implements IGameStateController {
     @Override
     public boolean playerHasBeenTakenDown() {
         return playerUpdates.contains(PlayerUpdate.TAKEN_DOWN);
+    }
+
+    @Override
+    public String getExposerId() {
+        String exposerId = "";
+        if(playerUpdates.contains(PlayerUpdate.TAKEN_DOWN)){
+            exposerId = this.exposerId;
+        }
+        return exposerId;
+    }
+
+    @Override
+    public void setExposerId(String exposerId) { this.exposerId = exposerId; }
+
+    @Override
+    public void resetExposerId() {
+        this.exposerId = "";
     }
 
     @Override
@@ -221,13 +263,8 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void updateExchangeReceive(String reqId) {
-        //TODO Define behaviour, likely a "console view" thing
-    }
-
-    @Override
-    public void handleNewMission(String missionId) {
-
-        //TODO Define behaviour, also likely a console view thing
+        exchangeRequestRecieved = true;
+        exchangeRequesterId = reqId;
     }
 
     @Override
@@ -269,7 +306,8 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
-    public void updateStatus(List<PlayerUpdate> updates) {
+    public void updateStatus(List<PlayerUpdate> updates, String exposerId) {
+        this.exposerId = exposerId;
         this.playerUpdates = updates;
     }
 
@@ -299,5 +337,30 @@ public class GameStateController implements IGameStateController {
     @Override
     public boolean gameHasEnded() {
         return gameOver;
+    }
+
+    @Override
+    public void missionFailed() {
+        consoleView.missionFailedPrompt("Mission failed.");
+    }
+
+    @Override
+    public void missionSuccessful() {
+        consoleView.missionSuccessPrompt("Mission successful");
+    }
+
+    @Override
+    public boolean exchangeHasBeenRequested() {
+        return exchangeRequestRecieved;
+    }
+
+    @Override
+    public String getExchangeRequesterId() {
+        return exchangeRequesterId;
+    }
+
+    @Override
+    public void completeExchangeRequest() {
+        exchangeRequestRecieved = false;
     }
 }

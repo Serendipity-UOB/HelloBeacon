@@ -1,6 +1,7 @@
 package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -21,7 +22,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class GameplayServerRequestsController implements IGameplayServerRequestsController {
 
@@ -73,7 +76,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         this.MISSION_URL = context.getString(R.string.mission_update_request);
     }
 
-    //TODO Define new exchange request and response behaviour
     @Override
     public void cancelAllRequests() {
         requestQueue.stop();
@@ -98,6 +100,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             public void onResponse(JSONObject response) {
                 try {
                     setAllPlayers(response);
+                    setEndTime(response);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -115,14 +118,46 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 listener, errorListener);
     }
 
+    private float calculateTimeRemainingInMinutes(String startTime) {
+        Calendar c2 = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
+        int currentHour = c2.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = c2.get(Calendar.MINUTE);
+        int currentSecond = c2.get(Calendar.SECOND);
+
+        int currentTotal = currentSecond + 60 * (currentMinute + 60 * currentHour);
+
+        String[] startTimeArr = startTime.split(":");
+        float startHour = Float.parseFloat(startTimeArr[0]);
+        float startMinute = Float.parseFloat(startTimeArr[1]);
+        float startSecond = Float.parseFloat(startTimeArr[2]);
+        float startTotal = startSecond + 60 * (startMinute + 60 * startHour);
+
+        Log.d("JoinGame", "Time remaining: " + Float.toString((startTotal - currentTotal) / 60));
+        return ((startTotal - currentTotal) / 60);
+    }
+
+    private void setEndTime(JSONObject response) throws JSONException {
+        String endTime = response.getString("end_time");
+        Log.d("StartInfo", "Game duration: " + calculateTimeRemainingInMinutes(endTime));
+        gameStateController.setGameDuration((long) (calculateTimeRemainingInMinutes(endTime)));
+    }
+
     private void setAllPlayers(JSONObject allPlayersJson) throws JSONException {
-        JSONArray allPlayers =  allPlayersJson.getJSONArray("all_players");
+
+        String allPlayersString = allPlayersJson.getString("all_players");
+        JSONArray allPlayers =  new JSONArray(allPlayersString);
+
+        Log.d("StartInfo", "Player JSON: " + allPlayers.toString());
         List<PlayerIdentifiers> allPlayersIdentifiers = new ArrayList<>();
 
         for (int i = 0; i < allPlayers.length(); i++) {
             JSONObject obj = allPlayers.getJSONObject(i);
+            Log.d("StartInfo", "Player added: " + jsonToPlayerIdentifiers(obj).getHackerName());
+
             if (!isCurrentPlayer(obj)) {
                 allPlayersIdentifiers.add(jsonToPlayerIdentifiers(obj));
+                Log.d("StartInfo", "Player added: " + jsonToPlayerIdentifiers(obj).getHackerName());
             }
         }
         gameStateController.setAllPlayers(allPlayersIdentifiers);
@@ -248,7 +283,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void checkForMission(JSONObject obj) throws JSONException {
+        Log.d("Mission", obj.toString());
         if(obj.has("mission_description")) {
+            Log.d("Mission", obj.getString("mission_description"));
             String missionId = obj.getString("mission_description");
             missionUpdateRunnable.run(missionId);
         }
@@ -256,20 +293,22 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void checkForPlayerStatusChanges(JSONObject obj) throws JSONException {
         List<PlayerUpdate> updates = new ArrayList<>();
-        if (obj.has("exposed")) {
-            boolean takenDown = obj.getBoolean("exposed");
-            if (takenDown) {
-                updates.add(PlayerUpdate.TAKEN_DOWN);
-            }
+        String exposedId = "";
+        if (obj.has("exposed_by")) {
+                exposedId = obj.getString("exposed_by");
+                if (exposedId != "0") {
+                    updates.add(PlayerUpdate.TAKEN_DOWN);
+                    gameStateController.setExposerId(exposedId);
+                }
         }
         if (obj.has("req_new_target")) {
-            boolean reqNewTarget = obj.getBoolean("exposed");
+            boolean reqNewTarget = obj.getBoolean("req_new_target");
             if (reqNewTarget) {
                 updates.add(PlayerUpdate.REQ_NEW_TARGET);
             }
         }
 
-        gameStateController.updateStatus(updates);
+        gameStateController.updateStatus(updates, exposedId);
     }
 
     private void checkGameOver(JSONObject obj) throws JSONException {
@@ -301,17 +340,17 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void missionUpdateRequest() throws JSONException {
-        requestQueue.add(volleyMissionUpdateRequest());
+    public void missionUpdateRequest(InteractionDetails details) throws JSONException {
+        requestQueue.add(volleyMissionUpdateRequest(details));
     }
 
-    private JsonObjectRequest volleyMissionUpdateRequest() throws JSONException {
+    private JsonObjectRequest volleyMissionUpdateRequest(final InteractionDetails details) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 if (statusCode == 200) {
                     try {
-                        missionSuccess(response); //TODO Define
+                        missionSuccess(details, response); //TODO Define
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -320,7 +359,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                     if(response.has("time_remaining")){
                         try {
                             int timeRemaining = response.getInt("time_remaining");
-                            missionPending(timeRemaining, response); //TODO Define
+                            missionPending(details, timeRemaining, response); //TODO Define
                         } catch (JSONException e) {
                             // TODO: handle.
                         }
@@ -328,7 +367,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 }
                 else if(statusCode == 203){
                     try {
-                        missionFailure(response); //TODO Define
+                        missionFailure(details, response); //TODO Define
                     } catch (JSONException e) {
                         // TODO: handle
                     }
@@ -359,7 +398,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
     }
 
-    private void missionSuccess(JSONObject obj) throws JSONException {
+    private void missionSuccess(InteractionDetails details, JSONObject obj) throws JSONException {
         if(obj.has("rewards")){
             JSONArray rewardArray = obj.getJSONArray("rewards");
             for(int i = 0; i < rewardArray.length(); i++){
@@ -368,19 +407,23 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 int rewardAmount = rewardRow.getInt("evidence");
                 gameStateController.increasePlayerIntel(rewardId, rewardAmount);
             }
+
+            gameStateController.missionSuccessful();
         }
+        details.status = InteractionStatus.SUCCESSFUL;
     }
 
-    private void missionPending(int timeRemaining, JSONObject obj) throws JSONException {
+    private void missionPending(InteractionDetails details, int timeRemaining, JSONObject obj) throws JSONException {
         //TODO Define, probably tell gameStateController something
+        details.status = InteractionStatus.IN_PROGRESS;
+        details.missionTime = timeRemaining;
     }
 
-    private void missionFailure(JSONObject obj) throws JSONException {
-        if(obj.has("failure_description")){
-            String failure = obj.getString("failure_description");
-            
-        }
+
+    private void missionFailure(InteractionDetails details, JSONObject obj) throws JSONException {
         //TODO Define probably tell gameStateController something
+        gameStateController.missionFailed();
+        details.status = InteractionStatus.FAILED;
     }
 
     @Override
@@ -635,6 +678,12 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void interceptFailure(InteractionDetails details) throws JSONException {
         details.status = InteractionStatus.FAILED;
+        if(statusCode == 204){
+            //No Content
+            //No exchange happened
+            details.status = InteractionStatus.NO_EVIDENCE;
+        }
+
     }
 
     private void interceptError(VolleyError error, InteractionDetails details) {
