@@ -82,7 +82,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void startInfoRequest() {
+    public void startInfoRequest() throws JSONException {
         // this is just a placeholder.
         // String response = "{\"all_players\":[{\"id\":\"1\",\"real_name\":\"Tom\",\"hacker_name\":\"Tom\"},{\"id\":\"2\",\"real_name\":\"Tilly\",\"hacker_name\":\"cutie_kitten\"},{\"id\":\"3\",\"real_name\":\"Louis\",\"hacker_name\":\"Louis\"},{\"id\":\"4\",\"real_name\":\"David\",\"hacker_name\":\"CookingKing\"},{\"id\":\"5\",\"real_name\":\"Jack\",\"hacker_name\":\"falafel\"},{\"id\":\"7\",\"real_name\":\"Tilo\",\"hacker_name\":\"Tilo\"},{\"id\":\"8\",\"real_name\":\"Beth\",\"hacker_name\":\"Beth\"},{\"id\":\"9\",\"real_name\":\"Becky\",\"hacker_name\":\"Becky\"},{\"id\":\"10\",\"real_name\":\"Bradley\",\"hacker_name\":\"Bradley\"}]}";
         // JSONObject obj = new JSONObject(response);
@@ -94,7 +94,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
 
 
-    private JsonObjectRequest volleyStartInfoRequest() {
+    private JsonObjectRequest volleyStartInfoRequest() throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
