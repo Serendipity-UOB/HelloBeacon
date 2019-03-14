@@ -115,7 +115,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
 
         JSONObject startInfoBody = new JSONObject();
+        Log.d("Player id",gameStateController.getPlayerId());
         startInfoBody.put("player_id",gameStateController.getPlayerId());
+
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + START_INFO_URL, startInfoBody,
                 listener, errorListener);
