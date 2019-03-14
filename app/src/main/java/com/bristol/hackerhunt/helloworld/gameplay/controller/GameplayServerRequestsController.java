@@ -292,7 +292,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         if(obj.has("mission_description")) {
             Log.d("Mission", obj.getString("mission_description"));
             String missionId = obj.getString("mission_description");
-            if(missionId != "") {
+            if(!missionId.equals("")) {
                 missionUpdateRunnable.run(missionId);
             }
         }
@@ -303,7 +303,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         String exposedId = "";
         if (obj.has("exposed_by")) {
                 exposedId = obj.getString("exposed_by");
-                if (exposedId != "0") {
+                if (!exposedId.equals("0")) {
                     updates.add(PlayerUpdate.TAKEN_DOWN);
                     gameStateController.setExposerId(exposedId);
                 }
