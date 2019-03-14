@@ -202,7 +202,14 @@ public class GameplayActivity extends AppCompatActivity {
 
             @Override
             public void run(final String playerId) {
-                beginExchangeResponseServerPolling(playerId);
+                final InteractionDetails details = new InteractionDetails();
+
+                try {
+                    serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
+                    exchangeRequestView.hideDialogueBox();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
     }
@@ -325,8 +332,7 @@ public class GameplayActivity extends AppCompatActivity {
                         that.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                notificationView.exchangeFailedRejection(playerId);
-                                //TODO Maybe sends the wrong message since user rejects not playerId
+                                exchangeRequestView.hideDialogueBox();
                             }
                         });
                     }
