@@ -608,8 +608,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     //6d - Exchange Response
     private JSONObject exchangeResponseBody(String interacteeId, int response) throws JSONException {
         JSONObject requestBody = new JSONObject();
-        requestBody.put("player_id", gameStateController.getPlayerId());
-        requestBody.put("exchanger_id", interacteeId);
+        requestBody.put("responder_id", gameStateController.getPlayerId());
+        requestBody.put("requester_id", interacteeId);
         requestBody.put("response", response);
 
         JSONArray contactIds = new JSONArray();
