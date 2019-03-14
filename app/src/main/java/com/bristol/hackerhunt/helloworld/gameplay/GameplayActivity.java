@@ -569,6 +569,8 @@ public class GameplayActivity extends AppCompatActivity {
         }.start();
     }
 
+
+    //TODO Bug here or in game over test
     private void gameOver() {
         gameOver = true;
         Intent intent = new Intent(GameplayActivity.this, LeaderboardActivity.class);
