@@ -521,6 +521,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     //6c - Exchange Request
     private JSONObject exchangeRequestBody(String interacteeId) throws JSONException {
         JSONObject requestBody = new JSONObject();
+        Log.d("Exchange Requester", gameStateController.getPlayerId());
+        Log.d("Exchange Responder", interacteeId);
         requestBody.put("requester_id", gameStateController.getPlayerId());
         requestBody.put("responder_id", interacteeId);
 
