@@ -292,7 +292,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         if(obj.has("mission_description")) {
             Log.d("Mission", obj.getString("mission_description"));
             String missionId = obj.getString("mission_description");
-            missionUpdateRunnable.run(missionId);
+            if(missionId != "") {
+                missionUpdateRunnable.run(missionId);
+            }
         }
     }
 
@@ -392,7 +394,10 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         };
 
-        return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + MISSION_URL, new JSONObject(), listener, errorListener) {
+        JSONObject missionUpdateBody = new JSONObject();
+        missionUpdateBody.put("player_id", gameStateController.getPlayerId());
+
+        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + MISSION_URL, missionUpdateBody, listener, errorListener) {
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 if (response != null) {
