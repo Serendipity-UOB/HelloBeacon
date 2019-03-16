@@ -19,21 +19,21 @@ public class NotificationView implements INotificationView {
     @Override
     public void exposeFailedInsufficientEvidence(String playerRealName) {
         setBadNotificationCard();
-        setNotificationText("Exchange failed\nInsufficient evidence on " + playerRealName + ".");
+        setNotificationText("Expose failed\nInsufficient evidence on " + playerRealName + ".");
         popUpNotification();
     }
 
     @Override
     public void exposeFailedNotYourTarget(String playerCodeName) {
         setBadNotificationCard();
-        setNotificationText("Exchange failed\n" + playerCodeName + " is not your target.");
+        setNotificationText("Expose failed\n" + playerCodeName + " is not your target.");
         popUpNotification();
     }
 
     @Override
     public void exposeFailedNetworkError() {
         setBadNotificationCard();
-        setNotificationText("Exchange failed\nNetwork error.");
+        setNotificationText("Expose failed\nNetwork error.");
         popUpNotification();
     }
 
