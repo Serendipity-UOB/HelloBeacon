@@ -28,6 +28,7 @@ public class JoinGameActivity extends AppCompatActivity {
     private GameInfo gameInfo;
     private boolean joinedGame = false;
     private boolean timerStarted = false;
+    private boolean gameStarted = false;
     private PlayerIdentifiers playerIdentifiers;
 
     @Override
@@ -70,10 +71,10 @@ public class JoinGameActivity extends AppCompatActivity {
                     startCountdownToGameStart(playerIdentifiers, timer);
                     showJoinGameButton();
                 }
-                if (gameInfo.numberOfPlayers != null && gameInfo.numberOfPlayers >= 0 ) {
+                if (gameInfo.numberOfPlayers != null && gameInfo.numberOfPlayers >= 0 && !gameStarted ) {
                     updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
                 }
-                if (gameInfo.minutesToStart != null && gameInfo.minutesToStart < 0) {
+                if (gameInfo.minutesToStart != null && gameInfo.minutesToStart < 0 && !gameStarted) {
                     updateTimeLeftUntilGame("--:--");
                     updateNumberOfPlayersInGame("--");
 
@@ -89,7 +90,6 @@ public class JoinGameActivity extends AppCompatActivity {
                                 }
                             }
                     );
-                    cancel();
                 }
             }
         };
@@ -105,7 +105,8 @@ public class JoinGameActivity extends AppCompatActivity {
         timerStarted = true;
     }
 
-    private CountDownTimer startGameTimer(final PlayerIdentifiers playerIdentifiers, final Timer timer,
+    private CountDownTimer startGameTimer(final PlayerIdentifiers playerIdentifiers,
+                                          final Timer timer,
                                           long millisecondsToGameStart) {
         return new CountDownTimer(millisecondsToGameStart, 1000) {
 
@@ -118,6 +119,7 @@ public class JoinGameActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 if (joinedGame) {
+                    gameStarted = true;
                     serverRequestController.cancelAllRequests();
                     goToGameplayActivity(playerIdentifiers);
                 }
