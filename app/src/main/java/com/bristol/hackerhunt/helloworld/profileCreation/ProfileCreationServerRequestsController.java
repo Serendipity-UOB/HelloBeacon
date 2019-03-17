@@ -91,9 +91,18 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
                 if (error.networkResponse != null && error.networkResponse.statusCode == 204) {
                     onProfileInvalidRunnable.run("There is currently no game available to join.");
                 }
-                //else if (error.networkResponse != null && error.networkResponse.statusCode == 400) {
-                //    onProfileInvalidRunnable.run("Code name is taken.");
-                //}
+                else if (error.networkResponse != null &&
+                        error.networkResponse.data != null &&
+                        error.networkResponse.statusCode == 400) {
+                    try {
+                        String jsonError = new JSONObject(new String(error.networkResponse.data))
+                                .getString("error");
+                        onProfileInvalidRunnable.run(jsonError);
+                    } catch (JSONException e) {
+                        Log.d("Network","Message: " + e.getMessage());
+                        onProfileInvalidRunnable.run("Network error.");
+                    }
+                }
                 else {
                     Log.d("Network","Message:" + error.toString());
                     onProfileInvalidRunnable.run("Network error.");
