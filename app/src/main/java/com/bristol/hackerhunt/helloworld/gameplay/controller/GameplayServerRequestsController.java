@@ -110,14 +110,13 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                throw new IllegalStateException("Error: " + error.getMessage());
+                Log.d("Network", error.getMessage());
             }
         };
 
         JSONObject startInfoBody = new JSONObject();
-        Log.d("Player id",gameStateController.getPlayerId());
         startInfoBody.put("player_id",gameStateController.getPlayerId());
-
+        Log.d("Player id",gameStateController.getPlayerId());
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + START_INFO_URL, startInfoBody,
                 listener, errorListener);

@@ -67,7 +67,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
                         Log.d("JoinGame", "Status code 204");
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.d("Network", e.getMessage());
                 }
                 statusCode = 0;
             }
