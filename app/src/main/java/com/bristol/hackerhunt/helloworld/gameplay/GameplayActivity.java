@@ -539,13 +539,21 @@ public class GameplayActivity extends AppCompatActivity {
                             for (String id : details.gainedIntelPlayerIds) {
                                 gameStateController.increasePlayerIntel(id);
                             }*/
+                            final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
 
                             that.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     playerListView.exchangeRequestComplete(interacteeId);
-                                    notificationView.exchangeSuccessful(getPlayerName(interacteeId),
-                                            getPlayerName(details.gainedIntelPlayerIds.get(1)));
+
+                                    if (secondaryExists) {
+                                        notificationView.exchangeSuccessful(getPlayerName(interacteeId),
+                                                details.gainedIntelPlayerIds.get(1));
+                                    }
+
+                                    else {
+                                        notificationView.exchangeSuccessful(getPlayerName(interacteeId),"");
+                                    }
                                 }
                             });
                         }
