@@ -458,7 +458,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Exchange Request code", Integer.toString(statusCode));
-                if (statusCode == 200) {
+                if (statusCode == 202) {
                     try {
                         successfulExchange(interacteeId, details, response);
                     } catch (JSONException e) {
@@ -470,6 +470,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 }
                 else if (statusCode == 204) {
                     rejectedExchange(details);
+                }
+                else if (statusCode == 206) {
+                    pollExchange(details,response);
                 }
                 statusCode = 0;
             }
