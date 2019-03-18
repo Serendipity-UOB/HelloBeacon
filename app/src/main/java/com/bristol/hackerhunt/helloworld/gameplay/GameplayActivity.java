@@ -559,11 +559,7 @@ public class GameplayActivity extends AppCompatActivity {
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
-                    try {
-                        serverRequestsController.exchangeRequest(interacteeId, details);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    //Do nothing
                 }
             }
         }, 0, EXCHANGE_POLLING_PERIOD * 1000);
