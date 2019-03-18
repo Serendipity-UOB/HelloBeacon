@@ -516,16 +516,17 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             notificationView.exchangeFailedTimedOut(getPlayerName(interacteeId));
+                            playerListView.exchangeRequestComplete(interacteeId);
                         }
                     });
                     cancel();
-                    playerListView.exchangeRequestComplete(interacteeId);
+
                 }
                 else {
                     try {
                         if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
                             cancel();
-                            playerListView.exchangeRequestComplete(interacteeId);
+
 
                             /* REPLACING BY INCREASING INTEL IN SERVER REQUESTS
                             for (String id : details.gainedIntelPlayerIds) {
@@ -535,6 +536,7 @@ public class GameplayActivity extends AppCompatActivity {
                             that.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    playerListView.exchangeRequestComplete(interacteeId);
                                     notificationView.exchangeSuccessful(getPlayerName(interacteeId),
                                             getPlayerName(details.gainedIntelPlayerIds.get(1)));
                                 }
