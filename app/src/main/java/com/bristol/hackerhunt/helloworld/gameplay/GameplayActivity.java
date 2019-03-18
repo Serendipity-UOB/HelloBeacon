@@ -511,6 +511,11 @@ public class GameplayActivity extends AppCompatActivity {
 
             @Override
             public void run() {
+                try {
+                    serverRequestsController.exchangeRequest(interacteeId, details);
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
                 if (details.status.equals(InteractionStatus.FAILED)) {
                     that.runOnUiThread(new Runnable() {
                         @Override

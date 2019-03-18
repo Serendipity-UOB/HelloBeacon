@@ -457,6 +457,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.d("Exchange Request code", Integer.toString(statusCode));
                 if (statusCode == 200) {
                     try {
                         successfulExchange(interacteeId, details, response);
@@ -552,6 +553,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.d("Exchange Response code", Integer.toString(statusCode));
                 if (statusCode == 202){
                     try {
                         successfulExchange(interacteeId, details, response);
