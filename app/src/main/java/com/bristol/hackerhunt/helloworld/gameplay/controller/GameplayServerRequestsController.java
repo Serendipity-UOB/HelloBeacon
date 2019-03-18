@@ -465,6 +465,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                         e.printStackTrace();
                     }
                 }
+                if (statusCode == 201) {
+                    pollExchange(details,response);
+                }
                 statusCode = 0;
             }
         };
@@ -494,6 +497,10 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 return super.parseNetworkResponse(response);
             }
         };
+    }
+
+    private void pollExchange(InteractionDetails details, JSONObject obj){
+        details.status = InteractionStatus.IN_PROGRESS;
     }
 
     private void successfulExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
