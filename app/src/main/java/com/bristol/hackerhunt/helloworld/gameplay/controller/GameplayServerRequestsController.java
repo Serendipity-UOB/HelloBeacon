@@ -795,7 +795,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             @Override
             public void onErrorResponse(VolleyError error) {
                 if(statusCode == 400) {
-                    throw new IllegalStateException("Error: " + error.getMessage());
+                    Log.d("Network", "No home beacon found");
                 }
             }
         };
