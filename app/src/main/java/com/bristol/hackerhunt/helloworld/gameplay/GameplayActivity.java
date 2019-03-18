@@ -206,6 +206,8 @@ public class GameplayActivity extends AppCompatActivity {
 
                 try {
                     serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
+                    //TODO Maybe put poll in here?
+                    //TODO Also put exchange request view in
                     exchangeRequestView.hideDialogueBox();
                 } catch (JSONException e) {
                     e.printStackTrace();

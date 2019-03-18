@@ -504,16 +504,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void successfulExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
-        String secondaryId = obj.getString("secondary_id");
-        /*
-        details.gainedIntelPlayerIds.add(interacteeId);
-        if (!secondaryId.equals("0"))
+        if(obj.has("secondary_id")){
+            String secondaryId = obj.getString("secondary_id");
+            gameStateController.increasePlayerIntel(secondaryId, EXCHANGE_SECONDARY_INCREMENT);
             details.gainedIntelPlayerIds.add(secondaryId);
-        */
+        }
         gameStateController.increasePlayerIntel(interacteeId, EXCHANGE_PRIMARY_INCREMENT);
         details.gainedIntelPlayerIds.add(interacteeId);
-        gameStateController.increasePlayerIntel(secondaryId, EXCHANGE_SECONDARY_INCREMENT);
-        details.gainedIntelPlayerIds.add(secondaryId);
+
         details.status = InteractionStatus.SUCCESSFUL;
     }
 
