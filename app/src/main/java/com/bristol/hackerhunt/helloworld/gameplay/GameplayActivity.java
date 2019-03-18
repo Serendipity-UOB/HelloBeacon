@@ -294,12 +294,21 @@ public class GameplayActivity extends AppCompatActivity {
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
-                    //playerListView.exchangeRequestComplete(playerId);
+                    final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
+
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            notificationView.exchangeSuccessful(getPlayerName(playerId),
-                                    getPlayerName(details.gainedIntelPlayerIds.get(1)));
+                            playerListView.exchangeRequestComplete(playerId);
+
+                            if (secondaryExists) {
+                                notificationView.exchangeSuccessful(getPlayerName(playerId),
+                                        details.gainedIntelPlayerIds.get(1));
+                            }
+
+                            else {
+                                notificationView.exchangeSuccessful(getPlayerName(playerId),"");
+                            }
                         }
                     });
                     cancel();
