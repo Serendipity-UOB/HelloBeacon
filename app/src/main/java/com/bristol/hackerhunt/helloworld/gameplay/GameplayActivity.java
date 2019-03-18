@@ -202,16 +202,13 @@ public class GameplayActivity extends AppCompatActivity {
 
             @Override
             public void run(final String playerId) {
-                final InteractionDetails details = new InteractionDetails();
+                //final InteractionDetails details = new InteractionDetails();
 
-                try {
-                    serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
-                    //TODO Maybe put poll in here?
-                    //TODO Also put exchange request view in
-                    exchangeRequestView.hideDialogueBox();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
+                //serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
+                beginExchangeResponseServerPolling(playerId);
+                exchangeRequestView.hideDialogueBox();
+
             }
         };
     }
@@ -286,38 +283,32 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 try {
                     serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
-
-                    if (details.status.equals(InteractionStatus.FAILED)) {
-                        that.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                notificationView.exchangeFailedTimedOut(playerId);
-                            }
-                        });
-                        cancel();
-                    }
-                    else {
-                        if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
-                            //playerListView.exchangeRequestComplete(playerId);
-                            that.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    notificationView.exchangeSuccessful(getPlayerName(playerId),
-                                            getPlayerName(details.gainedIntelPlayerIds.get(1)));
-                                }
-                            });
-                            cancel();
-                        }
-                        else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
-                            final long t0 = System.currentTimeMillis();
-
-                            //TODO Do something maybe??
-                            //Haven't set this for exchange response
-                        }
-                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                if (details.status.equals(InteractionStatus.FAILED)) {
+                    that.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() { notificationView.exchangeFailedTimedOut(playerId); }
+                    });
+                    cancel();
+                }
+                else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
+                    //playerListView.exchangeRequestComplete(playerId);
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationView.exchangeSuccessful(getPlayerName(playerId),
+                                    getPlayerName(details.gainedIntelPlayerIds.get(1)));
+                        }
+                    });
+                    cancel();
+                }
+                else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                    //TODO Do something maybe??
+                    //Haven't set this for exchange response
+                }
+
             }
         },1000, EXCHANGE_POLLING_PERIOD * 1000);
     }

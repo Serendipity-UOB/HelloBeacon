@@ -281,7 +281,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private void updateExchangeReceive(JSONObject obj) throws JSONException {
         if(obj.has("exchange_pending")) {
             String reqId = obj.getString("exchange_pending");
-            gameStateController.updateExchangeReceive(reqId);
+            if(!reqId.equals("0")) {
+                gameStateController.updateExchangeReceive(reqId);
+            }
         }
     }
 
