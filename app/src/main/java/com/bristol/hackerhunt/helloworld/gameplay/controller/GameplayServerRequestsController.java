@@ -497,6 +497,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void successfulExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
+        Log.d("Exchange", "JSON recieved: " + obj.toString());
         String secondaryId = obj.getString("secondary_id");
         /*
         details.gainedIntelPlayerIds.add(interacteeId);
@@ -553,7 +554,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("Exchange Response code", Integer.toString(statusCode));
                 if (statusCode == 202){
                     try {
                         successfulExchange(interacteeId, details, response);
