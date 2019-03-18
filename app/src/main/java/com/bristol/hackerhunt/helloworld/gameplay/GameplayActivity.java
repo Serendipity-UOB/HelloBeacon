@@ -527,42 +527,39 @@ public class GameplayActivity extends AppCompatActivity {
                         }
                     });
                     cancel();
-
                 }
-                else {
-                    try {
-                        if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
-                            cancel();
-
-
-                            /* REPLACING BY INCREASING INTEL IN SERVER REQUESTS
-                            for (String id : details.gainedIntelPlayerIds) {
-                                gameStateController.increasePlayerIntel(id);
-                            }*/
-                            final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
-
-                            that.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    playerListView.exchangeRequestComplete(interacteeId);
-
-                                    if (secondaryExists) {
-                                        notificationView.exchangeSuccessful(getPlayerName(interacteeId),
-                                                details.gainedIntelPlayerIds.get(1));
-                                    }
-
-                                    else {
-                                        notificationView.exchangeSuccessful(getPlayerName(interacteeId),"");
-                                    }
-                                }
-                            });
+                else if (details.status.equals(InteractionStatus.REJECTED)) {
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationView.exchangeFailedRejection(getPlayerName(interacteeId));
+                            playerListView.exchangeRequestComplete(interacteeId);
                         }
-                        else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
-                            serverRequestsController.exchangeRequest(interacteeId, details);
+                    });
+                    cancel();
+                }
+                else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
+                    final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
+
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            playerListView.exchangeRequestComplete(interacteeId);
+
+                            if (secondaryExists) {
+                                notificationView.exchangeSuccessful(getPlayerName(interacteeId),
+                                        details.gainedIntelPlayerIds.get(1));
+                            }
+
+                            else {
+                                notificationView.exchangeSuccessful(getPlayerName(interacteeId),"");
+                            }
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    });
+                    cancel();
+                }
+                else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                    //Do nothing
                 }
             }
         }, 0, EXCHANGE_POLLING_PERIOD * 1000);
