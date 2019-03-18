@@ -465,8 +465,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                         e.printStackTrace();
                     }
                 }
-                if (statusCode == 201) {
+                else if (statusCode == 201) {
                     pollExchange(details,response);
+                }
+                else if (statusCode == 204) {
+                    rejectedExchange(details);
                 }
                 statusCode = 0;
             }
@@ -477,6 +480,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             public void onErrorResponse(VolleyError error) {
                 if (statusCode == 400) {
                     // Log.d("Network", "400 Error received");
+                    unsuccessfulExchange(details);
+                }
+                else if (statusCode == 408){
                     unsuccessfulExchange(details);
                 }
                 else if (statusCode != 201 && statusCode != 202){
