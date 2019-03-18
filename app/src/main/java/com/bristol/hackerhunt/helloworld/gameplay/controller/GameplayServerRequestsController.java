@@ -341,6 +341,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         }
         requestBody.put("beacons", beacons);
+        Log.d("Player Update Body", requestBody.toString());
 
         return requestBody;
     }
@@ -776,6 +777,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     @Override
     public void isAtHomeBeaconRequest() throws JSONException {
+        Log.d("Home Beacon Request","Requested");
         requestQueue.add(volleyIsAtHomeBeaconRequest());
     }
 
@@ -783,19 +785,33 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                atHomeUpdate(response);
+                if(statusCode == 200) {
+                    atHomeUpdate(response);
+                }
             }
         };
+        statusCode = 0;
 
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                throw new IllegalStateException("Error: " + error.getMessage());
+                if(statusCode == 400) {
+                    throw new IllegalStateException("Error: " + error.getMessage());
+                }
             }
         };
+        statusCode = 0;
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + PLAYER_AT_HOME_URL,
-                playerUpdateRequestBody(), listener, errorListener);
+                playerUpdateRequestBody(), listener, errorListener) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                if (response != null) {
+                    statusCode = response.statusCode;
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
     }
 
     private void atHomeUpdate(JSONObject response) {
