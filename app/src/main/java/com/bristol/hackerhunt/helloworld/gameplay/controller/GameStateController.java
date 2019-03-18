@@ -40,7 +40,7 @@ public class GameStateController implements IGameStateController {
     private String targetPlayerId;
     private String exposerId;
 
-    private boolean exchangeRequestRecieved;
+    private boolean exchangeRequestReceived;
     private String exchangeRequesterId;
 
     private boolean gameOver;
@@ -67,7 +67,7 @@ public class GameStateController implements IGameStateController {
         nearestBeaconMajor = "none";
         this.exposerId = "";
 
-        this.exchangeRequestRecieved = false;
+        this.exchangeRequestReceived = false;
 
         this.gameOver = false;
     }
@@ -263,7 +263,7 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void updateExchangeReceive(String reqId) {
-        exchangeRequestRecieved = true;
+        exchangeRequestReceived = true;
         exchangeRequesterId = reqId;
     }
 
@@ -351,7 +351,7 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public boolean exchangeHasBeenRequested() {
-        return exchangeRequestRecieved;
+        return exchangeRequestReceived;
     }
 
     @Override
@@ -361,6 +361,6 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void completeExchangeRequest() {
-        exchangeRequestRecieved = false;
+        exchangeRequestReceived = false;
     }
 }
