@@ -149,8 +149,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void setAllPlayers(JSONObject allPlayersJson) throws JSONException {
 
-        String allPlayersString = allPlayersJson.getString("all_players");
-        JSONArray allPlayers =  new JSONArray(allPlayersString);
+        JSONArray allPlayers =  allPlayersJson.getJSONArray("all_players");
 
         Log.d("StartInfo", "Player JSON: " + allPlayers.toString());
         List<PlayerIdentifiers> allPlayersIdentifiers = new ArrayList<>();
