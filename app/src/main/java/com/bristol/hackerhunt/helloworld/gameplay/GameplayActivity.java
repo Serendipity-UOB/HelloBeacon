@@ -331,18 +331,20 @@ public class GameplayActivity extends AppCompatActivity {
                 try {
                     serverRequestsController.exchangeResponse(playerId, REJECT, details);
                     if (details.status.equals(InteractionStatus.REJECTED)) {
-                        that.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                exchangeRequestView.hideDialogueBox();
-                            }
-                        });
+                        Log.d("Reject Exchange", "Successfully rejected");
                     }
                     else {
+                        Log.d("Reject Exchange", "Something went wrong");
                         //Some error in server stuff
                         //Maybe just let it time out??
                         //Better than trying again
                     }
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            exchangeRequestView.hideDialogueBox();
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
