@@ -516,7 +516,12 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    serverRequestsController.exchangeRequest(interacteeId, details);
+
+                    if (details.status == InteractionStatus.IN_PROGRESS) {
+                        serverRequestsController.exchangeRequest(interacteeId, details);
+                        details.status = InteractionStatus.RESPONSE_PENDING;
+                    }
+
                 } catch (JSONException e){
                     e.printStackTrace();
                 }
@@ -559,9 +564,6 @@ public class GameplayActivity extends AppCompatActivity {
                         }
                     });
                     cancel();
-                }
-                else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
-                    //Do nothing
                 }
             }
         }, 0, EXCHANGE_POLLING_PERIOD * 1000);
