@@ -154,6 +154,7 @@ public class PlayerListView implements IPlayerListView {
         String playerName = playerIdNameMap.get(playerId);
         setTextOfView(playerNameView, playerName);
         evidenceGathered.setProgress(progress);
+        evidenceGathered.setText(String.valueOf(progress));
 
         // if the code name of the player is known, reveal it.
         if (playerIdCodeNameMap.containsKey(playerId)) {
@@ -280,6 +281,7 @@ public class PlayerListView implements IPlayerListView {
 
             float intel = intelBar.getProgress();
             intelBar.setProgress(intel + intelIncrement);
+            intelBar.setText(String.valueOf((int) intel + intelIncrement));
 
             if (intel == 100) {
                 setFullIntelCircleProgressBarColours(intelBar);
