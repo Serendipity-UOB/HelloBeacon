@@ -487,6 +487,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                     // Log.d("Network", "400 Error received");
                     unsuccessfulExchange(details);
                 }
+                else if (statusCode == 204) {
+                    rejectedExchange(details);
+                }
                 else if (statusCode == 408){
                     unsuccessfulExchange(details);
                 }

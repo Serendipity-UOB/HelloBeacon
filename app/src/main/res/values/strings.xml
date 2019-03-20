@@ -106,7 +106,7 @@
         Return to $BEACON, agent.
     </string>
 
-    <string name="console_expose_success_title">Exchange Success</string>
+    <string name="console_expose_success_title">Expose Success</string>
     <string name="console_expose_success_message">
         Good work, agent. Return to $BEACON for your next target.
         \n\n
