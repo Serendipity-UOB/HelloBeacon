@@ -305,8 +305,10 @@ public class PlayerListView implements IPlayerListView {
     }
 
     private void setFullIntelCircleProgressBarColours(CircleProgressBar progressBar) {
-        progressBar.setTextColor(R.color.progress_bar_complete_evidence_text);
-        progressBar.setProgressColor(R.color.progress_bar_complete_evidence);
+        progressBar.setTextColor(ContextCompat.getColor(progressBar.getContext(),
+                R.color.progress_bar_complete_evidence_text));
+        progressBar.setProgressColor(ContextCompat.getColor(progressBar.getContext(),
+                R.color.progress_bar_complete_evidence));
     }
 
     @Override

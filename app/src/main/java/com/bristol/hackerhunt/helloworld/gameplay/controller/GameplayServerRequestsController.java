@@ -496,7 +496,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 else if (statusCode == 404){
                     unsuccessfulExchange(details);
                 }
-                else if (statusCode != 201 && statusCode != 202){
+                else if (statusCode != 201 && statusCode != 202) {
                     // Log.d("Network", "Different server error received: " + Integer.toString(statusCode));
                     unsuccessfulExchange(details);
                 }
@@ -521,13 +521,17 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void successfulExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
-        if(obj.has("secondary_id")){
-            String secondaryId = obj.getString("secondary_id");
-            gameStateController.increasePlayerIntel(secondaryId, EXCHANGE_SECONDARY_INCREMENT);
-            details.gainedIntelPlayerIds.add(secondaryId);
+
+        if (obj.has("evidence")) {
+            JSONArray evidenceGained = obj.getJSONArray("evidence");
+            for (int i = 0; i < evidenceGained.length(); i++) {
+                JSONObject entry = evidenceGained.getJSONObject(i);
+                String playerId = entry.getString("player_id");
+                int amount = entry.getInt("amount");
+                gameStateController.increasePlayerIntel(playerId, amount);
+                details.gainedIntelPlayerIds.add(playerId);
+            }
         }
-        gameStateController.increasePlayerIntel(interacteeId, EXCHANGE_PRIMARY_INCREMENT);
-        details.gainedIntelPlayerIds.add(interacteeId);
 
         details.status = InteractionStatus.SUCCESSFUL;
     }
