@@ -669,11 +669,10 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                     }
                 }
                 else if (statusCode == 204){
-                    try {
-                        interceptFailure(details);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    interceptFailure(details);
+                }
+                else if (statusCode == 206){
+                    interceptPending(details);
                 }
                 statusCode = 0;
             }
@@ -682,11 +681,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                try {
-                    interceptFailure(details);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                interceptFailure(details);
+
 
                 statusCode = 0;
             }
@@ -724,8 +720,12 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         details.status = InteractionStatus.SUCCESSFUL;
     }
 
-    private void interceptFailure(InteractionDetails details) throws JSONException {
+    private void interceptFailure(InteractionDetails details) {
         details.status = InteractionStatus.FAILED;
+    }
+
+    private void interceptPending(InteractionDetails details) {
+        details.status = InteractionStatus.IN_PROGRESS;
     }
 
     private void interceptError(VolleyError error, InteractionDetails details) {

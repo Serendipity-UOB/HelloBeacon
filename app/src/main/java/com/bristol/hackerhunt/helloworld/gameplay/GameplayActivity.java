@@ -303,7 +303,7 @@ public class GameplayActivity extends AppCompatActivity {
 
                             if (secondaryExists) {
                                 notificationView.exchangeSuccessful(getPlayerName(playerId),
-                                        details.gainedIntelPlayerIds.get(1));
+                                        getPlayerName(details.gainedIntelPlayerIds.get(1)));
                             }
 
                             else {
