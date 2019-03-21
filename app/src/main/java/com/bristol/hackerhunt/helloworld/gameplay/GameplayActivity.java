@@ -445,16 +445,15 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-
                     if (details.status == InteractionStatus.IN_PROGRESS) {
+                        Log.d("Intecept", "Polling");
                         serverRequestsController.interceptRequest(interacteeId, details);
-                        details.status = InteractionStatus.RESPONSE_PENDING;
                     }
-
                 } catch (JSONException e){
                     e.printStackTrace();
                 }
                 if (details.status.equals(InteractionStatus.FAILED)) {
+                    Log.d("Intercept", "Failed");
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -464,7 +463,7 @@ public class GameplayActivity extends AppCompatActivity {
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
-
+                    Log.d("Intercept", "Successful");
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
