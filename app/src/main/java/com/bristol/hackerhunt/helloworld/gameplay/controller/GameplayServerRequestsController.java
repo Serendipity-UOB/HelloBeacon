@@ -683,7 +683,12 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             @Override
             public void onErrorResponse(VolleyError error) {
                 try {
-                    interceptFailure(details);
+                    if (error.networkResponse != null && error.networkResponse.statusCode == 204) {
+                        interceptFailure(details);
+                    }
+                    else {
+                        interceptError(error, details);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -729,6 +734,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void interceptError(VolleyError error, InteractionDetails details) {
+        Log.d("Intercept", error.getMessage());
         details.status = InteractionStatus.FAILED;
     }
 

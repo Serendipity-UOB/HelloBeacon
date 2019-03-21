@@ -233,7 +233,7 @@ public class ConsoleView implements IConsoleView {
         setConsoleTitle(R.string.console_expose_success_title);
         String message = consoleView.getResources()
                 .getString(R.string.console_expose_success_message);
-        message = message.replace("$HOME", homeBeaconName);
+        message = message.replace("$BEACON", homeBeaconName);
         setConsoleMessage(message);
 
         this.interactionInProgress = false;

@@ -458,9 +458,9 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             notificationView.interceptFailedNoExchange(getPlayerName(interacteeId));
+                            playerListView.interceptAttemptComplete();
                         }
                     });
-                    playerListView.interceptAttemptComplete();
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
@@ -470,9 +470,9 @@ public class GameplayActivity extends AppCompatActivity {
                         public void run() {
                             notificationView.interceptSucceeded(getPlayerName(interacteeId),
                                     getPlayerName(details.gainedIntelPlayerIds.get(1)));
+                                    playerListView.interceptAttemptComplete();
                         }
                     });
-                    playerListView.interceptAttemptComplete();
                     cancel();
                 }
             }
