@@ -682,16 +682,10 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (statusCode == 400) {
-                    // Log.d("Network", "400 Error received");
-                    interceptError(error, details);
-                }
-                else if (statusCode == 204){
-                    try {
-                        interceptFailure(details);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    interceptFailure(details);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
                 statusCode = 0;
@@ -741,6 +735,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private JSONObject interceptRequestBody(String interacteeId) throws JSONException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("target_id", interacteeId);
+        requestBody.put("player_id", gameStateController.getPlayerId());
         return requestBody;
     }
 
