@@ -686,6 +686,13 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                     // Log.d("Network", "400 Error received");
                     interceptError(error, details);
                 }
+                else if (statusCode == 204){
+                    try {
+                        interceptFailure(details);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
                 statusCode = 0;
             }
         };
