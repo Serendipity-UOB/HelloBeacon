@@ -289,6 +289,7 @@ public class PlayerListView implements IPlayerListView {
 
             if (intel >= 100) {
                 setFullIntelCircleProgressBarColours(intelBar);
+
             }
         }
     }

@@ -706,21 +706,16 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void interceptSuccess(JSONObject obj, InteractionDetails details) throws JSONException {
-        if(obj.has("primary_id")){
-            String primaryId = obj.getString("primary_id");
-            if(obj.has("primary_evidence")){
-                int primaryEvidence = obj.getInt("primary_evidence");
-                gameStateController.increasePlayerIntel(primaryId,primaryEvidence);
+
+        if (obj.has("evidence")) {
+            JSONArray evidenceGained = obj.getJSONArray("evidence");
+            for (int i = 0; i < evidenceGained.length(); i++) {
+                JSONObject entry = evidenceGained.getJSONObject(i);
+                String playerId = entry.getString("player_id");
+                int amount = entry.getInt("amount");
+                gameStateController.increasePlayerIntel(playerId, amount);
+                details.gainedIntelPlayerIds.add(playerId);
             }
-            details.gainedIntelPlayerIds.add(primaryId);
-        }
-        if(obj.has("secondary_id")){
-            String secondaryId = obj.getString("secondary_id");
-            if(obj.has("secondary_evidence")){
-                int secondaryEvidence = obj.getInt("secondary_evidence");
-                gameStateController.increasePlayerIntel(secondaryId,secondaryEvidence);
-            }
-            details.gainedIntelPlayerIds.add(secondaryId);
         }
         details.status = InteractionStatus.SUCCESSFUL;
     }
