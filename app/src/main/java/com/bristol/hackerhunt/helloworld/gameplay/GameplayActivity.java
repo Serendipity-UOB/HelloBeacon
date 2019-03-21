@@ -460,6 +460,7 @@ public class GameplayActivity extends AppCompatActivity {
                             notificationView.interceptFailedNoExchange(getPlayerName(interacteeId));
                         }
                     });
+                    playerListView.interceptAttemptComplete();
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
@@ -471,6 +472,7 @@ public class GameplayActivity extends AppCompatActivity {
                                     getPlayerName(details.gainedIntelPlayerIds.get(1)));
                         }
                     });
+                    playerListView.interceptAttemptComplete();
                     cancel();
                 }
             }
