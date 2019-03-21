@@ -463,6 +463,17 @@ public class GameplayActivity extends AppCompatActivity {
                     playerListView.interceptAttemptComplete();
                     cancel();
                 }
+                else if(details.status.equals(InteractionStatus.REJECTED)) {
+                    Log.d("Intercept","Error");
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationView.interceptFailedNoEvidenceShared();
+                        }
+                    });
+                    playerListView.interceptAttemptComplete();
+                    cancel();
+                }
                 else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
                     Log.d("Intercept", "Successful");
                     that.runOnUiThread(new Runnable() {

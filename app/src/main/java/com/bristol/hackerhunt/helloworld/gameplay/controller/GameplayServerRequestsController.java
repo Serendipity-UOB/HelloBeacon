@@ -681,7 +681,12 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                interceptFailure(details);
+                if (statusCode == 400){
+                    interceptError(error, details);
+                }
+                else if (statusCode == 404){
+                    interceptError(error, details);
+                }
 
 
                 statusCode = 0;
@@ -729,7 +734,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void interceptError(VolleyError error, InteractionDetails details) {
-        details.status = InteractionStatus.FAILED;
+        details.status = InteractionStatus.REJECTED;
     }
 
     private JSONObject interceptRequestBody(String interacteeId) throws JSONException {
