@@ -693,6 +693,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                         e.printStackTrace();
                     }
                 }
+
                 statusCode = 0;
             }
         };
@@ -731,12 +732,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void interceptFailure(InteractionDetails details) throws JSONException {
         details.status = InteractionStatus.FAILED;
-        if(statusCode == 204){
-            //No Content
-            //No exchange happened
-            details.status = InteractionStatus.NO_EVIDENCE;
-        }
-
     }
 
     private void interceptError(VolleyError error, InteractionDetails details) {
