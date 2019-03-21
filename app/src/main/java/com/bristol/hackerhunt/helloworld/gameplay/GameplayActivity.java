@@ -555,7 +555,7 @@ public class GameplayActivity extends AppCompatActivity {
 
                             if (secondaryExists) {
                                 notificationView.exchangeSuccessful(getPlayerName(interacteeId),
-                                        details.gainedIntelPlayerIds.get(1));
+                                        getPlayerName(details.gainedIntelPlayerIds.get(1)));
                             }
 
                             else {
