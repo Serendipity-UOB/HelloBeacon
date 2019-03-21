@@ -303,7 +303,7 @@ public class GameplayActivity extends AppCompatActivity {
 
                             if (secondaryExists) {
                                 notificationView.exchangeSuccessful(getPlayerName(playerId),
-                                        details.gainedIntelPlayerIds.get(1));
+                                        getPlayerName(details.gainedIntelPlayerIds.get(1)));
                             }
 
                             else {
@@ -461,6 +461,17 @@ public class GameplayActivity extends AppCompatActivity {
                             playerListView.interceptAttemptComplete();
                         }
                     });
+                    cancel();
+                }
+                else if(details.status.equals(InteractionStatus.REJECTED)) {
+                    Log.d("Intercept","Error");
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationView.interceptFailedNoEvidenceShared();
+                        }
+                    });
+                    playerListView.interceptAttemptComplete();
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
