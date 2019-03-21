@@ -424,48 +424,58 @@ public class GameplayActivity extends AppCompatActivity {
         this.playerStatusBarView = new PlayerStatusBarView(findViewById(R.id.gameplay_player_status_bar));
     }
 
-    private StringInputRunnable beginSelectedInterceptOnClickRunnable() {
-        final Activity that = this;
+    private StringInputRunnable beginSelectedInterceptOnClickRunnable(){
         return new StringInputRunnable() {
             @Override
-            public void run(final String playerId) {
-                final InteractionDetails details = new InteractionDetails();
-                notificationView.attemptingToIntercept(getPlayerName(playerId));
-
-                try {
-                    serverRequestsController.interceptRequest(playerId, details);
-                    if (details.status.equals(InteractionStatus.FAILED)) {
-                        that.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                notificationView.interceptFailedNoExchange(getPlayerName(playerId));
-                            }
-                        });
-                    }
-                    else if (details.status.equals(InteractionStatus.NO_EVIDENCE)) {
-                        that.runOnUiThread(new Runnable(){
-                            @Override
-                            public void run() {
-                                notificationView.interceptFailedNoEvidenceShared();
-                            }
-                        });
-                    }
-                    else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
-                        that.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                notificationView.interceptSucceeded(getPlayerName(playerId),
-                                        getPlayerName(details.gainedIntelPlayerIds.get(1)));
-                            }
-                        });
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+            public void run(final String interacteeId) {
+                notificationView.attemptingToIntercept(getPlayerName(interacteeId));
+                beginInterceptServerPolling(interacteeId);
                 restoreScreenOnPlayerCardPress();
             }
         };
+    }
+
+    private void beginInterceptServerPolling(final String interacteeId) {
+        final Activity that = this;
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            final InteractionDetails details = new InteractionDetails();
+
+            @Override
+            public void run() {
+                try {
+
+                    if (details.status == InteractionStatus.IN_PROGRESS) {
+                        serverRequestsController.interceptRequest(interacteeId, details);
+                        details.status = InteractionStatus.RESPONSE_PENDING;
+                    }
+
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+                if (details.status.equals(InteractionStatus.FAILED)) {
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationView.interceptFailedNoExchange(getPlayerName(interacteeId));
+                        }
+                    });
+                    cancel();
+                }
+                else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
+
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationView.interceptSucceeded(getPlayerName(interacteeId),
+                                    getPlayerName(details.gainedIntelPlayerIds.get(1)));
+                        }
+                    });
+                    cancel();
+                }
+            }
+        }, 0, EXCHANGE_POLLING_PERIOD * 1000);
     }
 
     private StringInputRunnable beginExposeOnClickRunner() {
