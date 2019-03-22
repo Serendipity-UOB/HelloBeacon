@@ -392,7 +392,7 @@ public class PlayerListView implements IPlayerListView {
         uiHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (view.getVisibility() == View.GONE) {
+                if (view.getVisibility() == View.GONE || view.getVisibility() == View.INVISIBLE) {
                     view.setVisibility(View.VISIBLE);
                 }
                 view.setText(text);

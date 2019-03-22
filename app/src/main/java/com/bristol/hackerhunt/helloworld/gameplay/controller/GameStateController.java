@@ -186,7 +186,7 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public boolean playerHasFullIntel(String targetId) {
-        return (allPlayersMap.get(targetId).intel == 100);
+        return (allPlayersMap.get(targetId).intel >= 100);
     }
 
     @Override
