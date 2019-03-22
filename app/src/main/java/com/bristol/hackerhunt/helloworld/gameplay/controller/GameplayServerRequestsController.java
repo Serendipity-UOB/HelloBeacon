@@ -410,7 +410,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void missionSuccess(InteractionDetails details, JSONObject obj) throws JSONException {
-        String success = "";
+        String success = "Mission Success - PRESET";
         if(obj.has("rewards")){
             JSONArray rewardArray = obj.getJSONArray("rewards");
             for(int i = 0; i < rewardArray.length(); i++){
@@ -420,9 +420,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 gameStateController.increasePlayerIntel(rewardId, rewardAmount);
             }
             if(obj.has("success_description")){
-                success = obj.getString("success_description");
+                if(!obj.getString("success_description").equals(null)) {
+                    success = obj.getString("success_description");
+                    gameStateController.missionSuccessful(success);
+                }
+                else {
+                    gameStateController.missionSuccessful(success);
+                }
             }
-            gameStateController.missionSuccessful(success);
         }
 
         details.status = InteractionStatus.SUCCESSFUL;
@@ -437,11 +442,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void missionFailure(InteractionDetails details, JSONObject obj) throws JSONException {
         //TODO Define probably tell gameStateController something
-        String failure = "";
         if(obj.has("failure_description")){
-            failure = obj.getString("failure_description");
+            if(!obj.getString("failure_description").equals(null)){
+                gameStateController.missionFailed(obj.getString("failure_description"));
+            }
         }
-        gameStateController.missionFailed(failure);
+        else {
+            gameStateController.missionFailed("Mission Failed - PRESET");
+        }
         details.status = InteractionStatus.FAILED;
     }
 
