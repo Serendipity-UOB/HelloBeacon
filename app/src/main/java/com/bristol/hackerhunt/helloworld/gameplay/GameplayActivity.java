@@ -448,6 +448,7 @@ public class GameplayActivity extends AppCompatActivity {
                     if (details.status == InteractionStatus.IN_PROGRESS) {
                         Log.d("Intecept", "Polling");
                         serverRequestsController.interceptRequest(interacteeId, details);
+                        details.status = InteractionStatus.RESPONSE_PENDING;
                     }
                 } catch (JSONException e){
                     e.printStackTrace();
