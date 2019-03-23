@@ -5,4 +5,9 @@ public class GameInfo {
     public Integer numberOfPlayers;
     public String startBeaconMajor;
     public String startBeaconName;
+    public CountdownStatus countdownStatus;
+
+    public GameInfo() {
+        this.countdownStatus = CountdownStatus.WAITING_FOR_RESPONSE;
+    }
 }

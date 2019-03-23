@@ -62,19 +62,21 @@ public class JoinGameActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    serverRequestController.gameInfoRequest();
+                    if (!gameStarted) {
+                        serverRequestController.gameInfoRequest();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 // Starting timer thread
-                if (gameInfo.minutesToStart != null && gameInfo.minutesToStart >= 0 && !timerStarted) {
+                if (gameInfo.countdownStatus == CountdownStatus.ACTIVE && !timerStarted) {
                     startCountdownToGameStart(playerIdentifiers, timer);
                     showJoinGameButton();
                 }
-                if (gameInfo.numberOfPlayers != null && gameInfo.numberOfPlayers >= 0 && !gameStarted ) {
+                if (gameInfo.countdownStatus == CountdownStatus.ACTIVE && !gameStarted ) {
                     updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
                 }
-                if (gameInfo.minutesToStart != null && gameInfo.minutesToStart < 0 && !gameStarted) {
+                if (gameInfo.countdownStatus == CountdownStatus.NO_GAME && !timerStarted) {
                     updateTimeLeftUntilGame("--:--");
                     updateNumberOfPlayersInGame("--");
 

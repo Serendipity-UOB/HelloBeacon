@@ -60,11 +60,11 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
                 try {
                     if (statusCode == 200) {
                         updateGameInfo(response);
+                        gameInfo.countdownStatus = CountdownStatus.ACTIVE;
                     }
                     else if (statusCode == 204) {
-                        gameInfo.minutesToStart = -1.0;
-                        gameInfo.numberOfPlayers = -1;
                         Log.d("JoinGame", "Status code 204");
+                        gameInfo.countdownStatus = CountdownStatus.NO_GAME;
                     }
                 } catch (JSONException e) {
                     Log.d("Network", e.getMessage());
@@ -77,10 +77,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Network", error.getMessage());
-
-                // an error indicates that there's no game available to join.
-                gameInfo.minutesToStart = -1.0;
-                gameInfo.numberOfPlayers = -1;
+                gameInfo.countdownStatus = CountdownStatus.NO_GAME;
             }
         };
 
