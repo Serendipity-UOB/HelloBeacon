@@ -63,6 +63,7 @@
     <color name="progress_bar_complete_evidence">#00a654</color>
     <color name="progress_bar_complete_evidence_text">#b6d7a8</color>
 
+    <color name="progress_bar_increase">#04f26e</color>
     <color name="progress_bar_darkened">#262939</color>
     <color name="progress_bar_background_darkened">#040f23</color>
     <color name="progress_bar_text_darkened">#0b2138</color>
