@@ -282,7 +282,10 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
+                    if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                        serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
+                        details.status = InteractionStatus.RESPONSE_PENDING;
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
