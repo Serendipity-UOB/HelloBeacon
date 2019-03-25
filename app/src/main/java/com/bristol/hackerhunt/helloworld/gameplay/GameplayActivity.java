@@ -158,6 +158,8 @@ public class GameplayActivity extends AppCompatActivity {
         serverRequestsController.registerExposeSuccessRunnable(exposeSuccessfulRunnable());
         serverRequestsController.registerExposeFailedRunnable(exposeFailedRunnable());
         serverRequestsController.registerMissionUpdateRunnable(handleNewMissionRunnable());
+        serverRequestsController.registerMissionSuccessRunnable(handleSuccessfulMissionRunnable());
+        serverRequestsController.registerMissionFailureRunnable(handleFailedMissionRunnable());
     }
 
     private Runnable exposeSuccessfulRunnable() {
@@ -224,6 +226,24 @@ public class GameplayActivity extends AppCompatActivity {
         };
     }
 
+    private StringInputRunnable handleSuccessfulMissionRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String input) {
+                consoleView.missionSuccessPrompt(input);
+            }
+        };
+    }
+
+    private StringInputRunnable handleFailedMissionRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String input) {
+                consoleView.missionFailedPrompt(input);
+            }
+        };
+    }
+
     private void beginMissionUpdateServerPolling() {
         final Activity that = this;
 
@@ -234,36 +254,14 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    serverRequestsController.missionUpdateRequest(details);
+                    if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                        serverRequestsController.missionUpdateRequest(details);
+                        details.status = InteractionStatus.RESPONSE_PENDING;
+                    }
 
-                    if (details.status == InteractionStatus.FAILED){
+                    else if (!details.status.equals(InteractionStatus.RESPONSE_PENDING) &&
+                            !details.status.equals(InteractionStatus.RESPONSE_PENDING)) {
                         cancel();
-                        that.runOnUiThread(new Runnable(){
-                            @Override
-                            public void run() {
-                                consoleView.missionFailedPrompt("Mission Failed");
-                                //TODO Right message
-                            }
-                        });
-                    }
-                    else if(details.status == InteractionStatus.SUCCESSFUL){
-                        cancel();
-                        that.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                consoleView.missionSuccessPrompt("Mission Success");
-                                //TODO Right message
-                            }
-                        });
-                    }
-                    else if(details.status == InteractionStatus.IN_PROGRESS){
-                        that.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                int timeRemaining = details.missionTime;
-                                //Tell the UI something
-                            }
-                        });
                     }
 
                 } catch (JSONException e){

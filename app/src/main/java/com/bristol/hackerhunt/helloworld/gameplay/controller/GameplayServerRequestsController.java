@@ -53,6 +53,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private Runnable exposeFailedRunnable;
     private Runnable interceptSuccessRunnable;
     private StringInputRunnable missionUpdateRunnable;
+    private StringInputRunnable missionSuccessRunnable;
+    private StringInputRunnable missionFailureRunnable;
 
 
     /**
@@ -422,10 +424,10 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             if(obj.has("success_description")){
                 if(!obj.getString("success_description").equals(null)) {
                     success = obj.getString("success_description");
-                    gameStateController.missionSuccessful(success);
+                    missionSuccessRunnable.run(success);
                 }
                 else {
-                    gameStateController.missionSuccessful(success);
+                    missionSuccessRunnable.run(success);
                 }
             }
         }
@@ -445,11 +447,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         if(obj.has("failure_description")){
             if(!obj.getString("failure_description").equals(null)){
                 Log.d("Mission Fail GSvr", obj.getString("failure_description"));
-                gameStateController.missionFailed(obj.getString("failure_description"));
+                missionFailureRunnable.run(obj.getString("failure_description"));
             }
         }
         else {
-            gameStateController.missionFailed("Mission Failed - PRESET");
+            missionFailureRunnable.run("Mission Failed - PRESET");
         }
         details.status = InteractionStatus.FAILED;
     }
@@ -752,6 +754,16 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     @Override
     public void registerMissionUpdateRunnable(StringInputRunnable runnable) {
         this.missionUpdateRunnable = runnable;
+    }
+
+    @Override
+    public void registerMissionSuccessRunnable(StringInputRunnable runnable) {
+        this.missionSuccessRunnable = runnable;
+    }
+
+    @Override
+    public void registerMissionFailureRunnable(StringInputRunnable runnable) {
+        this.missionFailureRunnable = runnable;
     }
 
     @Override
