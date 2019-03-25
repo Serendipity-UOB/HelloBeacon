@@ -444,6 +444,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         //TODO Define probably tell gameStateController something
         if(obj.has("failure_description")){
             if(!obj.getString("failure_description").equals(null)){
+                Log.d("Mission Fail GSvr", obj.getString("failure_description"));
                 gameStateController.missionFailed(obj.getString("failure_description"));
             }
         }
