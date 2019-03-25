@@ -68,7 +68,7 @@ public class GameplayActivity extends AppCompatActivity {
     private boolean newTargetRequested = true;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) { 
         // initialization
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameplay);
