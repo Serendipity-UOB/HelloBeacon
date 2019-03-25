@@ -43,6 +43,7 @@ public class PlayerListView implements IPlayerListView {
     private StringInputRunnable restoreOnBackgroundPressRunnable;
 
     private boolean exchangeStarted = false;
+    private String exchangePlayerId;
     private boolean exposeStarted = false;
     private boolean interceptStarted = false;
 
@@ -179,6 +180,10 @@ public class PlayerListView implements IPlayerListView {
 
             if (exchangeStarted) {
                 disableExchangeButton(playerId);
+
+                if (exchangePlayerId.equals(playerId)) {
+                    displayExchangeRequested(playerId);
+                }
             }
             else {
                 enableExchangeButton(playerId);
@@ -194,6 +199,10 @@ public class PlayerListView implements IPlayerListView {
         else {
             darkenFarAwayPlayerEntries(playerId);
             listItem.setOnClickListener(null);
+
+            if (exchangeStarted && exchangePlayerId.equals(playerId)) {
+                displayExchangeRequested(playerId);
+            }
         }
     }
 
@@ -310,6 +319,7 @@ public class PlayerListView implements IPlayerListView {
             @Override
             public void onClick(View view) {
                 exchangeStarted = true;
+                exchangePlayerId = playerId;
                 displayExchangeRequested(playerId);
                 beginExchangeOnClickRunner.run(playerId);
                 disableAllExchangeButtons();
