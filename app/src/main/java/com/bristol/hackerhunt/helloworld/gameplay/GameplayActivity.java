@@ -80,10 +80,10 @@ public class GameplayActivity extends AppCompatActivity {
         initializeNotificationView();
         initializeExchangeRequestView();
 
+        initializeGameStateController();
         initializeServerRequestController();
         initializeConsoleView();
         initializeBeaconController();
-        initializeGameStateController();
 
         gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
             @Override
