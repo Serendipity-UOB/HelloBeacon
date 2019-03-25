@@ -77,6 +77,11 @@ public interface IGameplayServerRequestsController {
      */
     void registerMissionUpdateRunnable(StringInputRunnable runnable);
 
+    void registerMissionSuccessRunnable(StringInputRunnable runnable);
+
+    void registerMissionFailureRunnable(StringInputRunnable runnable);
+
+
     /**
      * Submits a player take down request to the server:
      * POST /takeDown { player_id, target_id }
