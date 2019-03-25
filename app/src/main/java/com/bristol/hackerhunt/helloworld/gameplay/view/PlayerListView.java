@@ -284,7 +284,7 @@ public class PlayerListView implements IPlayerListView {
                 final float newProgress = (intel + intelIncrement >= 100) ? 100 : intel + intelIncrement;
                 intelBar.setProgress(newProgress);
 
-                intelBar.setText("+" + String.valueOf(intelIncrement) + "%");
+                intelBar.setText("+" + String.valueOf(intelIncrement));
                 intelBar.setTextColor(ContextCompat.getColor(playerList.getContext(),
                         R.color.progress_bar_increase));
                 new Handler().postDelayed(new Runnable() {
