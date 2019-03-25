@@ -99,7 +99,7 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void goToStartBeaconPrompt(String homeBeaconName) {
-        // disableCloseConsole();
+        disableCloseConsole();
 
         this.currentHomeBeacon = homeBeaconName;
         setNeutralConsole();
