@@ -416,8 +416,6 @@ public class GameplayActivity extends AppCompatActivity {
                                 String exposerName = getPlayerName(exposerId);
                                 gameStateController.resetExposerId();
 
-                                //TODO Full screen notification call for exposure
-
                                 consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
                                 gameStateController.loseHalfOfPlayersIntel();
                                 gameStateController.resetPlayerTakenDown();
@@ -505,6 +503,16 @@ public class GameplayActivity extends AppCompatActivity {
                             notificationView.interceptSucceeded(getPlayerName(interacteeId),
                                     getPlayerName(details.gainedIntelPlayerIds.get(1)));
                                     playerListView.interceptAttemptComplete();
+                        }
+                    });
+                    cancel();
+                }
+                else if (details.status.equals(InteractionStatus.ERROR)) {
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationView.networkError();
+                            playerListView.interceptAttemptComplete();
                         }
                     });
                     cancel();

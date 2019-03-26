@@ -725,7 +725,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                     interceptError(error, details);
                 }
 
-
                 statusCode = 0;
             }
         };
@@ -774,7 +773,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             statusCode = error.networkResponse.statusCode;
         }
         Log.d("Intercept", "Server error: " + statusCode);
-        details.status = InteractionStatus.FAILED;
+        details.status = InteractionStatus.ERROR;
     }
 
     private JSONObject interceptRequestBody(String interacteeId) throws JSONException {
