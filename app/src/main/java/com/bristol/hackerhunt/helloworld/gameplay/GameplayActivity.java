@@ -306,7 +306,7 @@ public class GameplayActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 exchangeRequestView.hideDialogueBox();
-                                notificationView.exchangeFailedTimedOut(playerId);
+                                notificationView.exchangeFailedTimedOut(getPlayerName(playerId));
                             }
                     });
                     currentPlayerExchangeResponse = WAIT;
@@ -326,8 +326,7 @@ public class GameplayActivity extends AppCompatActivity {
                                     notificationView.exchangeSuccessful(getPlayerName(playerId),
                                             getPlayerName(details.gainedIntelPlayerIds.get(1)));
                                 } else {
-                                    // TODO: fix
-                                    notificationView.exchangeSuccessful(getPlayerName(playerId), "");
+                                    notificationView.exchangeSuccessful(getPlayerName(playerId));
                                 }
                             }
                         });
@@ -592,7 +591,7 @@ public class GameplayActivity extends AppCompatActivity {
                             }
 
                             else {
-                                notificationView.exchangeSuccessful(getPlayerName(interacteeId),"");
+                                notificationView.exchangeSuccessful(getPlayerName(interacteeId));
                             }
                         }
                     });

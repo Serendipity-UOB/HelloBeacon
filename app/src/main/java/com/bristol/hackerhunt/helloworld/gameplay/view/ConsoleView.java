@@ -212,7 +212,7 @@ public class ConsoleView implements IConsoleView {
         setConsoleMessage(missionSuccessMessage);
         setConsoleTitle(R.string.mission_success_title);
     }
-
+ 
     @Override
     public void missionFailedPrompt(String missionFailedMessage) {
         Log.d("Mission Fail CV", missionFailedMessage);
