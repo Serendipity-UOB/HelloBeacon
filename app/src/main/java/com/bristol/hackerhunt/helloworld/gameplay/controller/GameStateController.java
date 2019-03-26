@@ -342,6 +342,7 @@ public class GameStateController implements IGameStateController {
     @Override
     public void missionFailed(String failure) {
         Log.d("Mission Fail GSC", failure);
+        Log.d("Mission Fail Obj ID", Integer.toString(consoleView.hashCode()));
         consoleView.missionFailedPrompt("Mission Failure Test Message");
     }
 

@@ -68,7 +68,7 @@ public class GameplayActivity extends AppCompatActivity {
     private boolean newTargetRequested = true;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) { 
+    protected void onCreate(Bundle savedInstanceState) {
         // initialization
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameplay);
@@ -230,6 +230,7 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(String input) {
+                Log.d("Mission Success",input);
                 consoleView.missionSuccessPrompt(input);
             }
         };
@@ -239,6 +240,7 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(String input) {
+                Log.d("Mission Failure",input);
                 consoleView.missionFailedPrompt(input);
             }
         };
