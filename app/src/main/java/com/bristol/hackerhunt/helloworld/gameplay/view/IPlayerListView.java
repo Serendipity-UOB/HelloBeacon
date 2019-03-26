@@ -61,11 +61,11 @@ public interface IPlayerListView {
      * Darkens every element in the list apart from the player card of the given player ID.
      * @param exemptPlayerId the player ID to ignore.
      */
-    void darken(String exemptPlayerId);
+    void openPlayerCardButtons(String exemptPlayerId);
 
     /**
      * Restore the player card elements after being darkened.
      */
-    void restore();
+    void closePlayerCardButtons();
 
 }

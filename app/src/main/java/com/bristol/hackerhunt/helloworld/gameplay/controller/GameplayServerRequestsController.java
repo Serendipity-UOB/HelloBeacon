@@ -39,11 +39,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private String EXCHANGE_RESPONSE_URL;
     private String MISSION_URL;
 
-    private final int EXCHANGE_PRIMARY_INCREMENT = 10;
-    private final int EXCHANGE_SECONDARY_INCREMENT = 20;
-    private final int INTERCEPT_PRIMARY_INCREMENT = 30;
-    private final int INTERCEPT_SECONDARY_INCREMENT = 10;
-
     private RequestQueue requestQueue;
     private IGameStateController gameStateController;
 

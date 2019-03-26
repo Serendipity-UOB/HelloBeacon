@@ -172,6 +172,7 @@ public class GameplayActivity extends AppCompatActivity {
                 String homeBeaconName = gameStateController.getHomeBeaconName();
                 closeConsoleOnHomeBeaconNearby = true;
                 consoleView.exposeSuccessPrompt(homeBeaconName);
+                playerListView.closePlayerCardButtons();
                 newTargetRequested = true;
             }
         };
@@ -220,6 +221,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(final String missionDetails) {
                 Log.d("New Mission", missionDetails);
                 consoleView.missionUpdatePrompt(missionDetails);
+                playerListView.closePlayerCardButtons();
                 beginMissionUpdateServerPolling();
             }
         };
@@ -231,6 +233,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(String input) {
                 Log.d("Mission Success",input);
                 consoleView.missionSuccessPrompt(input);
+                playerListView.closePlayerCardButtons();
             }
         };
     }
@@ -241,6 +244,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(String input) {
                 Log.d("Mission Failure",input);
                 consoleView.missionFailedPrompt(input);
+                playerListView.closePlayerCardButtons();
             }
         };
     }
@@ -417,6 +421,7 @@ public class GameplayActivity extends AppCompatActivity {
                                 gameStateController.resetExposerId();
 
                                 consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
+                                playerListView.closePlayerCardButtons();
                                 gameStateController.loseHalfOfPlayersIntel();
                                 gameStateController.resetPlayerTakenDown();
                             }
@@ -424,6 +429,7 @@ public class GameplayActivity extends AppCompatActivity {
                                 newTargetRequested = true;
                                 closeConsoleOnHomeBeaconNearby = true;
                                 consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
+                                playerListView.closePlayerCardButtons();
                                 gameStateController.resetPlayersTargetHasBeenTakenDown();
                             }
                         }
@@ -698,12 +704,12 @@ public class GameplayActivity extends AppCompatActivity {
         this.playerStatusBarView.setPlayerName(this.playerIdentifiers.getRealName());
     }
 
-    // a runnable used to darken the screen after a player card has been selected, excluding the one that was pressed.
+    // a runnable used to openPlayerCardButtons the screen after a player card has been selected, excluding the one that was pressed.
     private StringInputRunnable darkenScreenOnPlayerCardPressRunnable() {
         return new StringInputRunnable() {
             @Override
             public void run(final String exemptPlayerId) {
-                playerListView.darken(exemptPlayerId);
+                playerListView.openPlayerCardButtons(exemptPlayerId);
                 playerStatusBarView.darken();
 
                 View background = findViewById(R.id.gameplay_background);
@@ -716,7 +722,7 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private void restoreScreenOnPlayerCardPress() {
-        playerListView.restore();
+        playerListView.closePlayerCardButtons();
         playerStatusBarView.restore();
 
         View background = findViewById(R.id.gameplay_background);
@@ -735,7 +741,7 @@ public class GameplayActivity extends AppCompatActivity {
         };
     }
 
-    // an on-click listener used to restore the screen after the interaction buttons have appeared, to cancel.
+    // an on-click listener used to closePlayerCardButtons the screen after the interaction buttons have appeared, to cancel.
     private View.OnClickListener cancelInteractionButtonsOnClickListener(final String exemptPlayerId) {
         return new View.OnClickListener() {
             @Override

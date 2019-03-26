@@ -44,8 +44,12 @@ public class PlayerListView implements IPlayerListView {
 
     private boolean exchangeStarted = false;
     private String exchangePlayerId;
+
     private boolean exposeStarted = false;
     private boolean interceptStarted = false;
+
+    private boolean playerCardPressed = false;
+    private String playerCardPressedPlayerId;
 
     /**
      * Constructor
@@ -130,6 +134,9 @@ public class PlayerListView implements IPlayerListView {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                playerCardPressed = true;
+                playerCardPressedPlayerId = playerId;
+
                 View buttons = playerCard.findViewById(R.id.interaction_buttons);
                 buttons.setVisibility(View.VISIBLE);
                 emphasisOverlay.setVisibility(View.VISIBLE);
@@ -177,6 +184,10 @@ public class PlayerListView implements IPlayerListView {
             listItem.setOnClickListener(playerCardOnClickListener(playerId, listItem));
             setExposeOnClickListener(playerId);
 
+            if (playersCardHasBeenPressed(playerId)) {
+                openPlayerCardButtons(playerId);
+            }
+
             if (exchangeStarted) {
                 disableExchangeButton(playerId);
 
@@ -196,6 +207,11 @@ public class PlayerListView implements IPlayerListView {
             }
         }
         else {
+
+            if (playersCardHasBeenPressed(playerId)) {
+                closePlayerCardButtons();
+            }
+
             darkenFarAwayPlayerEntries(playerId);
             listItem.setOnClickListener(null);
 
@@ -203,6 +219,10 @@ public class PlayerListView implements IPlayerListView {
                 displayExchangeRequested(playerId);
             }
         }
+    }
+
+    private boolean playersCardHasBeenPressed(String playerId) {
+        return playerCardPressed && playerId.equals(playerCardPressedPlayerId);
     }
 
     private void enableExchangeButton(String playerId) {
@@ -521,7 +541,7 @@ public class PlayerListView implements IPlayerListView {
     }
 
     @Override
-    public void darken(String exemptPlayerId) {
+    public void openPlayerCardButtons(String exemptPlayerId) {
 
         for (String playerId : playerIdListItemIdMap.keySet()) {
             if (!playerId.equals(exemptPlayerId)) {
@@ -576,10 +596,12 @@ public class PlayerListView implements IPlayerListView {
                         .setColorFilter(getColor(R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
             }
         }
+
+        playerCardPressed = true;
     }
 
     @Override
-    public void restore() {
+    public void closePlayerCardButtons() {
         for (String playerId : playerIdListItemIdMap.keySet()) {
             View playerCard = getPlayerCard(playerId);
 
@@ -589,6 +611,8 @@ public class PlayerListView implements IPlayerListView {
             View buttons = playerCard.findViewById(R.id.interaction_buttons);
             buttons.setVisibility(View.GONE);
         }
+
+        playerCardPressed = false;
     }
 
     private void restoreUiColours(String playerId) {
