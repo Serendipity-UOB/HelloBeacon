@@ -252,7 +252,6 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void beginMissionUpdateServerPolling() {
         Log.d("Mission Poll", "Setting up Poll");
-
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             final InteractionDetails details = new InteractionDetails();
