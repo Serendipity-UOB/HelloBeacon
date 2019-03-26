@@ -290,7 +290,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void checkForMission(JSONObject obj) throws JSONException {
-        Log.d("Mission", obj.toString());
         if(obj.has("mission_description")) {
             Log.d("Mission", obj.getString("mission_description"));
             String missionId = obj.getString("mission_description");
