@@ -380,6 +380,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                         // TODO: handle
                     }
                 }
+                else {
+                    details.status = InteractionStatus.ERROR;
+                }
                 statusCode = 0;
             }
         };
@@ -387,15 +390,15 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(statusCode == 400) {
-                    Log.d("Network", "400 Error received");
-                }
-                else if(statusCode == 203){
+                if(statusCode == 203){
                     try {
                         missionFailure(details, new JSONObject("{\"failure_description\": \"Mission was failed.\"}"));
                     } catch (JSONException e) {
                         Log.d("Mission failure", e.getMessage());
                     }
+                }
+                else {
+                    details.status = InteractionStatus.ERROR;
                 }
                 statusCode = 0;
             }
@@ -427,7 +430,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 gameStateController.increasePlayerIntel(rewardId, rewardAmount);
             }
             if(obj.has("success_description")){
-                if(!obj.getString("success_description").equals(null)) {
+                if(obj.getString("success_description") != null) {
                     success = obj.getString("success_description");
                     missionSuccessRunnable.run(success);
                 }

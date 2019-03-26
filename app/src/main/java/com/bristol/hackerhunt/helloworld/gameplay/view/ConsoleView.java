@@ -109,6 +109,14 @@ public class ConsoleView implements IConsoleView {
         this.interactionInProgress = false;
     }
 
+    @Override
+    public void networkError() {
+        enableCloseConsole();
+        setBadConsole();
+        setConsoleTitle(R.string.console_error_title);
+        setConsoleMessage(consoleView.getResources().getString(R.string.console_error_message));
+    }
+
     private void setNeutralConsole() {
         consoleViewTitle.setTextColor(consoleView.getResources()
                 .getColor(R.color.neutral_full_screen_notif_title));
@@ -212,7 +220,7 @@ public class ConsoleView implements IConsoleView {
         setConsoleMessage(missionSuccessMessage);
         setConsoleTitle(R.string.mission_success_title);
     }
- 
+
     @Override
     public void missionFailedPrompt(String missionFailedMessage) {
         Log.d("Mission Fail CV", missionFailedMessage);

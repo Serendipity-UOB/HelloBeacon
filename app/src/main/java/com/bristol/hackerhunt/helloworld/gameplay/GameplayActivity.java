@@ -259,7 +259,10 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    serverRequestsController.missionUpdateRequest(details);
+                    if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                        serverRequestsController.missionUpdateRequest(details);
+                        details.status = InteractionStatus.RESPONSE_PENDING;
+                    }
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
@@ -268,6 +271,10 @@ public class GameplayActivity extends AppCompatActivity {
 
                 if (details.status.equals(InteractionStatus.SUCCESSFUL)
                         || details.status.equals(InteractionStatus.FAILED)) {
+                    cancel();
+                }
+                if (details.status.equals(InteractionStatus.ERROR)) {
+                    consoleView.networkError();
                     cancel();
                 }
             }

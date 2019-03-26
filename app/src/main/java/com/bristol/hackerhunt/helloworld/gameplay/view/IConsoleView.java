@@ -8,6 +8,8 @@ import android.content.Intent;
  */
 public interface IConsoleView {
 
+    void networkError();
+
     /**
      * Prompts player to go to their start beacon, and waits until they do so.
      */
