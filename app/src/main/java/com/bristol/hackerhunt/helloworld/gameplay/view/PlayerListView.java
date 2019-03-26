@@ -303,7 +303,7 @@ public class PlayerListView implements IPlayerListView {
 
                         intelBar.setTextColor(ContextCompat.getColor(playerList.getContext(), textColor));
                         intelBar.setText(String.valueOf((int) newProgress));
-                        if (intel >= 100) {
+                        if (newProgress >= 100) {
                             setFullIntelCircleProgressBarColours(intelBar);
                         }
                     }
