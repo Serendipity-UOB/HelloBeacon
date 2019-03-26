@@ -198,7 +198,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                throw new IllegalStateException("Error: " + error.getMessage());
+                Log.d("New Target", "Error Response, Something went wrong");
             }
         };
 
@@ -294,7 +294,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void checkForMission(JSONObject obj) throws JSONException {
-        Log.d("Mission", obj.toString());
         if(obj.has("mission_description")) {
             Log.d("Mission", obj.getString("mission_description"));
             String missionId = obj.getString("mission_description");
@@ -423,6 +422,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void missionSuccess(InteractionDetails details, JSONObject obj) throws JSONException {
         String success = "Mission Success - PRESET";
+        details.status = InteractionStatus.SUCCESSFUL;
         if(obj.has("rewards")){
             JSONArray rewardArray = obj.getJSONArray("rewards");
             for(int i = 0; i < rewardArray.length(); i++){
@@ -442,7 +442,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         }
 
-        details.status = InteractionStatus.SUCCESSFUL;
+
     }
 
     private void missionPending(InteractionDetails details, int timeRemaining, JSONObject obj) throws JSONException {
@@ -454,16 +454,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void missionFailure(InteractionDetails details, JSONObject obj) throws JSONException {
         //TODO Define probably tell gameStateController something
+        details.status = InteractionStatus.FAILED;
         if(obj.has("failure_description")){
-            if(!obj.getString("failure_description").equals(null)){
-                Log.d("Mission Fail GSvr", obj.getString("failure_description"));
-                missionFailureRunnable.run(obj.getString("failure_description"));
-            }
+            Log.d("Mission Fail GSvr", obj.getString("failure_description"));
+            missionFailureRunnable.run(obj.getString("failure_description"));
         }
         else {
             missionFailureRunnable.run("Mission Failed - PRESET");
         }
-        details.status = InteractionStatus.FAILED;
     }
 
     @Override

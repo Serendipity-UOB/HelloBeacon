@@ -234,6 +234,7 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(String input) {
+                Log.d("Mission Success",input);
                 consoleView.missionSuccessPrompt(input);
             }
         };
@@ -243,13 +244,14 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(String input) {
+                Log.d("Mission Failure",input);
                 consoleView.missionFailedPrompt(input);
             }
         };
     }
 
     private void beginMissionUpdateServerPolling() {
-        final Activity that = this;
+        Log.d("Mission Poll", "Setting up Poll");
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -258,18 +260,16 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
-                        serverRequestsController.missionUpdateRequest(details);
-                        details.status = InteractionStatus.RESPONSE_PENDING;
-                    }
-
-                    else if (!details.status.equals(InteractionStatus.RESPONSE_PENDING) &&
-                            !details.status.equals(InteractionStatus.RESPONSE_PENDING)) {
-                        cancel();
-                    }
-
-                } catch (JSONException e){
+                    serverRequestsController.missionUpdateRequest(details);
+                }
+                catch (JSONException e) {
                     e.printStackTrace();
+                }
+                Log.d("Mission Poll", "Polling");
+
+                if (details.status.equals(InteractionStatus.SUCCESSFUL)
+                        || details.status.equals(InteractionStatus.FAILED)) {
+                    cancel();
                 }
             }
         },0, MISSION_POLLING_PERIOD * 1000);
