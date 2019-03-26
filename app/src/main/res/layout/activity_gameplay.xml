@@ -62,17 +62,6 @@
             android:layout_marginEnd="2pt" />
     </LinearLayout>
 
-    <!-- Console pop-up overlay -->
-    <RelativeLayout
-        android:id="@+id/gameplay_console_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#CD000000"
-        android:visibility="gone">
-
-        <include layout="@layout/gameplay_console" />
-    </RelativeLayout>
-
     <!-- Little notification -->
     <RelativeLayout
         android:id="@+id/gameplay_notification_overlay"
@@ -192,5 +181,16 @@
             android:text="(tap to cancel)"
             android:textSize="7pt"
             android:layout_marginBottom="15dp"/>
+    </RelativeLayout>
+
+    <!-- Console pop-up overlay -->
+    <RelativeLayout
+        android:id="@+id/gameplay_console_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CD000000"
+        android:visibility="gone">
+
+        <include layout="@layout/gameplay_console" />
     </RelativeLayout>
 </RelativeLayout>

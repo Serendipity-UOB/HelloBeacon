@@ -89,22 +89,28 @@ public class PlayerListView implements IPlayerListView {
 
     @Override
     public void revealPlayerHackerName(String playerId, final String hackerName) {
-        Context context = playerList.getContext();
-
         playerIdCodeNameMap.put(playerId, hackerName);
+        displayPlayerCodeName(playerId);
+    }
+
+    private void displayPlayerCodeName(String playerId) {
+        Context context = playerList.getContext();
         int id = playerIdListItemIdMap.get(playerId);
+        String codeName = playerIdCodeNameMap.get(playerId);
+
         RelativeLayout listItem = playerList.findViewById(id);
-        final TextView nameView = listItem.findViewById(R.id.player_hacker_name);
+        if (listItem != null) {
+            final TextView nameView = listItem.findViewById(R.id.player_hacker_name);
 
-        setTextOfView(nameView, hackerName);
+            setTextOfView(nameView, codeName);
 
-        if (hackerName.equals(targetCodeName)) {
-            nameView.setBackgroundColor(ContextCompat.getColor(context,
-                    R.color.player_is_target_codename));
-        }
-        else {
-            nameView.setBackgroundColor(ContextCompat.getColor(context,
-                    R.color.player_is_not_target_codename));
+            if (codeName.equals(targetCodeName)) {
+                nameView.setBackgroundColor(ContextCompat.getColor(context,
+                        R.color.player_is_target_codename));
+            } else {
+                nameView.setBackgroundColor(ContextCompat.getColor(context,
+                        R.color.player_is_not_target_codename));
+            }
         }
     }
 
@@ -159,14 +165,7 @@ public class PlayerListView implements IPlayerListView {
 
         // if the code name of the player is known, reveal it.
         if (playerIdCodeNameMap.containsKey(playerId)) {
-            TextView codeNameView = listItem.findViewById(R.id.player_hacker_name);
-            String codeName = playerIdCodeNameMap.get(playerId);
-            if (nearby) {
-                setTextOfView(codeNameView, codeName);
-            }
-            else {
-                setTextOfView(codeNameView, codeName, R.color.gameplay_far_player_name);
-            }
+            displayPlayerCodeName(playerId);
         }
 
         // load the player card into the list.
@@ -262,7 +261,7 @@ public class PlayerListView implements IPlayerListView {
 
     private void enableAllInterceptButtons() {
         for (String playerId : playerIdNameMap.keySet()) {
-            enableExchangeButton(playerId);
+            enableInterceptButton(playerId);
         }
     }
 
@@ -289,7 +288,7 @@ public class PlayerListView implements IPlayerListView {
                 RelativeLayout listItem = playerList.findViewById(id);
                 final CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
-                float intel = intelBar.getProgress();
+                final float intel = intelBar.getProgress();
                 final float newProgress = (intel + intelIncrement >= 100) ? 100 : intel + intelIncrement;
                 intelBar.setProgress(newProgress);
 
@@ -304,12 +303,11 @@ public class PlayerListView implements IPlayerListView {
 
                         intelBar.setTextColor(ContextCompat.getColor(playerList.getContext(), textColor));
                         intelBar.setText(String.valueOf((int) newProgress));
+                        if (intel >= 100) {
+                            setFullIntelCircleProgressBarColours(intelBar);
+                        }
                     }
                 }, 3000);
-
-                if (intel >= 100) {
-                    setFullIntelCircleProgressBarColours(intelBar);
-                }
             }
         }
     }

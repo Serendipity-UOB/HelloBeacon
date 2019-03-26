@@ -47,6 +47,8 @@ public class GameplayActivity extends AppCompatActivity {
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
     private static final int CONSOLE_POPUP_DELAY_PERIOD = 3;    // given in seconds.
     private static final int MISSION_POLLING_PERIOD = 1;        // given in seconds.
+
+    private static final int WAIT = 0;
     private static final int ACCEPT = 1;
     private static final int REJECT = 2;
 
@@ -66,6 +68,7 @@ public class GameplayActivity extends AppCompatActivity {
     private boolean gameOver = false;
     private boolean closeConsoleOnHomeBeaconNearby = false;
     private boolean newTargetRequested = true;
+    private int currentPlayerExchangeResponse = WAIT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,7 +211,8 @@ public class GameplayActivity extends AppCompatActivity {
 
 
                 //serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
-                beginExchangeResponseServerPolling(playerId);
+                //beginExchangeResponseServerPolling(playerId);
+                currentPlayerExchangeResponse = ACCEPT;
                 exchangeRequestView.hideDialogueBox();
 
             }
@@ -281,7 +285,17 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 try {
                     if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
-                        serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
+
+                        String playerResponse = "Wait";
+                        if (currentPlayerExchangeResponse == REJECT) {
+                            playerResponse = "Reject";
+                        }
+                        if (currentPlayerExchangeResponse == ACCEPT) {
+                            playerResponse = "Accept";
+                        }
+                        Log.d("Exchange Response", "Action: " + playerResponse);
+
+                        serverRequestsController.exchangeResponse(playerId, currentPlayerExchangeResponse, details);
                         details.status = InteractionStatus.RESPONSE_PENDING;
                     }
                 } catch (JSONException e) {
@@ -290,37 +304,39 @@ public class GameplayActivity extends AppCompatActivity {
                 if (details.status.equals(InteractionStatus.FAILED)) {
                     that.runOnUiThread(new Runnable() {
                             @Override
-                            public void run() { notificationView.exchangeFailedTimedOut(playerId); }
+                            public void run() {
+                                exchangeRequestView.hideDialogueBox();
+                                notificationView.exchangeFailedTimedOut(playerId);
+                            }
                     });
+                    currentPlayerExchangeResponse = WAIT;
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
-                    final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
 
-                    that.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            playerListView.exchangeRequestComplete(playerId);
+                    if (currentPlayerExchangeResponse == ACCEPT) {
+                        final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
 
-                            if (secondaryExists) {
-                                notificationView.exchangeSuccessful(getPlayerName(playerId),
-                                        getPlayerName(details.gainedIntelPlayerIds.get(1)));
+                        that.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                playerListView.exchangeRequestComplete(playerId);
+
+                                if (secondaryExists) {
+                                    notificationView.exchangeSuccessful(getPlayerName(playerId),
+                                            getPlayerName(details.gainedIntelPlayerIds.get(1)));
+                                } else {
+                                    // TODO: fix
+                                    notificationView.exchangeSuccessful(getPlayerName(playerId), "");
+                                }
                             }
-
-                            else {
-                                notificationView.exchangeSuccessful(getPlayerName(playerId),"");
-                            }
-                        }
-                    });
+                        });
+                    }
+                    currentPlayerExchangeResponse = WAIT;
                     cancel();
                 }
-                else if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
-                    //TODO Do something maybe??
-                    //Haven't set this for exchange response
-                }
-
             }
-        },1000, EXCHANGE_POLLING_PERIOD * 1000);
+        },0, EXCHANGE_POLLING_PERIOD * 1000);
     }
 
     private StringInputRunnable onRejectExchangeRequestRunnable() {
@@ -328,27 +344,13 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(final String playerId) {
-                final InteractionDetails details = new InteractionDetails();
-                try {
-                    serverRequestsController.exchangeResponse(playerId, REJECT, details);
-                    if (details.status.equals(InteractionStatus.REJECTED)) {
-                        Log.d("Reject Exchange", "Successfully rejected");
+                currentPlayerExchangeResponse = REJECT;
+                that.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        exchangeRequestView.hideDialogueBox();
                     }
-                    else {
-                        Log.d("Reject Exchange", "Something went wrong");
-                        //Some error in server stuff
-                        //Maybe just let it time out??
-                        //Better than trying again
-                    }
-                    that.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            exchangeRequestView.hideDialogueBox();
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                });
 
             }
         };
@@ -392,6 +394,8 @@ public class GameplayActivity extends AppCompatActivity {
                                 String id = gameStateController.getExchangeRequesterId();
                                 exchangeRequestView.showDialogueBox(getPlayerName(id), id);
                                 gameStateController.completeExchangeRequest();
+                                currentPlayerExchangeResponse = WAIT;
+                                beginExchangeResponseServerPolling(id);
                             }
 
                             if (gameStateController.playerHasBeenTakenDown()) {
@@ -454,6 +458,11 @@ public class GameplayActivity extends AppCompatActivity {
                 } catch (JSONException e){
                     e.printStackTrace();
                 }
+
+                if (details.status != InteractionStatus.IN_PROGRESS) {
+                    playerListView.interceptAttemptComplete();
+                }
+
                 if (details.status.equals(InteractionStatus.FAILED)) {
                     Log.d("Intercept", "Failed");
                     that.runOnUiThread(new Runnable() {
@@ -471,9 +480,9 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             notificationView.interceptFailedNoEvidenceShared();
+                            playerListView.interceptAttemptComplete();
                         }
                     });
-                    playerListView.interceptAttemptComplete();
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
@@ -599,7 +608,7 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private void startGameTimer(long durationInMinutes) {
-        long duration = (durationInMinutes * 60 * 1000);
+        long duration = (durationInMinutes * 60 * 1000) + 60000;
 
         // Starting timer thread
         new CountDownTimer(duration, 1000) {

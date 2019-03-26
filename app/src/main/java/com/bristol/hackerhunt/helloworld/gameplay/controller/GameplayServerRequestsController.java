@@ -139,8 +139,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         float startSecond = Float.parseFloat(startTimeArr[2]);
         float startTotal = startSecond + 60 * (startMinute + 60 * startHour);
 
-        Log.d("JoinGame", "Time remaining: " + Float.toString((startTotal - currentTotal) / 60));
-        return ((startTotal - currentTotal) / 60);
+        Log.d("JoinGame", "Time remaining: " + Float.toString((startTotal - currentTotal) / 60.0f));
+        return ((startTotal - (float) currentTotal) / 60.0f);
     }
 
     private void setEndTime(JSONObject response) throws JSONException {
@@ -239,7 +239,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                throw new IllegalStateException("Error: " + error.getMessage());
+                String statusCode = "NaN";
+                if (error.networkResponse != null) {
+                    statusCode = String.valueOf(error.networkResponse.statusCode);
+                }
+                Log.d("Update", "Recieved status code " + statusCode);
             }
         };
 
@@ -360,7 +364,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             public void onResponse(JSONObject response) {
                 if (statusCode == 200) {
                     try {
-                        missionSuccess(details, response); //TODO Define
+                        missionSuccess(details, response);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -369,7 +373,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                     if(response.has("time_remaining")){
                         try {
                             int timeRemaining = response.getInt("time_remaining");
-                            missionPending(details, timeRemaining, response); //TODO Define
+                            missionPending(details, timeRemaining, response);
                         } catch (JSONException e) {
                             // TODO: handle.
                         }
@@ -390,8 +394,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             @Override
             public void onErrorResponse(VolleyError error) {
                 if(statusCode == 400) {
-                    // Log.d("Network", "400 Error received");
-                    //TODO Correct Behaviour?
+                    Log.d("Network", "400 Error received");
+                }
+                else if(statusCode == 203){
+                    try {
+                        missionFailure(details, new JSONObject("{\"failure_description\": \"Mission was failed.\"}"));
+                    } catch (JSONException e) {
+                        Log.d("Mission failure", e.getMessage());
+                    }
                 }
                 statusCode = 0;
             }
@@ -579,6 +589,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void pendingExchange(String interacteeId, InteractionDetails details, JSONObject obj) throws JSONException {
         int timeRemaining = obj.getInt("time_remaining"); //TODO Define what happens here
+        details.status = InteractionStatus.IN_PROGRESS;
     }
 
     @Override
@@ -586,26 +597,39 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyExchangeResponse(interacteeId, response, details));
     }
 
-    private JsonObjectRequest volleyExchangeResponse(final String interacteeId, int playerResponse, final InteractionDetails details) throws JSONException {
+    private JsonObjectRequest volleyExchangeResponse(final String interacteeId, final int playerResponse, final InteractionDetails details) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 if (statusCode == 202){
                     try {
-                        successfulExchange(interacteeId, details, response);
+                        if (playerResponse == 1) {
+                            Log.d("Exchange Response", "Response accept successful");
+                            successfulExchange(interacteeId, details, response);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
                 else if (statusCode == 206){
                     try {
+                        Log.d("Exchange Response", "Response pending");
                         pendingExchange(interacteeId, details, response);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
                 else if (statusCode == 205){
-                    rejectedExchange(details);
+                    Log.d("Exchange Response", "Response reject successful");
+                    try {
+                        successfulExchange(interacteeId, details, response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    Log.d("Exchange Response", "Other code recieved: " + statusCode);
+                    details.status = InteractionStatus.IN_PROGRESS;
                 }
                 statusCode = 0;
             }
@@ -614,18 +638,17 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (statusCode == 400) {
-                    // Log.d("Network", "400 Error received");
-                    unsuccessfulExchange(details);
+                if (statusCode == 408) {
+                    Log.d("Exchange Response", "Exchange request timeout");
                 }
-                else if (statusCode == 408) {
-                    // Log.d("Network", "408 Error received");
-                    unsuccessfulExchange(details);
+                else if (statusCode == 205){
+                    Log.d("Exchange Response", "Response reject successful");
+                    details.status = InteractionStatus.SUCCESSFUL;
                 }
-                else if (statusCode != 201 && statusCode != 202){
-                    // Log.d("Network", "Different server error received: " + Integer.toString(statusCode));
-                    unsuccessfulExchange(details);
+                else {
+                    Log.d("Exchange Response", "Exchange error, status code: " + statusCode);
                 }
+                unsuccessfulExchange(details);
                 statusCode = 0;
             }
         };
@@ -682,7 +705,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 else if (statusCode == 204){
                     interceptFailure(details);
                 }
-                else if (statusCode == 206){
+                else if (statusCode == 206 || statusCode == 201){
                     interceptPending(details);
                 }
                 statusCode = 0;
@@ -694,6 +717,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             public void onErrorResponse(VolleyError error) {
                 if (error.networkResponse != null && error.networkResponse.statusCode == 204) {
                     interceptFailure(details);
+                }
+                else if (error.networkResponse != null && (statusCode == 206 || statusCode == 201)) {
+                    interceptPending(details);
                 }
                 else {
                     interceptError(error, details);
@@ -728,19 +754,26 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 details.gainedIntelPlayerIds.add(playerId);
             }
         }
+        Log.d("Intercept", "Success");
         details.status = InteractionStatus.SUCCESSFUL;
     }
 
     private void interceptFailure(InteractionDetails details) {
+        Log.d("Intercept", "Failure");
         details.status = InteractionStatus.FAILED;
     }
 
     private void interceptPending(InteractionDetails details) {
+        Log.d("Intercept", "Pending");
         details.status = InteractionStatus.IN_PROGRESS;
     }
 
     private void interceptError(VolleyError error, InteractionDetails details) {
-        Log.d("Intercept", error.getMessage());
+        Integer statusCode = 0;
+        if (error.networkResponse != null) {
+            statusCode = error.networkResponse.statusCode;
+        }
+        Log.d("Intercept", "Server error: " + statusCode);
         details.status = InteractionStatus.FAILED;
     }
 
@@ -833,9 +866,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 if(statusCode == 200) {
                     atHomeUpdate(response);
                 }
+                statusCode = 0;
             }
         };
-        statusCode = 0;
 
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
@@ -843,9 +876,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 if(statusCode == 400) {
                     Log.d("Network", "No home beacon found");
                 }
+                statusCode = 0;
             }
         };
-        statusCode = 0;
 
         return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + PLAYER_AT_HOME_URL,
                 playerUpdateRequestBody(), listener, errorListener) {
