@@ -75,6 +75,7 @@ public class JoinGameActivity extends AppCompatActivity {
                 }
                 if (gameInfo.countdownStatus == CountdownStatus.ACTIVE && !gameStarted ) {
                     updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
+                    pressJoinGameButton();
                 }
                 if (gameInfo.countdownStatus == CountdownStatus.NO_GAME && !timerStarted) {
                     updateTimeLeftUntilGame("--:--");
@@ -132,23 +133,35 @@ public class JoinGameActivity extends AppCompatActivity {
         };
     }
 
+    private void pressJoinGameButton() {
+        final Activity that = this;
+        final Button joinGameButton = findViewById(R.id.join_game_button);
+
+        try {
+            serverRequestController.joinGameRequest(playerIdentifiers.getPlayerId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        that.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                joinGameButton.setVisibility(View.GONE);
+                findViewById(R.id.join_game_success).setVisibility(View.VISIBLE);
+            }
+        });
+        TextView joinStatus = findViewById(R.id.join_game_success);
+
+
+        (new Timer()).schedule(checkHomeBeaconHasBeenReceived(joinStatus), 1000);
+    }
+
     private void initializeJoinGameButton() {
         hideJoinGameButton();
         final Button joinGameButton = findViewById(R.id.join_game_button);
         joinGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                joinGameButton.setVisibility(View.GONE);
-                try {
-                    serverRequestController.joinGameRequest(playerIdentifiers.getPlayerId());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                TextView joinStatus = findViewById(R.id.join_game_success);
-                findViewById(R.id.join_game_success).setVisibility(View.VISIBLE);
-
-                (new Timer()).schedule(checkHomeBeaconHasBeenReceived(joinStatus), 1000);
+                pressJoinGameButton();
             }
         });
     }
