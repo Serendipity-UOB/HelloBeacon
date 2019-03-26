@@ -101,6 +101,13 @@ public class NotificationView implements INotificationView {
         popUpNotification();
     }
 
+    @Override
+    public void networkError() {
+        setBadNotificationCard();
+        setNotificationText("Network error.");
+        popUpNotification();
+    }
+
 
     private String insertTwoPlayerNames(int stringId, String playerName1, String playerName2) {
         String text = notificationOverlay.getContext().getResources().getString(stringId);

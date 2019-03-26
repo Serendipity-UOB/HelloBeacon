@@ -626,8 +626,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                     }
                 }
                 else {
-                    Log.d("Exchange Response", "Other code recieved: " + statusCode);
-                    details.status = InteractionStatus.IN_PROGRESS;
+                    Log.d("Exchange Response", "Other code received: " + statusCode);
+                    details.status = InteractionStatus.ERROR;
                 }
                 statusCode = 0;
             }
@@ -638,6 +638,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             public void onErrorResponse(VolleyError error) {
                 if (statusCode == 408) {
                     Log.d("Exchange Response", "Exchange request timeout");
+                    details.status = InteractionStatus.FAILED;
+
                 }
                 else if (statusCode == 205){
                     Log.d("Exchange Response", "Response reject successful");
@@ -645,8 +647,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 }
                 else {
                     Log.d("Exchange Response", "Exchange error, status code: " + statusCode);
+                    details.status = InteractionStatus.ERROR;
                 }
-                unsuccessfulExchange(details);
                 statusCode = 0;
             }
         };

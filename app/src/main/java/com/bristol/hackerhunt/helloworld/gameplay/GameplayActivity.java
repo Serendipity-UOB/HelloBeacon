@@ -207,11 +207,6 @@ public class GameplayActivity extends AppCompatActivity {
 
             @Override
             public void run(final String playerId) {
-                //final InteractionDetails details = new InteractionDetails();
-
-
-                //serverRequestsController.exchangeResponse(playerId, ACCEPT, details);
-                //beginExchangeResponseServerPolling(playerId);
                 currentPlayerExchangeResponse = ACCEPT;
                 exchangeRequestView.hideDialogueBox();
 
@@ -283,56 +278,74 @@ public class GameplayActivity extends AppCompatActivity {
             final InteractionDetails details = new InteractionDetails();
             @Override
             public void run() {
-                try {
-                    if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
 
-                        String playerResponse = "Wait";
-                        if (currentPlayerExchangeResponse == REJECT) {
-                            playerResponse = "Reject";
-                        }
-                        if (currentPlayerExchangeResponse == ACCEPT) {
-                            playerResponse = "Accept";
-                        }
-                        Log.d("Exchange Response", "Action: " + playerResponse);
+                switch (details.status) {
+                    case IN_PROGRESS:
+                        try {
+                            // Debug-logging user's response:
+                            String playerResponse = "Wait";
+                            if (currentPlayerExchangeResponse == REJECT) {
+                                playerResponse = "Reject";
+                            }
+                            if (currentPlayerExchangeResponse == ACCEPT) {
+                                playerResponse = "Accept";
+                            }
+                            Log.d("Exchange Response", "Player's exchange response: " + playerResponse);
 
-                        serverRequestsController.exchangeResponse(playerId, currentPlayerExchangeResponse, details);
-                        details.status = InteractionStatus.RESPONSE_PENDING;
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (details.status.equals(InteractionStatus.FAILED)) {
-                    that.runOnUiThread(new Runnable() {
+                            serverRequestsController.exchangeResponse(playerId, currentPlayerExchangeResponse, details);
+                            details.status = InteractionStatus.RESPONSE_PENDING;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+
+                    case FAILED:
+                        that.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 exchangeRequestView.hideDialogueBox();
                                 notificationView.exchangeFailedTimedOut(getPlayerName(playerId));
                             }
-                    });
-                    currentPlayerExchangeResponse = WAIT;
-                    cancel();
-                }
-                else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
+                        });
 
-                    if (currentPlayerExchangeResponse == ACCEPT) {
-                        final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
+                        currentPlayerExchangeResponse = WAIT;
+                        cancel();
+                        break;
 
+                    case SUCCESSFUL:
+                        if (currentPlayerExchangeResponse == ACCEPT) {
+                            final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
+
+                            that.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    playerListView.exchangeRequestComplete(playerId);
+
+                                    if (secondaryExists) {
+                                        notificationView.exchangeSuccessful(getPlayerName(playerId),
+                                                getPlayerName(details.gainedIntelPlayerIds.get(1)));
+                                    } else {
+                                        notificationView.exchangeSuccessful(getPlayerName(playerId));
+                                    }
+                                }
+                            });
+                        }
+                        currentPlayerExchangeResponse = WAIT;
+                        cancel();
+                        break;
+
+                    case ERROR:
                         that.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                playerListView.exchangeRequestComplete(playerId);
-
-                                if (secondaryExists) {
-                                    notificationView.exchangeSuccessful(getPlayerName(playerId),
-                                            getPlayerName(details.gainedIntelPlayerIds.get(1)));
-                                } else {
-                                    notificationView.exchangeSuccessful(getPlayerName(playerId));
-                                }
+                                exchangeRequestView.hideDialogueBox();
+                                notificationView.networkError();
                             }
                         });
-                    }
-                    currentPlayerExchangeResponse = WAIT;
-                    cancel();
+
+                        currentPlayerExchangeResponse = WAIT;
+                        cancel();
+                        break;
                 }
             }
         },0, EXCHANGE_POLLING_PERIOD * 1000);

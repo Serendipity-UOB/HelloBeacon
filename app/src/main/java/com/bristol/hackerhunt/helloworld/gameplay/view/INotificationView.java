@@ -2,6 +2,8 @@ package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 public interface INotificationView {
 
+    void networkError();
+
     /**
      * Shows a notification stating that the expose had failed due to insufficient evidence.
      * @param playerRealName target's real name.
