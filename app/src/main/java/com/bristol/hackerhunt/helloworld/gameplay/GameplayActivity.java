@@ -450,7 +450,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run() {
                 try {
                     if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
-                        Log.d("Intecept", "Polling");
+                        Log.d("Intercept", "Polling");
                         serverRequestsController.interceptRequest(interacteeId, details);
                         details.status = InteractionStatus.RESPONSE_PENDING;
                     }
@@ -459,7 +459,13 @@ public class GameplayActivity extends AppCompatActivity {
                 }
 
                 if (!details.status.equals(InteractionStatus.IN_PROGRESS)) {
-                    playerListView.interceptAttemptComplete();
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            playerListView.interceptAttemptComplete();
+                        }
+                    });
+
                 }
 
                 if (details.status.equals(InteractionStatus.FAILED)) {
