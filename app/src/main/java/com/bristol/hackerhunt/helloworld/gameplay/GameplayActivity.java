@@ -458,6 +458,7 @@ public class GameplayActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                //Catch all for if intercept is done
                 if (!details.status.equals(InteractionStatus.IN_PROGRESS)) {
                     that.runOnUiThread(new Runnable() {
                         @Override
@@ -468,6 +469,7 @@ public class GameplayActivity extends AppCompatActivity {
 
                 }
 
+                //Specific Cases
                 if (details.status.equals(InteractionStatus.FAILED)) {
                     Log.d("Intercept", "Failed");
                     that.runOnUiThread(new Runnable() {
