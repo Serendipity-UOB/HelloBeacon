@@ -133,6 +133,11 @@
         You also found some on $PLAYER_NAME_1.
     </string>
 
+    <string name="notification_exchange_successful_single">
+        Exchange successful.\n
+        You gained some evidence on $PLAYER_NAME.
+    </string>
+
     <string name="notification_exchange_rejected">
         Exchange failed.\n
         $PLAYER_NAME has rejected your request.

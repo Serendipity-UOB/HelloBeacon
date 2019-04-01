@@ -81,6 +81,13 @@ public class NotificationView implements INotificationView {
     }
 
     @Override
+    public void exchangeSuccessful(String interacteeName) {
+        setPositiveNotificationCard();
+        setNotificationText(insertPlayerName(R.string.notification_exchange_successful_single, interacteeName));
+        popUpNotification();
+    }
+
+    @Override
     public void exchangeFailedRejection(String interacteeName) {
         setBadNotificationCard();
         setNotificationText(insertPlayerName(R.string.notification_exchange_rejected, interacteeName));

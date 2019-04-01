@@ -33,6 +33,12 @@ public interface INotificationView {
     void exchangeSuccessful(String interacteeName, String mutualContactName);
 
     /**
+     * Shows a notification stating that an exchange has been successful
+     * @param interacteeName The person who was exchanged with.
+     */
+    void exchangeSuccessful(String interacteeName);
+
+    /**
      * Shows a notification stating that an exchange had failed, due to rejection.
      * @param interacteeName name.
      */
