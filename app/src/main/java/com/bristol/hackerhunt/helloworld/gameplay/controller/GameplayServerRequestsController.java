@@ -607,35 +607,26 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if (statusCode == 202){
-                    try {
+                try {
+                    if (statusCode == 202) {
                         if (playerResponse == 1) {
                             Log.d("Exchange Response", "Response accept successful");
                             successfulExchange(interacteeId, details, response);
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else if (statusCode == 206){
-                    try {
+                    } else if (statusCode == 206) {
                         Log.d("Exchange Response", "Response pending");
                         pendingExchange(interacteeId, details, response);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    } else if (statusCode == 205) {
+                        Log.d("Exchange Response", "Response reject successful");
+                        details.status = InteractionStatus.SUCCESSFUL;
+                    } else {
+                        Log.d("Exchange Response", "Other code recieved: " + statusCode);
+                        details.status = InteractionStatus.ERROR;
                     }
-                }
-                else if (statusCode == 205){
-                    Log.d("Exchange Response", "Response reject successful");
-                    try {
-                        successfulExchange(interacteeId, details, response);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else {
-                    Log.d("Exchange Response", "Other code recieved: " + statusCode);
-                    details.status = InteractionStatus.IN_PROGRESS;
+
+                } catch (JSONException e) {
+                    Log.d("Exchange response", e.getMessage());
+                    details.status = InteractionStatus.ERROR;
                 }
                 statusCode = 0;
             }
@@ -644,17 +635,17 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (statusCode == 408) {
-                    Log.d("Exchange Response", "Exchange request timeout");
-                }
-                else if (statusCode == 205){
+                if (statusCode == 205){         // user rejects it successfully
                     Log.d("Exchange Response", "Response reject successful");
                     details.status = InteractionStatus.SUCCESSFUL;
                 }
-                else {
-                    Log.d("Exchange Response", "Exchange error, status code: " + statusCode);
+                else if (statusCode == 408) {   // timeout
+                    details.status = InteractionStatus.FAILED;
                 }
-                unsuccessfulExchange(details);
+                else {                          // edge case
+                    details.status = InteractionStatus.ERROR;
+                }
+
                 statusCode = 0;
             }
         };

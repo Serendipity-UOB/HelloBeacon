@@ -306,6 +306,7 @@ public class GameplayActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
                 if (details.status.equals(InteractionStatus.FAILED)) {
                     that.runOnUiThread(new Runnable() {
                             @Override
@@ -314,6 +315,7 @@ public class GameplayActivity extends AppCompatActivity {
                                 notificationView.exchangeFailedTimedOut(playerId);
                             }
                     });
+
                     currentPlayerExchangeResponse = WAIT;
                     cancel();
                 }
@@ -336,6 +338,12 @@ public class GameplayActivity extends AppCompatActivity {
                             }
                         });
                     }
+
+                    currentPlayerExchangeResponse = WAIT;
+                    cancel();
+                }
+                else if (details.status.equals(InteractionStatus.ERROR)) {
+                    notificationView.applicationError();
                     currentPlayerExchangeResponse = WAIT;
                     cancel();
                 }
