@@ -610,6 +610,10 @@ public class GameplayActivity extends AppCompatActivity {
                     });
                     cancel();
                 }
+                else if (details.status.equals(InteractionStatus.ERROR)) {
+                    notificationView.applicationError();
+                    cancel();
+                }
             }
         }, 0, EXCHANGE_POLLING_PERIOD * 1000);
     }

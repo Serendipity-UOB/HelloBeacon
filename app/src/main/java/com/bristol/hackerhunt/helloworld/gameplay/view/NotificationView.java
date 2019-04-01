@@ -24,6 +24,13 @@ public class NotificationView implements INotificationView {
     }
 
     @Override
+    public void applicationError() {
+        setBadNotificationCard();
+        setNotificationText("Application error, please try again later.");
+        popUpNotification();
+    }
+
+    @Override
     public void exposeFailedNotYourTarget(String playerCodeName) {
         setBadNotificationCard();
         setNotificationText("Expose failed\n" + playerCodeName + " is not your target.");
