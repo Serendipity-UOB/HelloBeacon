@@ -87,6 +87,8 @@
     <string name="player_name_title">Agent\u00A0</string>
 
     <!-- Full screen pop up -->
+    <string name="console_error_title">Error</string>
+
     <string name="console_start_title">Game Start</string>
     <string name="console_start_beacon_message">
         Welcome, agent.\nGo to game zone $BEACON for your first target.

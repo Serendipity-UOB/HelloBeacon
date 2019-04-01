@@ -109,6 +109,15 @@ public class ConsoleView implements IConsoleView {
         this.interactionInProgress = false;
     }
 
+    @Override
+    public void applicationError() {
+        enableCloseConsole();
+        setNeutralConsole();
+
+        setConsoleTitle(R.string.console_error_title);
+        setConsoleMessage("Application error, please try again later.");
+    }
+
     private void setNeutralConsole() {
         consoleViewTitle.setTextColor(consoleView.getResources()
                 .getColor(R.color.neutral_full_screen_notif_title));

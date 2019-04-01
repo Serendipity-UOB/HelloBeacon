@@ -259,15 +259,21 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    serverRequestsController.missionUpdateRequest(details);
+                    if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
+                        serverRequestsController.missionUpdateRequest(details);
+                        details.status = InteractionStatus.RESPONSE_PENDING;
+                    }
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
                 }
                 Log.d("Mission Poll", "Polling");
 
-                if (details.status.equals(InteractionStatus.SUCCESSFUL)
-                        || details.status.equals(InteractionStatus.FAILED)) {
+                if (details.status.equals(InteractionStatus.ERROR)) {
+                    consoleView.applicationError();
+                }
+
+                if (!details.status.equals(InteractionStatus.RESPONSE_PENDING) && !details.status.equals(InteractionStatus.IN_PROGRESS)){
                     cancel();
                 }
             }

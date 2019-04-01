@@ -362,28 +362,16 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             @Override
             public void onResponse(JSONObject response) {
                 if (statusCode == 200) {
-                    try {
-                        missionSuccess(details, response);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    missionSuccess(details, response);
                 }
-                else if(statusCode == 100){
-                    if(response.has("time_remaining")){
-                        try {
-                            int timeRemaining = response.getInt("time_remaining");
-                            missionPending(details, timeRemaining, response);
-                        } catch (JSONException e) {
-                            // TODO: handle.
-                        }
-                    }
+                else if(statusCode == 206){
+                    missionPending(details, response);
                 }
                 else if(statusCode == 203){
-                    try {
-                        missionFailure(details, response); //TODO Define
-                    } catch (JSONException e) {
-                        // TODO: handle
-                    }
+                    missionFailure(details, response);
+                }
+                else {
+                    details.status = InteractionStatus.ERROR;
                 }
                 statusCode = 0;
             }
@@ -392,15 +380,15 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(statusCode == 400) {
-                    Log.d("Network", "400 Error received");
-                }
-                else if(statusCode == 203){
+                if(statusCode == 203){
                     try {
                         missionFailure(details, new JSONObject("{\"failure_description\": \"Mission was failed.\"}"));
                     } catch (JSONException e) {
-                        Log.d("Mission failure", e.getMessage());
+                        Log.d("Mission", e.getMessage());
                     }
+                }
+                else {
+                    details.status = InteractionStatus.ERROR;
                 }
                 statusCode = 0;
             }
@@ -420,48 +408,60 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
     }
 
-    private void missionSuccess(InteractionDetails details, JSONObject obj) throws JSONException {
-        String success = "Mission Success - PRESET";
-        details.status = InteractionStatus.SUCCESSFUL;
-        if(obj.has("rewards")){
-            JSONArray rewardArray = obj.getJSONArray("rewards");
-            for(int i = 0; i < rewardArray.length(); i++){
-                JSONObject rewardRow = rewardArray.getJSONObject(i);
-                String rewardId = rewardRow.getString("player_id");
-                int rewardAmount = rewardRow.getInt("evidence");
-                gameStateController.increasePlayerIntel(rewardId, rewardAmount);
+    private void missionSuccess(InteractionDetails details, JSONObject obj) {
+        String success = "Mission Successful";
+
+        try {
+            details.status = InteractionStatus.SUCCESSFUL;
+
+            if (obj.has("evidence")) {
+                JSONArray evidence = obj.getJSONArray("evidence");
+
+                for (int i = 0; i < evidence.length(); i++) {
+                    JSONObject entry = evidence.getJSONObject(i);
+                    String playerId = entry.getString("player_id");
+                    int evidenceAmount = entry.getInt("evidence");
+                    gameStateController.increasePlayerIntel(playerId, evidenceAmount);
+                }
             }
-            if(obj.has("success_description")){
-                if(!obj.getString("success_description").equals(null)) {
-                    success = obj.getString("success_description");
-                    missionSuccessRunnable.run(success);
-                }
-                else {
-                    missionSuccessRunnable.run(success);
-                }
+
+            if (obj.has("success_description")) {
+                success = obj.getString("success_description");
             }
         }
+        catch (JSONException e) {
+            Log.d("Mission", e.getMessage());
+        }
 
-
+        missionSuccessRunnable.run(success);
     }
 
-    private void missionPending(InteractionDetails details, int timeRemaining, JSONObject obj) throws JSONException {
-        //TODO Define, probably tell gameStateController something
+    private void missionPending(InteractionDetails details, JSONObject obj) {
         details.status = InteractionStatus.IN_PROGRESS;
-        details.missionTime = timeRemaining;
+        if (obj.has("time_remaining")) {
+            try {
+                details.missionTime = obj.getInt("time_remaining");
+            } catch (JSONException e) {
+                Log.d("Mission", e.getMessage());
+            }
+        }
     }
 
 
-    private void missionFailure(InteractionDetails details, JSONObject obj) throws JSONException {
-        //TODO Define probably tell gameStateController something
+    private void missionFailure(InteractionDetails details, JSONObject obj) {
         details.status = InteractionStatus.FAILED;
+        String failureDescription = "Mission Failed";
+
         if(obj.has("failure_description")){
-            Log.d("Mission Fail GSvr", obj.getString("failure_description"));
-            missionFailureRunnable.run(obj.getString("failure_description"));
+            try {
+                Log.d("Mission Fail GSvr", obj.getString("failure_description"));
+                failureDescription = obj.getString("failure_description");
+            } catch (JSONException e) {
+                Log.d("Mission", e.getMessage());
+            }
         }
-        else {
-            missionFailureRunnable.run("Mission Failed - PRESET");
-        }
+
+        missionFailureRunnable.run(failureDescription);
     }
 
     @Override

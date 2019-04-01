@@ -13,6 +13,8 @@ public interface IConsoleView {
      */
     void goToStartBeaconPrompt(String homeBeaconName);
 
+    void applicationError();
+
     /**
      * Prompts player to go to their home beacon, as their target has been taken down.
      */
