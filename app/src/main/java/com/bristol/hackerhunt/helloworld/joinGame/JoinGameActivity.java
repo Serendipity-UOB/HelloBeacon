@@ -28,6 +28,7 @@ public class JoinGameActivity extends AppCompatActivity {
 
     private GameInfo gameInfo;
     private boolean joinedGame = false;
+    private boolean joinPressed = false;
     private boolean timerStarted = false;
     private boolean gameStarted = false;
     private PlayerIdentifiers playerIdentifiers;
@@ -66,6 +67,7 @@ public class JoinGameActivity extends AppCompatActivity {
             public void run() {
                 try {
                     if (!gameStarted) {
+                        Log.i("Game Info", "Requested");
                         serverRequestController.gameInfoRequest();
                     }
                 } catch (JSONException e) {
@@ -73,14 +75,20 @@ public class JoinGameActivity extends AppCompatActivity {
                 }
                 // Starting timer thread
                 if (gameInfo.countdownStatus == CountdownStatus.ACTIVE && !timerStarted) {
-                    startCountdownToGameStart(playerIdentifiers, timer);
-                    showJoinGameButton();
+                    if(!joinPressed) {
+                        startCountdownToGameStart(playerIdentifiers, timer);
+                        showJoinGameButton();
+                    }
                 }
                 if (gameInfo.countdownStatus == CountdownStatus.ACTIVE && !gameStarted ) {
+                    if(!joinPressed) {
+                        updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
+                        showJoinGameButton();
+                        pressJoinGameButton();
+                    }
+                }
+                if(joinPressed){
                     updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
-                    showJoinGameButton();
-                    pressJoinGameButton();
-                    cancel();
                 }
                 if (gameInfo.countdownStatus == CountdownStatus.NO_GAME && !timerStarted) {
                     updateTimeLeftUntilGame("--:--");
@@ -139,6 +147,8 @@ public class JoinGameActivity extends AppCompatActivity {
     }
 
     private void pressJoinGameButton() {
+        this.joinPressed = true;
+
         final Activity that = this;
         final Button joinGameButton = findViewById(R.id.join_game_button);
 
@@ -159,6 +169,7 @@ public class JoinGameActivity extends AppCompatActivity {
 
 
                 (new Timer()).schedule(checkHomeBeaconHasBeenReceived(joinStatus), 1000);
+
 
     }
 

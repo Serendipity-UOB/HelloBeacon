@@ -95,10 +95,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
 
     private void updateGameInfo(JSONObject gameInfoJson) throws JSONException {
         String timeToStartJson = gameInfoJson.getString("start_time");
-        Log.i("Time to start",timeToStartJson);
         double minutesToStart = calculateTimeRemainingInMinutes(timeToStartJson);
-        Log.i("Minutes to start", Double.toString(minutesToStart));
-
         int numberOfPlayers = gameInfoJson.getInt("number_players");
 
         if (gameInfo.minutesToStart == null) {
@@ -143,6 +140,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
             public void onResponse(JSONObject response) {
                 try {
                     gameInfo.startBeaconName = response.getString("home_zone_name");
+                    Log.i("Start Beacon", response.getString("home_zone_name"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

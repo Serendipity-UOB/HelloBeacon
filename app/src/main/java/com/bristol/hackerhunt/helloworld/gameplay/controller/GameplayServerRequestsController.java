@@ -852,7 +852,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     @Override
     public void isAtHomeBeaconRequest() throws JSONException {
-        Log.d("Home Beacon Request","Requested");
         requestQueue.add(volleyIsAtHomeBeaconRequest());
     }
 
