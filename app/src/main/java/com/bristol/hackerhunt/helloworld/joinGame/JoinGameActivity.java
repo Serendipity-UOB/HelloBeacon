@@ -80,6 +80,7 @@ public class JoinGameActivity extends AppCompatActivity {
                     updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
                     showJoinGameButton();
                     pressJoinGameButton();
+                    cancel();
                 }
                 if (gameInfo.countdownStatus == CountdownStatus.NO_GAME && !timerStarted) {
                     updateTimeLeftUntilGame("--:--");
@@ -183,13 +184,15 @@ public class JoinGameActivity extends AppCompatActivity {
     }
 
     private void showJoinGameButton() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                final Button joinGameButton = findViewById(R.id.join_game_button);
-                joinGameButton.setVisibility(View.VISIBLE);
-            }
-        });
+        if(!joinedGame) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final Button joinGameButton = findViewById(R.id.join_game_button);
+                    joinGameButton.setVisibility(View.VISIBLE);
+                }
+            });
+        }
     }
 
     private TimerTask checkHomeBeaconHasBeenReceived(final TextView joinStatus) {
