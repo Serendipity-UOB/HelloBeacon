@@ -296,16 +296,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         }
     }
 
-    private void checkForMission(JSONObject obj) throws JSONException {
-        if(obj.has("mission_description")) {
-            Log.d("Mission", obj.getString("mission_description"));
-            String missionId = obj.getString("mission_description");
-            if(!missionId.equals("")) {
-                missionUpdateRunnable.run(missionId);
-            }
-        }
-    }
-
     private void checkForPlayerStatusChanges(JSONObject obj) throws JSONException {
         List<PlayerUpdate> updates = new ArrayList<>();
         String exposedId = "";
@@ -331,6 +321,16 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             boolean gameOver = obj.getBoolean("game_over");
             if (gameOver) {
                 gameStateController.setGameOver();
+            }
+        }
+    }
+
+    private void checkForMission(JSONObject obj) throws JSONException {
+        if(obj.has("mission_description")) {
+            Log.d("Mission", obj.getString("mission_description"));
+            String missionId = obj.getString("mission_description");
+            if(!missionId.equals("")) {
+                missionUpdateRunnable.run(missionId);
             }
         }
     }
@@ -412,7 +412,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void missionSuccess(InteractionDetails details, JSONObject obj) {
-        String success = "Mission Successful";
+        String success = "Test Mission Success";
 
         try {
             details.status = InteractionStatus.SUCCESSFUL;
@@ -430,6 +430,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
             if (obj.has("success_description")) {
                 success = obj.getString("success_description");
+                Log.i("Success Description", success);
             }
         }
         catch (JSONException e) {
@@ -453,18 +454,19 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void missionFailure(InteractionDetails details, JSONObject obj) {
         details.status = InteractionStatus.FAILED;
-        String failureDescription = "Mission Failed";
+        String failure = "Mission Failed";
 
         if(obj.has("failure_description")){
             try {
                 Log.d("Mission Fail GSvr", obj.getString("failure_description"));
-                failureDescription = obj.getString("failure_description");
+                failure = obj.getString("failure_description");
+                Log.i("Failure Description", failure);
             } catch (JSONException e) {
                 Log.d("Mission", e.getMessage());
             }
         }
 
-        missionFailureRunnable.run(failureDescription);
+        missionFailureRunnable.run(failure);
     }
 
     @Override

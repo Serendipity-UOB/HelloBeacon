@@ -251,7 +251,8 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private void beginMissionUpdateServerPolling() {
-        Log.d("Mission Poll", "Setting up Poll");
+        final Activity that = this;
+
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             final InteractionDetails details = new InteractionDetails();
@@ -270,7 +271,7 @@ public class GameplayActivity extends AppCompatActivity {
                 Log.d("Mission Poll", "Polling");
 
                 if (details.status.equals(InteractionStatus.ERROR)) {
-                    runOnUiThread(new Runnable() {
+                    that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             consoleView.applicationError();

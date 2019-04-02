@@ -224,7 +224,6 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void missionFailedPrompt(String missionFailedMessage) {
-        Log.d("Mission Fail CV", missionFailedMessage);
         enableCloseConsole();
         setBadConsole();
         setConsoleMessage(missionFailedMessage);
