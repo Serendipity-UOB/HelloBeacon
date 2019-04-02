@@ -519,10 +519,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 else if (statusCode == 404){
                     unsuccessfulExchange(details);
                 }
-                else if (statusCode != 201 && statusCode != 202) {
-                    // Log.d("Network", "Different server error received: " + Integer.toString(statusCode));
-                    unsuccessfulExchange(details);
-                }
                 else {
                     Log.d("Exchange request", "Error received.");
                     details.status = InteractionStatus.ERROR;
