@@ -350,7 +350,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         }
         requestBody.put("beacons", beacons);
-        Log.d("Player Update Body", requestBody.toString());
+        Log.v("Player Update Body", requestBody.toString());
 
         return requestBody;
     }
@@ -416,6 +416,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
         try {
             details.status = InteractionStatus.SUCCESSFUL;
+            Log.d("Mission Success", obj.toString());
 
             if (obj.has("evidence")) {
                 JSONArray evidence = obj.getJSONArray("evidence");
