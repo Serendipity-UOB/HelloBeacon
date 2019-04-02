@@ -16,6 +16,7 @@ import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
+import com.google.gson.JsonIOException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -424,20 +425,25 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 for (int i = 0; i < evidence.length(); i++) {
                     JSONObject entry = evidence.getJSONObject(i);
                     String playerId = entry.getString("player_id");
-                    int evidenceAmount = entry.getInt("evidence");
+                    int evidenceAmount = entry.getInt("amount");
                     gameStateController.increasePlayerIntel(playerId, evidenceAmount);
                 }
             }
 
-            if (obj.has("success_description")) {
-                success = obj.getString("success_description");
-                Log.i("Success Description", success);
-            }
+
         }
         catch (JSONException e) {
             Log.d("Mission", e.getMessage());
         }
 
+        try{
+            if (obj.has("success_description")) {
+                success = obj.getString("success_description");
+                Log.i("Success Description", success);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         missionSuccessRunnable.run(success);
     }
 
