@@ -286,6 +286,7 @@ public class GameplayActivity extends AppCompatActivity {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             final InteractionDetails details = new InteractionDetails();
+
             @Override
             public void run() {
                 try {
@@ -470,18 +471,6 @@ public class GameplayActivity extends AppCompatActivity {
                 } catch (JSONException e){
                     e.printStackTrace();
                 }
-
-                //Catch all for if intercept is done
-                if (!details.status.equals(InteractionStatus.IN_PROGRESS)) {
-                    that.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            playerListView.interceptAttemptComplete();
-                        }
-                    });
-
-                }
-
                 //Specific Cases
                 if (details.status.equals(InteractionStatus.FAILED)) {
                     Log.d("Intercept", "Failed");
@@ -495,7 +484,7 @@ public class GameplayActivity extends AppCompatActivity {
                     cancel();
                 }
                 else if(details.status.equals(InteractionStatus.REJECTED)) {
-                    Log.d("Intercept","Error");
+                    Log.d("Intercept","Rejected");
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -513,6 +502,16 @@ public class GameplayActivity extends AppCompatActivity {
                             notificationView.interceptSucceeded(getPlayerName(interacteeId),
                                     getPlayerName(details.gainedIntelPlayerIds.get(1)));
                                     playerListView.interceptAttemptComplete();
+                        }
+                    });
+                    cancel();
+                }
+                else if (details.status.equals(InteractionStatus.ERROR)) {
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationView.applicationError();
+                            playerListView.interceptAttemptComplete();
                         }
                     });
                     cancel();
@@ -569,12 +568,10 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-
-                    if (details.status == InteractionStatus.IN_PROGRESS) {
+                    if (details.status.equals(InteractionStatus.IN_PROGRESS)) {
                         serverRequestsController.exchangeRequest(interacteeId, details);
                         details.status = InteractionStatus.RESPONSE_PENDING;
                     }
-
                 } catch (JSONException e){
                     e.printStackTrace();
                 }
@@ -619,8 +616,13 @@ public class GameplayActivity extends AppCompatActivity {
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.ERROR)) {
-                    notificationView.applicationError();
-                    cancel();
+                    that.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationView.applicationError();
+                            cancel();
+                        }
+                    });
                 }
             }
         }, 0, EXCHANGE_POLLING_PERIOD * 1000);
