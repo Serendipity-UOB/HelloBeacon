@@ -120,7 +120,7 @@ public class GameStateController implements IGameStateController {
     @Override
     public void setNearestBeaconMajor(String major) {
         this.nearestBeaconMajor = major;
-        Log.i("NMajor", "New Nearest Major. Major: " + major);
+        Log.v("NMajor", "New Nearest Major. Major: " + major);
     }
 
     @Override

@@ -102,10 +102,10 @@ public class BeaconController implements IBeaconController {
                         if (rssi > nearestRssi && rssi < 0) {
                             nearestRssi = rssi;
                             nearestMajor = major;
-                            Log.i("NBeacon", "Nearest. Major: " + major + " Minor: " + minor + " RSSI: " + Integer.toString(rssi));
+                            Log.v("NBeacon", "Nearest. Major: " + major + " Minor: " + minor + " RSSI: " + Integer.toString(rssi));
                         }
                         else{
-                            Log.i("OBeacon", "Other. Major: " + major + " Minor: " + minor + " RSSI: " + Integer.toString(rssi));
+                            Log.v("OBeacon", "Other. Major: " + major + " Minor: " + minor + " RSSI: " + Integer.toString(rssi));
                         }
 
                     gameStateController.updateBeacon(major, minor, rssi);
