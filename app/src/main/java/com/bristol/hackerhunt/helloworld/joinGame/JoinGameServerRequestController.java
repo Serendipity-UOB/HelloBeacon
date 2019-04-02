@@ -95,7 +95,9 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
 
     private void updateGameInfo(JSONObject gameInfoJson) throws JSONException {
         String timeToStartJson = gameInfoJson.getString("start_time");
+        Log.i("Time to start",timeToStartJson);
         double minutesToStart = calculateTimeRemainingInMinutes(timeToStartJson);
+        Log.i("Minutes to start", Double.toString(minutesToStart));
 
         int numberOfPlayers = gameInfoJson.getInt("number_players");
 
@@ -109,6 +111,10 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         Calendar c2 = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
         int currentHour = c2.get(Calendar.HOUR_OF_DAY);
+
+        //DAYLIGHT SAVINGS CHANGE
+        currentHour++;
+
         int currentMinute = c2.get(Calendar.MINUTE);
         int currentSecond = c2.get(Calendar.SECOND);
 

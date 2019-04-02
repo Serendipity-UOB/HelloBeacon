@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -49,6 +50,8 @@ public class JoinGameActivity extends AppCompatActivity {
         TimerTask task = pollServer(playerIdentifiers, timer);
         task.run();
         timer.scheduleAtFixedRate(pollServer(playerIdentifiers, timer), 0, POLLING_PERIOD * 1000);
+
+        //timer.schedule(pressJoinGameButton(),2);
     }
 
     @Override
@@ -75,6 +78,7 @@ public class JoinGameActivity extends AppCompatActivity {
                 }
                 if (gameInfo.countdownStatus == CountdownStatus.ACTIVE && !gameStarted ) {
                     updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
+                    showJoinGameButton();
                     pressJoinGameButton();
                 }
                 if (gameInfo.countdownStatus == CountdownStatus.NO_GAME && !timerStarted) {
@@ -137,22 +141,24 @@ public class JoinGameActivity extends AppCompatActivity {
         final Activity that = this;
         final Button joinGameButton = findViewById(R.id.join_game_button);
 
-        try {
-            serverRequestController.joinGameRequest(playerIdentifiers.getPlayerId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        that.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                joinGameButton.setVisibility(View.GONE);
-                findViewById(R.id.join_game_success).setVisibility(View.VISIBLE);
-            }
-        });
-        TextView joinStatus = findViewById(R.id.join_game_success);
+                try {
+                    Log.i("Join Game", "Requested");
+                    serverRequestController.joinGameRequest(playerIdentifiers.getPlayerId());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                that.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        joinGameButton.setVisibility(View.GONE);
+                        findViewById(R.id.join_game_success).setVisibility(View.VISIBLE);
+                    }
+                });
+                TextView joinStatus = findViewById(R.id.join_game_success);
 
 
-        (new Timer()).schedule(checkHomeBeaconHasBeenReceived(joinStatus), 1000);
+                (new Timer()).schedule(checkHomeBeaconHasBeenReceived(joinStatus), 1000);
+
     }
 
     private void initializeJoinGameButton() {
