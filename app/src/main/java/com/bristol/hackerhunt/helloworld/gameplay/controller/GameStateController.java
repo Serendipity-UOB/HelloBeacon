@@ -17,7 +17,6 @@ import java.util.Set;
 
 public class GameStateController implements IGameStateController {
     //TODO Consider changing to 10 to better show quantum
-    private static final int INTEL_INCREMENT = 20; // a percentage
 
     private long gameDuration = -1;
 
