@@ -108,13 +108,9 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
     }
 
     private float calculateTimeRemainingInMinutes(String startTime) {
-        Calendar c2 = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        Calendar c2 = Calendar.getInstance(TimeZone.getDefault());
 
         int currentHour = c2.get(Calendar.HOUR_OF_DAY);
-
-        //DAYLIGHT SAVINGS CHANGE
-        currentHour++;
-
         int currentMinute = c2.get(Calendar.MINUTE);
         int currentSecond = c2.get(Calendar.SECOND);
 

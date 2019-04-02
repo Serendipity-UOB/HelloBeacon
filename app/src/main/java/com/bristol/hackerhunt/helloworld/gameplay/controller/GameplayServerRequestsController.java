@@ -125,7 +125,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private float calculateTimeRemainingInMinutes(String startTime) {
-        Calendar c2 = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        Calendar c2 = Calendar.getInstance(TimeZone.getDefault());
 
         int currentHour = c2.get(Calendar.HOUR_OF_DAY);
         int currentMinute = c2.get(Calendar.MINUTE);
