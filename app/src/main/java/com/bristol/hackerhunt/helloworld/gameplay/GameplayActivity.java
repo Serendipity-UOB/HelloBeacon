@@ -270,7 +270,12 @@ public class GameplayActivity extends AppCompatActivity {
                 Log.d("Mission Poll", "Polling");
 
                 if (details.status.equals(InteractionStatus.ERROR)) {
-                    consoleView.applicationError();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            consoleView.applicationError();
+                        }
+                    });
                 }
 
                 if (!details.status.equals(InteractionStatus.RESPONSE_PENDING) && !details.status.equals(InteractionStatus.IN_PROGRESS)){
@@ -344,9 +349,14 @@ public class GameplayActivity extends AppCompatActivity {
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.ERROR)) {
-                    notificationView.applicationError();
-                    currentPlayerExchangeResponse = WAIT;
-                    cancel();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationView.applicationError();
+                            currentPlayerExchangeResponse = WAIT;
+                            cancel();
+                        }
+                    });
                 }
             }
         },0, EXCHANGE_POLLING_PERIOD * 1000);
@@ -620,6 +630,7 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             notificationView.applicationError();
+                            playerListView.exchangeRequestComplete(interacteeId);
                             cancel();
                         }
                     });

@@ -136,7 +136,10 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         String[] startTimeArr = startTime.split(":");
         float startHour = Float.parseFloat(startTimeArr[0]);
         float startMinute = Float.parseFloat(startTimeArr[1]);
-        float startSecond = Float.parseFloat(startTimeArr[2]);
+        float startSecond = 0;
+        if (startTimeArr.length > 2) {
+            startSecond = Float.parseFloat(startTimeArr[2]);
+        }
         float startTotal = startSecond + 60 * (startMinute + 60 * startHour);
 
         Log.d("JoinGame", "Time remaining: " + Float.toString((startTotal - currentTotal) / 60.0f));
@@ -380,7 +383,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(statusCode == 203){
+                if(error.networkResponse != null && error.networkResponse.statusCode == 203){
                     try {
                         missionFailure(details, new JSONObject("{\"failure_description\": \"Mission was failed.\"}"));
                     } catch (JSONException e) {
@@ -506,22 +509,22 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (statusCode == 400) {
+                if (error.networkResponse != null && error.networkResponse.statusCode == 400) {
                     // Log.d("Network", "400 Error received");
                     unsuccessfulExchange(details);
                 }
-                else if (statusCode == 204) {
+                else if (error.networkResponse != null && error.networkResponse.statusCode == 204) {
                     rejectedExchange(details);
                 }
-                else if (statusCode == 408){
+                else if (error.networkResponse != null && error.networkResponse.statusCode == 408){
                     unsuccessfulExchange(details);
                 }
-                else if (statusCode == 404){
+                else if (error.networkResponse != null && error.networkResponse.statusCode == 404){
                     unsuccessfulExchange(details);
                 }
                 else {
-                    Log.d("Exchange request", "Error received.");
-                    details.status = InteractionStatus.ERROR;
+                    Log.d("Exchange request", "Error received:" + error.getMessage());
+                    rejectedExchange(details);
                 }
                 statusCode = 0;
             }
@@ -631,14 +634,15 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (statusCode == 205){         // user rejects it successfully
+                if (error.networkResponse != null && error.networkResponse.statusCode == 205){         // user rejects it successfully
                     Log.d("Exchange Response", "Response reject successful");
                     details.status = InteractionStatus.SUCCESSFUL;
                 }
-                else if (statusCode == 408) {   // timeout
+                else if (error.networkResponse != null && error.networkResponse.statusCode == 408) {   // timeout
                     details.status = InteractionStatus.FAILED;
                 }
                 else {                          // edge case
+                    Log.d("Exchange Response", "Error " + error.getMessage());
                     details.status = InteractionStatus.ERROR;
                 }
 
