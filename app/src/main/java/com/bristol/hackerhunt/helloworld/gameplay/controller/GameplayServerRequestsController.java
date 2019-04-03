@@ -16,7 +16,7 @@ import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
 import com.bristol.hackerhunt.helloworld.model.PlayerIdentifiers;
-import com.google.gson.JsonIOException;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,11 +39,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private String INTERCEPT_URL;
     private String EXCHANGE_RESPONSE_URL;
     private String MISSION_URL;
-
-    private final int EXCHANGE_PRIMARY_INCREMENT = 10;
-    private final int EXCHANGE_SECONDARY_INCREMENT = 20;
-    private final int INTERCEPT_PRIMARY_INCREMENT = 30;
-    private final int INTERCEPT_SECONDARY_INCREMENT = 10;
 
     private RequestQueue requestQueue;
     private IGameStateController gameStateController;
@@ -486,7 +481,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyExchangeRequest(interacteeId, details));
     }
 
-    private JsonObjectRequest volleyExchangeRequest(final String interacteeId, final InteractionDetails details) throws JSONException {
+    private JsonObjectRequestWithNull volleyExchangeRequest(final String interacteeId, final InteractionDetails details) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -539,7 +534,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         };
 
-        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_REQUEST_URL,
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_REQUEST_URL,
                 exchangeRequestBody(interacteeId), listener, errorListener) {
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
@@ -697,7 +692,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyInterceptRequest(interacteeId, details));
     }
 
-    private JsonObjectRequest volleyInterceptRequest(final String interacteeId, final InteractionDetails details) throws JSONException {
+    private JsonObjectRequestWithNull volleyInterceptRequest(final String interacteeId, final InteractionDetails details) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -736,7 +731,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         };
 
-        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + INTERCEPT_URL,
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + INTERCEPT_URL,
                 interceptRequestBody(interacteeId), listener, errorListener) {
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
