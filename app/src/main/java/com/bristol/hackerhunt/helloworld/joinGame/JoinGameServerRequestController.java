@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 public class JoinGameServerRequestController implements IJoinGameServerRequestController {
@@ -84,7 +85,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         };
 
         return new JsonObjectRequestWithNull(Request.Method.GET, SERVER_ADDRESS + GAME_INFO_URL, new JSONObject(),
-                listener, errorListener,setStatusCodeRunnable());
+                listener, errorListener,setStatusCodeRunnable(), new HashMap<String, Integer>());
     }
 
     private void updateGameInfo(JSONObject gameInfoJson) throws JSONException {
@@ -155,7 +156,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         requestBody.put("player_id", playerId);
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + JOIN_GAME_URL, requestBody,
-                listener, errorListener,setStatusCodeRunnable());
+                listener, errorListener,setStatusCodeRunnable(), new HashMap<String, Integer>());
     }
 
     private void noGameAvailableToJoin() {

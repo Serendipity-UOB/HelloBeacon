@@ -24,7 +24,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class GameplayServerRequestsController implements IGameplayServerRequestsController {
@@ -52,6 +54,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private StringInputRunnable missionSuccessRunnable;
     private StringInputRunnable missionFailureRunnable;
 
+    private Map<String, Integer> statusCodeRequestMap;
+
 
     /**
      * Class constructor.
@@ -72,6 +76,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         this.PLAYER_AT_HOME_URL = context.getString(R.string.home_beacon_request);
         this.INTERCEPT_URL = context.getString(R.string.intercept_request);
         this.MISSION_URL = context.getString(R.string.mission_update_request);
+
+        this.statusCodeRequestMap = new HashMap<>();
     }
 
     @Override
@@ -117,7 +123,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Log.d("Player id",gameStateController.getPlayerId());
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + START_INFO_URL, startInfoBody,
-                listener, errorListener,setStatusCodeRunnable());
+                listener, errorListener,setStatusCodeRunnable(), statusCodeRequestMap);
     }
 
     private float calculateTimeRemainingInMinutes(String startTime) {
@@ -205,7 +211,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestBody.put("player_id", gameStateController.getPlayerId());
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + NEW_TARGET_URL, requestBody,
-                listener, errorListener,setStatusCodeRunnable());
+                listener, errorListener,setStatusCodeRunnable(),statusCodeRequestMap);
     }
 
     private void updateTargetPlayer(JSONObject obj) throws JSONException {
@@ -247,7 +253,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + PLAYER_UPDATE_URL,
-                playerUpdateRequestBody(), listener, errorListener,setStatusCodeRunnable());
+                playerUpdateRequestBody(), listener, errorListener,setStatusCodeRunnable(), statusCodeRequestMap);
     }
 
     private void playerUpdate(JSONObject obj) throws JSONException {
@@ -360,13 +366,15 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if (statusCode == 200) {
+                String key = SERVER_ADDRESS + MISSION_URL;
+
+                if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 200) {
                     missionSuccess(details, response);
                 }
-                else if(statusCode == 206){
+                else if(statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 206){
                     missionPending(details, response);
                 }
-                else if(statusCode == 203){
+                else if(statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 203){
                     missionFailure(details, response);
                 }
                 else {
@@ -396,7 +404,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         JSONObject missionUpdateBody = new JSONObject();
         missionUpdateBody.put("player_id", gameStateController.getPlayerId());
 
-        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + MISSION_URL, missionUpdateBody, listener, errorListener,setStatusCodeRunnable()) {};
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + MISSION_URL, missionUpdateBody, listener, errorListener,setStatusCodeRunnable(), statusCodeRequestMap);
     }
 
     private void missionSuccess(InteractionDetails details, JSONObject obj) {
@@ -477,22 +485,29 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                String key = SERVER_ADDRESS + EXCHANGE_REQUEST_URL;
+
                 Log.d("Exchange Request code", Integer.toString(statusCode));
-                if (statusCode == 202) {
+                if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 202) {
                     try {
                         successfulExchange(interacteeId, details, response);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-                else if (statusCode == 201) {
+                else if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 201) {
                     pollExchange(details,response);
                 }
-                else if (statusCode == 204) {
+                else if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 204) {
                     rejectedExchange(details);
                 }
-                else if (statusCode == 206) {
+                else if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 206) {
                     pollExchange(details,response);
+                }
+                else if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 400 ||
+                        statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 408 ||
+                        statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 404) {
+                    unsuccessfulExchange(details);
                 }
                 else {
                     Log.d("Exchange request", "Error received, code: " + statusCode);
@@ -527,7 +542,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_REQUEST_URL,
-                exchangeRequestBody(interacteeId), listener, errorListener, setStatusCodeRunnable()) {};
+                exchangeRequestBody(interacteeId), listener, errorListener, setStatusCodeRunnable(), statusCodeRequestMap);
     }
 
     private void pollExchange(InteractionDetails details, JSONObject obj){
@@ -595,20 +610,24 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    if (statusCode == 202) {
+                    String key = SERVER_ADDRESS + EXCHANGE_RESPONSE_URL;
+
+                    if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 202) {
                         if (playerResponse == 1) {
                             Log.d("Exchange Response", "Response accept successful");
                             successfulExchange(interacteeId, details, response);
                         }
-                    } else if (statusCode == 206) {
+                    } else if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 206) {
                         Log.d("Exchange Response", "Response pending");
                         pendingExchange(interacteeId, details, response);
-                    } else if (statusCode == 205) {
+                    } else if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 205) {
                         Log.d("Exchange Response", "Response reject successful");
                         details.status = InteractionStatus.SUCCESSFUL;
+                    } else if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 408) {
+                        details.status = InteractionStatus.FAILED;
                     } else {
                         Log.d("Exchange Response", "Other code recieved: " + statusCode);
-                        details.status = InteractionStatus.ERROR;
+                        details.status = InteractionStatus.IN_PROGRESS;
                     }
 
                 } catch (JSONException e) {
@@ -639,7 +658,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_RESPONSE_URL,
-                exchangeResponseBody(interacteeId, playerResponse), listener, errorListener, setStatusCodeRunnable()) {};
+                exchangeResponseBody(interacteeId, playerResponse), listener, errorListener, setStatusCodeRunnable(), statusCodeRequestMap);
     }
 
     //6d - Exchange Response
@@ -672,18 +691,23 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if (statusCode == 200){
+                String key = SERVER_ADDRESS + INTERCEPT_URL;
+
+                if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 200){
                     try {
                         interceptSuccess(response, details);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-                else if (statusCode == 204){
+                else if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 204){
                     interceptFailure(details);
                 }
-                else if (statusCode == 206 || statusCode == 201){
+                else if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 206 || statusCode == 201){
                     interceptPending(details);
+                }
+                else {
+                    details.status = InteractionStatus.IN_PROGRESS;
                 }
                 statusCode = 0;
             }
@@ -695,20 +719,19 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 if (error.networkResponse != null && error.networkResponse.statusCode == 204) {
                     interceptFailure(details);
                 }
-                else if (error.networkResponse != null && (statusCode == 206 || statusCode == 201)) {
+                else if (error.networkResponse != null && (error.networkResponse.statusCode == 206 || error.networkResponse.statusCode == 201)) {
                     interceptPending(details);
                 }
                 else {
                     interceptError(error, details);
                 }
 
-
                 statusCode = 0;
             }
         };
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + INTERCEPT_URL,
-                interceptRequestBody(interacteeId), listener, errorListener, setStatusCodeRunnable()) {};
+                interceptRequestBody(interacteeId), listener, errorListener, setStatusCodeRunnable(),statusCodeRequestMap);
     }
 
     private void interceptSuccess(JSONObject obj, InteractionDetails details) throws JSONException {
@@ -794,7 +817,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + TAKE_DOWN_URL,
-                exposeRequestBody(targetId), listener, errorListener,setStatusCodeRunnable());
+                exposeRequestBody(targetId), listener, errorListener,setStatusCodeRunnable(),statusCodeRequestMap);
     }
 
     private JSONObject exposeRequestBody(String targetId) throws JSONException {
@@ -831,7 +854,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if(statusCode == 200) {
+                String key = SERVER_ADDRESS + PLAYER_AT_HOME_URL;
+
+                if(statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 200) {
                     atHomeUpdate(response);
                 }
                 statusCode = 0;
@@ -849,7 +874,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + PLAYER_AT_HOME_URL,
-                playerUpdateRequestBody(), listener, errorListener,setStatusCodeRunnable()) {};
+                playerUpdateRequestBody(), listener, errorListener,setStatusCodeRunnable(), statusCodeRequestMap);
     }
 
     private void atHomeUpdate(JSONObject response) {
