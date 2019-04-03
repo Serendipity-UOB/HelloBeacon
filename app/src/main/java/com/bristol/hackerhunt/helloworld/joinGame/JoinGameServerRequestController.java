@@ -11,6 +11,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
+import com.bristol.hackerhunt.helloworld.gameplay.controller.JsonObjectRequestWithNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +55,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         requestQueue.add(volleyGameInfoRequest());
     }
 
-    private JsonObjectRequest volleyGameInfoRequest() {
+    private JsonObjectRequestWithNull volleyGameInfoRequest() {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -81,16 +83,8 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
             }
         };
 
-        return new JsonObjectRequest(Request.Method.GET, SERVER_ADDRESS + GAME_INFO_URL, new JSONObject(),
-                listener, errorListener) {
-            @Override
-            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-                if (response != null) {
-                    statusCode = response.statusCode;
-                }
-                return super.parseNetworkResponse(response);
-            }
-        };
+        return new JsonObjectRequestWithNull(Request.Method.GET, SERVER_ADDRESS + GAME_INFO_URL, new JSONObject(),
+                listener, errorListener,setStatusCodeRunnable());
     }
 
     private void updateGameInfo(JSONObject gameInfoJson) throws JSONException {
@@ -134,7 +128,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         requestQueue.add(volleyJoinGameRequest(playerId));
     }
 
-    private JsonObjectRequest volleyJoinGameRequest(String playerId) throws JSONException {
+    private JsonObjectRequestWithNull volleyJoinGameRequest(String playerId) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -160,12 +154,26 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         JSONObject requestBody = new JSONObject();
         requestBody.put("player_id", playerId);
 
-        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + JOIN_GAME_URL, requestBody,
-                listener, errorListener);
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + JOIN_GAME_URL, requestBody,
+                listener, errorListener,setStatusCodeRunnable());
     }
 
     private void noGameAvailableToJoin() {
         gameInfo.minutesToStart = -1.0;
         gameInfo.numberOfPlayers = -1;
+    }
+
+    private void setStatusCode(int code){
+        this.statusCode = code;
+    }
+
+    private StringInputRunnable setStatusCodeRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(final String input) {
+                int code = Integer.parseInt(input);
+                setStatusCode(code);
+            }
+        };
     }
 }
