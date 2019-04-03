@@ -1,5 +1,6 @@
 package com.bristol.hackerhunt.helloworld.tutorial;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.profileCreation.CreateProfileActivity;
 import com.emredavarci.circleprogressbar.CircleProgressBar;
 
 import java.util.ArrayList;
@@ -199,7 +201,8 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 15:
-                findViewById(R.id.press_question_mark_to).setVisibility(View.GONE);
+                Intent intent = new Intent(TutorialActivity.this, CreateProfileActivity.class);
+                startActivity(intent);
                 break;
         }
         currentStep++;
