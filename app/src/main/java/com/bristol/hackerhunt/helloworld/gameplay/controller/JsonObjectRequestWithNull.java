@@ -34,7 +34,7 @@ public class JsonObjectRequestWithNull extends JsonRequest<JSONObject> {
     @Override
     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
         setStatusCodeRunnable.run(Integer.toString(response.statusCode));
-        Log.i("Status Code", "Got code" + Integer.toString(response.statusCode));
+        Log.i("WithNull Status Code", "Got code" + Integer.toString(response.statusCode));
         try {
             String jsonString = new String(response.data,
                     HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
