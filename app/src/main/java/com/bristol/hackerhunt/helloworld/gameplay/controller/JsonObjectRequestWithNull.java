@@ -6,6 +6,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
@@ -14,20 +15,23 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 public class JsonObjectRequestWithNull extends JsonRequest<JSONObject> {
+    StringInputRunnable setStatusCodeRunnable;
     public JsonObjectRequestWithNull(int method, String url, JSONObject jsonRequest,
-                                     Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+                                     Response.Listener<JSONObject> listener, Response.ErrorListener errorListener,  StringInputRunnable setStatusCodeRunnable) {
         super(method, url, (jsonRequest == null) ? null : jsonRequest.toString(), listener,
                 errorListener);
+        this.setStatusCodeRunnable = setStatusCodeRunnable;
     }
 
     public JsonObjectRequestWithNull(String url, JSONObject jsonRequest, Response.Listener<JSONObject> listener,
-                                     Response.ErrorListener errorListener) {
+                                     Response.ErrorListener errorListener, StringInputRunnable setStatusCodeRunnable) {
         this(jsonRequest == null ? Request.Method.GET : Request.Method.POST, url, jsonRequest,
-                listener, errorListener);
+                listener, errorListener, setStatusCodeRunnable);
     }
 
     @Override
     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+        setStatusCodeRunnable.run(Integer.toString(response.statusCode));
         try {
             String jsonString = new String(response.data,
                     HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));

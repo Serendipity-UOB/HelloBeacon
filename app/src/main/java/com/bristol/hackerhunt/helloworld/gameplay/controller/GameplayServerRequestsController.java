@@ -92,7 +92,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
 
 
-    private JsonObjectRequest volleyStartInfoRequest() throws JSONException {
+    private JsonObjectRequestWithNull volleyStartInfoRequest() throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -116,8 +116,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         startInfoBody.put("player_id",gameStateController.getPlayerId());
         Log.d("Player id",gameStateController.getPlayerId());
 
-        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + START_INFO_URL, startInfoBody,
-                listener, errorListener);
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + START_INFO_URL, startInfoBody,
+                listener, errorListener,setStatusCodeRunnable());
     }
 
     private float calculateTimeRemainingInMinutes(String startTime) {
@@ -182,7 +182,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyNewTargetRequest());
     }
 
-    private JsonObjectRequest volleyNewTargetRequest() throws JSONException {
+    private JsonObjectRequestWithNull volleyNewTargetRequest() throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -204,8 +204,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         JSONObject requestBody = new JSONObject();
         requestBody.put("player_id", gameStateController.getPlayerId());
 
-        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + NEW_TARGET_URL, requestBody,
-                listener, errorListener);
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + NEW_TARGET_URL, requestBody,
+                listener, errorListener,setStatusCodeRunnable());
     }
 
     private void updateTargetPlayer(JSONObject obj) throws JSONException {
@@ -223,7 +223,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyPlayerUpdateRequest());
     }
 
-    private JsonObjectRequest volleyPlayerUpdateRequest() throws JSONException {
+    private JsonObjectRequestWithNull volleyPlayerUpdateRequest() throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -246,8 +246,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         };
 
-        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + PLAYER_UPDATE_URL,
-                playerUpdateRequestBody(), listener, errorListener);
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + PLAYER_UPDATE_URL,
+                playerUpdateRequestBody(), listener, errorListener,setStatusCodeRunnable());
     }
 
     private void playerUpdate(JSONObject obj) throws JSONException {
@@ -356,7 +356,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyMissionUpdateRequest(details));
     }
 
-    private JsonObjectRequest volleyMissionUpdateRequest(final InteractionDetails details) throws JSONException {
+    private JsonObjectRequestWithNull volleyMissionUpdateRequest(final InteractionDetails details) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -396,15 +396,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         JSONObject missionUpdateBody = new JSONObject();
         missionUpdateBody.put("player_id", gameStateController.getPlayerId());
 
-        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + MISSION_URL, missionUpdateBody, listener, errorListener) {
-            @Override
-            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-                if (response != null) {
-                    statusCode = response.statusCode;
-                }
-                return super.parseNetworkResponse(response);
-            }
-        };
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + MISSION_URL, missionUpdateBody, listener, errorListener,setStatusCodeRunnable()) {};
     }
 
     private void missionSuccess(InteractionDetails details, JSONObject obj) {
@@ -535,15 +527,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_REQUEST_URL,
-                exchangeRequestBody(interacteeId), listener, errorListener) {
-            @Override
-            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-                if (response != null) {
-                    statusCode = response.statusCode;
-                }
-                return super.parseNetworkResponse(response);
-            }
-        };
+                exchangeRequestBody(interacteeId), listener, errorListener, setStatusCodeRunnable()) {};
     }
 
     private void pollExchange(InteractionDetails details, JSONObject obj){
@@ -606,7 +590,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyExchangeResponse(interacteeId, response, details));
     }
 
-    private JsonObjectRequest volleyExchangeResponse(final String interacteeId, final int playerResponse, final InteractionDetails details) throws JSONException {
+    private JsonObjectRequestWithNull volleyExchangeResponse(final String interacteeId, final int playerResponse, final InteractionDetails details) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -654,16 +638,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         };
 
-        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_RESPONSE_URL,
-                exchangeResponseBody(interacteeId, playerResponse), listener, errorListener) {
-            @Override
-            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-                if (response != null) {
-                    statusCode = response.statusCode;
-                }
-                return super.parseNetworkResponse(response);
-            }
-        };
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + EXCHANGE_RESPONSE_URL,
+                exchangeResponseBody(interacteeId, playerResponse), listener, errorListener, setStatusCodeRunnable()) {};
     }
 
     //6d - Exchange Response
@@ -732,15 +708,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         };
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + INTERCEPT_URL,
-                interceptRequestBody(interacteeId), listener, errorListener) {
-            @Override
-            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-                if (response != null) {
-                    statusCode = response.statusCode;
-                }
-                return super.parseNetworkResponse(response);
-            }
-        };
+                interceptRequestBody(interacteeId), listener, errorListener, setStatusCodeRunnable()) {};
     }
 
     private void interceptSuccess(JSONObject obj, InteractionDetails details) throws JSONException {
@@ -810,7 +778,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyExposeRequest(targetId));
     }
 
-    private JsonObjectRequest volleyExposeRequest(String targetId) throws JSONException {
+    private JsonObjectRequestWithNull volleyExposeRequest(String targetId) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -825,8 +793,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         };
 
-        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + TAKE_DOWN_URL,
-                exposeRequestBody(targetId), listener, errorListener);
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + TAKE_DOWN_URL,
+                exposeRequestBody(targetId), listener, errorListener,setStatusCodeRunnable());
     }
 
     private JSONObject exposeRequestBody(String targetId) throws JSONException {
@@ -859,7 +827,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyIsAtHomeBeaconRequest());
     }
 
-    private JsonObjectRequest volleyIsAtHomeBeaconRequest() throws JSONException {
+    private JsonObjectRequestWithNull volleyIsAtHomeBeaconRequest() throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -880,16 +848,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             }
         };
 
-        return new JsonObjectRequest(Request.Method.POST, SERVER_ADDRESS + PLAYER_AT_HOME_URL,
-                playerUpdateRequestBody(), listener, errorListener) {
-            @Override
-            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-                if (response != null) {
-                    statusCode = response.statusCode;
-                }
-                return super.parseNetworkResponse(response);
-            }
-        };
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + PLAYER_AT_HOME_URL,
+                playerUpdateRequestBody(), listener, errorListener,setStatusCodeRunnable()) {};
     }
 
     private void atHomeUpdate(JSONObject response) {
@@ -901,5 +861,19 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setStatusCode(int code){
+        this.statusCode = code;
+    }
+
+    private StringInputRunnable setStatusCodeRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(final String input) {
+                int code = Integer.parseInt(input);
+                setStatusCode(code);
+            }
+        };
     }
 }
