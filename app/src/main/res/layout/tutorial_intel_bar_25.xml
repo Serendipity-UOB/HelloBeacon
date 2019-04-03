@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:weightSum="1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_tutorial"
+    android:gravity="center">
+
+    <com.emredavarci.circleprogressbar.CircleProgressBar
+        android:id="@+id/tutorial_player_intel_circle_25"
+        xmlns:cpb="http://schemas.android.com/apk/res-auto"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        cpb:progressColor="@color/progress_bar"
+        cpb:backgroundColor="#033755"
+        cpb:strokeWidth="2"
+        cpb:backgroundWidth="2"
+        cpb:textSize="14sp"
+        cpb:roundedCorners="true"
+        cpb:suffix="%"
+        cpb:maxValue="100"
+        cpb:progressText="25"
+        cpb:progressTextColor="@color/progress_bar_text"
+        android:layout_margin="-10dp"/>
+</LinearLayout>

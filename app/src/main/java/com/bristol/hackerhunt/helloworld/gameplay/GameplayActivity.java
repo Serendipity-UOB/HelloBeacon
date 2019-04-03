@@ -319,7 +319,7 @@ public class GameplayActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 exchangeRequestView.hideDialogueBox();
-                                notificationView.exchangeFailedTimedOut(playerId);
+                                notificationView.exchangeFailedTimedOut(getPlayerName(playerId));
                             }
                     });
 

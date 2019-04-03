@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".gameplay.GameplayActivity"
+    android:orientation="vertical"
+    android:screenOrientation="portrait"
+    android:clipChildren="false">
+
+    <LinearLayout
+        android:id="@+id/gameplay_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="5pt"
+        android:background="@drawable/tile_background"
+        android:clipChildren="false">
+
+        <include layout="@layout/gameplay_player_status_bar" />
+
+        <ScrollView
+            android:id="@+id/scroll_player_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipChildren="false"
+            android:fillViewport="true">
+            <LinearLayout
+                android:id="@+id/gameplay_player_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:clipChildren="false">
+                <include layout="@layout/tutorial_player_list_item_1" />
+                <include layout="@layout/tutorial_player_list_item_2" />
+                <include layout="@layout/tutorial_player_list_item_3" />
+                <include layout="@layout/tutorial_player_list_item_4" />
+                <include layout="@layout/tutorial_player_list_item_5" />
+                <include layout="@layout/tutorial_player_list_item_6" />
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:visibility="gone"
+            android:layout_marginTop="5pt"
+            android:id="@+id/gameplay_exchange_select_player_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:fontFamily="@font/vt323"
+            android:textSize="14pt"
+            android:text="@string/exchange_select_player_button"
+            android:textColor="@android:color/white"
+            android:background="@color/gameplay_exchange_button"
+            android:layout_marginEnd="2pt" />
+        <Button
+            android:visibility="gone"
+            android:layout_marginTop="5pt"
+            android:id="@+id/takedown_exchange_select_player_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:fontFamily="@font/vt323"
+            android:textSize="14pt"
+            android:text="@string/takedown_select_player_button"
+            android:textColor="@android:color/white"
+            android:background="@color/gameplay_takedown_button"
+            android:layout_marginEnd="2pt" />
+    </LinearLayout>
+
+    <!-- Little notification -->
+    <RelativeLayout
+        android:id="@+id/gameplay_notification_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/gameplay_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/neutral_full_pop_up"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:layout_margin="7pt"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/agency_logo"
+                android:layout_width="28pt"
+                android:layout_height="28pt"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/agency_spy_logo" />
+
+            <TextView
+                android:id="@+id/gameplay_notification_text"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="#fff"
+                android:textSize="9pt"
+                android:gravity="center"
+                android:text="Exchange with Tilly requested."/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Exchange request notification -->
+    <RelativeLayout
+        android:id="@+id/exchange_request_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/exchange_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/neutral_full_pop_up"
+            android:layout_margin="7pt">
+            <TextView
+                android:id="@+id/exchange_request_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:fontFamily="@font/sharetech"
+                android:textColor="#fff"
+                android:textSize="8pt"
+                android:paddingTop="13dp"
+                android:paddingBottom="13dp"
+                android:text="Tilly wants to exchange evidence with you."/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/accept_exchange_button"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22pt"
+                    android:background="@drawable/accept_exchange_button"
+                    android:layout_marginStart="2pt"
+                    android:layout_marginBottom="2pt"
+                    android:text="Accept"
+                    android:textColor="#fff"
+                    android:fontFamily="@font/sharetech"
+                    android:textSize="23sp"/>
+                <Button
+                    android:id="@+id/reject_exchange_button"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22pt"
+                    android:background="@drawable/reject_exchange_button"
+                    android:layout_marginEnd="2pt"
+                    android:layout_marginBottom="2pt"
+                    android:layout_marginStart="2pt"
+                    android:text="Reject"
+                    android:textColor="#fff"
+                    android:fontFamily="@font/sharetech"
+                    android:textSize="23sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Greyed-out overlay -->
+    <RelativeLayout
+        android:id="@+id/emphasis_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0005091c"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:fontFamily="@font/sharetech_mono"
+            android:textAlignment="center"
+            android:textColor="#fff"
+            android:textStyle="italic"
+            android:text="(tap to cancel)"
+            android:textSize="7pt"
+            android:layout_marginBottom="15dp"/>
+    </RelativeLayout>
+
+    <!-- Console pop-up overlay -->
+    <RelativeLayout
+        android:id="@+id/gameplay_console_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CD000000"
+        android:visibility="gone">
+
+        <include layout="@layout/gameplay_console" />
+    </RelativeLayout>
+</RelativeLayout>

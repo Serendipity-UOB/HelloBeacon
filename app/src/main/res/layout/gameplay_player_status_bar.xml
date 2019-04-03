@@ -60,7 +60,8 @@
                 android:textColor="@color/gameplay_player_stats"
                 android:text="@string/player_status_info_separator"
                 android:textSize="10pt"
-                android:textStyle="italic"/>
+                android:textStyle="italic"
+                android:layout_marginStart="2pt"/>
             <TextView
                 android:id="@+id/gameplay_player_leaderboard_points"
                 android:layout_width="wrap_content"
@@ -80,7 +81,7 @@
                 android:text="@string/player_status_info_separator"
                 android:textSize="10pt"
                 android:textStyle="italic"
-                android:layout_marginEnd="2pt"/>
+                android:layout_marginStart="2pt"/>
             <RelativeLayout
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -127,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sharetech"
                 android:textColor="@color/gameplay_target"
-                android:text="@string/player_target_placeholder"
+                android:text="CookingKing"
                 android:textStyle="bold"
                 android:textSize="10pt"
                 android:layout_marginBottom="4pt"
