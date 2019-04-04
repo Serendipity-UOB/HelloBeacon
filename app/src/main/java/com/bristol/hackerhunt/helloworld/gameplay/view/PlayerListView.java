@@ -30,6 +30,7 @@ public class PlayerListView implements IPlayerListView {
     private final View emphasisOverlay;
 
     private String targetCodeName;
+    private String pressedPlayerCardPlayerId = "";
 
     private final Map<String, Integer> playerIdListItemIdMap;
     private final Map<String, String> playerIdNameMap;
@@ -128,6 +129,7 @@ public class PlayerListView implements IPlayerListView {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pressedPlayerCardPlayerId = "";
                 restoreOnBackgroundPressRunnable.run(playerId);
             }
         };
@@ -140,6 +142,7 @@ public class PlayerListView implements IPlayerListView {
             @Override
             public void onClick(View view) {
                 View buttons = playerCard.findViewById(R.id.interaction_buttons);
+                pressedPlayerCardPlayerId = playerId;
                 buttons.setVisibility(View.VISIBLE);
                 emphasisOverlay.setVisibility(View.VISIBLE);
                 darkenOnCardPressRunnable.run(playerId);
@@ -210,6 +213,10 @@ public class PlayerListView implements IPlayerListView {
 
             if (exchangeStarted && exchangePlayerId.equals(playerId)) {
                 displayExchangeRequested(playerId);
+            }
+
+            if (pressedPlayerCardPlayerId.equals(playerId)) {
+                restoreOnBackgroundPressRunnable.run(playerId);
             }
         }
     }
