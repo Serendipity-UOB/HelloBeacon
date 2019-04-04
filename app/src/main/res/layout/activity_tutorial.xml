@@ -17,7 +17,7 @@
         android:background="@drawable/tile_background"
         android:clipChildren="false">
 
-        <include layout="@layout/gameplay_player_status_bar" />
+        <include layout="@layout/tutorial_player_status_bar" />
 
         <ScrollView
             android:id="@+id/scroll_player_list"

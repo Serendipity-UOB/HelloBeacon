@@ -123,6 +123,8 @@ public interface IGameStateController {
      */
     void loseHalfOfPlayersIntel();
 
+    void clearAllEvidence(String playerId);
+
     /**
      * Set all of the players playing the game.
      * @param allPlayersIdentifiers a list of player identifiers for every player.

@@ -165,13 +165,14 @@ public class GameplayActivity extends AppCompatActivity {
         serverRequestsController.registerMissionFailureRunnable(handleFailedMissionRunnable());
     }
 
-    private Runnable exposeSuccessfulRunnable() {
-        return new Runnable() {
+    private StringInputRunnable exposeSuccessfulRunnable() {
+        return new StringInputRunnable() {
             @Override
-            public void run() {
+            public void run(String targetId) {
                 String homeBeaconName = gameStateController.getHomeBeaconName();
                 closeConsoleOnHomeBeaconNearby = true;
                 consoleView.exposeSuccessPrompt(homeBeaconName);
+                gameStateController.clearAllEvidence(targetId);
                 newTargetRequested = true;
             }
         };
@@ -315,14 +316,6 @@ public class GameplayActivity extends AppCompatActivity {
                 }
 
                 if (details.status.equals(InteractionStatus.FAILED)) {
-                    that.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                exchangeRequestView.hideDialogueBox();
-                                notificationView.exchangeFailedTimedOut(getPlayerName(playerId));
-                            }
-                    });
-
                     currentPlayerExchangeResponse = WAIT;
                     cancel();
                 }
