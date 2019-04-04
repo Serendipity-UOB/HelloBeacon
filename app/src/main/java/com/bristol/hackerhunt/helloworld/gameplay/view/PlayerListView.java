@@ -343,7 +343,12 @@ public class PlayerListView implements IPlayerListView {
             CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
             float intel = intelBar.getProgress();
-            intelBar.setProgress(intel - intelIncrement);
+            if(intel - intelIncrement <= 0){
+                intelBar.setProgress(0);
+            }
+            else {
+                intelBar.setProgress(intel - intelIncrement);
+            }
         }
     }
 
