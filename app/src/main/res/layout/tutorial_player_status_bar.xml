@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sharetech"
                 android:textColor="@color/gameplay_target"
-                android:text="Loading..."
+                android:text="CookingKing"
                 android:textStyle="bold"
                 android:textSize="10pt"
                 android:layout_marginBottom="4pt"
