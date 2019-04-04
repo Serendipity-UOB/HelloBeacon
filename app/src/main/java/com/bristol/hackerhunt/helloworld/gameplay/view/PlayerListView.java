@@ -100,10 +100,12 @@ public class PlayerListView implements IPlayerListView {
     @Override
     public void revealPlayerHackerName(String playerId, final String hackerName) {
         playerIdCodeNameMap.put(playerId, hackerName);
+        Log.i("Codename Reveal", hackerName);
         displayPlayerCodeName(playerId);
     }
 
     private void displayPlayerCodeName(String playerId) {
+
         Context context = playerList.getContext();
         int id = playerIdListItemIdMap.get(playerId);
         String codeName = playerIdCodeNameMap.get(playerId);
@@ -112,6 +114,7 @@ public class PlayerListView implements IPlayerListView {
         if (listItem != null) {
             final TextView nameView = listItem.findViewById(R.id.player_hacker_name);
 
+            Log.i("Display CodeName", codeName);
             setTextOfView(nameView, codeName);
 
             if (codeName != null && codeName.equals(targetCodeName)) {
@@ -159,6 +162,7 @@ public class PlayerListView implements IPlayerListView {
 
     // inserts a player into the list.
     private void insertPlayer(String playerId, boolean nearby, int progress) {
+        Log.i("Inserting Player", playerId);
         // initialize new player card.
         RelativeLayout listItem = (RelativeLayout) inflater.inflate(R.layout.gameplay_player_list_item, null);
 
@@ -177,6 +181,7 @@ public class PlayerListView implements IPlayerListView {
 
         // if the code name of the player is known, reveal it.
         if (playerIdCodeNameMap.containsKey(playerId)) {
+            Log.i("I Know Codename of", playerId);
             displayPlayerCodeName(playerId);
         }
 
@@ -219,6 +224,7 @@ public class PlayerListView implements IPlayerListView {
                 restoreOnBackgroundPressRunnable.run(playerId);
             }
         }
+        updateAllTargetCodenameColors();
     }
 
     private void enableExchangeButton(String playerId) {
@@ -425,6 +431,7 @@ public class PlayerListView implements IPlayerListView {
 
                     clearOnClickListener(playerId);
                     darkenFarAwayPlayerEntries(playerId);
+
                 }
             }
 
@@ -433,11 +440,12 @@ public class PlayerListView implements IPlayerListView {
                 removeListItemEntry(playerId);
                 insertPlayer(playerId, true, intel);
 
+
                 if (exchangeStarted) {
                     setExchangeOnClickListener(playerId);
                 }
             }
-
+            updateAllTargetCodenameColors();
             this.nearbyPlayerIds = newNearbyPlayerIds;
         }
     }
