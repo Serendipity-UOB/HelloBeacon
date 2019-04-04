@@ -192,7 +192,14 @@ public class GameStateController implements IGameStateController {
     public void loseHalfOfPlayersIntel() {
         for (String id : allPlayersMap.keySet()) {
             playerListController.decreasePlayerIntel(id, (int) (allPlayersMap.get(id).intel / 2.0));
+            allPlayersMap.get(id).intel = (int) (allPlayersMap.get(id).intel / 2.0);
         }
+    }
+
+    @Override
+    public void clearAllEvidence(String playerId) {
+        playerListController.decreasePlayerIntel(playerId, allPlayersMap.get(playerId).intel);
+        allPlayersMap.get(playerId).intel = 0;
     }
 
     @Override

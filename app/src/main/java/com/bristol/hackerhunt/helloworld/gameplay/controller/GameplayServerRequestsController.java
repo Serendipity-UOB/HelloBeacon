@@ -47,7 +47,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private int statusCode = 0;
 
-    private Runnable exposeSuccessRunnable;
+    private StringInputRunnable exposeSuccessRunnable;
     private Runnable exposeFailedRunnable;
     private Runnable interceptSuccessRunnable;
     private StringInputRunnable missionUpdateRunnable;
@@ -801,11 +801,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestQueue.add(volleyExposeRequest(targetId));
     }
 
-    private JsonObjectRequestWithNull volleyExposeRequest(String targetId) throws JSONException {
+    private JsonObjectRequestWithNull volleyExposeRequest(final String targetId) throws JSONException {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                exposeSuccessRunnable.run();
+                exposeSuccessRunnable.run(targetId);
             }
         };
 
@@ -836,7 +836,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void registerExposeSuccessRunnable(Runnable exposeSuccessRunnable) {
+    public void registerExposeSuccessRunnable(StringInputRunnable exposeSuccessRunnable) {
         this.exposeSuccessRunnable = exposeSuccessRunnable;
     }
 

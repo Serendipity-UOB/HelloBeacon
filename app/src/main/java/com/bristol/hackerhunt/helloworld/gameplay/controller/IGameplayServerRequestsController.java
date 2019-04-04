@@ -121,7 +121,7 @@ public interface IGameplayServerRequestsController {
      *
      * @param exposeSuccessRunnable a runnable.
      */
-    void registerExposeSuccessRunnable(Runnable exposeSuccessRunnable);
+    void registerExposeSuccessRunnable(StringInputRunnable exposeSuccessRunnable);
 
     void registerExposeFailedRunnable(Runnable exposeFailedRunnable);
 }
