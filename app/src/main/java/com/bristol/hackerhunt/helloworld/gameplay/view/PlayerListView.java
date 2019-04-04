@@ -293,18 +293,27 @@ public class PlayerListView implements IPlayerListView {
                 intelBar.setProgress(newProgress);
 
                 intelBar.setText("+" + String.valueOf(intelIncrement));
+                if (newProgress >= 100) {
+                    setFullIntelCircleProgressBarColours(playerId, intelBar);
+                }
                 intelBar.setTextColor(ContextCompat.getColor(playerList.getContext(),
                         R.color.progress_bar_increase));
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        int textColor =
-                                (nearbyPlayerIds.contains(playerId)) ? R.color.progress_bar_text : R.color.progress_bar_text_far;
-
-                        intelBar.setTextColor(ContextCompat.getColor(playerList.getContext(), textColor));
                         intelBar.setText(String.valueOf((int) newProgress));
+
                         if (newProgress >= 100) {
                             setFullIntelCircleProgressBarColours(playerId, intelBar);
+                        }
+                        else {
+                            if (playerIdNameMap.containsKey(playerId)) {
+                                setNotFullIntelCircleProgressBarColoursNearby(intelBar);
+                            }
+                            else {
+                                setNotFullIntelCircleProgressBarColoursFar(intelBar);
+                            }
                         }
                     }
                 }, 3000);
@@ -341,23 +350,22 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
-    private void setNotFullIntelCircleProgressBarColours(String playerId, CircleProgressBar progressBar) {
-        if (nearbyPlayerIds.contains(playerId)) {
-            progressBar.setTextColor(ContextCompat.getColor(progressBar.getContext(),
+    private void setNotFullIntelCircleProgressBarColoursNearby(CircleProgressBar progressBar) {
+        progressBar.setTextColor(ContextCompat.getColor(progressBar.getContext(),
                     R.color.progress_bar_text));
-            progressBar.setProgressColor(ContextCompat.getColor(progressBar.getContext(),
+        progressBar.setProgressColor(ContextCompat.getColor(progressBar.getContext(),
                     R.color.progress_bar));
-            progressBar.setBackgroundColor(ContextCompat.getColor(progressBar.getContext(),
+        progressBar.setBackgroundColor(ContextCompat.getColor(progressBar.getContext(),
                     R.color.progress_bar_background));
-        }
-        else {
-            progressBar.setTextColor(ContextCompat.getColor(progressBar.getContext(),
+    }
+
+    private void setNotFullIntelCircleProgressBarColoursFar(CircleProgressBar progressBar) {
+        progressBar.setTextColor(ContextCompat.getColor(progressBar.getContext(),
                     R.color.progress_bar_text_far));
-            progressBar.setProgressColor(ContextCompat.getColor(progressBar.getContext(),
+        progressBar.setProgressColor(ContextCompat.getColor(progressBar.getContext(),
                     R.color.progress_bar_far));
-            progressBar.setBackgroundColor(ContextCompat.getColor(progressBar.getContext(),
+        progressBar.setBackgroundColor(ContextCompat.getColor(progressBar.getContext(),
                     R.color.progress_bar_background_far));
-        }
     }
 
     @Override
@@ -373,13 +381,18 @@ public class PlayerListView implements IPlayerListView {
             float intel = intelBar.getProgress();
             float newIntel = Math.max(0, intel - intelIncrement);
             intelBar.setProgress(newIntel);
-            intelBar.setText(String.valueOf(newIntel));
+            intelBar.setText(String.valueOf((int) newIntel));
 
             if (newIntel >= 100) {
                 setFullIntelCircleProgressBarColours(playerId, intelBar);
             }
             else {
-                setNotFullIntelCircleProgressBarColours(playerId, intelBar);
+                if (nearbyPlayerIds.contains(playerId)) {
+                    setNotFullIntelCircleProgressBarColoursNearby(intelBar);
+                }
+                else {
+                    setNotFullIntelCircleProgressBarColoursFar(intelBar);
+                }
             }
         }
     }
@@ -448,9 +461,7 @@ public class PlayerListView implements IPlayerListView {
         uiHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (view.getVisibility() == View.GONE || view.getVisibility() == View.INVISIBLE) {
-                    view.setVisibility(View.VISIBLE);
-                }
+                view.setVisibility(View.VISIBLE);
                 view.setText(text);
             }
         });
@@ -486,7 +497,7 @@ public class PlayerListView implements IPlayerListView {
             setFullIntelCircleProgressBarColours(playerId, pb);
         }
         else {
-            setNotFullIntelCircleProgressBarColours(playerId, pb);
+            setNotFullIntelCircleProgressBarColoursNearby(pb);
         }
     }
 
@@ -503,7 +514,7 @@ public class PlayerListView implements IPlayerListView {
             setFullIntelCircleProgressBarColours(playerId, pb);
         }
         else {
-            setNotFullIntelCircleProgressBarColours(playerId, pb);
+            setNotFullIntelCircleProgressBarColoursFar(pb);
         }
 
         pb.setBackgroundColor(ContextCompat.getColor(context,
@@ -586,15 +597,21 @@ public class PlayerListView implements IPlayerListView {
                 if (getPlayerIntel(playerId) >= 100) {
                     progressBarColor = getColor(R.color.progress_bar_complete_evidence_darkened);
                     progressBarTextColor = getColor(R.color.progress_bar_complete_evidence_text_darkened);
-                } else if (!nearbyPlayerIds.contains(playerId)) {
+                }
+                else if (nearbyPlayerIds.contains(playerId)) {
+                    progressBarColor = getColor(R.color.progress_bar_darkened);
+                    progressBarBackgroundColor = getColor(R.color.progress_bar_background_darkened);
+                    progressBarTextColor = getColor(R.color.progress_bar_text_darkened);
+                }
+                else {
                     progressBarColor = getColor(R.color.progress_bar_far_darkened);
                     progressBarBackgroundColor = getColor(R.color.progress_bar_background_far_darkened);
                     progressBarTextColor = getColor(R.color.progress_bar_text_far_darkened);
                 }
+
                 circleProgressBar.setProgressColor(progressBarColor);
                 circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
                 circleProgressBar.setTextColor(progressBarTextColor);
-
 
                 ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
                         .setTextColor(getColor(R.color.player_card_name_darkened));
@@ -645,20 +662,21 @@ public class PlayerListView implements IPlayerListView {
 
         // handle evidence bars:
         CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.player_intel_circle);
-        int progressBarColor = getColor(R.color.progress_bar);
         int progressBarBackgroundColor = getColor(R.color.progress_bar_background);
-        int progressBarTextColor = getColor(R.color.progress_bar_text);
 
         if (getPlayerIntel(playerId) >= 100) {
             setFullIntelCircleProgressBarColours(playerId, circleProgressBar);
-        } else if (!nearbyPlayerIds.contains(playerId)) {
-            progressBarColor = getColor(R.color.progress_bar_far);
-            progressBarBackgroundColor = getColor(R.color.progress_bar_background_far);
-            progressBarTextColor = getColor(R.color.progress_bar_text_far);
         }
-        circleProgressBar.setProgressColor(progressBarColor);
+        else {
+            if (nearbyPlayerIds.contains(playerId)) {
+                setNotFullIntelCircleProgressBarColoursNearby(circleProgressBar);
+            }
+            else {
+                setNotFullIntelCircleProgressBarColoursFar(circleProgressBar);
+            }
+        }
+
         circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
-        circleProgressBar.setTextColor(progressBarTextColor);
 
         ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
                 .setTextColor(getColor(R.color.player_card_name));
