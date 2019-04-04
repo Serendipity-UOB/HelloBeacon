@@ -85,6 +85,15 @@ public class PlayerListView implements IPlayerListView {
     @Override
     public void setTargetCodeName(String codename) {
         this.targetCodeName = codename;
+        updateAllTargetCodenameColors();
+    }
+
+    private void updateAllTargetCodenameColors() {
+        for (String playerId : playerIdListItemIdMap.keySet()) {
+            if (playerIdCodeNameMap.containsKey(playerId)) {
+                displayPlayerCodeName(playerId);
+            }
+        }
     }
 
     @Override
@@ -104,7 +113,7 @@ public class PlayerListView implements IPlayerListView {
 
             setTextOfView(nameView, codeName);
 
-            if (codeName.equals(targetCodeName)) {
+            if (codeName != null && codeName.equals(targetCodeName)) {
                 nameView.setBackgroundColor(ContextCompat.getColor(context,
                         R.color.player_is_target_codename));
             } else {
