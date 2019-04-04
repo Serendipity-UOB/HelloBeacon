@@ -173,7 +173,7 @@ public class PlayerListView implements IPlayerListView {
 
         // update the look & behavior of the player card depending on where the player is.
         if (nearby) {
-            restoreFarAwayPlayerEntry(playerId);
+            nearbyPlayerEntryColoring(playerId);
             listItem.setOnClickListener(playerCardOnClickListener(playerId, listItem));
             setExposeOnClickListener(playerId);
 
@@ -351,7 +351,6 @@ public class PlayerListView implements IPlayerListView {
                     R.color.progress_bar_background));
         }
         else {
-            // TODO
             progressBar.setTextColor(ContextCompat.getColor(progressBar.getContext(),
                     R.color.progress_bar_text_far));
             progressBar.setProgressColor(ContextCompat.getColor(progressBar.getContext(),
@@ -471,7 +470,7 @@ public class PlayerListView implements IPlayerListView {
         });
     }
 
-    private void restoreFarAwayPlayerEntry(String playerId) {
+    private void nearbyPlayerEntryColoring(String playerId) {
         Context context = playerList.getContext();
 
         int viewId = playerIdListItemIdMap.get(playerId);
@@ -487,10 +486,7 @@ public class PlayerListView implements IPlayerListView {
             setFullIntelCircleProgressBarColours(playerId, pb);
         }
         else {
-            pb.setProgressColor(ContextCompat.getColor(context,
-                    R.color.progress_bar));
-            pb.setTextColor(ContextCompat.getColor(context,
-                    R.color.progress_bar_text));
+            setNotFullIntelCircleProgressBarColours(playerId, pb);
         }
     }
 
@@ -503,23 +499,15 @@ public class PlayerListView implements IPlayerListView {
                 .setBackgroundResource(R.drawable.player_card_far);
 
         CircleProgressBar pb = entry.findViewById(R.id.player_intel_circle);
-        int progressBarColor;
-        int progressBarTextColor;
         if (getPlayerIntel(playerId) >= 100) {
-            progressBarColor = getColor(R.color.progress_bar_complete_evidence_darkened);
-            progressBarTextColor = getColor(R.color.progress_bar_complete_evidence_text_darkened);
+            setFullIntelCircleProgressBarColours(playerId, pb);
         }
         else {
-            progressBarColor = ContextCompat.getColor(context,
-                    R.color.progress_bar_far);
-            progressBarTextColor = ContextCompat.getColor(context,
-                    R.color.progress_bar_text_far);
+            setNotFullIntelCircleProgressBarColours(playerId, pb);
         }
 
         pb.setBackgroundColor(ContextCompat.getColor(context,
                 R.color.progress_bar_background_far));
-        pb.setProgressColor(progressBarColor);
-        pb.setTextColor(progressBarTextColor);
 
     }
 
