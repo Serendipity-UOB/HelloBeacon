@@ -315,14 +315,6 @@ public class GameplayActivity extends AppCompatActivity {
                 }
 
                 if (details.status.equals(InteractionStatus.FAILED)) {
-                    that.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                exchangeRequestView.hideDialogueBox();
-                                notificationView.exchangeFailedTimedOut(getPlayerName(playerId));
-                            }
-                    });
-
                     currentPlayerExchangeResponse = WAIT;
                     cancel();
                 }
