@@ -468,7 +468,7 @@ public class PlayerListView implements IPlayerListView {
         displayIntStatus(playerId);
     }
 
-    public void displayIntStatus(String playerId) {
+    private void displayIntStatus(String playerId) {
         getIntStatusFlag(playerId).setVisibility(View.VISIBLE);
     }
 
