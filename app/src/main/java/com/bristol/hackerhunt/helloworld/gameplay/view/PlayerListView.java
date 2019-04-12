@@ -451,28 +451,43 @@ public class PlayerListView implements IPlayerListView {
     }
 
     public void displayExchangeRequested(String playerId) {
-        getExchangeRequestedFlag(playerId).setVisibility(View.VISIBLE);
+        setIntStatusText(playerId,"Exchange Requested\u00A0");
+        setIntStatusColour(playerId,0x93bdcf);
+        setIntStatusImage(playerId, R.drawable.exchange);
+        displayIntStatus(playerId);
     }
 
     public void hideExchangeRequested(String playerId) {
-        getExchangeRequestedFlag(playerId).setVisibility(View.INVISIBLE);
+        hideIntStatus(playerId);
     }
 
-    private View getExchangeRequestedFlag(String playerId) {
+    public void displayIntStatus(String playerId) {
+        getIntStatusFlag(playerId).setVisibility(View.VISIBLE);
+    }
+
+    public void hideIntStatus(String playerId) {
+        getIntStatusFlag(playerId).findViewById(View.INVISIBLE);
+    }
+
+    private View getIntStatusFlag(String playerId) {
         return getPlayerCard(playerId).findViewById(R.id.exchange_requested);
     }
-    
-    public void displayInterceptStarted(String playerId) {
-        getInterceptStartedFlag(playerId).setVisibility(View.VISIBLE);
+
+    public void setIntStatusText(String playerId, String text){
+        TextView tv = getPlayerCard(playerId).findViewById(R.id.exchange_requested_text);
+        tv.setText(text);
     }
 
-    public void hideInterceptStarted(String playerId) {
-        getInterceptStartedFlag(playerId).findViewById(View.INVISIBLE);
+    public void setIntStatusColour(String playerId, int colour){
+        TextView tv = getPlayerCard(playerId).findViewById(R.id.exchange_requested_text);
+        tv.setTextColor(colour);
     }
 
-    private View getInterceptStartedFlag(String playerId) {
-        return getInterceptStartedFlag(playerId).findViewById(R.id.intercept_started);
+    public void setIntStatusImage(String playerId, int resId){
+        ImageView iv = getPlayerCard(playerId).findViewById(R.id.exchange_requested_icon);
+        iv.setImageResource(resId);
     }
+
     //TODO Need to define intercept started in gameplay_player_list_item
 
     private int getPlayerIntel(String playerId) {
