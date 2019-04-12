@@ -461,6 +461,13 @@ public class PlayerListView implements IPlayerListView {
         hideIntStatus(playerId);
     }
 
+    public void displayInterceptPending(String playerId){
+        setIntStatusText(playerId,"Intercept Pending\u00A0");
+        setIntStatusColour(playerId,0x93bdcf);
+        setIntStatusImage(playerId, R.drawable.intercept);
+        displayIntStatus(playerId);
+    }
+
     public void displayIntStatus(String playerId) {
         getIntStatusFlag(playerId).setVisibility(View.VISIBLE);
     }
@@ -473,7 +480,7 @@ public class PlayerListView implements IPlayerListView {
         return getPlayerCard(playerId).findViewById(R.id.exchange_requested);
     }
 
-    public void setIntStatusText(String playerId, String text){
+    private void setIntStatusText(String playerId, String text){
         TextView tv = getPlayerCard(playerId).findViewById(R.id.exchange_requested_text);
         tv.setText(text);
     }
@@ -483,7 +490,7 @@ public class PlayerListView implements IPlayerListView {
         tv.setTextColor(colour);
     }
 
-    public void setIntStatusImage(String playerId, int resId){
+    private void setIntStatusImage(String playerId, int resId){
         ImageView iv = getPlayerCard(playerId).findViewById(R.id.exchange_requested_icon);
         iv.setImageResource(resId);
     }
