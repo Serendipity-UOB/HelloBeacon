@@ -461,6 +461,19 @@ public class PlayerListView implements IPlayerListView {
     private View getExchangeRequestedFlag(String playerId) {
         return getPlayerCard(playerId).findViewById(R.id.exchange_requested);
     }
+    
+    public void displayInterceptStarted(String playerId) {
+        getInterceptStartedFlag(playerId).setVisibility(View.VISIBLE);
+    }
+
+    public void hideInterceptStarted(String playerId) {
+        getInterceptStartedFlag(playerId).findViewById(View.INVISIBLE);
+    }
+
+    private View getInterceptStartedFlag(String playerId) {
+        return getInterceptStartedFlag(playerId).findViewById(R.id.intercept_started);
+    }
+    //TODO Need to define intercept started in gameplay_player_list_item
 
     private int getPlayerIntel(String playerId) {
         if (!playerIdListItemIdMap.containsKey(playerId)) {
