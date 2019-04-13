@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PlayerListView implements IPlayerListView {
 
@@ -479,12 +481,31 @@ public class PlayerListView implements IPlayerListView {
         displayIntStatus(playerId);
     }
 
+    public void timedDisplayInterceptSuccess(final String playerId, long time){
+        setIntStatusText(playerId,"Intercept Success\u00A0");
+        setIntStatusColour(playerId,0xb6d7a8);
+        setIntStatusImage(playerId, R.drawable.intercept);
+        displayIntStatus(playerId);
+
+        Timer timer = new Timer();
+        timer.schedule(timedHideIntStatus(playerId),time);
+    }
+
     private void displayIntStatus(String playerId) {
         getIntStatusFlag(playerId).setVisibility(View.VISIBLE);
     }
 
     public void hideIntStatus(String playerId) {
         getIntStatusFlag(playerId).findViewById(View.INVISIBLE);
+    }
+
+    public TimerTask timedHideIntStatus(final String playerId) {
+        return new TimerTask() {
+            @Override
+            public void run(){
+                hideIntStatus(playerId);
+            }
+        };
     }
 
     private View getIntStatusFlag(String playerId) {
