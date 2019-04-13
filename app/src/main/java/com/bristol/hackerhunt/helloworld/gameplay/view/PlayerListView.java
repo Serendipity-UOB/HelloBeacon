@@ -47,6 +47,7 @@ public class PlayerListView implements IPlayerListView {
     private String exchangePlayerId;
     private boolean exposeStarted = false;
     private boolean interceptStarted = false;
+    private String interceptPlayerId;
 
     /**
      * Constructor
@@ -207,6 +208,10 @@ public class PlayerListView implements IPlayerListView {
 
             if (interceptStarted) {
                 disableInterceptButton(playerId);
+
+                if (interceptPlayerId.equals(playerId)){
+                    displayInterceptPending(playerId);
+                }
             }
             else {
                 enableInterceptButton(playerId);
@@ -218,6 +223,10 @@ public class PlayerListView implements IPlayerListView {
 
             if (exchangeStarted && exchangePlayerId.equals(playerId)) {
                 displayExchangeRequested(playerId);
+            }
+
+            if (interceptStarted && interceptPlayerId.equals(playerId)) {
+                displayInterceptPending(playerId);
             }
 
             if (pressedPlayerCardPlayerId.equals(playerId)) {
@@ -270,6 +279,8 @@ public class PlayerListView implements IPlayerListView {
             @Override
             public void onClick(View view) {
                 interceptStarted = true;
+                interceptPlayerId = playerId;
+                displayInterceptPending(playerId);
                 beginSelectedInterceptOnClickRunner.run(playerId);
                 disableAllInterceptButtons();
             }
@@ -753,6 +764,8 @@ public class PlayerListView implements IPlayerListView {
     public void interceptAttemptComplete() {
         interceptStarted = false;
         enableAllInterceptButtons();
+        hideIntStatus(interceptPlayerId);
+        interceptPlayerId = "";
     }
 
     private int getColor(int id) {
