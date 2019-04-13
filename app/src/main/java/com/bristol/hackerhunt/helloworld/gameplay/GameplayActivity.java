@@ -328,13 +328,14 @@ public class GameplayActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 playerListView.exchangeRequestComplete(playerId, true);
-
+                                /* NOTIFICATIONS
                                 if (secondaryExists) {
                                     notificationView.exchangeSuccessful(getPlayerName(playerId),
                                             getPlayerName(details.gainedIntelPlayerIds.get(1)));
                                 } else {
                                     notificationView.exchangeSuccessful(getPlayerName(playerId));
                                 }
+                                */
                             }
                         });
                     }
@@ -451,7 +452,7 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(final String interacteeId) {
-                notificationView.attemptingToIntercept(getPlayerName(interacteeId));
+                //notificationView.attemptingToIntercept(getPlayerName(interacteeId));
                 beginInterceptServerPolling(interacteeId);
                 restoreScreenOnPlayerCardPress();
             }
@@ -482,7 +483,7 @@ public class GameplayActivity extends AppCompatActivity {
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            notificationView.interceptFailedNoExchange(getPlayerName(interacteeId));
+                            //notificationView.interceptFailedNoExchange(getPlayerName(interacteeId));
                             playerListView.interceptAttemptComplete(interacteeId, false);
                         }
                     });
@@ -493,7 +494,7 @@ public class GameplayActivity extends AppCompatActivity {
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            notificationView.interceptFailedNoEvidenceShared();
+                            //notificationView.interceptFailedNoEvidenceShared();
                             playerListView.interceptAttemptComplete(interacteeId, false);
                         }
                     });
@@ -504,8 +505,8 @@ public class GameplayActivity extends AppCompatActivity {
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            notificationView.interceptSucceeded(getPlayerName(interacteeId),
-                                    getPlayerName(details.gainedIntelPlayerIds.get(1)));
+                            //notificationView.interceptSucceeded(getPlayerName(interacteeId),
+                            //        getPlayerName(details.gainedIntelPlayerIds.get(1)));
                                     playerListView.interceptAttemptComplete(interacteeId, true);
                         }
                     });
@@ -556,7 +557,7 @@ public class GameplayActivity extends AppCompatActivity {
         return new StringInputRunnable() {
             @Override
             public void run(String interacteeId) {
-                notificationView.exchangeRequested(getPlayerName(interacteeId));
+                //notificationView.exchangeRequested(getPlayerName(interacteeId));
                 beginExchangeServerPolling(interacteeId);
                 restoreScreenOnPlayerCardPress();
             }
@@ -584,7 +585,7 @@ public class GameplayActivity extends AppCompatActivity {
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            notificationView.exchangeFailedTimedOut(getPlayerName(interacteeId));
+                            //notificationView.exchangeFailedTimedOut(getPlayerName(interacteeId));
                             playerListView.exchangeRequestComplete(interacteeId, false);
                         }
                     });
@@ -594,20 +595,20 @@ public class GameplayActivity extends AppCompatActivity {
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            notificationView.exchangeFailedRejection(getPlayerName(interacteeId));
+                            //notificationView.exchangeFailedRejection(getPlayerName(interacteeId));
                             playerListView.exchangeRequestComplete(interacteeId, false);
                         }
                     });
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
-                    final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
+                    //final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
 
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             playerListView.exchangeRequestComplete(interacteeId, true);
-
+                            /* NOTIFICATIONS
                             if (secondaryExists) {
                                 notificationView.exchangeSuccessful(getPlayerName(interacteeId),
                                         getPlayerName(details.gainedIntelPlayerIds.get(1)));
@@ -615,7 +616,7 @@ public class GameplayActivity extends AppCompatActivity {
 
                             else {
                                 notificationView.exchangeSuccessful(getPlayerName(interacteeId));
-                            }
+                            }*/
                         }
                     });
                     cancel();
