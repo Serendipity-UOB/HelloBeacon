@@ -327,7 +327,7 @@ public class GameplayActivity extends AppCompatActivity {
                         that.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                playerListView.exchangeRequestComplete(playerId);
+                                playerListView.exchangeRequestComplete(playerId, true);
 
                                 if (secondaryExists) {
                                     notificationView.exchangeSuccessful(getPlayerName(playerId),
@@ -347,6 +347,7 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             notificationView.applicationError();
+                            playerListView.exchangeRequestComplete(playerId, false);
                             currentPlayerExchangeResponse = WAIT;
                             cancel();
                         }
@@ -482,7 +483,7 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             notificationView.interceptFailedNoExchange(getPlayerName(interacteeId));
-                            playerListView.interceptAttemptComplete();
+                            playerListView.interceptAttemptComplete(interacteeId, false);
                         }
                     });
                     cancel();
@@ -493,7 +494,7 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             notificationView.interceptFailedNoEvidenceShared();
-                            playerListView.interceptAttemptComplete();
+                            playerListView.interceptAttemptComplete(interacteeId, false);
                         }
                     });
                     cancel();
@@ -505,7 +506,7 @@ public class GameplayActivity extends AppCompatActivity {
                         public void run() {
                             notificationView.interceptSucceeded(getPlayerName(interacteeId),
                                     getPlayerName(details.gainedIntelPlayerIds.get(1)));
-                                    playerListView.interceptAttemptComplete();
+                                    playerListView.interceptAttemptComplete(interacteeId, true);
                         }
                     });
                     cancel();
@@ -515,7 +516,7 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             notificationView.applicationError();
-                            playerListView.interceptAttemptComplete();
+                            playerListView.interceptAttemptComplete(interacteeId, false);
                         }
                     });
                     cancel();
@@ -584,7 +585,7 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             notificationView.exchangeFailedTimedOut(getPlayerName(interacteeId));
-                            playerListView.exchangeRequestComplete(interacteeId);
+                            playerListView.exchangeRequestComplete(interacteeId, false);
                         }
                     });
                     cancel();
@@ -594,7 +595,7 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             notificationView.exchangeFailedRejection(getPlayerName(interacteeId));
-                            playerListView.exchangeRequestComplete(interacteeId);
+                            playerListView.exchangeRequestComplete(interacteeId, false);
                         }
                     });
                     cancel();
@@ -605,7 +606,7 @@ public class GameplayActivity extends AppCompatActivity {
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            playerListView.exchangeRequestComplete(interacteeId);
+                            playerListView.exchangeRequestComplete(interacteeId, true);
 
                             if (secondaryExists) {
                                 notificationView.exchangeSuccessful(getPlayerName(interacteeId),
@@ -624,7 +625,7 @@ public class GameplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             notificationView.applicationError();
-                            playerListView.exchangeRequestComplete(interacteeId);
+                            playerListView.exchangeRequestComplete(interacteeId, false);
                             cancel();
                         }
                     });

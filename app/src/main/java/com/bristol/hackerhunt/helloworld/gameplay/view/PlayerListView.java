@@ -51,6 +51,8 @@ public class PlayerListView implements IPlayerListView {
     private boolean interceptStarted = false;
     private String interceptPlayerId;
 
+    private static final long INTERACTION_DISPLAY_PERIOD = 2;
+
     /**
      * Constructor
      * @param inflater Inflater used to insert and render new UI components.
@@ -481,9 +483,40 @@ public class PlayerListView implements IPlayerListView {
         displayIntStatus(playerId);
     }
 
+    public void timedDisplayExchangeSuccess(final String playerId, long time){
+        setIntStatusText(playerId,"Exchange Success\u00A0");
+        setIntStatusColour(playerId,0xb6d7a8);
+        setIntStatusImage(playerId, R.drawable.exchange);
+        displayIntStatus(playerId);
+
+        Timer timer = new Timer();
+        timer.schedule(timedHideIntStatus(playerId),time);
+    }
+
+    public void timedDisplayExchangeFailure(final String playerId, long time){
+        setIntStatusText(playerId,"Exchange Rejected\u00A0");
+        setIntStatusColour(playerId,0xb3e066);
+        setIntStatusImage(playerId, R.drawable.exchange);
+        displayIntStatus(playerId);
+
+        Timer timer = new Timer();
+        timer.schedule(timedHideIntStatus(playerId),time);
+    }
+
+
     public void timedDisplayInterceptSuccess(final String playerId, long time){
         setIntStatusText(playerId,"Intercept Success\u00A0");
         setIntStatusColour(playerId,0xb6d7a8);
+        setIntStatusImage(playerId, R.drawable.intercept);
+        displayIntStatus(playerId);
+
+        Timer timer = new Timer();
+        timer.schedule(timedHideIntStatus(playerId),time);
+    }
+
+    public void timedDisplayInterceptFailure(final String playerId, long time){
+        setIntStatusText(playerId,"Intercept Failure\u00A0");
+        setIntStatusColour(playerId,0xb3e066);
         setIntStatusImage(playerId, R.drawable.intercept);
         displayIntStatus(playerId);
 
@@ -775,18 +808,28 @@ public class PlayerListView implements IPlayerListView {
     }
 
     @Override
-    public void exchangeRequestComplete(String playerId) {
+    public void exchangeRequestComplete(String playerId, boolean success) {
         exchangeStarted = false;
         enableAllExchangeButtons();
-        hideExchangeRequested(playerId);
+        hideExchangeRequested(playerId); //TODO Remove
+        if(success){
+            timedDisplayExchangeSuccess(playerId, INTERACTION_DISPLAY_PERIOD * 1000);
+        }
+        else {
+            timedDisplayExchangeFailure(playerId, INTERACTION_DISPLAY_PERIOD * 1000);
+        }
     }
 
     @Override
-    public void interceptAttemptComplete() {
+    public void interceptAttemptComplete(String playerId, boolean success) {
         interceptStarted = false;
         enableAllInterceptButtons();
-        hideIntStatus(interceptPlayerId);
-        interceptPlayerId = "";
+        if(success){
+            timedDisplayInterceptSuccess(playerId, INTERACTION_DISPLAY_PERIOD * 1000);
+        }
+        else {
+            timedDisplayInterceptFailure(playerId, INTERACTION_DISPLAY_PERIOD * 1000);
+        }
     }
 
     private int getColor(int id) {

@@ -49,13 +49,18 @@ public interface IPlayerListView {
 
     /**
      * Reverts the player cards and buttons back to a state where no exchanges are taking place.
+     * @param playerId the id of the exchange target
+     * @param success whether the exchange succeeded or failed
      */
-    void exchangeRequestComplete(String playerId);
+    void exchangeRequestComplete(String playerId, boolean success);
 
     /**
      * Reverts the player cards and buttons back to a state where no intercepts are taking place.
+     * Also handles displaying the correct card message
+     * @param playerId the id of the player intercepted
+     * @param success Whether the intercept succeeded or failed
      */
-    void interceptAttemptComplete();
+    void interceptAttemptComplete(String playerId, boolean success);
 
     /**
      * Darkens every element in the list apart from the player card of the given player ID.
