@@ -38,6 +38,7 @@ public class PlayerListView implements IPlayerListView {
     private final Map<String, String> playerIdNameMap;
     private final Map<String, String> playerIdCodeNameMap;
     private List<String> nearbyPlayerIds;
+    private List<String> interceptExchangeIds;
 
     private StringInputRunnable beginExposeOnClickRunner;
     private StringInputRunnable beginExchangeOnClickRunner;
@@ -76,6 +77,7 @@ public class PlayerListView implements IPlayerListView {
         this.playerIdNameMap = new HashMap<>();
         this.playerIdCodeNameMap = new HashMap<>();
         this.nearbyPlayerIds = new ArrayList<>();
+        this.interceptExchangeIds = new ArrayList<>();
 
         this.beginExposeOnClickRunner = beginExposeOnClickRunner;
         this.beginExchangeOnClickRunner = beginExchangeOnClickRunner;
@@ -220,6 +222,11 @@ public class PlayerListView implements IPlayerListView {
             else {
                 enableInterceptButton(playerId);
             }
+
+            if(interceptExchangeIds.contains(playerId)){
+                disableExchangeButton(playerId);
+                disableInterceptButton(playerId);
+            }
         }
         else {
             darkenFarAwayPlayerEntries(playerId);
@@ -283,10 +290,12 @@ public class PlayerListView implements IPlayerListView {
             @Override
             public void onClick(View view) {
                 interceptStarted = true;
+                interceptExchangeIds.add(playerId);
                 interceptPlayerId = playerId;
                 displayInterceptPending(playerId);
                 beginSelectedInterceptOnClickRunner.run(playerId);
                 disableAllInterceptButtons();
+                disableExchangeButton(playerId);
             }
         });
     }
@@ -363,10 +372,12 @@ public class PlayerListView implements IPlayerListView {
             @Override
             public void onClick(View view) {
                 exchangeStarted = true;
+                interceptExchangeIds.add(playerId);
                 exchangePlayerId = playerId;
                 displayExchangeRequested(playerId);
                 beginExchangeOnClickRunner.run(playerId);
                 disableAllExchangeButtons();
+                disableInterceptButton(playerId);
             }
         });
     }
@@ -559,8 +570,6 @@ public class PlayerListView implements IPlayerListView {
         ImageView iv = getPlayerCard(playerId).findViewById(R.id.exchange_requested_icon);
         iv.setImageResource(resId);
     }
-
-    //TODO Need to define intercept started in gameplay_player_list_item
 
     private int getPlayerIntel(String playerId) {
         if (!playerIdListItemIdMap.containsKey(playerId)) {
@@ -811,7 +820,12 @@ public class PlayerListView implements IPlayerListView {
     public void exchangeRequestComplete(String playerId, boolean success) {
         exchangeStarted = false;
         enableAllExchangeButtons();
-        hideExchangeRequested(playerId); //TODO Remove
+
+        if(interceptExchangeIds.contains(playerId)){
+            interceptExchangeIds.remove(playerId);
+            enableInterceptButton(playerId);
+        }
+
         if(success){
             timedDisplayExchangeSuccess(playerId, INTERACTION_DISPLAY_PERIOD * 1000);
         }
@@ -824,6 +838,12 @@ public class PlayerListView implements IPlayerListView {
     public void interceptAttemptComplete(String playerId, boolean success) {
         interceptStarted = false;
         enableAllInterceptButtons();
+
+        if(interceptExchangeIds.contains(playerId)){
+            interceptExchangeIds.remove(playerId);
+            enableExchangeButton(playerId);
+        }
+
         if(success){
             timedDisplayInterceptSuccess(playerId, INTERACTION_DISPLAY_PERIOD * 1000);
         }
