@@ -30,6 +30,12 @@ public interface IPlayerStatusBarView {
     void setPlayerName(String playerName);
 
     /**
+     * Sets the image for player location
+     * @param flag TODO int ResId determining the flag to be displayed
+     */
+    void setPlayerLocation(int flag);
+
+    /**
      * Darken all of the elements in the status bar.
      */
     void darken();

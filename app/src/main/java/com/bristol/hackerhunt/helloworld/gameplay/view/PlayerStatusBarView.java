@@ -41,6 +41,12 @@ public class PlayerStatusBarView implements IPlayerStatusBarView {
     }
 
     @Override
+    public void setPlayerLocation(int flag){
+        ImageView iv = playerStatusBar.findViewById(R.id.current_game_zone_logo);
+        iv.setImageResource(flag);
+    }
+
+    @Override
     public void darken() {
         // agent name:
         ((TextView) playerStatusBar.findViewById(R.id.gameplay_player_name_title))
