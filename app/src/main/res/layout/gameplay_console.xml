@@ -34,13 +34,26 @@
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
         android:gravity="center">
+        <LinearLayout
+            android:id="@+id/left_side_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/agency_logo"
+                android:layout_width="35pt"
+                android:layout_height="35pt"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/agency_spy_logo"/>
+            <TextView
+                android:id="@+id/mission_countdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="11pt"
+                android:fontFamily="@font/sharetech"/>
+        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/agency_logo"
-            android:layout_width="35pt"
-            android:layout_height="35pt"
-            android:layout_marginEnd="15dp"
-            android:src="@drawable/agency_spy_logo"/>
 
         <TextView
             android:layout_weight="1"

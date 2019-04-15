@@ -2,6 +2,7 @@ package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import com.bristol.hackerhunt.helloworld.Typewriter;
 public class ConsoleView implements IConsoleView {
 
     private static final int TYPEWRITER_SPEED = 10;     // given in milliseconds.
+    private static final long MISSION_DURATION = 30000;
 
     private final View overlay;
     private final View consoleView;
@@ -26,6 +28,8 @@ public class ConsoleView implements IConsoleView {
     private boolean playerGotTakenDownInProgress;
     private boolean playersTargetGotTakenDownInProgress;
     private boolean takedownSuccessInProgress;
+
+    private CountDownTimer cTimer = null;
 
     public ConsoleView(View consolePromptContainer) {
         this.overlay = consolePromptContainer;
@@ -212,6 +216,7 @@ public class ConsoleView implements IConsoleView {
         setNeutralConsole();
         setConsoleMessage(missionStatement);
         setConsoleTitle(R.string.mission_update_title);
+        startMissionTimer();
     }
 
     @Override
@@ -228,6 +233,31 @@ public class ConsoleView implements IConsoleView {
         setBadConsole();
         setConsoleMessage(missionFailedMessage);
         setConsoleTitle(R.string.mission_failed_title);
+    }
+
+    private void startMissionTimer(){
+        final TextView tv = consoleView.findViewById(R.id.mission_countdown);
+
+        cTimer = new CountDownTimer(MISSION_DURATION, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                tv.setText(Long.toString(millisUntilFinished/1000));
+            }
+
+            @Override
+            public void onFinish() {
+                tv.setText("");
+                // v potential NPE inducing v
+                wipeTimer();
+            }
+        };
+
+
+        cTimer.start();
+    }
+
+    private void wipeTimer(){
+        cTimer = null;
     }
 
     @Override
