@@ -1,5 +1,6 @@
 package com.bristol.hackerhunt.helloworld.gameplay.controller;
 
+import com.bristol.hackerhunt.helloworld.TwinInputRunnable;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.StringInputRunnable;
 
@@ -126,4 +127,6 @@ public interface IGameplayServerRequestsController {
     void registerExposeFailedRunnable(Runnable exposeFailedRunnable);
 
     void registerChangePlayerLocationRunnable(StringInputRunnable runnable);
+
+    void registerChangeLocationRunnable(TwinInputRunnable runnable);
 }

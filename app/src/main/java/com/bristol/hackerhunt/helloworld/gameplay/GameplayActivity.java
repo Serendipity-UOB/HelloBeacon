@@ -164,6 +164,7 @@ public class GameplayActivity extends AppCompatActivity {
         serverRequestsController.registerMissionSuccessRunnable(handleSuccessfulMissionRunnable());
         serverRequestsController.registerMissionFailureRunnable(handleFailedMissionRunnable());
         serverRequestsController.registerChangePlayerLocationRunnable(this.playerStatusBarView.changePlayerLocationRunnable());
+        serverRequestsController.registerChangeLocationRunnable(this.playerListView.changeLocationRunnable());
     }
 
     private StringInputRunnable exposeSuccessfulRunnable() {

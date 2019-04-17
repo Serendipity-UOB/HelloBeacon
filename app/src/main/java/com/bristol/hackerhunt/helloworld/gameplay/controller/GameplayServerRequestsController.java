@@ -8,10 +8,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.StringInputRunnable;
+import com.bristol.hackerhunt.helloworld.TwinInputRunnable;
 import com.bristol.hackerhunt.helloworld.gameplay.PlayerUpdate;
 import com.bristol.hackerhunt.helloworld.model.InteractionDetails;
 import com.bristol.hackerhunt.helloworld.model.InteractionStatus;
@@ -54,6 +54,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private StringInputRunnable missionSuccessRunnable;
     private StringInputRunnable missionFailureRunnable;
     private StringInputRunnable changePlayerLocationRunnable;
+    private TwinInputRunnable changeLocationRunnable;
 
     private Map<String, Integer> statusCodeRequestMap;
 
@@ -262,6 +263,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         updatePlayerPoints(obj);
         updateLeaderboardPosition(obj);
         updatePlayerLocation(obj);
+        updateLocations(obj);
         updateExchangeReceive(obj);
         checkForPlayerStatusChanges(obj);
         checkForMission(obj);
@@ -275,11 +277,45 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         }
     }
 
+    /*if (obj.has("evidence")) {
+            JSONArray evidenceGained = obj.getJSONArray("evidence");
+            for (int i = 0; i < evidenceGained.length(); i++) {
+                JSONObject entry = evidenceGained.getJSONObject(i);
+                String playerId = entry.getString("player_id");
+                int amount = entry.getInt("amount");
+                gameStateController.increasePlayerIntel(playerId, amount);
+                details.gainedIntelPlayerIds.add(playerId);
+            }
+        }*/
+
+    private void updateLocations(JSONObject obj) throws JSONException {
+        JSONObject nearbyPlayer;
+        JSONArray nearbyPlayerIdsJson = obj.getJSONArray("nearby_players");
+        for (int i = 0; i < nearbyPlayerIdsJson.length(); i++) {
+            nearbyPlayer = nearbyPlayerIdsJson.getJSONObject(i);
+            changeLocationRunnable.run(
+                    nearbyPlayer.getString("id"),
+                    Integer.toString(nearbyPlayer.getInt("location"))
+            );
+        }
+
+        JSONObject farPlayer;
+        JSONArray farPlayerIdsJson = obj.getJSONArray("far_players");
+        for (int i = 0; i < farPlayerIdsJson.length(); i++){
+            farPlayer = farPlayerIdsJson.getJSONObject(i);
+            changeLocationRunnable.run(
+                    farPlayer.getString("id"),
+                    Integer.toString(farPlayer.getInt("location"))
+            );
+        }
+
+    }
+
     private void updateNearbyPlayers(JSONObject obj) throws JSONException {
         JSONArray nearbyPlayerIdsJson = obj.getJSONArray("nearby_players");
         List<String> nearbyPlayerIds = new ArrayList<>();
         for (int i = 0; i < nearbyPlayerIdsJson.length(); i++) {
-            nearbyPlayerIds.add(nearbyPlayerIdsJson.getString(i));
+            nearbyPlayerIds.add(nearbyPlayerIdsJson.getJSONObject(i).getString("id"));
         }
         gameStateController.updateNearbyPlayers(nearbyPlayerIds);
     }
@@ -811,6 +847,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     @Override
     public void registerChangePlayerLocationRunnable(StringInputRunnable runnable){
         this.changePlayerLocationRunnable = runnable;
+    }
+
+    @Override
+    public void registerChangeLocationRunnable(TwinInputRunnable runnable){
+        this.changeLocationRunnable = runnable;
     }
 
     @Override

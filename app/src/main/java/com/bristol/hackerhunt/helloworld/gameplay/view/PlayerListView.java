@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
 import com.bristol.hackerhunt.helloworld.StringInputRunnable;
+import com.bristol.hackerhunt.helloworld.TwinInputRunnable;
 import com.emredavarci.circleprogressbar.CircleProgressBar;
 
 import java.util.ArrayList;
@@ -573,6 +574,17 @@ public class PlayerListView implements IPlayerListView {
 
     private ImageView getPlayerFlagView(String playerId){
         return getPlayerCard(playerId).findViewById(R.id.player_card_flag);
+    }
+
+    @Override
+    public TwinInputRunnable changeLocationRunnable(){
+        return new TwinInputRunnable() {
+            @Override
+            public void run(String playerId, String flagString) {
+                int flag = Integer.parseInt(flagString);
+                changePlayerLocation(playerId, flag);
+            }
+        };
     }
 
     @Override

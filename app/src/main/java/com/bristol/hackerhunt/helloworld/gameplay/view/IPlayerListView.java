@@ -1,5 +1,7 @@
 package com.bristol.hackerhunt.helloworld.gameplay.view;
 
+import com.bristol.hackerhunt.helloworld.TwinInputRunnable;
+
 import java.util.List;
 
 /**
@@ -74,5 +76,7 @@ public interface IPlayerListView {
     void restore();
 
     void changePlayerLocation(String playerId, int flag);
+
+    TwinInputRunnable changeLocationRunnable();
 
 }
