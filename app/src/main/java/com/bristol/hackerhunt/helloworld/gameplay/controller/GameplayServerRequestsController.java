@@ -261,6 +261,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         updateNearbyPlayers(obj);
         updatePlayerPoints(obj);
         updateLeaderboardPosition(obj);
+        updatePlayerLocation(obj);
         updateExchangeReceive(obj);
         checkForPlayerStatusChanges(obj);
         checkForMission(obj);
@@ -384,6 +385,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 }
                 else if(statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 203){
                     missionFailure(details, response);
+                }
+                else if(statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 204){
+                    missionPending(details, response);
                 }
                 else {
                     details.status = InteractionStatus.ERROR;
