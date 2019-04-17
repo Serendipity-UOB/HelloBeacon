@@ -53,6 +53,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private StringInputRunnable missionUpdateRunnable;
     private StringInputRunnable missionSuccessRunnable;
     private StringInputRunnable missionFailureRunnable;
+    private StringInputRunnable changePlayerLocationRunnable;
 
     private Map<String, Integer> statusCodeRequestMap;
 
@@ -264,6 +265,13 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         checkForPlayerStatusChanges(obj);
         checkForMission(obj);
         checkGameOver(obj);
+    }
+
+    private void updatePlayerLocation(JSONObject obj) throws JSONException {
+        if(obj.has("location")){
+            int flag = obj.getInt("location");
+            changePlayerLocationRunnable.run(Integer.toString(flag));
+        }
     }
 
     private void updateNearbyPlayers(JSONObject obj) throws JSONException {
@@ -794,6 +802,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     @Override
     public void registerInterceptSuccessRunnable(Runnable runnable) {
         this.interceptSuccessRunnable = runnable;
+    }
+
+    @Override
+    public void registerChangePlayerLocationRunnable(StringInputRunnable runnable){
+        this.changePlayerLocationRunnable = runnable;
     }
 
     @Override

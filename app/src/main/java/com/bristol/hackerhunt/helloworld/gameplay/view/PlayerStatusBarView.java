@@ -1,12 +1,14 @@
 package com.bristol.hackerhunt.helloworld.gameplay.view;
 
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
 
 public class PlayerStatusBarView implements IPlayerStatusBarView {
 
@@ -43,7 +45,37 @@ public class PlayerStatusBarView implements IPlayerStatusBarView {
     @Override
     public void setPlayerLocation(int flag){
         ImageView iv = playerStatusBar.findViewById(R.id.current_game_zone_logo);
-        iv.setImageResource(flag);
+        int imageId = R.drawable.beacon_valor;
+        if(flag == 0){
+            //UN
+        }
+        else if(flag == 1){
+            imageId = R.drawable.italy_flag_dark;
+        }
+        else if(flag == 2){
+            imageId = R.drawable.sweden_flag_dark;
+        }
+        else if(flag == 3){
+            imageId = R.drawable.switzerland_flag_dark;
+        }
+        else if(flag == 4){
+            imageId = R.drawable.czech_republic_flag_dark;
+        }
+        else{
+            Log.d("Bad Flag", "Flag number " + Integer.toString(flag));
+        }
+        iv.setImageResource(imageId);
+    }
+
+    @Override
+    public StringInputRunnable changePlayerLocationRunnable() {
+        return new StringInputRunnable() {
+            @Override
+            public void run(String input) {
+                int flag = Integer.parseInt(input);
+                setPlayerLocation(flag);
+            }
+        };
     }
 
     @Override

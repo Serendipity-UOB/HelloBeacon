@@ -1,5 +1,7 @@
 package com.bristol.hackerhunt.helloworld.gameplay.view;
 
+import com.bristol.hackerhunt.helloworld.StringInputRunnable;
+
 /**
  * A controller class responsible for the status bar of the UI.
  */
@@ -44,4 +46,6 @@ public interface IPlayerStatusBarView {
      * Restore the status bar colors after being darkened.
      */
     void restore();
+
+    StringInputRunnable changePlayerLocationRunnable();
 }

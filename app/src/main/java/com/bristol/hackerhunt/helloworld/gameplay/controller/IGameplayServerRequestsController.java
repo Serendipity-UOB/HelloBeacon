@@ -124,4 +124,6 @@ public interface IGameplayServerRequestsController {
     void registerExposeSuccessRunnable(StringInputRunnable exposeSuccessRunnable);
 
     void registerExposeFailedRunnable(Runnable exposeFailedRunnable);
+
+    void registerChangePlayerLocationRunnable(StringInputRunnable runnable);
 }
