@@ -47,7 +47,7 @@ public class PlayerStatusBarView implements IPlayerStatusBarView {
         ImageView iv = playerStatusBar.findViewById(R.id.current_game_zone_logo);
         int imageId = R.drawable.beacon_valor;
         if(flag == 0){
-            //UN
+            imageId = R.drawable.un_flag;
         }
         else if(flag == 1){
             imageId = R.drawable.italy_flag_dark;

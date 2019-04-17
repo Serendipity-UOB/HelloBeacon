@@ -73,4 +73,6 @@ public interface IPlayerListView {
      */
     void restore();
 
+    void changePlayerLocation(String playerId, int flag);
+
 }

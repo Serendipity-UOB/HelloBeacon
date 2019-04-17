@@ -571,6 +571,38 @@ public class PlayerListView implements IPlayerListView {
         iv.setImageResource(resId);
     }
 
+    private ImageView getPlayerFlagView(String playerId){
+        return getPlayerCard(playerId).findViewById(R.id.player_card_flag);
+    }
+
+    @Override
+    public void changePlayerLocation(String playerId, int flag){
+
+        ImageView iv = getPlayerFlagView(playerId);
+
+        int imageId = R.drawable.beacon_valor;
+
+        if(flag == 0){
+            imageId = R.drawable.un_flag;
+        }
+        else if(flag == 1){
+            imageId = R.drawable.italy_flag_dark;
+        }
+        else if(flag == 2){
+            imageId = R.drawable.sweden_flag_dark;
+        }
+        else if(flag == 3){
+            imageId = R.drawable.switzerland_flag_dark;
+        }
+        else if(flag == 4){
+            imageId = R.drawable.czech_republic_flag_dark;
+        }
+        else{
+            Log.d("Bad Flag", "Flag number " + Integer.toString(flag));
+        }
+        iv.setImageResource(imageId);
+    }
+
     private int getPlayerIntel(String playerId) {
         if (!playerIdListItemIdMap.containsKey(playerId)) {
             throw new IllegalArgumentException("Error: player is not listed as playing the game.");
