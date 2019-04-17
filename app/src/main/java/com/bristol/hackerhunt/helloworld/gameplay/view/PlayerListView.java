@@ -1,5 +1,6 @@
 package com.bristol.hackerhunt.helloworld.gameplay.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Handler;
@@ -41,6 +42,8 @@ public class PlayerListView implements IPlayerListView {
     private List<String> nearbyPlayerIds;
     private List<String> interceptExchangeIds;
 
+    private Map<String, Integer> playerIdLocationMap;
+
     private StringInputRunnable beginExposeOnClickRunner;
     private StringInputRunnable beginExchangeOnClickRunner;
     private StringInputRunnable beginSelectedInterceptOnClickRunner;
@@ -79,6 +82,7 @@ public class PlayerListView implements IPlayerListView {
         this.playerIdCodeNameMap = new HashMap<>();
         this.nearbyPlayerIds = new ArrayList<>();
         this.interceptExchangeIds = new ArrayList<>();
+        this.playerIdLocationMap = new HashMap<>();
 
         this.beginExposeOnClickRunner = beginExposeOnClickRunner;
         this.beginExchangeOnClickRunner = beginExchangeOnClickRunner;
@@ -473,6 +477,7 @@ public class PlayerListView implements IPlayerListView {
                 }
             }
             updateAllTargetCodenameColors();
+            updateAllPlayerLocation();
             this.nearbyPlayerIds = newNearbyPlayerIds;
         }
     }
@@ -562,7 +567,7 @@ public class PlayerListView implements IPlayerListView {
         tv.setText(text);
     }
 
-    public void setIntStatusColour(String playerId, int colour){
+    private void setIntStatusColour(String playerId, int colour){
         TextView tv = getPlayerCard(playerId).findViewById(R.id.exchange_requested_text);
         tv.setTextColor(colour);
     }
@@ -587,12 +592,9 @@ public class PlayerListView implements IPlayerListView {
         };
     }
 
-    @Override
-    public void changePlayerLocation(String playerId, int flag){
-
-        ImageView iv = getPlayerFlagView(playerId);
-
+    private int getFlag(int flag){
         int imageId = R.drawable.beacon_valor;
+
 
         if(flag == 0){
             imageId = R.drawable.un_flag;
@@ -612,7 +614,43 @@ public class PlayerListView implements IPlayerListView {
         else{
             Log.d("Bad Flag", "Flag number " + Integer.toString(flag));
         }
+
+        return imageId;
+    }
+
+    @Override
+    public void changePlayerLocation(String playerId, int flag){
+        if(playerIdLocationMap.containsKey(playerId)){
+            playerIdLocationMap.remove(playerId);
+            playerIdLocationMap.put(playerId,flag);
+            //Can't use replace due to API level
+        }
+        else{
+            playerIdLocationMap.put(playerId,flag);
+        }
+
+        ImageView iv = getPlayerFlagView(playerId);
+
+        int imageId = getFlag(flag);
+
+
         iv.setImageResource(imageId);
+    }
+
+    private void updateAllPlayerLocation(){
+        int flag;
+        int imageId;
+        ImageView iv;
+        for(String playerId : playerIdLocationMap.keySet()){
+            flag = playerIdLocationMap.get(playerId);
+
+            iv = getPlayerFlagView(playerId);
+
+            imageId = getFlag(flag);
+
+            iv.setImageResource(imageId);
+
+        }
     }
 
     private int getPlayerIntel(String playerId) {
