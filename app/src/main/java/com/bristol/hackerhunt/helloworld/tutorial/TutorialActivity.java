@@ -1,8 +1,10 @@
 package com.bristol.hackerhunt.helloworld.tutorial;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -188,11 +190,11 @@ public class TutorialActivity extends AppCompatActivity {
                 exchangeRequestComplete();
                 closeInteractionButtons();
 
-                increaseTillyEvidence(25);
-                increaseLouisEvidence(10);
-
                 restoreExamplePlayerCard();
                 restore3rdPlayerCard();
+
+                increaseTillyEvidence(25);
+                increaseLouisEvidence(10);
 
                 findViewById(R.id.you_can_have_one_request_at_a_time).setVisibility(View.GONE);
                 findViewById(R.id.you_gained_evidence_from_exchange).setVisibility(View.VISIBLE);
@@ -265,12 +267,12 @@ public class TutorialActivity extends AppCompatActivity {
 
                 closeInteractionButtons();
 
-                increaseTillyEvidence(50);
-                increaseLouisEvidence(10);
-
                 restore3rdPlayerCard();
                 restoreExamplePlayerCard();
                 restorePressedPlayerCard();
+
+                increaseTillyEvidence(50);
+                increaseLouisEvidence(10);
 
                 findViewById(R.id.one_intercept_at_a_time).setVisibility(View.GONE);
                 findViewById(R.id.intercept_successful).setVisibility(View.VISIBLE);
@@ -675,21 +677,60 @@ public class TutorialActivity extends AppCompatActivity {
 
     private void increaseTillyEvidence(int evidence) {
         CircleProgressBar bar = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
-        float currentProgress = bar.getProgress();
-        bar.setText(Integer.toString((int) (evidence + currentProgress)));
-        bar.setProgress(currentProgress + evidence);
+        increaseEvidence(bar, evidence);
     }
 
     private void releaseTillyEvidence() {
-        CircleProgressBar bar = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
-        bar.setText("0");
-        bar.setProgress(0);
+        final CircleProgressBar bar = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
+
+        final Context context = this;
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (bar.getProgress() > 0) {
+                    bar.setProgress(Math.max(0, bar.getProgress() - 2));
+                    bar.setText(Integer.toString((int) bar.getProgress()));
+                    handler.postDelayed(this, 25);
+                }
+            }
+        }, 25);
     }
 
     private void increaseLouisEvidence(int evidence) {
-        CircleProgressBar bar =findViewById(R.id.player_card_3).findViewById(R.id.tutorial_player_intel_circle_0);
-        float currentProgress = bar.getProgress();
-        bar.setText(Integer.toString((int) (evidence + currentProgress)));
-        bar.setProgress(currentProgress + evidence);
+        CircleProgressBar bar = findViewById(R.id.player_card_3).findViewById(R.id.tutorial_player_intel_circle_0);
+        increaseEvidence(bar, evidence);
+    }
+
+    private void increaseEvidence(final CircleProgressBar bar, final int evidence) {
+        final float currentProgress = bar.getProgress();
+        bar.setText("+" + Integer.toString(evidence));
+        bar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_increase));
+
+        final Context context = this;
+        final int finalEvidence = (int) currentProgress + evidence;
+
+        final Handler increaseHandler = new Handler();
+        increaseHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (bar.getProgress() < finalEvidence) {
+                    bar.setProgress(Math.min(finalEvidence, bar.getProgress() + 2));
+                    increaseHandler.postDelayed(this, 25);
+                }
+            }
+        }, 25);
+
+        final Handler restoreTextHandler = new Handler();
+        restoreTextHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bar.setTextColor(ContextCompat.getColor(context, R.color.progress_bar_text));
+                bar.setText(Integer.toString(finalEvidence));
+
+            }
+        }, 1000);
+
     }
 }
