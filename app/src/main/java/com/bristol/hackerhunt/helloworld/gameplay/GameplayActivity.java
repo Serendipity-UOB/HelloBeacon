@@ -248,9 +248,29 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(final String missionDetails) {
                 Log.d("New Mission", missionDetails);
                 consoleView.missionUpdatePrompt(missionDetails);
+                consoleView.setConsoleFlag(getFlagFromMission(missionDetails));
                 beginMissionUpdateServerPolling();
+
+
             }
         };
+    }
+
+    private int getFlagFromMission(String details){
+        int flag = 6;
+        if(details.contains("italy")){
+            flag = 1;
+        }
+        else if(details.contains("sweden")){
+            flag = 2;
+        }
+        else if(details.contains("switzerland")){
+            flag = 3;
+        }
+        else if(details.contains("czech republic")){
+            flag = 4;
+        }
+        return flag;
     }
 
     private StringInputRunnable handleSuccessfulMissionRunnable() {

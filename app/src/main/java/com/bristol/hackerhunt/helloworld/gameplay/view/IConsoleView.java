@@ -67,4 +67,6 @@ public interface IConsoleView {
      * Enables user to tap console pop up to close.
      */
     void enableTapToClose();
+
+    void setConsoleFlag(int flag);
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bristol.hackerhunt.helloworld.R;
@@ -238,6 +239,31 @@ public class ConsoleView implements IConsoleView {
         setBadConsole();
         setConsoleMessage(missionFailedMessage);
         setConsoleTitle(R.string.mission_failed_title);
+    }
+
+    @Override
+    public void setConsoleFlag(int flag){
+        ImageView iv = consoleView.findViewById(R.id.agency_logo);
+        int imageId = R.drawable.beacon_valor;
+        if(flag == 0){
+            imageId = R.drawable.un_flag;
+        }
+        else if(flag == 1){
+            imageId = R.drawable.italy_flag_dark;
+        }
+        else if(flag == 2){
+            imageId = R.drawable.sweden_flag_dark;
+        }
+        else if(flag == 3){
+            imageId = R.drawable.switzerland_flag_dark;
+        }
+        else if(flag == 4){
+            imageId = R.drawable.czech_republic_flag_dark;
+        }
+        else{
+            Log.d("Bad Flag", "Flag number " + Integer.toString(flag));
+        }
+        iv.setImageResource(imageId);
     }
 
     private void startMissionTimer(){
