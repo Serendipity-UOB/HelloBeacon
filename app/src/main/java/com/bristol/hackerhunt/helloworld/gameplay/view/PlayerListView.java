@@ -699,6 +699,9 @@ public class PlayerListView implements IPlayerListView {
 
             iv.setImageResource(imageId);
         }
+        else{
+            Log.d("Change Location", "Empty string for playerId");
+        }
     }
 
     private void updateAllPlayerLocation(){
