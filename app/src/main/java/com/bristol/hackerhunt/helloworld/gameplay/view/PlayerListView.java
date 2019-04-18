@@ -303,9 +303,26 @@ public class PlayerListView implements IPlayerListView {
 
     @Override
     public void enableAllButtons() {
-        enableAllExchangeButtons();
-        enableAllInterceptButtons();
         enableAllExposeButtons();
+
+        //Now disable correct buttons again
+
+        //Only enable intercepts if not doing one
+        if(!interceptStarted){
+            enableAllInterceptButtons();
+        }
+
+        //Only enable exchanges if not doing one
+        if(!exchangeStarted){
+            enableAllExchangeButtons();
+        }
+
+        //Disable Exchange/Intercept for specific player if
+        // currently Intercept/Exchange active
+        for(String playerId : interceptExchangeIds){
+            disableExchangeButton(playerId);
+            disableInterceptButton(playerId);
+        }
     }
 
     @Override

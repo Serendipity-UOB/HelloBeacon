@@ -274,6 +274,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         if(obj.has("location")){
             int flag = obj.getInt("location");
             changePlayerLocationRunnable.run(Integer.toString(flag));
+
+            //If at UN
+            if(flag == 0){
+                disableInteractionsRunnable.run();
+            }
+            else{
+                enableInteractionsRunnable.run();
+            }
         }
     }
 
