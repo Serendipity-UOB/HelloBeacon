@@ -500,6 +500,10 @@ public class TutorialActivity extends AppCompatActivity {
 
         playerCard.findViewById(R.id.player_item_background).setBackgroundResource(R.drawable.player_card_darkened);
 
+        TextView codename = playerCard.findViewById(R.id.player_hacker_name);
+        codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text_darkened));
+        codename.setBackgroundColor(ContextCompat.getColor(this, R.color.player_is_not_target_codename_darkened));
+
         ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
                 .setTextColor(ContextCompat.getColor(this, R.color.player_card_name_darkened));
         ((ImageView) playerCard.findViewById(R.id.exchange_requested_icon))
@@ -524,6 +528,9 @@ public class TutorialActivity extends AppCompatActivity {
         ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
                 .setTextColor(ContextCompat.getColor(this, R.color.player_card_name));
         ((ImageView) playerCard.findViewById(R.id.exchange_requested_icon)).clearColorFilter();
+
+        TextView codename = playerCard.findViewById(R.id.player_hacker_name);
+        codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text));
 
         CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.tutorial_player_intel_circle_25);
         circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar));
@@ -694,6 +701,10 @@ public class TutorialActivity extends AppCompatActivity {
                     bar.setText(Integer.toString((int) bar.getProgress()));
                     handler.postDelayed(this, 25);
                 }
+                else {
+                    pressedPlayerCard.findViewById(R.id.player_hacker_name)
+                            .setBackgroundColor(ContextCompat.getColor(context, R.color.player_is_not_target_codename));
+                }
             }
         }, 25);
     }
@@ -719,6 +730,12 @@ public class TutorialActivity extends AppCompatActivity {
                     bar.setProgress(Math.min(finalEvidence, bar.getProgress() + 2));
                     increaseHandler.postDelayed(this, 25);
                 }
+                else if (finalEvidence >=100) {
+                    bar.setProgressColor(ContextCompat.getColor(context, R.color.progress_bar_complete_evidence));
+                    pressedPlayerCard.findViewById(R.id.player_hacker_name).setVisibility(View.VISIBLE);
+                    pressedPlayerCard.findViewById(R.id.player_hacker_name)
+                            .setBackgroundColor(ContextCompat.getColor(context, R.color.player_is_target_codename));
+                }
             }
         }, 25);
 
@@ -726,11 +743,15 @@ public class TutorialActivity extends AppCompatActivity {
         restoreTextHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                bar.setTextColor(ContextCompat.getColor(context, R.color.progress_bar_text));
+                if (finalEvidence >= 100) {
+                    bar.setTextColor(ContextCompat.getColor(context, R.color.progress_bar_complete_evidence_text));
+                }
+                else {
+                    bar.setTextColor(ContextCompat.getColor(context, R.color.progress_bar_text));
+                }
                 bar.setText(Integer.toString(finalEvidence));
 
             }
         }, 1000);
-
     }
 }
