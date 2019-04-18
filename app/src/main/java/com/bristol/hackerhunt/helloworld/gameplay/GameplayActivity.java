@@ -165,6 +165,8 @@ public class GameplayActivity extends AppCompatActivity {
         serverRequestsController.registerMissionFailureRunnable(handleFailedMissionRunnable());
         serverRequestsController.registerChangePlayerLocationRunnable(this.playerStatusBarView.changePlayerLocationRunnable());
         serverRequestsController.registerChangeLocationRunnable(this.playerListView.changeLocationRunnable());
+        serverRequestsController.registerEnableInteractionsRunnable(enableInteractionsRunnable());
+        serverRequestsController.registerDisableInteractionsRunnable(disableInteractionsRunnable());
     }
 
     private StringInputRunnable exposeSuccessfulRunnable() {
@@ -203,6 +205,24 @@ public class GameplayActivity extends AppCompatActivity {
         this.exchangeRequestView = new ExchangeRequestView(findViewById(R.id.exchange_request_overlay),
                 onAcceptExchangeRequestRunnable(),
                 onRejectExchangeRequestRunnable());
+    }
+
+    private Runnable disableInteractionsRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                playerListView.disableAllButtons();
+            }
+        };
+    }
+
+    private Runnable enableInteractionsRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                playerListView.enableAllButtons();
+            }
+        };
     }
 
     private StringInputRunnable onAcceptExchangeRequestRunnable() {

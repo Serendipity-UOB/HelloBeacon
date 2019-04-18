@@ -79,4 +79,8 @@ public interface IPlayerListView {
 
     TwinInputRunnable changeLocationRunnable();
 
+    void enableAllButtons();
+
+    void disableAllButtons();
+
 }

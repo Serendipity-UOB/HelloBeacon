@@ -55,6 +55,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private StringInputRunnable missionFailureRunnable;
     private StringInputRunnable changePlayerLocationRunnable;
     private TwinInputRunnable changeLocationRunnable;
+    private Runnable disableInteractionsRunnable;
+    private Runnable enableInteractionsRunnable;
 
     private Map<String, Integer> statusCodeRequestMap;
 
@@ -160,16 +162,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
         JSONArray allPlayers =  allPlayersJson.getJSONArray("all_players");
 
-        Log.d("StartInfo", "Player JSON: " + allPlayers.toString());
+        Log.v("StartInfo", "Player JSON: " + allPlayers.toString());
         List<PlayerIdentifiers> allPlayersIdentifiers = new ArrayList<>();
 
         for (int i = 0; i < allPlayers.length(); i++) {
             JSONObject obj = allPlayers.getJSONObject(i);
-            Log.d("StartInfo", "Player added: " + jsonToPlayerIdentifiers(obj).getHackerName());
 
             if (!isCurrentPlayer(obj)) {
                 allPlayersIdentifiers.add(jsonToPlayerIdentifiers(obj));
-                Log.d("StartInfo", "Player added: " + jsonToPlayerIdentifiers(obj).getHackerName());
             }
         }
         gameStateController.setAllPlayers(allPlayersIdentifiers);
@@ -822,6 +822,16 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         requestBody.put("target_id", interacteeId);
         requestBody.put("player_id", gameStateController.getPlayerId());
         return requestBody;
+    }
+
+    @Override
+    public void registerDisableInteractionsRunnable(Runnable runnable){
+        this.disableInteractionsRunnable = runnable;
+    }
+
+    @Override
+    public void registerEnableInteractionsRunnable(Runnable runnable){
+        this.enableInteractionsRunnable = runnable;
     }
 
     @Override

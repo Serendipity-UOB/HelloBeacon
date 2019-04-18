@@ -274,6 +274,53 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
+    private void disableAllExposeButtons() {
+        for (String playerId :playerIdNameMap.keySet()) {
+            disableExposeButton(playerId);
+        }
+    }
+
+    private void disableExposeButton(String playerId) {
+        //TODO Greyed out expose button
+        getExposeButton(playerId).setBackgroundResource(R.drawable.expose_button);
+        removeExposeOnClickListener(playerId);
+    }
+
+    private void enableAllExposeButtons() {
+        for (String playerId : playerIdNameMap.keySet()) {
+            enableExposeButton(playerId);
+        }
+    }
+
+    private void enableExposeButton(String playerId) {
+        getExposeButton(playerId).setBackgroundResource(R.drawable.expose_button);
+        setExposeOnClickListener(playerId);
+    }
+
+    private void removeExposeOnClickListener(String playerId) {
+        getExposeButton(playerId).setOnClickListener(null);
+    }
+
+    @Override
+    public void enableAllButtons() {
+        enableAllExchangeButtons();
+        enableAllInterceptButtons();
+        enableAllExposeButtons();
+    }
+
+    @Override
+    public void disableAllButtons(){
+        disableAllExchangeButtons();
+        disableAllInterceptButtons();
+        disableAllExposeButtons();
+    }
+
+
+
+    private View getExposeButton(String playerId){
+        return getPlayerCard(playerId).findViewById(R.id.gameplay_expose_button);
+    }
+
     private View getPlayerCard(String playerId) {
         int id = playerIdListItemIdMap.get(playerId);
         return playerList.findViewById(id);

@@ -129,4 +129,8 @@ public interface IGameplayServerRequestsController {
     void registerChangePlayerLocationRunnable(StringInputRunnable runnable);
 
     void registerChangeLocationRunnable(TwinInputRunnable runnable);
+
+    void registerDisableInteractionsRunnable(Runnable runnable);
+
+    void registerEnableInteractionsRunnable(Runnable runnable);
 }
