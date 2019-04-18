@@ -771,7 +771,7 @@
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
 
-            android:layout_marginTop="159pt"
+            android:layout_marginTop="165pt"
             android:layout_marginLeft="7pt"
             android:layout_marginRight="7pt"
             android:layout_marginBottom="7pt"
@@ -814,7 +814,7 @@
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
 
-            android:layout_marginTop="159pt"
+            android:layout_marginTop="165pt"
             android:layout_marginLeft="7pt"
             android:layout_marginRight="7pt"
             android:layout_marginBottom="7pt"
@@ -900,7 +900,7 @@
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
 
-            android:layout_marginTop="159pt"
+            android:layout_marginTop="165pt"
             android:layout_marginLeft="7pt"
             android:layout_marginRight="7pt"
             android:layout_marginBottom="7pt"
@@ -964,7 +964,65 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <!-- Exchange request notification -->
+    <RelativeLayout
+        android:id="@+id/exchange_request_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
+        <LinearLayout
+            android:id="@+id/exchange_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/neutral_full_pop_up"
+            android:layout_margin="7pt">
+            <TextView
+                android:id="@+id/exchange_request_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:fontFamily="@font/sharetech"
+                android:textColor="#fff"
+                android:textSize="8pt"
+                android:paddingTop="13dp"
+                android:paddingBottom="13dp"
+                android:text="Tilly wants to exchange evidence with you."/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/accept_exchange_button"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22pt"
+                    android:background="@drawable/accept_exchange_button"
+                    android:layout_marginStart="2pt"
+                    android:layout_marginBottom="2pt"
+                    android:text="Accept"
+                    android:textColor="#fff"
+                    android:fontFamily="@font/sharetech"
+                    android:textSize="23sp"/>
+                <Button
+                    android:id="@+id/reject_exchange_button"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22pt"
+                    android:background="@drawable/reject_exchange_button"
+                    android:layout_marginEnd="2pt"
+                    android:layout_marginBottom="2pt"
+                    android:layout_marginStart="2pt"
+                    android:text="Reject"
+                    android:textColor="#fff"
+                    android:fontFamily="@font/sharetech"
+                    android:textSize="23sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
 
 

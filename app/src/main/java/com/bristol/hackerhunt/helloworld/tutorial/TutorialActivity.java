@@ -32,14 +32,17 @@ public class TutorialActivity extends AppCompatActivity {
 
         CircleProgressBar intelBar1 = findViewById(R.id.intel_bar_1).findViewById(R.id.tutorial_player_intel_circle_100);
         CircleProgressBar intelBar2 = findViewById(R.id.intel_bar_2).findViewById(R.id.tutorial_player_intel_circle_25);
-        CircleProgressBar intelBar3 = findViewById(R.id.intel_bar_3).findViewById(R.id.tutorial_player_intel_circle_100);
+        CircleProgressBar intelBar3 = findViewById(R.id.intel_bar_3).findViewById(R.id.tutorial_player_intel_circle_0);
         CircleProgressBar intelBar4 = findViewById(R.id.intel_bar_4).findViewById(R.id.tutorial_player_intel_circle_far);
         CircleProgressBar intelBar5 = findViewById(R.id.intel_bar_5).findViewById(R.id.tutorial_player_intel_circle_far);
         CircleProgressBar intelBar6 = findViewById(R.id.intel_bar_6).findViewById(R.id.tutorial_player_intel_circle_far);
 
-        intelBar1.setProgress(100);
-        intelBar2.setProgress(20);
-        intelBar3.setProgress(100);
+        intelBar1.setProgress(0);
+        intelBar1.setText("0");
+        findViewById(R.id.player_card_1).findViewById(R.id.player_hacker_name).setVisibility(View.INVISIBLE);
+
+        intelBar2.setProgress(0);
+        intelBar2.setText("0");
 
         intelBar4.setProgress(50);
         intelBar4.setBackgroundColor(ContextCompat.getColor(this,R.color.progress_bar_background_far_darkened));
@@ -86,14 +89,14 @@ public class TutorialActivity extends AppCompatActivity {
                 restoreStatusBar();
 
                 findViewById(R.id.welcome_to_spy_expose).setVisibility(View.GONE);
-                findViewById(R.id.this_is_your_status).setVisibility(View.VISIBLE);
+                findViewById(R.id.this_is_your_position_and_reputation).setVisibility(View.VISIBLE);
                 break;
 
             case 2:
                 darkenStatusBar();
                 restoreTargetBox();
 
-                findViewById(R.id.this_is_your_status).setVisibility(View.GONE);
+                findViewById(R.id.this_is_your_position_and_reputation).setVisibility(View.GONE);
                 findViewById(R.id.this_is_your_target).setVisibility(View.VISIBLE);
                 break;
 
@@ -114,98 +117,244 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 5:
+                darkenExamplePlayerCard();
+                restoreExamplePlayerCardEvidence();
 
                 findViewById(R.id.this_is_another_agent).setVisibility(View.GONE);
                 findViewById(R.id.this_icon_displays_evidence).setVisibility(View.VISIBLE);
                 break;
 
             case 6:
+                CircleProgressBar bar = findViewById(R.id.player_card_1).findViewById(R.id.tutorial_player_intel_circle_100);
+                bar.setProgress(100);
+                bar.setText("100");
+                restoreExamplePlayerCardEvidence();
+
                 findViewById(R.id.this_icon_displays_evidence).setVisibility(View.GONE);
                 findViewById(R.id.codename_reveal).setVisibility(View.VISIBLE);
                 break;
 
             case 7:
+                restoreExamplePlayerCard();
                 restorePressedPlayerCard();
                 restore3rdPlayerCard();
 
                 findViewById(R.id.codename_reveal).setVisibility(View.GONE);
                 findViewById(R.id.nearby_agents).setVisibility(View.VISIBLE);
+
+                findViewById(R.id.clicker).setOnClickListener(null);
+                findViewById(R.id.clicker).setVisibility(View.GONE);
+                pressedPlayerCard.setOnClickListener(nextOnClickListener());
+
                 break;
 
             case 8:
-                darkenExamplePlayerCard();
-                darkenPressedPlayerCard();
-                darken3rdPlayerCard();
-
-                restoreFarAwayPlayerCards();
-
-                findViewById(R.id.nearby_agents).setVisibility(View.GONE);
-                findViewById(R.id.faraway_agents).setVisibility(View.VISIBLE);
-                break;
-
-            case 9:
                 darkenExamplePlayerCard();
                 darken3rdPlayerCard();
                 darkenFarAwayPlayerCards();
 
                 restorePressedPlayerCard();
 
-                findViewById(R.id.faraway_agents).setVisibility(View.GONE);
+                //findViewById(R.id.faraway_agents).setVisibility(View.GONE);
                 pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.VISIBLE);
+
+                findViewById(R.id.nearby_agents).setVisibility(View.GONE);
                 findViewById(R.id.press_exchange_to).setVisibility(View.VISIBLE);
+
+                pressedPlayerCard.setOnClickListener(null);
+                pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(nextOnClickListener());
+                break;
+
+            case 9:
+                pressedPlayerCard.findViewById(R.id.interaction_buttons)
+                        .findViewById(R.id.gameplay_exchange_button)
+                        .setBackgroundResource(R.drawable.exchange_button_greyed);
+
+                pressedPlayerCard.findViewById(R.id.exchange_requested).setVisibility(View.VISIBLE);
+
+                findViewById(R.id.press_exchange_to).setVisibility(View.GONE);
+                findViewById(R.id.you_can_have_one_request_at_a_time).setVisibility(View.VISIBLE);
+
+                pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(null);
+                findViewById(R.id.clicker).setVisibility(View.VISIBLE);
+                findViewById(R.id.clicker).setOnClickListener(nextOnClickListener());
                 break;
 
             case 10:
                 pressedPlayerCard.findViewById(R.id.interaction_buttons)
                         .findViewById(R.id.gameplay_exchange_button)
-                        .setBackgroundResource(R.drawable.exchange_button_greyed);
+                        .setBackgroundResource(R.drawable.exchange_button);
 
-                findViewById(R.id.press_exchange_to).setVisibility(View.GONE);
-                findViewById(R.id.you_can_have_one_request_at_a_time).setVisibility(View.VISIBLE);
+                pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.GONE);
+                CircleProgressBar bar1 = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
+                CircleProgressBar bar2 = findViewById(R.id.player_card_3).findViewById(R.id.tutorial_player_intel_circle_0);
+
+                pressedPlayerCard.findViewById(R.id.exchange_requested).setVisibility(View.INVISIBLE);
+
+                bar1.setProgress(25);
+                bar1.setText("25");
+                bar2.setProgress(10);
+                bar2.setText("10");
+
+                restoreExamplePlayerCard();
+                restore3rdPlayerCard();
+
+                findViewById(R.id.you_can_have_one_request_at_a_time).setVisibility(View.GONE);
+                findViewById(R.id.you_gained_evidence_from_exchange).setVisibility(View.VISIBLE);
                 break;
 
             case 11:
-                pressedPlayerCard.findViewById(R.id.interaction_buttons)
-                        .findViewById(R.id.gameplay_exchange_button)
-                        .setBackgroundResource(R.drawable.exchange_button);
+                findViewById(R.id.clicker).setVisibility(View.GONE);
+                findViewById(R.id.clicker).setOnClickListener(null);
 
-                findViewById(R.id.you_can_have_one_request_at_a_time).setVisibility(View.GONE);
-                findViewById(R.id.you_can_try_intercepting).setVisibility(View.VISIBLE);
+                findViewById(R.id.exchange_request_overlay).setVisibility(View.VISIBLE);
+                findViewById(R.id.accept_exchange_button).setOnClickListener(nextOnClickListener());
+
+                findViewById(R.id.you_gained_evidence_from_exchange).setVisibility(View.GONE);
+                findViewById(R.id.Tilly_requested_an_exchange).setVisibility(View.VISIBLE);
+
+                pressedPlayerCard.setOnClickListener(null);
+                pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(nextOnClickListener());
                 break;
 
             case 12:
+                findViewById(R.id.accept_exchange_button).setOnClickListener(null);
+                findViewById(R.id.exchange_request_overlay).setVisibility(View.GONE);
+                findViewById(R.id.clicker).setVisibility(View.VISIBLE);
+                findViewById(R.id.clicker).setOnClickListener(nextOnClickListener());
+
+                bar1 = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
+                bar2 = findViewById(R.id.player_card_3).findViewById(R.id.tutorial_player_intel_circle_0);
+
+                bar1.setProgress(50);
+                bar1.setText("50");
+                bar2.setProgress(20);
+                bar2.setText("20");
+
+                findViewById(R.id.Tilly_requested_an_exchange).setVisibility(View.GONE);
+                findViewById(R.id.you_gained_evidence_from_exchange).setVisibility(View.VISIBLE);
+                break;
+
+            case 13:
+                findViewById(R.id.clicker).setVisibility(View.GONE);
+                findViewById(R.id.clicker).setOnClickListener(null);
+                pressedPlayerCard.setOnClickListener(nextOnClickListener());
+
+                findViewById(R.id.you_gained_evidence_from_exchange).setVisibility(View.GONE);
+                findViewById(R.id.Tilly_is_interacting_with_Louis).setVisibility(View.VISIBLE);
+                break;
+
+            case 14:
+                darkenExamplePlayerCard();
+                darken3rdPlayerCard();
+
+                pressedPlayerCard.setOnClickListener(null);
+                pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.VISIBLE);
+                pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(null);
+                pressedPlayerCard.findViewById(R.id.gameplay_intercept_button).setOnClickListener(nextOnClickListener());
+
+                findViewById(R.id.Tilly_is_interacting_with_Louis).setVisibility(View.GONE);
+                findViewById(R.id.tap_intercept).setVisibility(View.VISIBLE);
+                break;
+
+            case 15:
                 pressedPlayerCard.findViewById(R.id.interaction_buttons)
                         .findViewById(R.id.gameplay_intercept_button)
                         .setBackgroundResource(R.drawable.intercept_button_greyed);
 
-                findViewById(R.id.you_can_try_intercepting).setVisibility(View.GONE);
-                findViewById(R.id.you_can_only_have_one_intercept_at_a_time).setVisibility(View.VISIBLE);
+                pressedPlayerCard.findViewById(R.id.gameplay_intercept_button).setOnClickListener(null);
+                findViewById(R.id.clicker).setVisibility(View.VISIBLE);
+                findViewById(R.id.clicker).setOnClickListener(nextOnClickListener());
+
+                findViewById(R.id.tap_intercept).setVisibility(View.GONE);
+                findViewById(R.id.one_intercept_at_a_time).setVisibility(View.VISIBLE);
                 break;
 
-            case 13:
+            case 16:
                 pressedPlayerCard.findViewById(R.id.interaction_buttons)
                         .findViewById(R.id.gameplay_intercept_button)
                         .setBackgroundResource(R.drawable.intercept_button);
 
-                findViewById(R.id.you_can_only_have_one_intercept_at_a_time).setVisibility(View.GONE);
-                findViewById(R.id.you_can_try_exposing).setVisibility(View.VISIBLE);
-                break;
-
-            case 14:
-                darkenPressedPlayerCard();
-                restoreQuestionIcon();
-
                 pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.GONE);
-                findViewById(R.id.you_can_try_exposing).setVisibility(View.GONE);
-                findViewById(R.id.press_question_mark_to).setVisibility(View.VISIBLE);
+
+                bar1 = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
+                bar2 = findViewById(R.id.player_card_3).findViewById(R.id.tutorial_player_intel_circle_0);
+
+                bar1.setProgress(100);
+                bar1.setText("100");
+                bar2.setProgress(30);
+                bar2.setText("30");
+
+                restore3rdPlayerCard();
+                restoreExamplePlayerCard();
+                restorePressedPlayerCard();
+
+                findViewById(R.id.one_intercept_at_a_time).setVisibility(View.GONE);
+                findViewById(R.id.intercept_successful).setVisibility(View.VISIBLE);
                 break;
 
-            case 15:
+            case 17:
+                pressedPlayerCard.setOnClickListener(nextOnClickListener());
+                findViewById(R.id.clicker).setVisibility(View.GONE);
+                findViewById(R.id.clicker).setOnClickListener(null);
+
+                findViewById(R.id.intercept_successful).setVisibility(View.GONE);
+                findViewById(R.id.your_target_has_been_exposed).setVisibility(View.VISIBLE);
+                break;
+
+            case 18:
+                pressedPlayerCard.setOnClickListener(null);
+                pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.VISIBLE);
+
+                findViewById(R.id.gameplay_expose_button).setOnClickListener(nextOnClickListener());
+
+                findViewById(R.id.your_target_has_been_exposed).setVisibility(View.GONE);
+                findViewById(R.id.expose_your_target).setVisibility(View.VISIBLE);
+                break;
+
+            case 19:
+                pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.GONE);
+                pressedPlayerCard.findViewById(R.id.interaction_buttons).setOnClickListener(null);
+
+                bar1 = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
+                bar1.setProgress(0);
+                bar1.setText("0");
+
+                restoreExamplePlayerCard();
+                restorePressedPlayerCard();
+                restore3rdPlayerCard();
+
+                findViewById(R.id.clicker).setVisibility(View.VISIBLE);
+                findViewById(R.id.clicker).setOnClickListener(nextOnClickListener());
+
+                findViewById(R.id.expose_your_target).setVisibility(View.GONE);
+                findViewById(R.id.expose_was_successful).setVisibility(View.VISIBLE);
+                break;
+
+            case 20:
+                darkenExamplePlayerCard();
+                darkenPressedPlayerCard();
+                darken3rdPlayerCard();
+
+                findViewById(R.id.expose_was_successful).setVisibility(View.GONE);
+                findViewById(R.id.good_luck).setVisibility(View.VISIBLE);
+                break;
+
+            case 21:
                 Intent intent = new Intent(TutorialActivity.this, CreateProfileActivity.class);
                 startActivity(intent);
                 break;
         }
         currentStep++;
+    }
+
+    private View.OnClickListener nextOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                next();
+            }
+        };
     }
 
     private void darkenBackground() {
@@ -236,16 +385,10 @@ public class TutorialActivity extends AppCompatActivity {
 
         // game zone logo:
         ((ImageView) findViewById(R.id.current_game_zone_logo))
-                .setColorFilter(ContextCompat.getColor(this, R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
+               .setColorFilter(ContextCompat.getColor(this, R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
     }
 
     private void restoreStatusBar() {
-        // agent name:
-        ((TextView) findViewById(R.id.gameplay_player_name_title))
-                .setTextColor(ContextCompat.getColor(this, R.color.gameplay_player_name));
-        ((TextView) findViewById(R.id.gameplay_player_name))
-                .setTextColor(ContextCompat.getColor(this, R.color.gameplay_player_name));
-
         // stats:
         LinearLayout stats = findViewById(R.id.gameplay_player_stats);
         for (int i = 0; i < stats.getChildCount(); i++) {
@@ -255,7 +398,7 @@ public class TutorialActivity extends AppCompatActivity {
             }
         }
 
-        ((ImageView) findViewById(R.id.current_game_zone_logo)).clearColorFilter();
+        //((ImageView) findViewById(R.id.current_game_zone_logo)).clearColorFilter();
     }
 
     private void darkenTargetBox() {
@@ -304,11 +447,18 @@ public class TutorialActivity extends AppCompatActivity {
 
         TextView codename = playerCard.findViewById(R.id.player_hacker_name);
         codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text_darkened));
-        codename.setBackgroundColor(ContextCompat.getColor(this, R.color.player_is_target_codename_darkened));
+        codename.setBackgroundColor(ContextCompat.getColor(this, R.color.player_is_not_target_codename_darkened));
 
         CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.tutorial_player_intel_circle_100);
-        circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence_darkened));
-        circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence_text_darkened));
+        if (circleProgressBar.getProgress() >= 100) {
+            circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence_darkened));
+            circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence_text_darkened));
+        }
+        else {
+            circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar_darkened));
+            circleProgressBar.setBackgroundColor(ContextCompat.getColor(this, R.color.progress_bar_background_darkened));
+            circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_text_darkened));
+        }
     }
 
     private void restoreExamplePlayerCard() {
@@ -323,11 +473,38 @@ public class TutorialActivity extends AppCompatActivity {
 
         TextView codename = playerCard.findViewById(R.id.player_hacker_name);
         codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text));
-        codename.setBackgroundColor(ContextCompat.getColor(this, R.color.player_is_target_codename));
+        codename.setBackgroundColor(ContextCompat.getColor(this, R.color.player_is_not_target_codename));
 
         CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.tutorial_player_intel_circle_100);
-        circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence));
-        circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence_text));
+        if (circleProgressBar.getProgress() >= 100) {
+            circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence));
+            circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence_text));
+        }
+        else {
+            circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar));
+            circleProgressBar.setBackgroundColor(ContextCompat.getColor(this, R.color.progress_bar_background));
+            circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_text));
+        }
+    }
+
+    private void restoreExamplePlayerCardEvidence() {
+        View playerCard = findViewById(R.id.player_card_1);
+
+        CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.tutorial_player_intel_circle_100);
+        if (circleProgressBar.getProgress() >= 100) {
+            circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence));
+            circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence_text));
+
+            TextView codename = playerCard.findViewById(R.id.player_hacker_name);
+            codename.setBackgroundColor(ContextCompat.getColor(this, R.color.player_is_not_target_codename));
+            codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text));
+            codename.setVisibility(View.VISIBLE);
+        }
+        else {
+            circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar));
+            circleProgressBar.setBackgroundColor(ContextCompat.getColor(this, R.color.progress_bar_background));
+            circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_text));
+        }
     }
 
     private void darkenPressedPlayerCard() {
@@ -385,9 +562,10 @@ public class TutorialActivity extends AppCompatActivity {
         codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text_darkened));
         codename.setBackgroundColor(ContextCompat.getColor(this, R.color.player_is_not_target_codename_darkened));
 
-        CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.tutorial_player_intel_circle_100);
-        circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence_darkened));
-        circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence_text_darkened));
+        CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.tutorial_player_intel_circle_0);
+        circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar_darkened));
+        circleProgressBar.setBackgroundColor(ContextCompat.getColor(this, R.color.progress_bar_background_darkened));
+        circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_text_darkened));
     }
 
     private void restore3rdPlayerCard() {
@@ -404,9 +582,10 @@ public class TutorialActivity extends AppCompatActivity {
         codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text));
         codename.setBackgroundColor(ContextCompat.getColor(this, R.color.player_is_not_target_codename));
 
-        CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.tutorial_player_intel_circle_100);
-        circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence));
-        circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_complete_evidence_text));
+        CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.tutorial_player_intel_circle_0);
+        circleProgressBar.setProgressColor(ContextCompat.getColor(this, R.color.progress_bar));
+        circleProgressBar.setBackgroundColor(ContextCompat.getColor(this, R.color.progress_bar_background));
+        circleProgressBar.setTextColor(ContextCompat.getColor(this, R.color.progress_bar_text));
     }
 
     private void darkenFarAwayPlayerCards() {
