@@ -684,21 +684,21 @@ public class PlayerListView implements IPlayerListView {
 
     @Override
     public void changePlayerLocation(String playerId, int flag){
-        if(playerIdLocationMap.containsKey(playerId)){
-            playerIdLocationMap.remove(playerId);
-            playerIdLocationMap.put(playerId,flag);
-            //Can't use replace due to API level
+        if(!playerId.isEmpty()) {
+            if (playerIdLocationMap.containsKey(playerId)) {
+                playerIdLocationMap.remove(playerId);
+                playerIdLocationMap.put(playerId, flag);
+                //Can't use replace due to API level
+            } else {
+                playerIdLocationMap.put(playerId, flag);
+            }
+            ImageView iv = getPlayerFlagView(playerId);
+
+            int imageId = getFlag(flag);
+
+
+            iv.setImageResource(imageId);
         }
-        else{
-            playerIdLocationMap.put(playerId,flag);
-        }
-
-        ImageView iv = getPlayerFlagView(playerId);
-
-        int imageId = getFlag(flag);
-
-
-        iv.setImageResource(imageId);
     }
 
     private void updateAllPlayerLocation(){
