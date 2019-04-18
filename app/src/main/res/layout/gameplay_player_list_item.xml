@@ -36,7 +36,7 @@
                     <ImageView
                         android:id="@+id/player_card_flag"
                         android:src="@drawable/beacon_valor"
-                        android:layout_width="5pt"
+                        android:layout_width="18dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         />
