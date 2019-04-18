@@ -103,13 +103,14 @@
                 android:textColor="#fff"
                 android:textSize="9pt"
                 android:gravity="center"
-                android:text="Welcome to Spy Exposé."/>
+                android:textAlignment="textStart"
+                android:text="Welcome to Spywhere.\nTap to begin your training."/>
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- This is your status -->
+    <!-- This is your position and reputation -->
     <RelativeLayout
-        android:id="@+id/this_is_your_status"
+        android:id="@+id/this_is_your_position_and_reputation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
@@ -145,7 +146,51 @@
                 android:textColor="#fff"
                 android:textSize="9pt"
                 android:gravity="center"
-                android:text="This is your status.\n Gain the most reputation to win the game!"/>
+                android:textAlignment="textStart"
+                android:text="This is your position and reputation.\nGet the most reputation to win!"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- This is your current location -->
+    <RelativeLayout
+        android:id="@+id/this_is_your_current_location"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/neutral_full_pop_up"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:layout_marginTop="28pt"
+
+            android:layout_marginLeft="7pt"
+            android:layout_marginRight="7pt"
+            android:layout_marginBottom="7pt"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="28pt"
+                android:layout_height="28pt"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/agency_spy_logo" />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="#fff"
+                android:textSize="9pt"
+                android:gravity="center"
+                android:textAlignment="textStart"
+                android:text="This is your current location"/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -317,7 +362,7 @@
                 android:textColor="#fff"
                 android:textSize="9pt"
                 android:gravity="center"
-                android:text="This icon displays how much evidence you’ve gathered about an agent."/>
+                android:text="This is how much evidence you've gathered about an agent."/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -403,93 +448,7 @@
                 android:textColor="#fff"
                 android:textSize="9pt"
                 android:gravity="center"
-                android:text="These agents are nearby, tap one to interact."/>
-        </LinearLayout>
-    </RelativeLayout>
-
-    <!-- These agents are far away, go find them to interact!. -->
-    <RelativeLayout
-        android:id="@+id/faraway_agents"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/neutral_full_pop_up"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-
-            android:layout_marginTop="120pt"
-            android:layout_marginLeft="7pt"
-            android:layout_marginRight="7pt"
-            android:layout_marginBottom="7pt"
-
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="28pt"
-                android:layout_height="28pt"
-                android:layout_marginEnd="15dp"
-                android:src="@drawable/agency_spy_logo" />
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sharetech"
-                android:textColor="#fff"
-                android:textSize="9pt"
-                android:gravity="center"
-                android:text="These agents are far away, go find them to interact!"/>
-        </LinearLayout>
-    </RelativeLayout>
-
-    <!-- Press the question mark to replay the tutorial at any time! -->
-    <RelativeLayout
-        android:id="@+id/press_question_mark_to"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/neutral_full_pop_up"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-
-            android:layout_marginTop="27pt"
-            android:layout_marginLeft="7pt"
-            android:layout_marginRight="7pt"
-            android:layout_marginBottom="7pt"
-
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="28pt"
-                android:layout_height="28pt"
-                android:layout_marginEnd="15dp"
-                android:src="@drawable/agency_spy_logo" />
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sharetech"
-                android:textColor="#fff"
-                android:textSize="9pt"
-                android:gravity="center"
-                android:text="Press the question mark to replay the tutorial at any time!"/>
+                android:text="These agents are nearby, tap Tilly to interact."/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -575,13 +534,142 @@
                 android:textColor="#fff"
                 android:textSize="9pt"
                 android:gravity="center"
-                android:text="You can only have one Exchange Request at a time!"/>
+                android:text="Note: You can only have one exchange at a time!"/>
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- You can also try to Intercept evidence currently being sent by this agent. -->
+    <!-- You gained evidence from your exchange -->
     <RelativeLayout
-        android:id="@+id/you_can_try_intercepting"
+        android:id="@+id/you_gained_evidence_from_exchange"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/neutral_full_pop_up"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+
+            android:layout_marginTop="165pt"
+            android:layout_marginLeft="7pt"
+            android:layout_marginRight="7pt"
+            android:layout_marginBottom="7pt"
+
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="28pt"
+                android:layout_height="28pt"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/agency_spy_logo" />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="#fff"
+                android:textSize="9pt"
+                android:gravity="center"
+                android:text="You gained evidence on Tilly from your exchange.\nTilly also gave you evidence on Louis."/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Tilly requested an exchange with you -->
+    <RelativeLayout
+        android:id="@+id/Tilly_requested_an_exchange"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/neutral_full_pop_up"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+
+            android:layout_marginTop="165pt"
+            android:layout_marginLeft="7pt"
+            android:layout_marginRight="7pt"
+            android:layout_marginBottom="7pt"
+
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="28pt"
+                android:layout_height="28pt"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/agency_spy_logo" />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="#fff"
+                android:textSize="9pt"
+                android:gravity="center"
+                android:text="Tilly requested an exchange with you!\nGo ahead and accept it!"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Tilly is interacting with Louis -->
+    <RelativeLayout
+        android:id="@+id/Tilly_is_interacting_with_Louis"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/neutral_full_pop_up"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+
+            android:layout_marginTop="165pt"
+            android:layout_marginLeft="7pt"
+            android:layout_marginRight="7pt"
+            android:layout_marginBottom="7pt"
+
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="28pt"
+                android:layout_height="28pt"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/agency_spy_logo" />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="#fff"
+                android:textSize="9pt"
+                android:gravity="center"
+                android:text="Tilly is exchanging with Louis.\nTap Tilly again to intercept the exchange!"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Tap intercept to deploy the spyware. -->
+    <RelativeLayout
+        android:id="@+id/tap_intercept"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
@@ -618,13 +706,13 @@
                 android:textColor="#fff"
                 android:textSize="9pt"
                 android:gravity="center"
-                android:text="You can also try to Intercept evidence currently being sent by this agent."/>
+                android:text="Tap Intercept to deploy the spyware."/>
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- You can only have one Intercept active at once. -->
+    <!-- You can only have one intercept active at once. -->
     <RelativeLayout
-        android:id="@+id/you_can_only_have_one_intercept_at_a_time"
+        android:id="@+id/one_intercept_at_a_time"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
@@ -661,13 +749,13 @@
                 android:textColor="#fff"
                 android:textSize="9pt"
                 android:gravity="center"
-                android:text="You can only have one Intercept active at once."/>
+                android:text="Note: You can only have one intercept active at once."/>
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- If you have complete evidence on your target, spend your evidence to Expose them and increase your reputation. -->
+    <!-- Your intercept was successful. -->
     <RelativeLayout
-        android:id="@+id/you_can_try_exposing"
+        android:id="@+id/intercept_successful"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
@@ -704,7 +792,175 @@
                 android:textColor="#fff"
                 android:textSize="9pt"
                 android:gravity="center"
-                android:text="If you have complete evidence on your target, spend your evidence to Expose them and increase your reputation."/>
+                android:text="Your intercept was successful!\nYou gained evidence on Tilly and Louis."/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Your target has been exposed. -->
+    <RelativeLayout
+        android:id="@+id/your_target_has_been_exposed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/neutral_full_pop_up"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+
+            android:layout_marginTop="159pt"
+            android:layout_marginLeft="7pt"
+            android:layout_marginRight="7pt"
+            android:layout_marginBottom="7pt"
+
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="28pt"
+                android:layout_height="28pt"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/agency_spy_logo" />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="#fff"
+                android:textSize="9pt"
+                android:gravity="center"
+                android:text="You have discovered Tilly's codename, and they are your target!\nTap on Tilly to expose her identity."/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Expose your target. -->
+    <RelativeLayout
+        android:id="@+id/expose_your_target"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/neutral_full_pop_up"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+
+            android:layout_marginTop="159pt"
+            android:layout_marginLeft="7pt"
+            android:layout_marginRight="7pt"
+            android:layout_marginBottom="7pt"
+
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="28pt"
+                android:layout_height="28pt"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/agency_spy_logo" />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="#fff"
+                android:textSize="9pt"
+                android:gravity="center"
+                android:text="Expose your target, releasing your evidence and increasing your reputation"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Expose was successful. -->
+    <RelativeLayout
+        android:id="@+id/expose_was_successful"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/neutral_full_pop_up"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+
+            android:layout_marginTop="159pt"
+            android:layout_marginLeft="7pt"
+            android:layout_marginRight="7pt"
+            android:layout_marginBottom="7pt"
+
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="28pt"
+                android:layout_height="28pt"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/agency_spy_logo" />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="#fff"
+                android:textSize="9pt"
+                android:gravity="center"
+                android:text="Your expose was successful!\nYou gained reputation and will be assigned your next target."/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Good luck! -->
+    <RelativeLayout
+        android:id="@+id/good_luck"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:background="@drawable/neutral_full_pop_up"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:layout_margin="7pt"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="28pt"
+                android:layout_height="28pt"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/agency_spy_logo" />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sharetech"
+                android:textColor="#fff"
+                android:textSize="9pt"
+                android:gravity="center"
+                android:textAlignment="textStart"
+                android:text="The safety of the world is in your hands. Good luck!"/>
         </LinearLayout>
     </RelativeLayout>
 
