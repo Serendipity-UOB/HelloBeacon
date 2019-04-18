@@ -100,6 +100,96 @@
                         android:textColor="#93bdcf"
                         android:textSize="6pt"/>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/exchange_accepted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/exchange_accepted_icon"
+                        android:tint="@color/progress_bar_increase"
+                        android:layout_width="5pt"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/exchange"
+                        android:gravity="center"
+                        android:layout_marginEnd="5dp" />
+                    <TextView
+                        android:id="@+id/exchange_accepted_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sharetech"
+                        android:text="Exchange accepted\u00A0"
+                        android:textStyle="italic"
+                        android:textColor="@color/progress_bar_increase"
+                        android:textSize="6pt"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/intercept_pending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/intercept_pending_icon"
+                        android:tint="#93bdcf"
+                        android:layout_width="5pt"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/intercept"
+                        android:gravity="center"
+                        android:layout_marginEnd="5dp" />
+                    <TextView
+                        android:id="@+id/intercept_pending_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sharetech"
+                        android:text="Intercept pending\u00A0"
+                        android:textStyle="italic"
+                        android:textColor="#93bdcf"
+                        android:textSize="6pt"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/intercept_success"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/intercept_success_icon"
+                        android:tint="@color/progress_bar_increase"
+                        android:layout_width="5pt"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/intercept"
+                        android:gravity="center"
+                        android:layout_marginEnd="5dp" />
+                    <TextView
+                        android:id="@+id/intercept_success_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sharetech"
+                        android:text="Intercept success\u00A0"
+                        android:textStyle="italic"
+                        android:textColor="@color/progress_bar_increase"
+                        android:textSize="6pt"/>
+                </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
 

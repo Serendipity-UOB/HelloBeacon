@@ -188,6 +188,7 @@ public class TutorialActivity extends AppCompatActivity {
             case 10:
                 /* You've gained evidence from your exchange request */
                 exchangeRequestComplete();
+                findViewById(R.id.exchange_accepted).setVisibility(View.VISIBLE);
                 closeInteractionButtons();
 
                 restoreExamplePlayerCard();
@@ -254,6 +255,8 @@ public class TutorialActivity extends AppCompatActivity {
                 /* Only one intercept may be active at a time */
                 pressedInterceptButton();
 
+                findViewById(R.id.intercept_pending).setVisibility(View.VISIBLE);
+
                 pressedPlayerCard.findViewById(R.id.gameplay_intercept_button).setOnClickListener(null);
                 enableOnTapProgression();
 
@@ -264,6 +267,9 @@ public class TutorialActivity extends AppCompatActivity {
             case 16:
                 /* Intercept on Tilly and Louis was successful */
                 interceptAttemptComplete();
+
+                findViewById(R.id.intercept_pending).setVisibility(View.GONE);
+                findViewById(R.id.intercept_success).setVisibility(View.VISIBLE);
 
                 closeInteractionButtons();
 
@@ -750,7 +756,8 @@ public class TutorialActivity extends AppCompatActivity {
                     bar.setTextColor(ContextCompat.getColor(context, R.color.progress_bar_text));
                 }
                 bar.setText(Integer.toString(finalEvidence));
-
+                findViewById(R.id.intercept_success).setVisibility(View.GONE);
+                findViewById(R.id.exchange_accepted).setVisibility(View.GONE);
             }
         }, 1000);
     }
