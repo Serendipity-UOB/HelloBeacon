@@ -73,6 +73,7 @@ public class TutorialActivity extends AppCompatActivity {
     private void next() {
         switch (currentStep) {
             case 0:
+                /* Welcome to SpyWhere */
                 darkenStatusBar();
                 darkenTargetBox();
                 darkenTimeLeft();
@@ -86,6 +87,7 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 1:
+                /* This is your position and reputation */
                 restoreStatusBar();
 
                 findViewById(R.id.welcome_to_spy_expose).setVisibility(View.GONE);
@@ -93,6 +95,7 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 2:
+                /* This is your target */
                 darkenStatusBar();
                 restoreTargetBox();
 
@@ -101,6 +104,7 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 3:
+                /* This is the remaining game time */
                 darkenTargetBox();
                 restoreTimeLeft();
 
@@ -109,6 +113,7 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 4:
+                /* This is another agent */
                 darkenTimeLeft();
                 restoreExamplePlayerCard();
 
@@ -117,6 +122,7 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 5:
+                /* This is the evidence bar */
                 darkenExamplePlayerCard();
                 restoreExamplePlayerCardEvidence();
 
@@ -125,6 +131,7 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 6:
+                /* If you have 100 evidence, the agent's codename is revealed */
                 CircleProgressBar bar = findViewById(R.id.player_card_1).findViewById(R.id.tutorial_player_intel_circle_100);
                 bar.setProgress(100);
                 bar.setText("100");
@@ -135,66 +142,54 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 7:
+                /* These are your nearby agents */
                 restoreExamplePlayerCard();
                 restorePressedPlayerCard();
                 restore3rdPlayerCard();
 
-                findViewById(R.id.codename_reveal).setVisibility(View.GONE);
-                findViewById(R.id.nearby_agents).setVisibility(View.VISIBLE);
-
-                findViewById(R.id.clicker).setOnClickListener(null);
-                findViewById(R.id.clicker).setVisibility(View.GONE);
+                disableOnTapProgression();
                 pressedPlayerCard.setOnClickListener(nextOnClickListener());
 
+                findViewById(R.id.codename_reveal).setVisibility(View.GONE);
+                findViewById(R.id.nearby_agents).setVisibility(View.VISIBLE);
                 break;
 
             case 8:
+                /* Tap exchange to send an exchange request to Tilly */
                 darkenExamplePlayerCard();
                 darken3rdPlayerCard();
                 darkenFarAwayPlayerCards();
 
                 restorePressedPlayerCard();
+                openInteractionButtons();
 
-                //findViewById(R.id.faraway_agents).setVisibility(View.GONE);
-                pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.VISIBLE);
+                pressedPlayerCard.setOnClickListener(null);
+                pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(nextOnClickListener());
 
                 findViewById(R.id.nearby_agents).setVisibility(View.GONE);
                 findViewById(R.id.press_exchange_to).setVisibility(View.VISIBLE);
 
-                pressedPlayerCard.setOnClickListener(null);
-                pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(nextOnClickListener());
                 break;
 
             case 9:
-                pressedPlayerCard.findViewById(R.id.interaction_buttons)
-                        .findViewById(R.id.gameplay_exchange_button)
-                        .setBackgroundResource(R.drawable.exchange_button_greyed);
+                /* You can only have one exchange request active at a time */
+                pressedExchangeButton();
 
-                pressedPlayerCard.findViewById(R.id.exchange_requested).setVisibility(View.VISIBLE);
+                pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(null);
+                enableOnTapProgression();
 
                 findViewById(R.id.press_exchange_to).setVisibility(View.GONE);
                 findViewById(R.id.you_can_have_one_request_at_a_time).setVisibility(View.VISIBLE);
 
-                pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(null);
-                findViewById(R.id.clicker).setVisibility(View.VISIBLE);
-                findViewById(R.id.clicker).setOnClickListener(nextOnClickListener());
                 break;
 
             case 10:
-                pressedPlayerCard.findViewById(R.id.interaction_buttons)
-                        .findViewById(R.id.gameplay_exchange_button)
-                        .setBackgroundResource(R.drawable.exchange_button);
+                /* You've gained evidence from your exchange request */
+                exchangeRequestComplete();
+                closeInteractionButtons();
 
-                pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.GONE);
-                CircleProgressBar bar1 = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
-                CircleProgressBar bar2 = findViewById(R.id.player_card_3).findViewById(R.id.tutorial_player_intel_circle_0);
-
-                pressedPlayerCard.findViewById(R.id.exchange_requested).setVisibility(View.INVISIBLE);
-
-                bar1.setProgress(25);
-                bar1.setText("25");
-                bar2.setProgress(10);
-                bar2.setText("10");
+                increaseTillyEvidence(25);
+                increaseLouisEvidence(10);
 
                 restoreExamplePlayerCard();
                 restore3rdPlayerCard();
@@ -204,40 +199,35 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 11:
-                findViewById(R.id.clicker).setVisibility(View.GONE);
-                findViewById(R.id.clicker).setOnClickListener(null);
+                /* Tilly requested an exchange; Accept it! */
+                disableOnTapProgression();
+
+                pressedPlayerCard.setOnClickListener(null);
+                pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(nextOnClickListener());
 
                 findViewById(R.id.exchange_request_overlay).setVisibility(View.VISIBLE);
                 findViewById(R.id.accept_exchange_button).setOnClickListener(nextOnClickListener());
 
                 findViewById(R.id.you_gained_evidence_from_exchange).setVisibility(View.GONE);
                 findViewById(R.id.Tilly_requested_an_exchange).setVisibility(View.VISIBLE);
-
-                pressedPlayerCard.setOnClickListener(null);
-                pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(nextOnClickListener());
                 break;
 
             case 12:
+                /* You gained more evidence! */
                 findViewById(R.id.accept_exchange_button).setOnClickListener(null);
                 findViewById(R.id.exchange_request_overlay).setVisibility(View.GONE);
-                findViewById(R.id.clicker).setVisibility(View.VISIBLE);
-                findViewById(R.id.clicker).setOnClickListener(nextOnClickListener());
+                enableOnTapProgression();
 
-                bar1 = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
-                bar2 = findViewById(R.id.player_card_3).findViewById(R.id.tutorial_player_intel_circle_0);
-
-                bar1.setProgress(50);
-                bar1.setText("50");
-                bar2.setProgress(20);
-                bar2.setText("20");
+                increaseTillyEvidence(25);
+                increaseLouisEvidence(10);
 
                 findViewById(R.id.Tilly_requested_an_exchange).setVisibility(View.GONE);
                 findViewById(R.id.you_gained_evidence_from_exchange).setVisibility(View.VISIBLE);
                 break;
 
             case 13:
-                findViewById(R.id.clicker).setVisibility(View.GONE);
-                findViewById(R.id.clicker).setOnClickListener(null);
+                /* Tilly is interacting with Louis; now is your change to run an Intercept! */
+                disableOnTapProgression();
                 pressedPlayerCard.setOnClickListener(nextOnClickListener());
 
                 findViewById(R.id.you_gained_evidence_from_exchange).setVisibility(View.GONE);
@@ -245,11 +235,12 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 14:
+                /* Tap intercept */
                 darkenExamplePlayerCard();
                 darken3rdPlayerCard();
+                openInteractionButtons();
 
                 pressedPlayerCard.setOnClickListener(null);
-                pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.VISIBLE);
                 pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(null);
                 pressedPlayerCard.findViewById(R.id.gameplay_intercept_button).setOnClickListener(nextOnClickListener());
 
@@ -258,32 +249,24 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 15:
-                pressedPlayerCard.findViewById(R.id.interaction_buttons)
-                        .findViewById(R.id.gameplay_intercept_button)
-                        .setBackgroundResource(R.drawable.intercept_button_greyed);
+                /* Only one intercept may be active at a time */
+                pressedInterceptButton();
 
                 pressedPlayerCard.findViewById(R.id.gameplay_intercept_button).setOnClickListener(null);
-                findViewById(R.id.clicker).setVisibility(View.VISIBLE);
-                findViewById(R.id.clicker).setOnClickListener(nextOnClickListener());
+                enableOnTapProgression();
 
                 findViewById(R.id.tap_intercept).setVisibility(View.GONE);
                 findViewById(R.id.one_intercept_at_a_time).setVisibility(View.VISIBLE);
                 break;
 
             case 16:
-                pressedPlayerCard.findViewById(R.id.interaction_buttons)
-                        .findViewById(R.id.gameplay_intercept_button)
-                        .setBackgroundResource(R.drawable.intercept_button);
+                /* Intercept on Tilly and Louis was successful */
+                interceptAttemptComplete();
 
-                pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.GONE);
+                closeInteractionButtons();
 
-                bar1 = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
-                bar2 = findViewById(R.id.player_card_3).findViewById(R.id.tutorial_player_intel_circle_0);
-
-                bar1.setProgress(100);
-                bar1.setText("100");
-                bar2.setProgress(30);
-                bar2.setText("30");
+                increaseTillyEvidence(50);
+                increaseLouisEvidence(10);
 
                 restore3rdPlayerCard();
                 restoreExamplePlayerCard();
@@ -294,17 +277,18 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 17:
+                /* Your target's codename has been revealed */
                 pressedPlayerCard.setOnClickListener(nextOnClickListener());
-                findViewById(R.id.clicker).setVisibility(View.GONE);
-                findViewById(R.id.clicker).setOnClickListener(null);
+                disableOnTapProgression();
 
                 findViewById(R.id.intercept_successful).setVisibility(View.GONE);
                 findViewById(R.id.your_target_has_been_exposed).setVisibility(View.VISIBLE);
                 break;
 
             case 18:
+                /* Click Expose! */
                 pressedPlayerCard.setOnClickListener(null);
-                pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.VISIBLE);
+                openInteractionButtons();
 
                 findViewById(R.id.gameplay_expose_button).setOnClickListener(nextOnClickListener());
 
@@ -313,25 +297,22 @@ public class TutorialActivity extends AppCompatActivity {
                 break;
 
             case 19:
-                pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.GONE);
-                pressedPlayerCard.findViewById(R.id.interaction_buttons).setOnClickListener(null);
-
-                bar1 = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
-                bar1.setProgress(0);
-                bar1.setText("0");
+                /* Expose successful */
+                closeInteractionButtons();
+                releaseTillyEvidence();
 
                 restoreExamplePlayerCard();
                 restorePressedPlayerCard();
                 restore3rdPlayerCard();
 
-                findViewById(R.id.clicker).setVisibility(View.VISIBLE);
-                findViewById(R.id.clicker).setOnClickListener(nextOnClickListener());
+                enableOnTapProgression();
 
                 findViewById(R.id.expose_your_target).setVisibility(View.GONE);
                 findViewById(R.id.expose_was_successful).setVisibility(View.VISIBLE);
                 break;
 
             case 20:
+                /* Good luck my doods */
                 darkenExamplePlayerCard();
                 darkenPressedPlayerCard();
                 darken3rdPlayerCard();
@@ -644,5 +625,71 @@ public class TutorialActivity extends AppCompatActivity {
         circleProgressBar.setProgressColor(progressBarColor);
         circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
         circleProgressBar.setTextColor(progressBarTextColor);
+    }
+
+    private void disableOnTapProgression() {
+        findViewById(R.id.clicker).setOnClickListener(null);
+        findViewById(R.id.clicker).setVisibility(View.GONE);
+    }
+
+    private void enableOnTapProgression() {
+        findViewById(R.id.clicker).setVisibility(View.VISIBLE);
+        findViewById(R.id.clicker).setOnClickListener(nextOnClickListener());
+    }
+
+    private void openInteractionButtons() {
+        pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.VISIBLE);
+    }
+
+    private void closeInteractionButtons() {
+        pressedPlayerCard.findViewById(R.id.interaction_buttons).setVisibility(View.GONE);
+    }
+
+    private void pressedExchangeButton() {
+        pressedPlayerCard.findViewById(R.id.interaction_buttons)
+                .findViewById(R.id.gameplay_exchange_button)
+                .setBackgroundResource(R.drawable.exchange_button_greyed);
+
+        pressedPlayerCard.findViewById(R.id.exchange_requested).setVisibility(View.VISIBLE);
+    }
+
+    private void exchangeRequestComplete() {
+        pressedPlayerCard.findViewById(R.id.interaction_buttons)
+                .findViewById(R.id.gameplay_exchange_button)
+                .setBackgroundResource(R.drawable.exchange_button);
+
+        pressedPlayerCard.findViewById(R.id.exchange_requested).setVisibility(View.INVISIBLE);
+    }
+
+    private void pressedInterceptButton() {
+        pressedPlayerCard.findViewById(R.id.interaction_buttons)
+                .findViewById(R.id.gameplay_intercept_button)
+                .setBackgroundResource(R.drawable.intercept_button_greyed);
+    }
+
+    private void interceptAttemptComplete() {
+        pressedPlayerCard.findViewById(R.id.interaction_buttons)
+                .findViewById(R.id.gameplay_intercept_button)
+                .setBackgroundResource(R.drawable.intercept_button);
+    }
+
+    private void increaseTillyEvidence(int evidence) {
+        CircleProgressBar bar = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
+        float currentProgress = bar.getProgress();
+        bar.setText(Integer.toString((int) (evidence + currentProgress)));
+        bar.setProgress(currentProgress + evidence);
+    }
+
+    private void releaseTillyEvidence() {
+        CircleProgressBar bar = pressedPlayerCard.findViewById(R.id.tutorial_player_intel_circle_25);
+        bar.setText("0");
+        bar.setProgress(0);
+    }
+
+    private void increaseLouisEvidence(int evidence) {
+        CircleProgressBar bar =findViewById(R.id.player_card_3).findViewById(R.id.tutorial_player_intel_circle_0);
+        float currentProgress = bar.getProgress();
+        bar.setText(Integer.toString((int) (evidence + currentProgress)));
+        bar.setProgress(currentProgress + evidence);
     }
 }
