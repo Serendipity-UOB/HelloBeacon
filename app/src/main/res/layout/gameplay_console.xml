@@ -38,8 +38,7 @@
             android:id="@+id/left_side_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:orientation="vertical">
             <ImageView
                 android:id="@+id/agency_logo"
                 android:layout_width="35pt"
