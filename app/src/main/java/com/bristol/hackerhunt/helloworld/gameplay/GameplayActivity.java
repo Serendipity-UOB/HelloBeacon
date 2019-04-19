@@ -366,7 +366,7 @@ public class GameplayActivity extends AppCompatActivity {
                 else if (details.status.equals(InteractionStatus.SUCCESSFUL)) {
 
                     if (currentPlayerExchangeResponse == ACCEPT) {
-                        final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
+                        //final boolean secondaryExists = details.gainedIntelPlayerIds.size() > 1;
 
                         that.runOnUiThread(new Runnable() {
                             @Override
@@ -388,7 +388,7 @@ public class GameplayActivity extends AppCompatActivity {
                     cancel();
                 }
                 else if (details.status.equals(InteractionStatus.ERROR)) {
-                    runOnUiThread(new Runnable() {
+                    that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             notificationView.applicationError();

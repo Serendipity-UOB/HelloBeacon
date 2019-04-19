@@ -312,7 +312,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             farPlayer = farPlayerIdsJson.getJSONObject(i);
             if(farPlayer.has("id")){
                 id = farPlayer.getString("id");
-                Log.d("Far Players", "Got id" + id);
+                Log.v("Far Players", "Got id" + id);
 
                 if(farPlayer.has("location")){
                     location = Integer.toString(farPlayer.getInt("location"));

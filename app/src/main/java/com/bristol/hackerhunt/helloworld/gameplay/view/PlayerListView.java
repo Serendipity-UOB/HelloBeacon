@@ -558,69 +558,69 @@ public class PlayerListView implements IPlayerListView {
         hideIntStatus(playerId);
     }
 
-    public void displayInterceptPending(String playerId){
+    private void displayInterceptPending(String playerId){
         setIntStatusText(playerId,"Intercept Pending\u00A0");
         setIntStatusColour(playerId,0x93bdcf);
         setIntStatusImage(playerId, R.drawable.intercept);
         displayIntStatus(playerId);
     }
 
-    public void timedDisplayExchangeSuccess(final String playerId, long time){
+    private void timedHideIntStatus(final String playerId){
+        final View intStatus = getIntStatusFlag(playerId);
+
+        intStatus.postDelayed(
+                new Runnable() {
+                    public void run(){
+                        intStatus.setVisibility(View.INVISIBLE);
+                    }
+                }, INTERACTION_DISPLAY_PERIOD*1000);
+    }
+
+    private void timedDisplayExchangeSuccess(final String playerId){
         setIntStatusText(playerId,"Exchange Success\u00A0");
         setIntStatusColour(playerId,0xb6d7a8);
         setIntStatusImage(playerId, R.drawable.exchange);
         displayIntStatus(playerId);
 
-        Timer timer = new Timer();
-        timer.schedule(timedHideIntStatus(playerId),time);
+        timedHideIntStatus(playerId);
+
     }
 
-    public void timedDisplayExchangeFailure(final String playerId, long time){
+    private void timedDisplayExchangeFailure(final String playerId){
         setIntStatusText(playerId,"Exchange Rejected\u00A0");
         setIntStatusColour(playerId,0xb3e066);
         setIntStatusImage(playerId, R.drawable.exchange);
         displayIntStatus(playerId);
 
-        Timer timer = new Timer();
-        timer.schedule(timedHideIntStatus(playerId),time);
+        timedHideIntStatus(playerId);
     }
 
 
-    public void timedDisplayInterceptSuccess(final String playerId, long time){
+    private void timedDisplayInterceptSuccess(final String playerId){
         setIntStatusText(playerId,"Intercept Success\u00A0");
         setIntStatusColour(playerId,0xb6d7a8);
         setIntStatusImage(playerId, R.drawable.intercept);
         displayIntStatus(playerId);
 
-        Timer timer = new Timer();
-        timer.schedule(timedHideIntStatus(playerId),time);
+        timedHideIntStatus(playerId);
     }
 
-    public void timedDisplayInterceptFailure(final String playerId, long time){
+    private void timedDisplayInterceptFailure(final String playerId){
         setIntStatusText(playerId,"Intercept Failure\u00A0");
         setIntStatusColour(playerId,0xb3e066);
         setIntStatusImage(playerId, R.drawable.intercept);
         displayIntStatus(playerId);
 
-        Timer timer = new Timer();
-        timer.schedule(timedHideIntStatus(playerId),time);
+
+        timedHideIntStatus(playerId);
     }
 
     private void displayIntStatus(String playerId) {
         getIntStatusFlag(playerId).setVisibility(View.VISIBLE);
     }
 
-    public void hideIntStatus(String playerId) {
-        getIntStatusFlag(playerId).findViewById(View.INVISIBLE);
-    }
-
-    public TimerTask timedHideIntStatus(final String playerId) {
-        return new TimerTask() {
-            @Override
-            public void run(){
-                hideIntStatus(playerId);
-            }
-        };
+    private void hideIntStatus(String playerId) {
+        getIntStatusFlag(playerId).setVisibility(View.INVISIBLE);
     }
 
     private View getIntStatusFlag(String playerId) {
@@ -981,10 +981,10 @@ public class PlayerListView implements IPlayerListView {
         }
 
         if(success){
-            timedDisplayExchangeSuccess(playerId, INTERACTION_DISPLAY_PERIOD * 1000);
+            timedDisplayExchangeSuccess(playerId);
         }
         else {
-            timedDisplayExchangeFailure(playerId, INTERACTION_DISPLAY_PERIOD * 1000);
+            timedDisplayExchangeFailure(playerId);
         }
     }
 
@@ -999,10 +999,10 @@ public class PlayerListView implements IPlayerListView {
         }
 
         if(success){
-            timedDisplayInterceptSuccess(playerId, INTERACTION_DISPLAY_PERIOD * 1000);
+            timedDisplayInterceptSuccess(playerId);
         }
         else {
-            timedDisplayInterceptFailure(playerId, INTERACTION_DISPLAY_PERIOD * 1000);
+            timedDisplayInterceptFailure(playerId);
         }
     }
 
