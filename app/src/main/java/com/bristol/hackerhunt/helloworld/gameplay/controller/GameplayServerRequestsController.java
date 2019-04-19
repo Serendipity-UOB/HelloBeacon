@@ -287,30 +287,33 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void updateLocations(JSONObject obj) throws JSONException {
         String id;
-
+        String location;
         JSONObject nearbyPlayer;
         JSONArray nearbyPlayerIdsJson = obj.getJSONArray("nearby_players");
+
         for (int i = 0; i < nearbyPlayerIdsJson.length(); i++) {
             nearbyPlayer = nearbyPlayerIdsJson.getJSONObject(i);
             if(nearbyPlayer.has("id")){
                 id = nearbyPlayer.getString("id");
-                changeLocationRunnable.run(
-                        id,
-                        Integer.toString(nearbyPlayer.getInt("location"))
-                );
+                if(nearbyPlayer.has("location")){
+                    location = Integer.toString(nearbyPlayer.getInt("location"));
+                    changeLocationRunnable.run(id,location);
+                }
+
             }
         }
 
         JSONObject farPlayer;
         JSONArray farPlayerIdsJson = obj.getJSONArray("far_players");
+        
         for (int i = 0; i < farPlayerIdsJson.length(); i++){
             farPlayer = farPlayerIdsJson.getJSONObject(i);
             if(farPlayer.has("id")){
                 id = farPlayer.getString("id");
-                changeLocationRunnable.run(
-                        farPlayer.getString("id"),
-                        Integer.toString(farPlayer.getInt("location"))
-                );
+                if(farPlayer.has("location")){
+                    location = Integer.toString(farPlayer.getInt("location"));
+                    changeLocationRunnable.run(id,location);
+                }
             }
         }
     }

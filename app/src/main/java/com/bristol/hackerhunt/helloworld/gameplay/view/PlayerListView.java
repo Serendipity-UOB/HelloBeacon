@@ -341,6 +341,7 @@ public class PlayerListView implements IPlayerListView {
     private View getPlayerCard(String playerId) {
         int id = playerIdListItemIdMap.get(playerId);
         return playerList.findViewById(id);
+
     }
 
     // sets the on-click listener to be run when the expose button for a player card is pressed.
@@ -642,7 +643,11 @@ public class PlayerListView implements IPlayerListView {
     }
 
     private ImageView getPlayerFlagView(String playerId){
+        if(playerId.isEmpty()){
+            Log.i("Flag View", "Empty playerId");
+        }
         return getPlayerCard(playerId).findViewById(R.id.player_card_flag);
+
     }
 
     @Override
