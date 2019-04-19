@@ -666,7 +666,7 @@ public class PlayerListView implements IPlayerListView {
 
 
         if(flag == 0){
-            imageId = R.drawable.un_flag;
+            imageId = R.drawable.un_flag_small;
         }
         else if(flag == 1){
             imageId = R.drawable.italy_flag_dark;
