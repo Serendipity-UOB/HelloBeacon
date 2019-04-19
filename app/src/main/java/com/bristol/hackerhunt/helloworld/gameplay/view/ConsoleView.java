@@ -106,6 +106,7 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void goToStartBeaconPrompt(String homeBeaconName) {
+        hideTimer();
         disableCloseConsole();
 
         this.currentHomeBeacon = homeBeaconName;
@@ -118,6 +119,7 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void applicationError() {
+        hideTimer();
         enableCloseConsole();
         setNeutralConsole();
 
@@ -151,6 +153,7 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void playersTargetTakenDownPrompt(String homeBeaconName) {
+        hideTimer();
         disableCloseConsole();
 
         this.currentHomeBeacon = homeBeaconName;
@@ -167,6 +170,8 @@ public class ConsoleView implements IConsoleView {
     }
 
     private void playersTargetGotTakenDownConsoleMessage(String homeBeaconName) {
+
+
         String message = consoleView.getResources()
                 .getString(R.string.console_target_taken_down_message);
         message = message.replace("$BEACON", homeBeaconName);
@@ -175,6 +180,8 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void playerGotTakenDownPrompt(String homeBeaconName) {
+        hideTimer();
+
         disableCloseConsole();
 
         this.playerGotTakenDownInProgress = true;
@@ -194,6 +201,8 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent) {
+        hideTimer();
+
         disableCloseConsole();
 
         setNeutralConsole();
@@ -215,6 +224,8 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void missionUpdatePrompt(String missionStatement) {
+        hideTimer();
+
         disableCloseConsole();
         setNeutralConsole();
         setConsoleMessage(missionStatement);
@@ -227,6 +238,8 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void missionSuccessPrompt(String missionSuccessMessage) {
+        hideTimer();
+
         enableCloseConsole();
         setGoodConsole();
         setConsoleMessage(missionSuccessMessage);
@@ -235,6 +248,8 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void missionFailedPrompt(String missionFailedMessage) {
+        hideTimer();
+
         enableCloseConsole();
         setBadConsole();
         setConsoleMessage(missionFailedMessage);
@@ -266,33 +281,56 @@ public class ConsoleView implements IConsoleView {
         iv.setImageResource(imageId);
     }
 
-    private void startMissionTimer(){
-        final TextView tv = consoleView.findViewById(R.id.mission_countdown);
+    private CountDownTimer missionTimer(){
 
-        cTimer = new CountDownTimer(MISSION_DURATION, 1000) {
+        return new CountDownTimer(30*1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                tv.setText(Long.toString(millisUntilFinished/1000));
+                String formattedTime = formatTime(millisUntilFinished);
+                updateMissionTimer(formattedTime);
             }
 
             @Override
             public void onFinish() {
-                tv.setText("");
-                // v potential NPE inducing v
-                wipeTimer();
+                updateMissionTimer("00");
             }
         };
-
-
-        cTimer.start();
     }
 
-    private void wipeTimer(){
-        cTimer = null;
+    private String formatTime(long milliseconds) {
+        Long seconds = (milliseconds * 60000) / 1000;
+        String formattedTime = "";
+        if (seconds < 10) formattedTime = formattedTime + "0";
+        return formattedTime + seconds.toString();
+    }
+
+    private void updateMissionTimer(final String time) {
+        final TextView timerView = consoleView.findViewById(R.id.mission_countdown);
+
+        timerView.post(new Runnable(){
+            @Override
+            public void run() {
+                timerView.setText(time);
+            }
+        });
+    }
+
+    private void startMissionTimer(){
+        showTimer();
+        missionTimer().start();
+    }
+
+    private void hideTimer(){
+        consoleView.findViewById(R.id.mission_countdown).setVisibility(View.INVISIBLE);
+    }
+
+    private void showTimer(){
+        consoleView.findViewById(R.id.mission_countdown).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void exposeSuccessPrompt(String homeBeaconName) {
+        hideTimer();
         disableCloseConsole();
 
         this.currentHomeBeacon = homeBeaconName;

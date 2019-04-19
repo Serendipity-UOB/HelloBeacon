@@ -577,39 +577,43 @@ public class PlayerListView implements IPlayerListView {
     }
 
     private void timedDisplayExchangeSuccess(final String playerId){
+        displayIntStatus(playerId);
+
         setIntStatusText(playerId,"Exchange Success\u00A0");
         setIntStatusColour(playerId,0x2DBF52);
         setIntStatusImage(playerId, R.drawable.exchange);
-        displayIntStatus(playerId);
 
         timedHideIntStatus(playerId);
 
     }
 
     private void timedDisplayExchangeFailure(final String playerId){
+        displayIntStatus(playerId);
+
         setIntStatusText(playerId,"Exchange Rejected\u00A0");
         setIntStatusColour(playerId,0xD36B6B);
         setIntStatusImage(playerId, R.drawable.exchange);
-        displayIntStatus(playerId);
 
         timedHideIntStatus(playerId);
     }
 
 
     private void timedDisplayInterceptSuccess(final String playerId){
+        displayIntStatus(playerId);
         setIntStatusText(playerId,"Intercept Success\u00A0");
         setIntStatusColour(playerId,0x2DBF52);
         setIntStatusImage(playerId, R.drawable.intercept);
-        displayIntStatus(playerId);
+
 
         timedHideIntStatus(playerId);
     }
 
     private void timedDisplayInterceptFailure(final String playerId){
+        displayIntStatus(playerId);
         setIntStatusText(playerId,"Intercept Failure\u00A0");
         setIntStatusColour(playerId,0xD36B6B);
         setIntStatusImage(playerId, R.drawable.intercept);
-        displayIntStatus(playerId);
+
 
 
         timedHideIntStatus(playerId);

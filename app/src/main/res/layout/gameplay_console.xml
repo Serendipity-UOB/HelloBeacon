@@ -38,20 +38,22 @@
             android:id="@+id/left_side_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center">
             <ImageView
                 android:id="@+id/agency_logo"
                 android:layout_width="35pt"
                 android:layout_height="35pt"
                 android:layout_marginEnd="15dp"
-                android:src="@drawable/agency_spy_logo"/>
+                android:src="@drawable/agency_spy_logo" />
             <TextView
                 android:id="@+id/mission_countdown"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#fff"
-                android:textSize="11pt"
-                android:fontFamily="@font/sharetech"/>
+                android:textSize="15pt"
+                android:text="30"
+                android:textColor="@color/titleScreenText"
+                android:fontFamily="@font/sharetech_mono"/>
         </LinearLayout>
 
 
