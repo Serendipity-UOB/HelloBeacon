@@ -124,7 +124,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
         JSONObject startInfoBody = new JSONObject();
         startInfoBody.put("player_id",gameStateController.getPlayerId());
-        Log.d("Player id",gameStateController.getPlayerId());
+        Log.d("My Player id",gameStateController.getPlayerId());
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + START_INFO_URL, startInfoBody,
                 listener, errorListener,setStatusCodeRunnable(), statusCodeRequestMap);
@@ -295,21 +295,25 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             nearbyPlayer = nearbyPlayerIdsJson.getJSONObject(i);
             if(nearbyPlayer.has("id")){
                 id = nearbyPlayer.getString("id");
-                if(nearbyPlayer.has("location")){
-                    location = Integer.toString(nearbyPlayer.getInt("location"));
-                    changeLocationRunnable.run(id,location);
+                Log.v("Nearby Players", "Got id" + id);
+                if(!id.equals(gameStateController.getPlayerId())) {
+                    if (nearbyPlayer.has("location")) {
+                        location = Integer.toString(nearbyPlayer.getInt("location"));
+                        changeLocationRunnable.run(id, location);
+                    }
                 }
-
             }
         }
 
         JSONObject farPlayer;
         JSONArray farPlayerIdsJson = obj.getJSONArray("far_players");
-        
+
         for (int i = 0; i < farPlayerIdsJson.length(); i++){
             farPlayer = farPlayerIdsJson.getJSONObject(i);
             if(farPlayer.has("id")){
                 id = farPlayer.getString("id");
+                Log.d("Far Players", "Got id" + id);
+
                 if(farPlayer.has("location")){
                     location = Integer.toString(farPlayer.getInt("location"));
                     changeLocationRunnable.run(id,location);

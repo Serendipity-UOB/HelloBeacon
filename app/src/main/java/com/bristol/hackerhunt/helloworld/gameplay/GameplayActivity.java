@@ -104,7 +104,8 @@ public class GameplayActivity extends AppCompatActivity {
 
         // First task: player needs to head to their home beacon.
         closeConsoleOnHomeBeaconNearby = true;
-        consoleView.goToStartBeaconPrompt(gameStateController.getHomeBeaconName());
+        //TODO Is disabling this correct app behaviour
+        //consoleView.goToStartBeaconPrompt(gameStateController.getHomeBeaconName());
 
         try {
             beaconController.startScanning();
