@@ -578,7 +578,7 @@ public class PlayerListView implements IPlayerListView {
 
     private void timedDisplayExchangeSuccess(final String playerId){
         setIntStatusText(playerId,"Exchange Success\u00A0");
-        setIntStatusColour(playerId,0xb6d7a8);
+        setIntStatusColour(playerId,0x2DBF52);
         setIntStatusImage(playerId, R.drawable.exchange);
         displayIntStatus(playerId);
 
@@ -588,7 +588,7 @@ public class PlayerListView implements IPlayerListView {
 
     private void timedDisplayExchangeFailure(final String playerId){
         setIntStatusText(playerId,"Exchange Rejected\u00A0");
-        setIntStatusColour(playerId,0xb3e066);
+        setIntStatusColour(playerId,0xD36B6B);
         setIntStatusImage(playerId, R.drawable.exchange);
         displayIntStatus(playerId);
 
@@ -598,7 +598,7 @@ public class PlayerListView implements IPlayerListView {
 
     private void timedDisplayInterceptSuccess(final String playerId){
         setIntStatusText(playerId,"Intercept Success\u00A0");
-        setIntStatusColour(playerId,0xb6d7a8);
+        setIntStatusColour(playerId,0x2DBF52);
         setIntStatusImage(playerId, R.drawable.intercept);
         displayIntStatus(playerId);
 
@@ -607,7 +607,7 @@ public class PlayerListView implements IPlayerListView {
 
     private void timedDisplayInterceptFailure(final String playerId){
         setIntStatusText(playerId,"Intercept Failure\u00A0");
-        setIntStatusColour(playerId,0xb3e066);
+        setIntStatusColour(playerId,0xD36B6B);
         setIntStatusImage(playerId, R.drawable.intercept);
         displayIntStatus(playerId);
 
