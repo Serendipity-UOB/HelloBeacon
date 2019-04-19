@@ -258,7 +258,8 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private int getFlagFromMission(String details){
-        int flag = 6;
+        //Default to UN Flag
+        int flag = 0;
         if(details.contains("italy")){
             flag = 1;
         }
