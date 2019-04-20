@@ -56,7 +56,7 @@ public class PlayerListView implements IPlayerListView {
     private boolean interceptStarted = false;
     private String interceptPlayerId;
 
-    private static final long INTERACTION_DISPLAY_PERIOD = 2;
+    private static final long INTERACTION_DISPLAY_PERIOD = 3;
 
     /**
      * Constructor
@@ -208,7 +208,7 @@ public class PlayerListView implements IPlayerListView {
                 disableExchangeButton(playerId);
 
                 if (exchangePlayerId.equals(playerId)) {
-                    displayExchangeRequested(playerId);
+                    displayIntStatus(playerId);
                 }
             }
             else {
@@ -219,7 +219,7 @@ public class PlayerListView implements IPlayerListView {
                 disableInterceptButton(playerId);
 
                 if (interceptPlayerId.equals(playerId)){
-                    displayInterceptPending(playerId);
+                    displayIntStatus(playerId);
                 }
             }
             else {
@@ -236,11 +236,11 @@ public class PlayerListView implements IPlayerListView {
             listItem.setOnClickListener(null);
 
             if (exchangeStarted && exchangePlayerId.equals(playerId)) {
-                displayExchangeRequested(playerId);
+                displayIntStatus(playerId);
             }
 
             if (interceptStarted && interceptPlayerId.equals(playerId)) {
-                displayInterceptPending(playerId);
+                displayIntStatus(playerId);
             }
 
             if (pressedPlayerCardPlayerId.equals(playerId)) {
@@ -547,84 +547,120 @@ public class PlayerListView implements IPlayerListView {
         }
     }
 
-    public void displayExchangeRequested(String playerId) {
+    private void displayExchangeRequested(String playerId) {
+        //hideIntStatus(playerId);
+
         setIntStatusText(playerId,"Exchange Requested\u00A0");
-        setIntStatusColour(playerId,0x93bdcf);
+        setIntStatusColour(playerId,getColor(R.color.gameplay_time_left));
         setIntStatusImage(playerId, R.drawable.exchange);
+
         displayIntStatus(playerId);
     }
 
-    public void hideExchangeRequested(String playerId) {
-        hideIntStatus(playerId);
-    }
-
     private void displayInterceptPending(String playerId){
+        //hideIntStatus(playerId);
+
         setIntStatusText(playerId,"Intercept Pending\u00A0");
-        setIntStatusColour(playerId,0x93bdcf);
+        setIntStatusColour(playerId,getColor(R.color.gameplay_time_left));
         setIntStatusImage(playerId, R.drawable.intercept);
+
         displayIntStatus(playerId);
     }
 
     private void timedHideIntStatus(final String playerId){
         final View intStatus = getIntStatusFlag(playerId);
-
         intStatus.postDelayed(
                 new Runnable() {
                     public void run(){
-                        intStatus.setVisibility(View.INVISIBLE);
+                        hideIntStatus(playerId);
                     }
                 }, INTERACTION_DISPLAY_PERIOD*1000);
     }
 
     private void timedDisplayExchangeSuccess(final String playerId){
-        displayIntStatus(playerId);
+        //hideIntStatus(playerId);
 
         setIntStatusText(playerId,"Exchange Success\u00A0");
-        setIntStatusColour(playerId,0x2DBF52);
+        setIntStatusColour(playerId, getColor(R.color.interaction_success));
         setIntStatusImage(playerId, R.drawable.exchange);
+
+        displayIntStatus(playerId);
 
         timedHideIntStatus(playerId);
 
     }
 
     private void timedDisplayExchangeFailure(final String playerId){
-        displayIntStatus(playerId);
+        //hideIntStatus(playerId);
 
         setIntStatusText(playerId,"Exchange Rejected\u00A0");
-        setIntStatusColour(playerId,0xD36B6B);
+        setIntStatusColour(playerId,getColor(R.color.interaction_failure));
         setIntStatusImage(playerId, R.drawable.exchange);
+
+        displayIntStatus(playerId);
 
         timedHideIntStatus(playerId);
     }
 
 
     private void timedDisplayInterceptSuccess(final String playerId){
-        displayIntStatus(playerId);
+        //hideIntStatus(playerId);
+
         setIntStatusText(playerId,"Intercept Success\u00A0");
-        setIntStatusColour(playerId,0x2DBF52);
+        setIntStatusColour(playerId,getColor(R.color.interaction_success));
         setIntStatusImage(playerId, R.drawable.intercept);
 
+        displayIntStatus(playerId);
 
         timedHideIntStatus(playerId);
     }
 
     private void timedDisplayInterceptFailure(final String playerId){
-        displayIntStatus(playerId);
+        //hideIntStatus(playerId);
+
         setIntStatusText(playerId,"Intercept Failure\u00A0");
-        setIntStatusColour(playerId,0xD36B6B);
+        setIntStatusColour(playerId,getColor(R.color.interaction_failure));
         setIntStatusImage(playerId, R.drawable.intercept);
 
-
+        displayIntStatus(playerId);
 
         timedHideIntStatus(playerId);
     }
 
     private void displayIntStatus(String playerId) {
-        getIntStatusFlag(playerId).setVisibility(View.VISIBLE);
+        showIntStatusContainer(playerId);
+        showIntStatusImage(playerId);
+        showIntStatusText(playerId);
     }
 
     private void hideIntStatus(String playerId) {
-        getIntStatusFlag(playerId).setVisibility(View.INVISIBLE);
+        hideIntStatusContainer(playerId);
+        hideIntStatusImage(playerId);
+        hideIntStatusText(playerId);
+    }
+
+    private void hideIntStatusContainer(String playerId){
+        getPlayerCard(playerId).findViewById(R.id.exchange_requested).setVisibility(View.INVISIBLE);
+    }
+
+    private void showIntStatusContainer(String playerId){
+        getPlayerCard(playerId).findViewById(R.id.exchange_requested).setVisibility(View.VISIBLE);
+    }
+
+    private void hideIntStatusText(String playerId){
+        getPlayerCard(playerId).findViewById(R.id.exchange_requested_text).setVisibility(View.INVISIBLE);
+    }
+
+    private void showIntStatusText(String playerId){
+        getPlayerCard(playerId).findViewById(R.id.exchange_requested_text).setVisibility(View.VISIBLE);
+    }
+
+    private void hideIntStatusImage(String playerId){
+        getPlayerCard(playerId).findViewById(R.id.exchange_requested_icon).setVisibility(View.INVISIBLE);
+    }
+
+    private void showIntStatusImage(String playerId){
+        getPlayerCard(playerId).findViewById(R.id.exchange_requested_icon).setVisibility(View.VISIBLE);
     }
 
     private View getIntStatusFlag(String playerId) {
@@ -632,8 +668,10 @@ public class PlayerListView implements IPlayerListView {
     }
 
     private void setIntStatusText(String playerId, String text){
+        hideIntStatusText(playerId);
         TextView tv = getPlayerCard(playerId).findViewById(R.id.exchange_requested_text);
         tv.setText(text);
+        showIntStatusText(playerId);
     }
 
     private void setIntStatusColour(String playerId, int colour){
@@ -905,9 +943,11 @@ public class PlayerListView implements IPlayerListView {
                 circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
                 circleProgressBar.setTextColor(progressBarTextColor);
 
-                ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
-                        .setTextColor(getColor(R.color.player_card_name_darkened));
+                //((TextView) playerCard.findViewById(R.id.exchange_requested_text))
+                //        .setTextColor(getColor(R.color.player_card_name_darkened));
                 ((ImageView) playerCard.findViewById(R.id.exchange_requested_icon))
+                        .setColorFilter(getColor(R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
+                ((ImageView) playerCard.findViewById(R.id.player_card_flag))
                         .setColorFilter(getColor(R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
             }
         }
@@ -970,9 +1010,11 @@ public class PlayerListView implements IPlayerListView {
 
         circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
 
-        ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
-                .setTextColor(getColor(R.color.player_card_name));
+        //((TextView) playerCard.findViewById(R.id.exchange_requested_text))
+        //        .setTextColor(getColor(R.color.player_card_name));
         ((ImageView) playerCard.findViewById(R.id.exchange_requested_icon)).clearColorFilter();
+        ((ImageView) playerCard.findViewById(R.id.player_card_flag)).clearColorFilter();
+
     }
 
     @Override
@@ -984,7 +1026,7 @@ public class PlayerListView implements IPlayerListView {
             interceptExchangeIds.remove(playerId);
             enableInterceptButton(playerId);
         }
-
+        Log.d("Exchange complete", Boolean.toString(success) + playerId);
         if(success){
             timedDisplayExchangeSuccess(playerId);
         }
@@ -1002,6 +1044,7 @@ public class PlayerListView implements IPlayerListView {
             interceptExchangeIds.remove(playerId);
             enableExchangeButton(playerId);
         }
+        Log.d("Intercept complete", Boolean.toString(success) + playerId);
 
         if(success){
             timedDisplayInterceptSuccess(playerId);

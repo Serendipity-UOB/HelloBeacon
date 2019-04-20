@@ -805,17 +805,17 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 details.gainedIntelPlayerIds.add(playerId);
             }
         }
-        Log.d("Intercept", "Success");
+        Log.v("Intercept", "Success");
         details.status = InteractionStatus.SUCCESSFUL;
     }
 
     private void interceptFailure(InteractionDetails details) {
-        Log.d("Intercept", "Failure");
+        Log.v("Intercept", "Failure");
         details.status = InteractionStatus.FAILED;
     }
 
     private void interceptPending(InteractionDetails details) {
-        Log.d("Intercept", "Pending");
+        Log.v("Intercept", "Pending");
         details.status = InteractionStatus.IN_PROGRESS;
     }
 
