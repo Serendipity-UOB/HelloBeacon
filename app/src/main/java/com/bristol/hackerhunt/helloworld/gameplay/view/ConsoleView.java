@@ -1,5 +1,6 @@
 package com.bristol.hackerhunt.helloworld.gameplay.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
@@ -25,6 +26,8 @@ public class ConsoleView implements IConsoleView {
     private final ImageView consoleViewImage;
     private final TextView consoleViewCountdown;
 
+    private final Activity caller;
+
     // status flags
     private String currentHomeBeacon = "";
     private boolean interactionInProgress;
@@ -36,8 +39,9 @@ public class ConsoleView implements IConsoleView {
 
     private CountDownTimer cTimer = null;
 
-    public ConsoleView(View consolePromptContainer) {
+    public ConsoleView(View consolePromptContainer, Activity caller) {
         this.overlay = consolePromptContainer;
+        this.caller = caller;
         this.consoleView = overlay.findViewById(R.id.gameplay_console);
         this.consoleViewTitle = overlay.findViewById(R.id.full_pop_up_title);
         this.consoleViewText = overlay.findViewById(R.id.gameplay_console_text);
@@ -221,6 +225,7 @@ public class ConsoleView implements IConsoleView {
         setConsoleTitle(R.string.game_over_console_title);
         setConsoleImage(R.drawable.un_flag_small);
 
+
         this.interactionInProgress = false;
 
         View.OnClickListener cl = new View.OnClickListener() {
@@ -332,24 +337,24 @@ public class ConsoleView implements IConsoleView {
     }
 
     private String formatTime(long milliseconds) {
-        Long seconds = (milliseconds * 60000) / 1000;
+        Long seconds = (milliseconds) / 1000;
         String formattedTime = "";
         if (seconds < 10) formattedTime = formattedTime + "0";
         return formattedTime + seconds.toString();
     }
 
     private void updateMissionTimer(final String time) {
-        consoleViewCountdown.post(new Runnable(){
-            @Override
-            public void run() {
-                consoleViewCountdown.setText(time);
-            }
-        });
+        consoleViewCountdown.setText(time);
     }
 
     private void startMissionTimer(){
         showTimer();
         missionTimer().start();
+    }
+
+    @Override
+    public void setCountdownText(String time){
+        consoleViewCountdown.setText(time);
     }
 
     private void hideTimer(){

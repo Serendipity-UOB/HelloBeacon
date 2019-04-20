@@ -681,7 +681,8 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void initializeConsoleView() {
         final View overlay = findViewById(R.id.gameplay_console_overlay);
-        this.consoleView = new ConsoleView(overlay);
+        final Activity that = this;
+        this.consoleView = new ConsoleView(overlay, that);
     }
 
     private void startGameTimer(long durationInMinutes) {

@@ -71,4 +71,6 @@ public interface IConsoleView {
     int getConsoleFlag(int flag);
 
     void setConsoleImage(int res);
+
+    void setCountdownText(String time);
 }

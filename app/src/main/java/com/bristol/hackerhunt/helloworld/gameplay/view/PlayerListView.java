@@ -112,7 +112,6 @@ public class PlayerListView implements IPlayerListView {
     @Override
     public void revealPlayerHackerName(String playerId, final String hackerName) {
         playerIdCodeNameMap.put(playerId, hackerName);
-        Log.i("Codename Reveal", hackerName);
         displayPlayerCodeName(playerId);
     }
 
@@ -126,7 +125,6 @@ public class PlayerListView implements IPlayerListView {
         if (listItem != null) {
             final TextView nameView = listItem.findViewById(R.id.player_hacker_name);
 
-            Log.i("Display CodeName", codeName);
             setTextOfView(nameView, codeName);
 
             if (codeName != null && codeName.equals(targetCodeName)) {
@@ -638,6 +636,7 @@ public class PlayerListView implements IPlayerListView {
 
     private void setIntStatusColour(String playerId, int colour){
         TextView tv = getPlayerCard(playerId).findViewById(R.id.exchange_requested_text);
+        Log.d("Colour set", Integer.toHexString(colour));
         tv.setTextColor(colour);
     }
 
