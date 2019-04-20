@@ -486,6 +486,7 @@ public class PlayerListView implements IPlayerListView {
 
     @Override
     public void decreasePlayerIntel(String playerId, int intelIncrement) {
+        Log.d("Decrease Intel", Integer.toString(intelIncrement));
         if (!playerIdListItemIdMap.containsKey(playerId)) {
             throw new IllegalArgumentException("Error: player is not listed as playing the game.");
         }

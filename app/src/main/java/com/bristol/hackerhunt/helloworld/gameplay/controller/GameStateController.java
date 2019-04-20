@@ -198,6 +198,8 @@ public class GameStateController implements IGameStateController {
 
     @Override
     public void clearAllEvidence(String playerId) {
+        Log.d("Clear Evidence", "GSC");
+        Log.d("Clear Evidence", Integer.toString(allPlayersMap.get(playerId).intel));
         playerListController.decreasePlayerIntel(playerId, allPlayersMap.get(playerId).intel);
         allPlayersMap.get(playerId).intel = 0;
     }

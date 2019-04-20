@@ -177,6 +177,7 @@ public class GameplayActivity extends AppCompatActivity {
                 String homeBeaconName = gameStateController.getHomeBeaconName();
                 closeConsoleOnHomeBeaconNearby = true;
                 consoleView.exposeSuccessPrompt(homeBeaconName);
+                Log.d("Clear Evidence", targetId);
                 gameStateController.clearAllEvidence(targetId);
                 newTargetRequested = true;
             }
