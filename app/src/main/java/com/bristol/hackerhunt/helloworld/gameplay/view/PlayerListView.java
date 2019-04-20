@@ -498,6 +498,7 @@ public class PlayerListView implements IPlayerListView {
             float intel = intelBar.getProgress();
             float newIntel = Math.max(0, intel - intelIncrement);
             intelBar.setProgress(newIntel);
+            Log.d("Set Intel Text", String.valueOf((int) newIntel));
             intelBar.setText(String.valueOf((int) newIntel));
 
             if (newIntel >= 100) {
