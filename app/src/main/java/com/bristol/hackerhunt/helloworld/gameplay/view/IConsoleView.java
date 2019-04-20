@@ -68,5 +68,7 @@ public interface IConsoleView {
      */
     void enableTapToClose();
 
-    void setConsoleFlag(int flag);
+    int getConsoleFlag(int flag);
+
+    void setConsoleImage(int res);
 }

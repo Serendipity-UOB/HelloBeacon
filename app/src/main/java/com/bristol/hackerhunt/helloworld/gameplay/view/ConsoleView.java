@@ -22,6 +22,8 @@ public class ConsoleView implements IConsoleView {
     private final TextView consoleViewTitle;
     private final TextView consoleViewText;
     private final TextView consoleTapToCloseMessage;
+    private final ImageView consoleViewImage;
+    private final TextView consoleViewCountdown;
 
     // status flags
     private String currentHomeBeacon = "";
@@ -41,6 +43,8 @@ public class ConsoleView implements IConsoleView {
         this.consoleViewText = overlay.findViewById(R.id.gameplay_console_text);
         this.consoleTapToCloseMessage = overlay.findViewById(R.id.console_close_message);
         this.consoleWrapper = overlay.findViewById(R.id.full_pop_up_wrapper);
+        this.consoleViewImage = overlay.findViewById(R.id.agency_logo);
+        this.consoleViewCountdown = overlay.findViewById(R.id.mission_countdown);
 
         this.interactionInProgress = false;
         this.playerGotTakenDownInProgress = false;
@@ -152,6 +156,11 @@ public class ConsoleView implements IConsoleView {
     }
 
     @Override
+    public void setConsoleImage(int res){
+        consoleViewImage.setImageResource(res);
+    }
+
+    @Override
     public void playersTargetTakenDownPrompt(String homeBeaconName) {
         hideTimer();
         disableCloseConsole();
@@ -160,6 +169,7 @@ public class ConsoleView implements IConsoleView {
         this.playersTargetGotTakenDownInProgress = true;
         setNeutralConsole();
         setConsoleTitle(R.string.console_target_taken_down_title);
+        setConsoleImage(R.drawable.un_flag_small);
         playersTargetGotTakenDownConsoleMessage(homeBeaconName);
         this.interactionInProgress = false;
     }
@@ -188,6 +198,7 @@ public class ConsoleView implements IConsoleView {
         this.currentHomeBeacon = homeBeaconName;
         setBadConsole();
         setConsoleTitle(R.string.console_taken_down_title);
+        setConsoleImage(R.drawable.un_flag_small);
         playerTakenDownConsoleMessage(homeBeaconName);
         this.interactionInProgress = false;
     }
@@ -208,6 +219,7 @@ public class ConsoleView implements IConsoleView {
         setNeutralConsole();
         setConsoleMessage(context.getString(R.string.game_over_console_message));
         setConsoleTitle(R.string.game_over_console_title);
+        setConsoleImage(R.drawable.un_flag_small);
 
         this.interactionInProgress = false;
 
@@ -230,6 +242,7 @@ public class ConsoleView implements IConsoleView {
         setNeutralConsole();
         setConsoleMessage(missionStatement);
         setConsoleTitle(R.string.mission_update_title);
+        setConsoleImage(getConsoleFlag(getFlagFromMission(missionStatement)));
         if(!firstMission) {
             startMissionTimer();
             firstMission = false;
@@ -244,6 +257,7 @@ public class ConsoleView implements IConsoleView {
         setGoodConsole();
         setConsoleMessage(missionSuccessMessage);
         setConsoleTitle(R.string.mission_success_title);
+        setConsoleImage(getConsoleFlag(getFlagFromMission(missionSuccessMessage)));
     }
 
     @Override
@@ -254,11 +268,13 @@ public class ConsoleView implements IConsoleView {
         setBadConsole();
         setConsoleMessage(missionFailedMessage);
         setConsoleTitle(R.string.mission_failed_title);
+
+        int res = getConsoleFlag(getFlagFromMission(missionFailedMessage));
+        setConsoleImage(res);
     }
 
     @Override
-    public void setConsoleFlag(int flag){
-        ImageView iv = consoleView.findViewById(R.id.agency_logo);
+    public int getConsoleFlag(int flag){
         int imageId = R.drawable.beacon_valor;
         if(flag == 0){
             imageId = R.drawable.un_flag_small;
@@ -278,7 +294,25 @@ public class ConsoleView implements IConsoleView {
         else{
             Log.d("Bad Flag", "Flag number " + Integer.toString(flag));
         }
-        iv.setImageResource(imageId);
+        return imageId;
+    }
+
+    private int getFlagFromMission(String details){
+        //Default to UN Flag
+        int flag = 0;
+        if(details.contains("italy")){
+            flag = 1;
+        }
+        else if(details.contains("sweden")){
+            flag = 2;
+        }
+        else if(details.contains("switzerland")){
+            flag = 3;
+        }
+        else if(details.contains("czech republic")){
+            flag = 4;
+        }
+        return flag;
     }
 
     private CountDownTimer missionTimer(){
@@ -305,12 +339,10 @@ public class ConsoleView implements IConsoleView {
     }
 
     private void updateMissionTimer(final String time) {
-        final TextView timerView = consoleView.findViewById(R.id.mission_countdown);
-
-        timerView.post(new Runnable(){
+        consoleViewCountdown.post(new Runnable(){
             @Override
             public void run() {
-                timerView.setText(time);
+                consoleViewCountdown.setText(time);
             }
         });
     }
@@ -338,6 +370,7 @@ public class ConsoleView implements IConsoleView {
 
         setGoodConsole();
         setConsoleTitle(R.string.console_expose_success_title);
+        setConsoleImage(R.drawable.un_flag_small);
         String message = consoleView.getResources()
                 .getString(R.string.console_expose_success_message);
         message = message.replace("$BEACON", homeBeaconName);

@@ -249,7 +249,7 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(final String missionDetails) {
                 Log.d("New Mission", missionDetails);
                 consoleView.missionUpdatePrompt(missionDetails);
-                consoleView.setConsoleFlag(getFlagFromMission(missionDetails));
+                consoleView.setConsoleImage(consoleView.getConsoleFlag(getFlagFromMission(missionDetails)));
                 beginMissionUpdateServerPolling();
 
 
