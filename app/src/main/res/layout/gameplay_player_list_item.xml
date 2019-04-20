@@ -106,7 +106,7 @@
                         android:layout_marginEnd="5dp"/>
                     <TextView
                         android:id="@+id/exchange_requested_text"
-                        android:layout_width="200dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/sharetech"
                         android:text="Exchange requested\u00A0"
