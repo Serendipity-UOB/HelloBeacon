@@ -43,6 +43,8 @@ public interface IPlayerListView {
      */
     void decreasePlayerIntel(String playerId, int intelIncrement);
 
+    void clearPlayerIntel(String playerId);
+
     /**
      * Update the visible list of nearby players in the list UI.
      * @param newNearbyPlayerIds the list of nearby player IDs.

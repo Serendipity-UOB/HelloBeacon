@@ -516,6 +516,24 @@ public class PlayerListView implements IPlayerListView {
     }
 
     @Override
+    public void clearPlayerIntel(String playerId) {
+        if (playerIdListItemIdMap.containsKey(playerId)) {
+            int id = playerIdListItemIdMap.get(playerId);
+            RelativeLayout listItem = playerList.findViewById(id);
+            CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
+            intelBar.setProgress(0);
+            intelBar.setText("0");
+
+            if (nearbyPlayerIds.contains(playerId)) {
+                setNotFullIntelCircleProgressBarColoursNearby(intelBar);
+            }
+            else {
+                setNotFullIntelCircleProgressBarColoursFar(intelBar);
+            }
+        }
+    }
+
+    @Override
     public void updateNearbyPlayers(List<String> newNearbyPlayerIds) {
         if (!newNearbyPlayerIds.containsAll(nearbyPlayerIds) || !nearbyPlayerIds.containsAll(newNearbyPlayerIds)) {
 
