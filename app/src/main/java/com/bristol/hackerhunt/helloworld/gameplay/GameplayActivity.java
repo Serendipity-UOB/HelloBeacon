@@ -99,7 +99,7 @@ public class GameplayActivity extends AppCompatActivity {
                     //Log.d("App", "Closing console, home beacon nearby");
                     if(notFirstConsole){
                         consoleView.enableTapToClose();
-
+                        closeConsoleAfterDelay();
                     }
                     else{
                         notFirstConsole = true;
@@ -109,14 +109,17 @@ public class GameplayActivity extends AppCompatActivity {
             }
         });
 
+
+        initializeStatusBarPlayerName();
+
+
+        /*
         try {
             serverRequestsController.newTargetRequest();
             newTargetRequested = false;
         } catch (JSONException e){
             e.printStackTrace();
-        }
-
-        initializeStatusBarPlayerName();
+        }*/
 
         // First task: player needs to head to their home beacon.
         closeConsoleOnHomeBeaconNearby = false;

@@ -109,6 +109,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 try {
                     setAllPlayers(response);
                     setEndTime(response);
+                    setTarget(response);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -128,6 +129,12 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + START_INFO_URL, startInfoBody,
                 listener, errorListener,setStatusCodeRunnable(), statusCodeRequestMap);
+    }
+
+    private void setTarget(JSONObject response) throws JSONException{
+        String targetId = response.getString("first_target_id");
+        gameStateController.updateTargetPlayer(targetId);
+
     }
 
     private float calculateTimeRemainingInMinutes(String startTime) {
