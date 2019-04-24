@@ -262,6 +262,7 @@ public class ConsoleView implements IConsoleView {
         setGoodConsole();
         setConsoleMessage(missionSuccessMessage);
         setConsoleTitle(R.string.mission_success_title);
+        Log.d("Mission Flag", Integer.toString(getFlagFromMission(missionSuccessMessage)));
         setConsoleImage(getConsoleFlag(getFlagFromMission(missionSuccessMessage)));
     }
 

@@ -436,6 +436,9 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 else if(statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 204){
                     missionPending(details, response);
                 }
+                else if(statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 205){
+                    missionCancelled(details, response);
+                }
                 else {
                     details.status = InteractionStatus.ERROR;
                 }
@@ -528,6 +531,10 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         }
 
         missionFailureRunnable.run(failure);
+    }
+
+    private void missionCancelled(InteractionDetails details, JSONObject obj){
+        details.status = InteractionStatus.NO_EVIDENCE;
     }
 
     @Override
