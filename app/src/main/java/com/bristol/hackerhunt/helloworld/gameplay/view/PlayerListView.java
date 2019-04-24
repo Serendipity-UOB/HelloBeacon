@@ -699,8 +699,10 @@ public class PlayerListView implements IPlayerListView {
     }
 
     private void setIntStatusImage(String playerId, int resId){
+        hideIntStatusImage(playerId);
         ImageView iv = getPlayerCard(playerId).findViewById(R.id.exchange_requested_icon);
         iv.setImageResource(resId);
+        showIntStatusImage(playerId);
     }
 
     private ImageView getPlayerFlagView(String playerId){
