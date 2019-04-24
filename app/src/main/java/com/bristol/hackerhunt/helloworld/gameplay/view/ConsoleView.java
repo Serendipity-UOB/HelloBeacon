@@ -35,7 +35,7 @@ public class ConsoleView implements IConsoleView {
     private boolean playersTargetGotTakenDownInProgress;
     private boolean takedownSuccessInProgress;
 
-    private boolean firstMission = true;
+    private boolean notFirstMission = false;
 
     private CountDownTimer cTimer = null;
 
@@ -248,9 +248,9 @@ public class ConsoleView implements IConsoleView {
         setConsoleMessage(missionStatement);
         setConsoleTitle(R.string.mission_update_title);
         setConsoleImage(getConsoleFlag(getFlagFromMission(missionStatement)));
-        if(!firstMission) {
+        if(notFirstMission) {
             startMissionTimer();
-            firstMission = false;
+            notFirstMission = true;
         }
     }
 
