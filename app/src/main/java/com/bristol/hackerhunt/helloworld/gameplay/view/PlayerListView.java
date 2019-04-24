@@ -39,6 +39,7 @@ public class PlayerListView implements IPlayerListView {
     private final Map<String, Integer> playerIdListItemIdMap;
     private final Map<String, String> playerIdNameMap;
     private final Map<String, String> playerIdCodeNameMap;
+    private final Map<String, Integer> playerIdIntColourMap;
     private List<String> nearbyPlayerIds;
     private List<String> interceptExchangeIds;
 
@@ -83,6 +84,7 @@ public class PlayerListView implements IPlayerListView {
         this.nearbyPlayerIds = new ArrayList<>();
         this.interceptExchangeIds = new ArrayList<>();
         this.playerIdLocationMap = new HashMap<>();
+        this.playerIdIntColourMap = new HashMap<>();
 
         this.beginExposeOnClickRunner = beginExposeOnClickRunner;
         this.beginExchangeOnClickRunner = beginExchangeOnClickRunner;
@@ -280,7 +282,7 @@ public class PlayerListView implements IPlayerListView {
 
     private void disableExposeButton(String playerId) {
         //TODO Greyed out expose button
-        getExposeButton(playerId).setBackgroundResource(R.drawable.expose_button);
+        getExposeButton(playerId).setBackgroundResource(R.drawable.expose_button_greyed);
         removeExposeOnClickListener(playerId);
     }
 
@@ -600,7 +602,7 @@ public class PlayerListView implements IPlayerListView {
 
         setIntStatusText(playerId,"Exchange Success\u00A0");
         setIntStatusColour(playerId, getColor(R.color.interaction_success));
-        setIntStatusImage(playerId, R.drawable.exchange);
+        setIntStatusImage(playerId, R.drawable.exchange_button_green);
 
         displayIntStatus(playerId);
 
@@ -613,7 +615,6 @@ public class PlayerListView implements IPlayerListView {
 
         setIntStatusText(playerId,"Exchange Rejected\u00A0");
         setIntStatusColour(playerId,getColor(R.color.interaction_failure));
-        setIntStatusImage(playerId, R.drawable.exchange);
 
         displayIntStatus(playerId);
 
@@ -626,7 +627,7 @@ public class PlayerListView implements IPlayerListView {
 
         setIntStatusText(playerId,"Intercept Success\u00A0");
         setIntStatusColour(playerId,getColor(R.color.interaction_success));
-        setIntStatusImage(playerId, R.drawable.intercept);
+        setIntStatusImage(playerId, R.drawable.intercept_button_green);
 
         displayIntStatus(playerId);
 
@@ -638,7 +639,7 @@ public class PlayerListView implements IPlayerListView {
 
         setIntStatusText(playerId,"Intercept Failure\u00A0");
         setIntStatusColour(playerId,getColor(R.color.interaction_failure));
-        setIntStatusImage(playerId, R.drawable.intercept);
+        setIntStatusImage(playerId, R.drawable.intercept_button_red);
 
         displayIntStatus(playerId);
 
@@ -913,6 +914,8 @@ public class PlayerListView implements IPlayerListView {
                 int id = playerIdListItemIdMap.get(playerId);
                 RelativeLayout playerCard = playerList.findViewById(id);
 
+                playerIdIntColourMap.put(playerId, ((TextView) playerCard.findViewById(R.id.exchange_requested_text)).getCurrentTextColor());
+
                 // handle core of the player card:
                 ((TextView) playerCard.findViewById(R.id.player_name))
                         .setTextColor(getColor(R.color.player_card_name_darkened));
@@ -961,8 +964,8 @@ public class PlayerListView implements IPlayerListView {
                 circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
                 circleProgressBar.setTextColor(progressBarTextColor);
 
-                //((TextView) playerCard.findViewById(R.id.exchange_requested_text))
-                //        .setTextColor(getColor(R.color.player_card_name_darkened));
+                ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
+                        .setTextColor(getColor(R.color.player_card_name_darkened));
                 ((ImageView) playerCard.findViewById(R.id.exchange_requested_icon))
                         .setColorFilter(getColor(R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
                 ((ImageView) playerCard.findViewById(R.id.player_card_flag))
@@ -1028,8 +1031,11 @@ public class PlayerListView implements IPlayerListView {
 
         circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
 
-        //((TextView) playerCard.findViewById(R.id.exchange_requested_text))
-        //        .setTextColor(getColor(R.color.player_card_name));
+
+
+        ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
+                .setTextColor(playerIdIntColourMap.get(playerId));
+        playerIdIntColourMap.remove(playerId);
         ((ImageView) playerCard.findViewById(R.id.exchange_requested_icon)).clearColorFilter();
         ((ImageView) playerCard.findViewById(R.id.player_card_flag)).clearColorFilter();
 
