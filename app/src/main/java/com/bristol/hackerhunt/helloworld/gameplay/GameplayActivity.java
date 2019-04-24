@@ -88,13 +88,14 @@ public class GameplayActivity extends AppCompatActivity {
         initializeConsoleView();
         initializeBeaconController();
 
+        requestTarget();
+
         gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
             @Override
             public void run() {
                 if (!gameOver && closeConsoleOnHomeBeaconNearby) {
                     Log.d("App", "Closing console, home beacon nearby");
                     //consoleView.enableTapToClose();
-                    closeConsoleAfterDelay();
                     closeConsoleOnHomeBeaconNearby = false;
                 }
             }
@@ -119,6 +120,17 @@ public class GameplayActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void requestTarget() {
+
+        try {
+            serverRequestsController.newTargetRequest();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void closeConsoleAfterDelay() {
