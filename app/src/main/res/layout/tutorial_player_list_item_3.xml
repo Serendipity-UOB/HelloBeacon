@@ -69,7 +69,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginStart="15dp"
                     android:textSize="6pt"
-                    android:visibility="visible"/>
+                    android:visibility="invisible"/>
 
                 <LinearLayout
                     android:id="@+id/exchange_requested"
@@ -103,7 +103,7 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <include layout="@layout/tutorial_intel_bar_100"
+        <include layout="@layout/tutorial_intel_bar_0"
             android:id="@+id/intel_bar_3"
             android:visibility="visible"
             android:layout_height="match_parent"
