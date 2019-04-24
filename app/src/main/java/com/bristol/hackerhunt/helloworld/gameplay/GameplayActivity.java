@@ -65,6 +65,7 @@ public class GameplayActivity extends AppCompatActivity {
     private IBeaconController beaconController;
 
     private boolean timerStarted = false;
+    private boolean notFirstConsole = false;
     private boolean gameOver = false;
     private boolean closeConsoleOnHomeBeaconNearby = false;
     private boolean newTargetRequested = true;
@@ -88,23 +89,37 @@ public class GameplayActivity extends AppCompatActivity {
         initializeConsoleView();
         initializeBeaconController();
 
-        requestTarget();
+        closeConsoleOnHomeBeaconNearby = true;
+
 
         gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
             @Override
             public void run() {
                 if (!gameOver && closeConsoleOnHomeBeaconNearby) {
-                    Log.d("App", "Closing console, home beacon nearby");
-                    //consoleView.enableTapToClose();
+                    //Log.d("App", "Closing console, home beacon nearby");
+                    if(notFirstConsole){
+                        consoleView.enableTapToClose();
+
+                    }
+                    else{
+                        notFirstConsole = true;
+                    }
                     closeConsoleOnHomeBeaconNearby = false;
                 }
             }
         });
 
+        try {
+            serverRequestsController.newTargetRequest();
+            newTargetRequested = false;
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
         initializeStatusBarPlayerName();
 
         // First task: player needs to head to their home beacon.
-        closeConsoleOnHomeBeaconNearby = true;
+        closeConsoleOnHomeBeaconNearby = false;
         //TODO Is disabling this correct app behaviour
         //consoleView.goToStartBeaconPrompt(gameStateController.getHomeBeaconName());
 
@@ -120,17 +135,6 @@ public class GameplayActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    private void requestTarget() {
-
-        try {
-            serverRequestsController.newTargetRequest();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
     }
 
     private void closeConsoleAfterDelay() {
