@@ -84,4 +84,6 @@
     <!-- LEADERBOARD UI -->
     <color name="leaderboard_current_player_name">#fff</color>
     <color name="neutral_full_pop_up_title">#00c9d9</color>
+
+    <color name="dark_player_card_filter">#002d49</color>
 </resources>
