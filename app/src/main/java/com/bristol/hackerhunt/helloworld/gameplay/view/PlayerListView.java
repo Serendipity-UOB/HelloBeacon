@@ -281,7 +281,6 @@ public class PlayerListView implements IPlayerListView {
     }
 
     private void disableExposeButton(String playerId) {
-        //TODO Greyed out expose button
         getExposeButton(playerId).setBackgroundResource(R.drawable.expose_button_greyed);
         removeExposeOnClickListener(playerId);
     }
@@ -1033,8 +1032,14 @@ public class PlayerListView implements IPlayerListView {
 
 
 
-        ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
-                .setTextColor(playerIdIntColourMap.get(playerId));
+
+        try{
+            ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
+                    .setTextColor(playerIdIntColourMap.get(playerId));
+        } catch (NullPointerException e){
+            ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
+                    .setTextColor(getColor(R.color.gameplay_time_left));
+        }
         playerIdIntColourMap.remove(playerId);
         ((ImageView) playerCard.findViewById(R.id.exchange_requested_icon)).clearColorFilter();
         ((ImageView) playerCard.findViewById(R.id.player_card_flag)).clearColorFilter();
