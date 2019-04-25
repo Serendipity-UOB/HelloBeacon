@@ -89,7 +89,6 @@ public class GameplayActivity extends AppCompatActivity {
         initializeConsoleView();
         initializeBeaconController();
 
-        closeConsoleOnHomeBeaconNearby = true;
 
 
         gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
@@ -109,17 +108,11 @@ public class GameplayActivity extends AppCompatActivity {
             }
         });
 
-        try {
-            serverRequestsController.newTargetRequest();
-            newTargetRequested = false;
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-
         initializeStatusBarPlayerName();
 
+        closeConsoleOnHomeBeaconNearby = true;
+
         // First task: player needs to head to their home beacon.
-        closeConsoleOnHomeBeaconNearby = false;
         //TODO Is disabling this correct app behaviour
         //consoleView.goToStartBeaconPrompt(gameStateController.getHomeBeaconName());
 
