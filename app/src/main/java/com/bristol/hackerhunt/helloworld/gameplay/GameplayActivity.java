@@ -106,7 +106,7 @@ public class GameplayActivity extends AppCompatActivity {
                     else{
                         notFirstConsole = true;
                     }
-                    closeConsoleOnHomeBeaconNearby = false;
+                    closeConsoleOnHomeBeaconNearby = true;
                 }
             }
         });
