@@ -159,6 +159,7 @@ public class GameplayActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d("SCANNING", "STOP SCANNING CALLED");
         beaconController.stopScanning();
     }
 

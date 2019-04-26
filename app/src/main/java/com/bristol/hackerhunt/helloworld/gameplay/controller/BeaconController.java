@@ -83,7 +83,7 @@ public class BeaconController implements IBeaconController {
                 String major = Integer.toString(ibeacon.getMajor());
                 String minor = Integer.toString(ibeacon.getMinor());
                 int rssi = ibeacon.getRssi();
-
+                Log.v("Beacon discovered", "Found. Major: " + major + " Minor: " + minor);
                 gameStateController.updateBeacon(major, minor, rssi);
             }
 
@@ -123,7 +123,7 @@ public class BeaconController implements IBeaconController {
                 String minor = Integer.toString(ibeacon.getMinor());
                 // gameStateController.updateBeacon(major, minor, 0);
                 gameStateController.removeBeacon(major, minor);
-                Log.i("Lost Beacon" , "Lost. Major: " + major + " Minor: " + minor);
+                Log.v("Lost Beacon" , "Lost. Major: " + major + " Minor: " + minor);
 
 
                 // Update nearest major.

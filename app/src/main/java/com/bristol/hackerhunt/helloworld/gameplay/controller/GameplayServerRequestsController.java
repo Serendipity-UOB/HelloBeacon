@@ -463,6 +463,13 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                         Log.d("Mission", e.getMessage());
                     }
                 }
+                else if(error.networkResponse != null && error.networkResponse.statusCode == 205){
+                    try {
+                        missionCancelled(details, new JSONObject("{\"failure_description\": \"Mission was cancelled.\"}"));
+                    } catch (JSONException e) {
+                        Log.d("Mission", e.getMessage());
+                    }
+                }
                 else {
                     details.status = InteractionStatus.ERROR;
                 }
