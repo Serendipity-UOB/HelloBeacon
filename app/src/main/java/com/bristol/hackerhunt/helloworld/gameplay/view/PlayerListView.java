@@ -52,9 +52,15 @@ public class PlayerListView implements IPlayerListView {
     private StringInputRunnable restoreOnBackgroundPressRunnable;
 
     private boolean exchangeStarted = false;
+    private boolean exchangeSuccess = false;
+    private boolean exchangeFailure = false;
     private String exchangePlayerId;
+
     private boolean exposeStarted = false;
+
     private boolean interceptStarted = false;
+    private boolean interceptSuccess = false;
+    private boolean interceptFailure = false;
     private String interceptPlayerId;
 
     private static final long INTERACTION_DISPLAY_PERIOD = 3;
@@ -210,22 +216,36 @@ public class PlayerListView implements IPlayerListView {
                 disableExchangeButton(playerId);
 
                 if (exchangePlayerId.equals(playerId)) {
-                    displayIntStatus(playerId);
+                    displayExchangeRequested(playerId);
                 }
             }
             else {
                 enableExchangeButton(playerId);
+
+                if (exchangePlayerId != null && exchangePlayerId.equals(playerId) && exchangeSuccess) {
+                    displayExchangeSuccess(playerId);
+                }
+                if (exchangePlayerId != null && exchangePlayerId.equals(playerId) && exchangeFailure) {
+                    displayExchangeFailure(playerId);
+                }
             }
 
             if (interceptStarted) {
                 disableInterceptButton(playerId);
 
                 if (interceptPlayerId.equals(playerId)){
-                    displayIntStatus(playerId);
+                    displayInterceptPending(playerId);
                 }
             }
             else {
                 enableInterceptButton(playerId);
+
+                if (interceptPlayerId != null && interceptPlayerId.equals(playerId) && interceptSuccess) {
+                    displayInterceptSuccess(playerId);
+                }
+                if (interceptPlayerId != null && interceptPlayerId.equals(playerId) && interceptFailure) {
+                    displayInterceptFailure(playerId);
+                }
             }
 
             if(interceptExchangeIds.contains(playerId)){
@@ -238,11 +258,25 @@ public class PlayerListView implements IPlayerListView {
             listItem.setOnClickListener(null);
 
             if (exchangeStarted && exchangePlayerId.equals(playerId)) {
-                displayIntStatus(playerId);
+                displayExchangeRequested(playerId);
+            }
+
+            if (exchangePlayerId != null && exchangePlayerId.equals(playerId) && exchangeSuccess) {
+                displayExchangeSuccess(playerId);
+            }
+            if (exchangePlayerId != null && exchangePlayerId.equals(playerId) && exchangeFailure) {
+                displayExchangeFailure(playerId);
             }
 
             if (interceptStarted && interceptPlayerId.equals(playerId)) {
-                displayIntStatus(playerId);
+                displayInterceptPending(playerId);
+            }
+
+            if (interceptPlayerId != null && interceptPlayerId.equals(playerId) && interceptSuccess) {
+                displayInterceptSuccess(playerId);
+            }
+            if (interceptPlayerId != null && interceptPlayerId.equals(playerId) && interceptFailure) {
+                displayInterceptFailure(playerId);
             }
 
             if (pressedPlayerCardPlayerId.equals(playerId)) {
@@ -596,53 +630,92 @@ public class PlayerListView implements IPlayerListView {
                 }, INTERACTION_DISPLAY_PERIOD*1000);
     }
 
-    private void timedDisplayExchangeSuccess(final String playerId){
+    private void timedHideExchangeStatus(final String playerId){
+        final View intStatus = getIntStatusFlag(playerId);
+        intStatus.postDelayed(
+                new Runnable() {
+                    public void run(){
+                        exchangeSuccess = false;
+                        exchangeFailure = false;
+                        hideIntStatus(playerId);
+                    }
+                }, INTERACTION_DISPLAY_PERIOD*1000);
+    }
+
+    private void timedHideInterceptStatus(final String playerId){
+        final View intStatus = getIntStatusFlag(playerId);
+        intStatus.postDelayed(
+                new Runnable() {
+                    public void run(){
+                        interceptSuccess = false;
+                        interceptFailure = false;
+                        hideIntStatus(playerId);
+                    }
+                }, INTERACTION_DISPLAY_PERIOD*1000);
+    }
+
+    private void displayExchangeSuccess(String playerId) {
         //hideIntStatus(playerId);
 
         setIntStatusText(playerId,"Exchange Success\u00A0");
+        exchangeSuccess = true;
         setIntStatusColour(playerId, getColor(R.color.interaction_success));
         setIntStatusImage(playerId, R.drawable.exchange_button_green);
 
         displayIntStatus(playerId);
-
-        timedHideIntStatus(playerId);
-
     }
 
-    private void timedDisplayExchangeFailure(final String playerId){
+    private void timedDisplayExchangeSuccess(final String playerId){
+        displayExchangeSuccess(playerId);
+        timedHideExchangeStatus(playerId);
+    }
+
+    private void displayExchangeFailure(String playerId) {
         //hideIntStatus(playerId);
 
         setIntStatusText(playerId,"Exchange Rejected\u00A0");
+        exchangeFailure = true;
         setIntStatusColour(playerId,getColor(R.color.interaction_failure));
 
         displayIntStatus(playerId);
-
-        timedHideIntStatus(playerId);
     }
 
+    private void timedDisplayExchangeFailure(final String playerId){
+        displayExchangeFailure(playerId);
+        timedHideExchangeStatus(playerId);
+    }
 
-    private void timedDisplayInterceptSuccess(final String playerId){
+    private void displayInterceptSuccess(String playerId) {
         //hideIntStatus(playerId);
 
         setIntStatusText(playerId,"Intercept Success\u00A0");
+        interceptSuccess = true;
         setIntStatusColour(playerId,getColor(R.color.interaction_success));
         setIntStatusImage(playerId, R.drawable.intercept_button_green);
 
         displayIntStatus(playerId);
-
-        timedHideIntStatus(playerId);
     }
 
-    private void timedDisplayInterceptFailure(final String playerId){
+    private void timedDisplayInterceptSuccess(final String playerId){
+        displayInterceptSuccess(playerId);
+        timedHideInterceptStatus(playerId);
+    }
+
+    private void displayInterceptFailure(String playerId) {
         //hideIntStatus(playerId);
 
         setIntStatusText(playerId,"Intercept Failure\u00A0");
+        interceptFailure = true;
         setIntStatusColour(playerId,getColor(R.color.interaction_failure));
         setIntStatusImage(playerId, R.drawable.intercept_button_red);
 
         displayIntStatus(playerId);
 
-        timedHideIntStatus(playerId);
+    }
+
+    private void timedDisplayInterceptFailure(final String playerId){
+        displayInterceptFailure(playerId);
+        timedHideInterceptStatus(playerId);
     }
 
     private void displayIntStatus(String playerId) {

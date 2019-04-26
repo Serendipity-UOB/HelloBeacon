@@ -89,7 +89,6 @@ public class GameplayActivity extends AppCompatActivity {
         initializeConsoleView();
         initializeBeaconController();
 
-        closeConsoleOnHomeBeaconNearby = true;
 
 
         gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
@@ -112,17 +111,9 @@ public class GameplayActivity extends AppCompatActivity {
 
         initializeStatusBarPlayerName();
 
-
-        /*
-        try {
-            serverRequestsController.newTargetRequest();
-            newTargetRequested = false;
-        } catch (JSONException e){
-            e.printStackTrace();
-        }*/
+        closeConsoleOnHomeBeaconNearby = true;
 
         // First task: player needs to head to their home beacon.
-        closeConsoleOnHomeBeaconNearby = false;
         //TODO Is disabling this correct app behaviour
         //consoleView.goToStartBeaconPrompt(gameStateController.getHomeBeaconName());
 
@@ -268,6 +259,7 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run(final String missionDetails) {
                 Log.d("New Mission", missionDetails);
+                closeConsoleOnHomeBeaconNearby = false;
                 consoleView.missionUpdatePrompt(missionDetails);
                 consoleView.setConsoleImage(consoleView.getConsoleFlag(getFlagFromMission(missionDetails)));
                 beginMissionUpdateServerPolling();
@@ -280,16 +272,17 @@ public class GameplayActivity extends AppCompatActivity {
     private int getFlagFromMission(String details){
         //Default to UN Flag
         int flag = 0;
-        if(details.contains("italy")){
+        String lowerDetails = details.toLowerCase();
+        if(lowerDetails.contains("italy")){
             flag = 1;
         }
-        else if(details.contains("sweden")){
+        else if(lowerDetails.contains("sweden")){
             flag = 2;
         }
-        else if(details.contains("switzerland")){
+        else if(lowerDetails.contains("switzerland")){
             flag = 3;
         }
-        else if(details.contains("czech republic")){
+        else if(lowerDetails.contains("czech republic")){
             flag = 4;
         }
         return flag;

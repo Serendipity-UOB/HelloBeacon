@@ -306,16 +306,17 @@ public class ConsoleView implements IConsoleView {
     private int getFlagFromMission(String details){
         //Default to UN Flag
         int flag = 0;
-        if(details.contains("italy")){
+        String lowerDetails = details.toLowerCase();
+        if(lowerDetails.contains("italy")){
             flag = 1;
         }
-        else if(details.contains("sweden")){
+        else if(lowerDetails.contains("sweden")){
             flag = 2;
         }
-        else if(details.contains("switzerland")){
+        else if(lowerDetails.contains("switzerland")){
             flag = 3;
         }
-        else if(details.contains("czech republic")){
+        else if(lowerDetails.contains("czech republic")){
             flag = 4;
         }
         return flag;

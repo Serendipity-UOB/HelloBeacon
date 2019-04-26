@@ -99,7 +99,6 @@
                     android:orientation="horizontal">
                     <ImageView
                         android:id="@+id/exchange_requested_icon"
-                        android:tint="@color/gameplay_player_name"
                         android:layout_width="5pt"
                         android:layout_height="match_parent"
                         android:src="@drawable/exchange"
