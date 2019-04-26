@@ -94,9 +94,12 @@ public class GameplayActivity extends AppCompatActivity {
         gameStateController.setOnNearestBeaconBeingHomeBeaconListener(new Runnable() {
             @Override
             public void run() {
+                Log.d("Home Beacon", "Nearby");
+                Log.d("Close Console", Boolean.toString(closeConsoleOnHomeBeaconNearby));
                 if (!gameOver && closeConsoleOnHomeBeaconNearby) {
-                    //Log.d("App", "Closing console, home beacon nearby");
+                    Log.d("Home Beacon", "Closing console, home beacon nearby");
                     if(notFirstConsole){
+                        Log.d("Not First Console", "True");
                         consoleView.enableTapToClose();
                         closeConsoleAfterDelay();
                     }
@@ -479,8 +482,6 @@ public class GameplayActivity extends AppCompatActivity {
                                 String exposerId = gameStateController.getExposerId();
                                 String exposerName = getPlayerName(exposerId);
                                 gameStateController.resetExposerId();
-
-                                //TODO Full screen notification call for exposure
 
                                 consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
                                 gameStateController.loseHalfOfPlayersIntel();
