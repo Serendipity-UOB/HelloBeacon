@@ -403,7 +403,7 @@ public class PlayerListView implements IPlayerListView {
         });
     }
 
-    private void enableInterceptButton(String playerId) {
+    private void enableInterceptButton(String playerId) { 
         getInterceptButton(playerId).setBackgroundResource(R.drawable.intercept_button);
         setInterceptOnClickListener(playerId);
     }
@@ -605,7 +605,7 @@ public class PlayerListView implements IPlayerListView {
 
         setIntStatusText(playerId,"Exchange Requested\u00A0");
         setIntStatusColour(playerId,getColor(R.color.gameplay_time_left));
-        setIntStatusImage(playerId, R.drawable.exchange);
+        setIntStatusImage(playerId, R.drawable.exchange_blue);
 
         displayIntStatus(playerId);
     }
@@ -615,7 +615,7 @@ public class PlayerListView implements IPlayerListView {
 
         setIntStatusText(playerId,"Intercept Pending\u00A0");
         setIntStatusColour(playerId,getColor(R.color.gameplay_time_left));
-        setIntStatusImage(playerId, R.drawable.intercept);
+        setIntStatusImage(playerId, R.drawable.intercept_blue);
 
         displayIntStatus(playerId);
     }

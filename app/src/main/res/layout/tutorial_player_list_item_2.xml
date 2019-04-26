@@ -30,15 +30,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
-                    android:id="@+id/player_name"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/sharetech"
-                    android:text="Tilly"
-                    android:textColor="#b6eaff"
-                    android:textSize="8pt"
-                    android:paddingStart="15dp"/>
+                    android:orientation="horizontal">
+                    <RelativeLayout
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/player_card_flag"
+                            android:layout_marginStart="5pt"
+                            android:layout_marginEnd="2pt"
+                            android:layout_width="11pt"
+                            android:layout_height="11pt"
+                            android:src="@drawable/italy_flag_dark"/>
+                    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/player_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sharetech"
+                        android:text="Tilly"
+                        android:textColor="#b6eaff"
+                        android:textSize="8pt"
+                        android:paddingStart="15dp"/>
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/player_card_divider"

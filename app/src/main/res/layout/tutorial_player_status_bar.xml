@@ -90,7 +90,7 @@
                     android:id="@+id/current_game_zone_logo"
                     android:layout_width="9pt"
                     android:layout_height="9pt"
-                    android:src="@drawable/beacon_valor"
+                    android:src="@drawable/italy_flag_dark"
                     android:contentDescription="Current game zone." />
             </RelativeLayout>
         </LinearLayout>

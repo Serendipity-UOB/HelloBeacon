@@ -442,6 +442,8 @@ public class TutorialActivity extends AppCompatActivity {
                 .setImageResource(R.drawable.player_card_divider_darkened);
 
         playerCard.findViewById(R.id.player_item_background).setBackgroundResource(R.drawable.player_card_darkened);
+        ((ImageView) playerCard.findViewById(R.id.player_card_flag))
+                .setColorFilter(ContextCompat.getColor(this, R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
 
         TextView codename = playerCard.findViewById(R.id.player_hacker_name);
         codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text_darkened));
@@ -468,6 +470,8 @@ public class TutorialActivity extends AppCompatActivity {
                 .setImageResource(R.drawable.player_card_divider);
 
         playerCard.findViewById(R.id.player_item_background).setBackgroundResource(R.drawable.player_card);
+        ((ImageView) playerCard.findViewById(R.id.player_card_flag))
+                .clearColorFilter();
 
         TextView codename = playerCard.findViewById(R.id.player_hacker_name);
         codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text));
@@ -514,6 +518,8 @@ public class TutorialActivity extends AppCompatActivity {
                 .setImageResource(R.drawable.player_card_divider_darkened);
 
         playerCard.findViewById(R.id.player_item_background).setBackgroundResource(R.drawable.player_card_darkened);
+        ((ImageView) playerCard.findViewById(R.id.player_card_flag))
+                .setColorFilter(ContextCompat.getColor(this, R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
 
         TextView codename = playerCard.findViewById(R.id.player_hacker_name);
         codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text_darkened));
@@ -539,6 +545,8 @@ public class TutorialActivity extends AppCompatActivity {
                 .setImageResource(R.drawable.player_card_divider);
 
         playerCard.findViewById(R.id.player_item_background).setBackgroundResource(R.drawable.player_card);
+        ((ImageView) playerCard.findViewById(R.id.player_card_flag))
+                .clearColorFilter();
 
         ((TextView) playerCard.findViewById(R.id.exchange_requested_text))
                 .setTextColor(ContextCompat.getColor(this, R.color.player_card_name));
@@ -562,6 +570,8 @@ public class TutorialActivity extends AppCompatActivity {
                 .setImageResource(R.drawable.player_card_divider_darkened);
 
         playerCard.findViewById(R.id.player_item_background).setBackgroundResource(R.drawable.player_card_darkened);
+        ((ImageView) playerCard.findViewById(R.id.player_card_flag))
+                .setColorFilter(ContextCompat.getColor(this, R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
 
         TextView codename = playerCard.findViewById(R.id.player_hacker_name);
         codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text_darkened));
@@ -582,6 +592,8 @@ public class TutorialActivity extends AppCompatActivity {
                 .setImageResource(R.drawable.player_card_divider);
 
         playerCard.findViewById(R.id.player_item_background).setBackgroundResource(R.drawable.player_card);
+        ((ImageView) playerCard.findViewById(R.id.player_card_flag))
+                .clearColorFilter();
 
         TextView codename = playerCard.findViewById(R.id.player_hacker_name);
         codename.setTextColor(ContextCompat.getColor(this, R.color.player_card_target_codename_text));
@@ -613,6 +625,9 @@ public class TutorialActivity extends AppCompatActivity {
         View background = playerCard.findViewById(R.id.player_item_background);
         background.setBackgroundResource(R.drawable.player_card_far_darkened);
 
+        ((ImageView) playerCard.findViewById(R.id.player_card_flag))
+                .setColorFilter(ContextCompat.getColor(this, R.color.player_card_name_darkened), PorterDuff.Mode.MULTIPLY);
+
         CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.tutorial_player_intel_circle_far);
         int progressBarColor = ContextCompat.getColor(this, R.color.progress_bar_far_darkened);
         int progressBarBackgroundColor = ContextCompat.getColor(this, R.color.progress_bar_background_far_darkened);
@@ -641,6 +656,9 @@ public class TutorialActivity extends AppCompatActivity {
 
         View background = playerCard.findViewById(R.id.player_item_background);
         background.setBackgroundResource(R.drawable.player_card_far);
+
+        ((ImageView) playerCard.findViewById(R.id.player_card_flag))
+                .clearColorFilter();
 
         CircleProgressBar circleProgressBar = playerCard.findViewById(R.id.tutorial_player_intel_circle_far);
         int progressBarColor = ContextCompat.getColor(this, R.color.progress_bar_far);
