@@ -1,10 +1,12 @@
 package com.bristol.hackerhunt.helloworld.gameplay;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -189,11 +191,21 @@ public class GameplayActivity extends AppCompatActivity {
                 String homeBeaconName = gameStateController.getHomeBeaconName();
                 closeConsoleOnHomeBeaconNearby = true;
                 consoleView.exposeSuccessPrompt(homeBeaconName);
+                notificationVibrate();
                 Log.d("Clear Evidence", targetId);
                 gameStateController.clearAllEvidence(targetId);
                 newTargetRequested = true;
             }
         };
+    }
+
+
+    private void notificationVibrate() {
+        // Get instance of Vibrator from current Context
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        // Vibrate for 400 milliseconds
+        v.vibrate(500);
     }
 
     // This should never be called because the client should pick up on invalid requests, but if it
@@ -264,6 +276,7 @@ public class GameplayActivity extends AppCompatActivity {
                 closeConsoleOnHomeBeaconNearby = false;
                 consoleView.missionUpdatePrompt(missionDetails);
                 consoleView.setConsoleImage(consoleView.getConsoleFlag(getFlagFromMission(missionDetails)));
+                notificationVibrate();
                 beginMissionUpdateServerPolling();
 
 
@@ -296,6 +309,8 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(String input) {
                 Log.d("Mission Success",input);
                 consoleView.missionSuccessPrompt(input);
+                notificationVibrate();
+
             }
         };
     }
@@ -306,6 +321,8 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(String input) {
                 Log.d("Mission Failure",input);
                 consoleView.missionFailedPrompt(input);
+                notificationVibrate();
+
             }
         };
     }
@@ -483,6 +500,7 @@ public class GameplayActivity extends AppCompatActivity {
                                 gameStateController.resetExposerId();
 
                                 consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
+                                notificationVibrate();
                                 gameStateController.loseHalfOfPlayersIntel();
                                 gameStateController.resetPlayerTakenDown();
                             }
@@ -490,6 +508,8 @@ public class GameplayActivity extends AppCompatActivity {
                                 newTargetRequested = true;
                                 closeConsoleOnHomeBeaconNearby = true;
                                 consoleView.playersTargetTakenDownPrompt(gameStateController.getHomeBeaconName());
+                                notificationVibrate();
+
                                 gameStateController.resetPlayersTargetHasBeenTakenDown();
                             }
                         }
