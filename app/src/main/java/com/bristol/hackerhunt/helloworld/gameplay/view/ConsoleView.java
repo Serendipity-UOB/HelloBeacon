@@ -250,6 +250,8 @@ public class ConsoleView implements IConsoleView {
         setConsoleImage(getConsoleFlag(getFlagFromMission(missionStatement)));
         if(notFirstMission) {
             startMissionTimer();
+        }
+        else{
             notFirstMission = true;
         }
     }
