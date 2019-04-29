@@ -427,7 +427,7 @@ public class PlayerListView implements IPlayerListView {
     }
 
     @Override
-    public void increasePlayerIntel(final String playerId, int intelIncrement) {
+    public void increasePlayerIntel(final String playerId, final int intelIncrement) {
         if (!playerIdListItemIdMap.containsKey(playerId)) {
             Log.e("Error","Error: player is not listed as playing the game.");
         }
@@ -437,32 +437,44 @@ public class PlayerListView implements IPlayerListView {
                 RelativeLayout listItem = playerList.findViewById(id);
                 final CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
+                final Context context = intelBar.getContext();
                 final float intel = intelBar.getProgress();
                 final float newProgress = (intel + intelIncrement >= 100) ? 100 : intel + intelIncrement;
-                intelBar.setProgress(newProgress);
 
                 intelBar.setText("+" + String.valueOf(intelIncrement));
-                if (newProgress >= 100) {
-                    setFullIntelCircleProgressBarColours(playerId, intelBar);
-                }
                 intelBar.setTextColor(ContextCompat.getColor(playerList.getContext(),
                         R.color.progress_bar_increase));
 
-                new Handler().postDelayed(new Runnable() {
+                final Handler increaseHandler = new Handler();
+                increaseHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        intelBar.setText(String.valueOf((int) newProgress));
+                        if (intelBar.getProgress() < newProgress) {
+                            intelBar.setProgress(Math.min(newProgress, intelBar.getProgress() + 2));
+                            increaseHandler.postDelayed(this, 25);
+                        }
 
-                        if (newProgress >= 100) {
+                        else if (newProgress >= 100) {
                             setFullIntelCircleProgressBarColours(playerId, intelBar);
                         }
-                        else {
-                            if (playerIdNameMap.containsKey(playerId)) {
-                                setNotFullIntelCircleProgressBarColoursNearby(intelBar);
-                            }
-                        }
                     }
-                }, 3000);
+                }, 25);
+
+                final Handler restoreTextHandler = new Handler();
+                restoreTextHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (newProgress >= 100) {
+                            intelBar.setTextColor(ContextCompat.getColor(context, R.color.progress_bar_complete_evidence_text));
+                        }
+                        else {
+                            intelBar.setTextColor(ContextCompat.getColor(context, R.color.progress_bar_text));
+                        }
+                        intelBar.setText(Integer.toString((int) newProgress));
+                        exchangeSuccess = false;
+                        interceptSuccess = false;
+                    }
+                }, 1000);
             }
         }
     }
@@ -525,13 +537,10 @@ public class PlayerListView implements IPlayerListView {
         else {
             int id = playerIdListItemIdMap.get(playerId);
             RelativeLayout listItem = playerList.findViewById(id);
-            CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
+            final CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
             float intel = intelBar.getProgress();
-            float newIntel = Math.max(0, intel - intelIncrement);
-            intelBar.setProgress(newIntel);
-            Log.d("Set Intel Text", String.valueOf((int) newIntel));
-            intelBar.setText(String.valueOf((int) newIntel));
+            final float newIntel = Math.max(0, intel - intelIncrement);
 
             if (newIntel >= 100) {
                 setFullIntelCircleProgressBarColours(playerId, intelBar);
@@ -539,6 +548,18 @@ public class PlayerListView implements IPlayerListView {
             else {
                 setNotFullIntelCircleProgressBarColoursNearby(intelBar);
             }
+
+            final Handler decreaseHandler = new Handler();
+            decreaseHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (intelBar.getProgress() > newIntel) {
+                        intelBar.setProgress(Math.max(newIntel, intelBar.getProgress() - 2));
+                        intelBar.setText(Integer.toString((int) intelBar.getProgress()));
+                        decreaseHandler.postDelayed(this, 25);
+                    }
+                }
+            }, 25);
         }
     }
 
@@ -547,11 +568,24 @@ public class PlayerListView implements IPlayerListView {
         if (playerIdListItemIdMap.containsKey(playerId)) {
             int id = playerIdListItemIdMap.get(playerId);
             RelativeLayout listItem = playerList.findViewById(id);
-            CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
-            intelBar.setProgress(0);
-            intelBar.setText("0");
+            final CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
             setNotFullIntelCircleProgressBarColoursNearby(intelBar);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (intelBar.getProgress() > 0) {
+                        intelBar.setProgress(Math.max(0, intelBar.getProgress() - 2));
+                        intelBar.setText(Integer.toString((int) intelBar.getProgress()));
+                        handler.postDelayed(this, 25);
+                    }
+                    else {
+                        // TODO.
+                    }
+                }
+            }, 25);
         }
     }
 
