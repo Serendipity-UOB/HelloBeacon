@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:paddingBottom="2pt"
-    tools:showIn="@layout/activity_gameplay"
     android:clipChildren="false"
     android:elevation="5dp">
 
@@ -212,4 +211,9 @@
                 android:layout_alignParentBottom="true"/>
         </RelativeLayout>
     </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/far_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="34.5pt"
+        android:background="#5f000000"/>
 </RelativeLayout>
