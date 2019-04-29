@@ -663,6 +663,7 @@ public class PlayerListView implements IPlayerListView {
         setIntStatusText(playerId,"Exchange Rejected\u00A0");
         exchangeFailure = true;
         setIntStatusColour(playerId,getColor(R.color.interaction_failure));
+        setIntStatusImage(playerId, R.drawable.exchange_button_red);
 
         displayIntStatus(playerId);
     }
