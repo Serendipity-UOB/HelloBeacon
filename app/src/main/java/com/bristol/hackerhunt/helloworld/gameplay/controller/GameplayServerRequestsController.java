@@ -447,6 +447,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                     missionCancelled(details, response);
                 }
                 else {
+                    Log.v("Mission", response.toString());
                     details.status = InteractionStatus.ERROR;
                 }
                 statusCode = 0;
@@ -470,8 +471,27 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                         Log.d("Mission", e.getMessage());
                     }
                 }
+                else if(error.networkResponse != null && error.networkResponse.statusCode == 204){
+                    missionPending(details, new JSONObject());
+                }
+                else if(error.networkResponse != null && error.networkResponse.statusCode == 206){
+                    missionPending(details, new JSONObject());
+                }
+                else if(error.networkResponse == null){
+                    Log.v("Mission", "Null network response");
+                    try {
+                        missionCancelled(details, new JSONObject("{\"failure_description\": \"Mission was cancelled.\"}"));
+                    } catch (JSONException e){
+                        Log.d("Mission", e.getMessage());
+                    }
+                }
                 else {
-                    details.status = InteractionStatus.ERROR;
+                    Log.v("Mission", Integer.toString(error.networkResponse.statusCode));
+                    try {
+                        missionCancelled(details, new JSONObject("{\"failure_description\": \"Mission was cancelled.\"}"));
+                    } catch (JSONException e){
+                        Log.d("Mission", e.getMessage());
+                    }
                 }
                 statusCode = 0;
             }
