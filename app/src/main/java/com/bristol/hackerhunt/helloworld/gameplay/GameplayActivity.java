@@ -277,8 +277,12 @@ public class GameplayActivity extends AppCompatActivity {
                 consoleView.missionUpdatePrompt(missionDetails);
                 consoleView.setConsoleImage(consoleView.getConsoleFlag(getFlagFromMission(missionDetails)));
                 notificationVibrate();
-                beginMissionUpdateServerPolling();
-
+                if(missionDetails.toLowerCase().contains("your target")){
+                    consoleView.enableTapToClose();
+                }
+                else {
+                    beginMissionUpdateServerPolling();
+                }
 
             }
         };
