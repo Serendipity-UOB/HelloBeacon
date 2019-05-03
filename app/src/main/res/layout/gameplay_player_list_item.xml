@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:paddingBottom="2pt"
-    tools:showIn="@layout/activity_gameplay"
     android:clipChildren="false"
     android:elevation="5dp">
 
@@ -212,4 +211,100 @@
                 android:layout_alignParentBottom="true"/>
         </RelativeLayout>
     </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/far_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#6f000000"
+        android:orientation="horizontal"
+        android:clipChildren="false">
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sharetech"
+                        android:text="."
+                        android:textColor="#b6eaff"
+                        android:textSize="8pt"
+                        android:paddingStart="15dp"
+                        android:visibility="invisible"/>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="4px"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/player_card_divider"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="7dp"
+                    android:visibility="invisible"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sharetech_mono"
+                    android:text="CookingKing"
+                    android:textColor="#fff"
+                    android:background="@color/player_is_not_target_codename"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginStart="15dp"
+                    android:textSize="6pt"
+                    android:visibility="invisible"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
+                    <ImageView
+                        android:layout_width="5pt"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/exchange"
+                        android:gravity="center"
+                        android:layout_marginEnd="5dp"
+                        android:visibility="invisible"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sharetech"
+                        android:text="Exchange requested\u00A0"
+                        android:textStyle="italic"
+                        android:textColor="#93bdcf"
+                        android:textSize="6pt"
+                        android:visibility="invisible"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
 </RelativeLayout>

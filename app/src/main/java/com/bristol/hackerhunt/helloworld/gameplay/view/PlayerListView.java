@@ -254,7 +254,6 @@ public class PlayerListView implements IPlayerListView {
             }
         }
         else {
-            darkenFarAwayPlayerEntries(playerId);
             listItem.setOnClickListener(null);
 
             if (exchangeStarted && exchangePlayerId.equals(playerId)) {
@@ -282,6 +281,7 @@ public class PlayerListView implements IPlayerListView {
             if (pressedPlayerCardPlayerId.equals(playerId)) {
                 restoreOnBackgroundPressRunnable.run(playerId);
             }
+            darkenFarAwayPlayerEntries(playerId);
         }
         updateAllTargetCodenameColors();
     }
@@ -427,7 +427,7 @@ public class PlayerListView implements IPlayerListView {
     }
 
     @Override
-    public void increasePlayerIntel(final String playerId, int intelIncrement) {
+    public void increasePlayerIntel(final String playerId, final int intelIncrement) {
         if (!playerIdListItemIdMap.containsKey(playerId)) {
             Log.e("Error","Error: player is not listed as playing the game.");
         }
@@ -437,35 +437,44 @@ public class PlayerListView implements IPlayerListView {
                 RelativeLayout listItem = playerList.findViewById(id);
                 final CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
+                final Context context = intelBar.getContext();
                 final float intel = intelBar.getProgress();
                 final float newProgress = (intel + intelIncrement >= 100) ? 100 : intel + intelIncrement;
-                intelBar.setProgress(newProgress);
 
                 intelBar.setText("+" + String.valueOf(intelIncrement));
-                if (newProgress >= 100) {
-                    setFullIntelCircleProgressBarColours(playerId, intelBar);
-                }
                 intelBar.setTextColor(ContextCompat.getColor(playerList.getContext(),
                         R.color.progress_bar_increase));
 
-                new Handler().postDelayed(new Runnable() {
+                final Handler increaseHandler = new Handler();
+                increaseHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        intelBar.setText(String.valueOf((int) newProgress));
+                        if (intelBar.getProgress() < newProgress) {
+                            intelBar.setProgress(Math.min(newProgress, intelBar.getProgress() + 2));
+                            increaseHandler.postDelayed(this, 25);
+                        }
 
-                        if (newProgress >= 100) {
+                        else if (newProgress >= 100) {
                             setFullIntelCircleProgressBarColours(playerId, intelBar);
                         }
-                        else {
-                            if (playerIdNameMap.containsKey(playerId)) {
-                                setNotFullIntelCircleProgressBarColoursNearby(intelBar);
-                            }
-                            else {
-                                setNotFullIntelCircleProgressBarColoursFar(intelBar);
-                            }
-                        }
                     }
-                }, 3000);
+                }, 25);
+
+                final Handler restoreTextHandler = new Handler();
+                restoreTextHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (newProgress >= 100) {
+                            intelBar.setTextColor(ContextCompat.getColor(context, R.color.progress_bar_complete_evidence_text));
+                        }
+                        else {
+                            intelBar.setTextColor(ContextCompat.getColor(context, R.color.progress_bar_text));
+                        }
+                        intelBar.setText(Integer.toString((int) newProgress));
+                        exchangeSuccess = false;
+                        interceptSuccess = false;
+                    }
+                }, 1000);
             }
         }
     }
@@ -528,25 +537,29 @@ public class PlayerListView implements IPlayerListView {
         else {
             int id = playerIdListItemIdMap.get(playerId);
             RelativeLayout listItem = playerList.findViewById(id);
-            CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
+            final CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
             float intel = intelBar.getProgress();
-            float newIntel = Math.max(0, intel - intelIncrement);
-            intelBar.setProgress(newIntel);
-            Log.d("Set Intel Text", String.valueOf((int) newIntel));
-            intelBar.setText(String.valueOf((int) newIntel));
+            final float newIntel = Math.max(0, intel - intelIncrement);
 
             if (newIntel >= 100) {
                 setFullIntelCircleProgressBarColours(playerId, intelBar);
             }
             else {
-                if (nearbyPlayerIds.contains(playerId)) {
-                    setNotFullIntelCircleProgressBarColoursNearby(intelBar);
-                }
-                else {
-                    setNotFullIntelCircleProgressBarColoursFar(intelBar);
-                }
+                setNotFullIntelCircleProgressBarColoursNearby(intelBar);
             }
+
+            final Handler decreaseHandler = new Handler();
+            decreaseHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (intelBar.getProgress() > newIntel) {
+                        intelBar.setProgress(Math.max(newIntel, intelBar.getProgress() - 2));
+                        intelBar.setText(Integer.toString((int) intelBar.getProgress()));
+                        decreaseHandler.postDelayed(this, 25);
+                    }
+                }
+            }, 25);
         }
     }
 
@@ -555,16 +568,24 @@ public class PlayerListView implements IPlayerListView {
         if (playerIdListItemIdMap.containsKey(playerId)) {
             int id = playerIdListItemIdMap.get(playerId);
             RelativeLayout listItem = playerList.findViewById(id);
-            CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
-            intelBar.setProgress(0);
-            intelBar.setText("0");
+            final CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
-            if (nearbyPlayerIds.contains(playerId)) {
-                setNotFullIntelCircleProgressBarColoursNearby(intelBar);
-            }
-            else {
-                setNotFullIntelCircleProgressBarColoursFar(intelBar);
-            }
+            setNotFullIntelCircleProgressBarColoursNearby(intelBar);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (intelBar.getProgress() > 0) {
+                        intelBar.setProgress(Math.max(0, intelBar.getProgress() - 2));
+                        intelBar.setText(Integer.toString((int) intelBar.getProgress()));
+                        handler.postDelayed(this, 25);
+                    }
+                    else {
+                        // TODO.
+                    }
+                }
+            }, 25);
         }
     }
 
@@ -676,6 +697,7 @@ public class PlayerListView implements IPlayerListView {
         setIntStatusText(playerId,"Exchange Rejected\u00A0");
         exchangeFailure = true;
         setIntStatusColour(playerId,getColor(R.color.interaction_failure));
+        setIntStatusImage(playerId, R.drawable.exchange_button_red);
 
         displayIntStatus(playerId);
     }
@@ -911,6 +933,7 @@ public class PlayerListView implements IPlayerListView {
         View entry = playerList.findViewById(viewId);
         entry.findViewById(R.id.player_item_background)
                 .setBackgroundResource(R.drawable.player_card);
+        entry.findViewById(R.id.far_overlay).setVisibility(View.GONE);
 
         CircleProgressBar pb = entry.findViewById(R.id.player_intel_circle);
         pb.setBackgroundColor(ContextCompat.getColor(context,
@@ -925,7 +948,7 @@ public class PlayerListView implements IPlayerListView {
     }
 
     private void darkenFarAwayPlayerEntries(String playerId) {
-        Context context = playerList.getContext();
+ /*       Context context = playerList.getContext();
 
         int viewId = playerIdListItemIdMap.get(playerId);
         View entry = playerList.findViewById(viewId);
@@ -942,7 +965,11 @@ public class PlayerListView implements IPlayerListView {
 
         pb.setBackgroundColor(ContextCompat.getColor(context,
                 R.color.progress_bar_background_far));
-
+*/
+        nearbyPlayerEntryColoring(playerId);
+        int viewId = playerIdListItemIdMap.get(playerId);
+        View entry = playerList.findViewById(viewId);
+        entry.findViewById(R.id.far_overlay).setVisibility(View.VISIBLE);
     }
 
     private void clearOnClickListener(String playerId) {
@@ -997,10 +1024,7 @@ public class PlayerListView implements IPlayerListView {
                         .setImageResource(R.drawable.player_card_divider_darkened);
 
                 View background = playerCard.findViewById(R.id.player_item_background);
-                int cardBackground = R.drawable.player_card_far_darkened;
-                if (nearbyPlayerIds.contains(playerId)) {
-                    cardBackground = R.drawable.player_card_darkened;
-                }
+                int cardBackground = R.drawable.player_card_darkened;
                 background.setBackgroundResource(cardBackground);
 
                 // handle any revealed codenames:
@@ -1022,16 +1046,6 @@ public class PlayerListView implements IPlayerListView {
                 if (getPlayerIntel(playerId) >= 100) {
                     progressBarColor = getColor(R.color.progress_bar_complete_evidence_darkened);
                     progressBarTextColor = getColor(R.color.progress_bar_complete_evidence_text_darkened);
-                }
-                else if (nearbyPlayerIds.contains(playerId)) {
-                    progressBarColor = getColor(R.color.progress_bar_darkened);
-                    progressBarBackgroundColor = getColor(R.color.progress_bar_background_darkened);
-                    progressBarTextColor = getColor(R.color.progress_bar_text_darkened);
-                }
-                else {
-                    progressBarColor = getColor(R.color.progress_bar_far_darkened);
-                    progressBarBackgroundColor = getColor(R.color.progress_bar_background_far_darkened);
-                    progressBarTextColor = getColor(R.color.progress_bar_text_far_darkened);
                 }
 
                 circleProgressBar.setProgressColor(progressBarColor);
@@ -1071,10 +1085,7 @@ public class PlayerListView implements IPlayerListView {
                 .setImageResource(R.drawable.player_card_divider);
 
         View background = playerCard.findViewById(R.id.player_item_background);
-        int cardBackground = R.drawable.player_card_far;
-        if (nearbyPlayerIds.contains(playerId)) {
-            cardBackground = R.drawable.player_card;
-        }
+        int cardBackground = R.drawable.player_card;
         background.setBackgroundResource(cardBackground);
 
         // handle any revealed codenames:
@@ -1095,17 +1106,10 @@ public class PlayerListView implements IPlayerListView {
             setFullIntelCircleProgressBarColours(playerId, circleProgressBar);
         }
         else {
-            if (nearbyPlayerIds.contains(playerId)) {
-                setNotFullIntelCircleProgressBarColoursNearby(circleProgressBar);
-            }
-            else {
-                setNotFullIntelCircleProgressBarColoursFar(circleProgressBar);
-            }
+            setNotFullIntelCircleProgressBarColoursNearby(circleProgressBar);
         }
 
         circleProgressBar.setBackgroundColor(progressBarBackgroundColor);
-
-
 
 
         try{
