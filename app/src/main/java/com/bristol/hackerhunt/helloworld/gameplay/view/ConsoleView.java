@@ -249,7 +249,9 @@ public class ConsoleView implements IConsoleView {
         setConsoleTitle(R.string.mission_update_title);
         setConsoleImage(getConsoleFlag(getFlagFromMission(missionStatement)));
         if(notFirstMission) {
-            startMissionTimer();
+            if(!missionStatement.toLowerCase().contains("your target")) {
+                startMissionTimer();
+            }
         }
         else{
             notFirstMission = true;
