@@ -84,79 +84,38 @@ public class TutorialActivity extends AppCompatActivity {
                 darken3rdPlayerCard();
                 darkenFarAwayPlayerCards();
                 darkenBackground();
+                displayTapToContinue();
 
                 findViewById(R.id.welcome_to_spy_expose).setVisibility(View.VISIBLE);
                 break;
 
             case 1:
-                /* This is your position and reputation */
-                restoreStatusBar();
-
-                findViewById(R.id.welcome_to_spy_expose).setVisibility(View.GONE);
-                findViewById(R.id.this_is_your_position_and_reputation).setVisibility(View.VISIBLE);
-                break;
-
-            case 2:
-                /* This is your current location */
-                darkenStatusBar();
-                restoreQuestionIcon();
-
-                findViewById(R.id.this_is_your_position_and_reputation).setVisibility(View.GONE);
-                findViewById(R.id.this_is_your_current_location).setVisibility(View.VISIBLE);
-                break;
-
-            case 3:
-                /* This is your target */
-                darkenStatusBar();
-                restoreTargetBox();
-
-                findViewById(R.id.this_is_your_current_location).setVisibility(View.GONE);
-                findViewById(R.id.this_is_your_target).setVisibility(View.VISIBLE);
-                break;
-
-            case 4:
-                /* This is the remaining game time */
-                darkenTargetBox();
-                restoreTimeLeft();
-
-                findViewById(R.id.this_is_your_target).setVisibility(View.GONE);
-                findViewById(R.id.this_is_the_remaining_game_time).setVisibility(View.VISIBLE);
-                break;
-
-            case 5:
                 /* This is another agent */
                 darkenTimeLeft();
                 restoreExamplePlayerCard();
 
-                findViewById(R.id.this_is_the_remaining_game_time).setVisibility(View.GONE);
+                findViewById(R.id.welcome_to_spy_expose).setVisibility(View.GONE);
                 findViewById(R.id.this_is_another_agent).setVisibility(View.VISIBLE);
                 break;
 
-            case 6:
-                /* This is the evidence bar */
-                darkenExamplePlayerCard();
-                restoreExamplePlayerCardEvidence();
-
-                findViewById(R.id.this_is_another_agent).setVisibility(View.GONE);
-                findViewById(R.id.this_icon_displays_evidence).setVisibility(View.VISIBLE);
-                break;
-
-            case 7:
+            case 2:
                 /* If you have 100 evidence, the agent's codename is revealed */
                 CircleProgressBar bar = findViewById(R.id.player_card_1).findViewById(R.id.tutorial_player_intel_circle_100);
                 bar.setProgress(100);
                 bar.setText("100");
                 restoreExamplePlayerCardEvidence();
 
-                findViewById(R.id.this_icon_displays_evidence).setVisibility(View.GONE);
+                findViewById(R.id.this_is_another_agent).setVisibility(View.GONE);
                 findViewById(R.id.codename_reveal).setVisibility(View.VISIBLE);
                 break;
 
-            case 8:
+            case 3:
                 /* These are your nearby agents */
                 restoreExamplePlayerCard();
                 restorePressedPlayerCard();
                 restore3rdPlayerCard();
+
+                hideTapToContinue();
 
                 disableOnTapProgression();
                 pressedPlayerCard.setOnClickListener(nextOnClickListener());
@@ -165,7 +124,7 @@ public class TutorialActivity extends AppCompatActivity {
                 findViewById(R.id.nearby_agents).setVisibility(View.VISIBLE);
                 break;
 
-            case 9:
+            case 4:
                 /* Tap exchange to send an exchange request to Tilly */
                 darkenExamplePlayerCard();
                 darken3rdPlayerCard();
@@ -182,9 +141,10 @@ public class TutorialActivity extends AppCompatActivity {
 
                 break;
 
-            case 10:
+            case 5:
                 /* You can only have one exchange request active at a time */
                 pressedExchangeButton();
+                displayTapToContinue();
 
                 pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(null);
                 enableOnTapProgression();
@@ -194,13 +154,13 @@ public class TutorialActivity extends AppCompatActivity {
 
                 break;
 
-            case 11:
+            case 6:
                 /* You've gained evidence from your exchange request */
                 exchangeRequestComplete();
                 findViewById(R.id.exchange_accepted).setVisibility(View.VISIBLE);
                 closeInteractionButtons();
 
-                restoreExamplePlayerCard();
+                darkenExamplePlayerCard();
                 restore3rdPlayerCard();
 
                 increaseTillyEvidence(25);
@@ -210,9 +170,10 @@ public class TutorialActivity extends AppCompatActivity {
                 findViewById(R.id.you_gained_evidence_from_exchange).setVisibility(View.VISIBLE);
                 break;
 
-            case 12:
+            case 7:
                 /* Tilly requested an exchange; Accept it! */
                 disableOnTapProgression();
+                hideTapToContinue();
 
                 pressedPlayerCard.setOnClickListener(null);
                 pressedPlayerCard.findViewById(R.id.gameplay_exchange_button).setOnClickListener(nextOnClickListener());
@@ -224,11 +185,12 @@ public class TutorialActivity extends AppCompatActivity {
                 findViewById(R.id.Tilly_requested_an_exchange).setVisibility(View.VISIBLE);
                 break;
 
-            case 13:
+            case 8:
                 /* You gained more evidence! */
                 findViewById(R.id.accept_exchange_button).setOnClickListener(null);
                 findViewById(R.id.exchange_request_overlay).setVisibility(View.GONE);
                 enableOnTapProgression();
+                displayTapToContinue();
 
                 increaseTillyEvidence(25);
                 increaseLouisEvidence(10);
@@ -237,16 +199,17 @@ public class TutorialActivity extends AppCompatActivity {
                 findViewById(R.id.you_gained_evidence_from_exchange).setVisibility(View.VISIBLE);
                 break;
 
-            case 14:
+            case 9:
                 /* Tilly is interacting with Louis; now is your change to run an Intercept! */
                 disableOnTapProgression();
+                hideTapToContinue();
                 pressedPlayerCard.setOnClickListener(nextOnClickListener());
 
                 findViewById(R.id.you_gained_evidence_from_exchange).setVisibility(View.GONE);
                 findViewById(R.id.Tilly_is_interacting_with_Louis).setVisibility(View.VISIBLE);
                 break;
 
-            case 15:
+            case 10:
                 /* Tap intercept */
                 darkenExamplePlayerCard();
                 darken3rdPlayerCard();
@@ -260,7 +223,7 @@ public class TutorialActivity extends AppCompatActivity {
                 findViewById(R.id.tap_intercept).setVisibility(View.VISIBLE);
                 break;
 
-            case 16:
+            case 11:
                 /* Only one intercept may be active at a time */
                 pressedInterceptButton();
 
@@ -268,14 +231,16 @@ public class TutorialActivity extends AppCompatActivity {
 
                 pressedPlayerCard.findViewById(R.id.gameplay_intercept_button).setOnClickListener(null);
                 enableOnTapProgression();
+                displayTapToContinue();
 
                 findViewById(R.id.tap_intercept).setVisibility(View.GONE);
                 findViewById(R.id.one_intercept_at_a_time).setVisibility(View.VISIBLE);
                 break;
 
-            case 17:
+            case 12:
                 /* Intercept on Tilly and Louis was successful */
                 interceptAttemptComplete();
+                displayTapToContinue();
 
                 findViewById(R.id.intercept_pending).setVisibility(View.GONE);
                 findViewById(R.id.intercept_success).setVisibility(View.VISIBLE);
@@ -283,7 +248,7 @@ public class TutorialActivity extends AppCompatActivity {
                 closeInteractionButtons();
 
                 restore3rdPlayerCard();
-                restoreExamplePlayerCard();
+                darkenExamplePlayerCard();
                 restorePressedPlayerCard();
 
                 increaseTillyEvidence(50);
@@ -293,16 +258,18 @@ public class TutorialActivity extends AppCompatActivity {
                 findViewById(R.id.intercept_successful).setVisibility(View.VISIBLE);
                 break;
 
-            case 18:
+            case 13:
                 /* Your target's codename has been revealed */
                 pressedPlayerCard.setOnClickListener(nextOnClickListener());
                 disableOnTapProgression();
+
+                hideTapToContinue();
 
                 findViewById(R.id.intercept_successful).setVisibility(View.GONE);
                 findViewById(R.id.your_target_has_been_exposed).setVisibility(View.VISIBLE);
                 break;
 
-            case 19:
+            case 14:
                 /* Click Expose! */
                 pressedPlayerCard.setOnClickListener(null);
                 openInteractionButtons();
@@ -313,7 +280,7 @@ public class TutorialActivity extends AppCompatActivity {
                 findViewById(R.id.expose_your_target).setVisibility(View.VISIBLE);
                 break;
 
-            case 20:
+            case 15:
                 /* Expose successful */
                 closeInteractionButtons();
                 releaseTillyEvidence();
@@ -323,22 +290,24 @@ public class TutorialActivity extends AppCompatActivity {
                 restore3rdPlayerCard();
 
                 enableOnTapProgression();
+                displayTapToContinue();
 
                 findViewById(R.id.expose_your_target).setVisibility(View.GONE);
                 findViewById(R.id.expose_was_successful).setVisibility(View.VISIBLE);
                 break;
 
-            case 21:
+            case 16:
                 /* Good luck my doods */
                 darkenExamplePlayerCard();
                 darkenPressedPlayerCard();
                 darken3rdPlayerCard();
+                displayTapToContinue();
 
                 findViewById(R.id.expose_was_successful).setVisibility(View.GONE);
                 findViewById(R.id.good_luck).setVisibility(View.VISIBLE);
                 break;
 
-            case 22:
+            case 17:
                 Intent intent = new Intent(TutorialActivity.this, CreateProfileActivity.class);
                 startActivity(intent);
                 break;
@@ -787,5 +756,13 @@ public class TutorialActivity extends AppCompatActivity {
                 findViewById(R.id.exchange_accepted).setVisibility(View.GONE);
             }
         }, 1000);
+    }
+
+    private void displayTapToContinue() {
+        findViewById(R.id.tap).setVisibility(View.VISIBLE);
+    }
+
+    private void hideTapToContinue() {
+        findViewById(R.id.tap).setVisibility(View.GONE);
     }
 }

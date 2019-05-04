@@ -921,7 +921,7 @@
                 android:textColor="#fff"
                 android:textSize="9pt"
                 android:gravity="center"
-                android:text="Your expose was successful!\nYou gained reputation and will be assigned your next target."/>
+                android:text="Congratulations, your expose was successful.\nYou've used up your evidence and will get a new target."/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -1023,6 +1023,19 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="(tap to continue)"
+        android:fontFamily="@font/sharetech"
+        android:textColor="#999"
+        android:textSize="8pt"
+        android:layout_centerInParent="true"
+        android:paddingBottom="40dp"
+        android:visibility="visible"/>
 
 
 
