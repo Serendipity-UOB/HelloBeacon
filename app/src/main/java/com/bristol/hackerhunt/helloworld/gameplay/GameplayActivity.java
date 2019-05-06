@@ -508,6 +508,7 @@ public class GameplayActivity extends AppCompatActivity {
                                 gameStateController.loseHalfOfPlayersIntel();
                                 gameStateController.resetPlayerTakenDown();
                             }
+                            /*
                             if (gameStateController.playersTargetHasBeenTakenDown()) {
                                 newTargetRequested = true;
                                 closeConsoleOnHomeBeaconNearby = true;
@@ -516,6 +517,7 @@ public class GameplayActivity extends AppCompatActivity {
 
                                 gameStateController.resetPlayersTargetHasBeenTakenDown();
                             }
+                            */
                         }
                     }
                 } catch (JSONException e) {
