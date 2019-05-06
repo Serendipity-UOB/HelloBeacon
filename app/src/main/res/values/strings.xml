@@ -122,6 +122,7 @@
     </string>
 
     <string name="mission_update_title">Mission update</string>
+    <string name="mission_hint_title">Target Hint</string>
     <string name="mission_success_title">Mission success</string>
     <string name="mission_failed_title">Mission failed</string>
 

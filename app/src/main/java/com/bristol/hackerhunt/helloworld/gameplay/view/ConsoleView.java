@@ -246,7 +246,12 @@ public class ConsoleView implements IConsoleView {
         disableCloseConsole();
         setNeutralConsole();
         setConsoleMessage(missionStatement);
-        setConsoleTitle(R.string.mission_update_title);
+        if(missionStatement.toLowerCase().contains("was last seen in")){
+            setConsoleTitle(R.string.mission_hint_title);
+        }
+        else{
+            setConsoleTitle(R.string.mission_update_title);
+        }
         setConsoleImage(getConsoleFlag(getFlagFromMission(missionStatement)));
         if(notFirstMission) {
             if(!missionStatement.toLowerCase().contains("was last seen in")) {
