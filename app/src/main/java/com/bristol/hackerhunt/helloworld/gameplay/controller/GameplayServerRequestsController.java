@@ -320,10 +320,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             if(farPlayer.has("id")){
                 id = farPlayer.getString("id");
                 Log.v("Far Players", "Got id" + id);
-
-                if(farPlayer.has("location")){
-                    location = Integer.toString(farPlayer.getInt("location"));
-                    changeLocationRunnable.run(id,location);
+                if(!id.equals(gameStateController.getPlayerId())) {
+                    if (farPlayer.has("location")) {
+                        location = Integer.toString(farPlayer.getInt("location"));
+                        changeLocationRunnable.run(id, location);
+                    }
                 }
             }
         }
