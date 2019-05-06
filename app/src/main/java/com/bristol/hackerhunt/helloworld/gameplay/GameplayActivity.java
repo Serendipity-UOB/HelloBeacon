@@ -46,6 +46,7 @@ import java.util.TimerTask;
 public class GameplayActivity extends AppCompatActivity {
 
     private static final int POLLING_PERIOD = 1;                // given in seconds
+    private static final int POLLING_SCALAR_MS = 750;           // given in milliseconds
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
     private static final int CONSOLE_POPUP_DELAY_PERIOD = 3;    // given in seconds.
     private static final int MISSION_POLLING_PERIOD = 1;        // given in seconds.
@@ -129,7 +130,7 @@ public class GameplayActivity extends AppCompatActivity {
             // polling
             Timer timer = new Timer(false);
             pollServer().run();
-            timer.scheduleAtFixedRate(pollServer(),0, POLLING_PERIOD * 1000);
+            timer.scheduleAtFixedRate(pollServer(),0, POLLING_PERIOD * POLLING_SCALAR_MS);
 
         } catch (JSONException e) {
             e.printStackTrace();

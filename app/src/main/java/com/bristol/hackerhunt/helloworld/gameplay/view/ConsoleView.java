@@ -328,7 +328,7 @@ public class ConsoleView implements IConsoleView {
 
     private CountDownTimer missionTimer(){
 
-        return new CountDownTimer(30*1000, 1000) {
+        return new CountDownTimer(15*1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 String formattedTime = formatTime(millisUntilFinished);
