@@ -41,6 +41,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private String INTERCEPT_URL;
     private String EXCHANGE_RESPONSE_URL;
     private String MISSION_URL;
+    private String CODENAME_DISCOVERED_URL;
 
     private RequestQueue requestQueue;
     private IGameStateController gameStateController;
@@ -59,6 +60,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private Runnable enableInteractionsRunnable;
 
     private Map<String, Integer> statusCodeRequestMap;
+
+    private List<String> codenameDiscoveredList;
 
 
     /**
@@ -80,9 +83,12 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         this.PLAYER_AT_HOME_URL = context.getString(R.string.home_beacon_request);
         this.INTERCEPT_URL = context.getString(R.string.intercept_request);
         this.MISSION_URL = context.getString(R.string.mission_update_request);
+        this.CODENAME_DISCOVERED_URL = context.getString(R.string.codename_discovered_request);
 
         this.statusCodeRequestMap = new HashMap<>();
+        this.codenameDiscoveredList = new ArrayList<>();
     }
+
 
     @Override
     public void cancelAllRequests() {
@@ -519,6 +525,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                     String playerId = entry.getString("player_id");
                     int evidenceAmount = entry.getInt("amount");
                     gameStateController.increasePlayerIntel(playerId, evidenceAmount);
+                    checkPlayerFullIntelAndSend(playerId);
+
                 }
             }
 
@@ -570,6 +578,62 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private void missionCancelled(InteractionDetails details, JSONObject obj){
         details.status = InteractionStatus.NO_EVIDENCE;
+    }
+
+    private void checkPlayerFullIntelAndSend(String playerId){
+        if(gameStateController.playerHasFullIntel(playerId)){
+            if(!codenameDiscoveredList.contains(playerId)){
+                try {
+                    codenameDiscovered(playerId);
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
+            }
+            else{
+                codenameDiscoveredList.add(playerId);
+            }
+
+        }
+    }
+
+    private void codenameDiscovered(String playerId) throws JSONException{
+        requestQueue.add(volleyCodenameDiscovered(playerId));
+    }
+
+    private JsonObjectRequestWithNull volleyCodenameDiscovered(final String playerId)throws JSONException{
+        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response){
+                String key = SERVER_ADDRESS + EXCHANGE_REQUEST_URL;
+
+                Log.d("Codename discovered", Integer.toString(statusCode));
+                if (statusCodeRequestMap.containsKey(key) && statusCodeRequestMap.get(key) == 200){
+                    Log.v("Codename discovered", "200");
+                }
+                statusCode = 0;
+            }
+
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Exchange request", "Error received:" + error.getMessage());
+            }
+        };
+
+        return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + CODENAME_DISCOVERED_URL,
+                codenameBody(playerId), listener, errorListener, setStatusCodeRunnable(), statusCodeRequestMap);
+    }
+
+    private JSONObject codenameBody(String playerId) throws JSONException {
+        JSONObject requestBody = new JSONObject();
+
+        requestBody.put("playerId", gameStateController.getPlayerId());
+
+
+        // Log.d("Network", requestBody.toString());
+        return requestBody;
     }
 
     @Override
@@ -659,6 +723,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 String playerId = entry.getString("player_id");
                 int amount = entry.getInt("amount");
                 gameStateController.increasePlayerIntel(playerId, amount);
+                checkPlayerFullIntelAndSend(playerId);
                 details.gainedIntelPlayerIds.add(playerId);
             }
         }
@@ -844,6 +909,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 String playerId = entry.getString("player_id");
                 int amount = entry.getInt("amount");
                 gameStateController.increasePlayerIntel(playerId, amount);
+                checkPlayerFullIntelAndSend(playerId);
                 details.gainedIntelPlayerIds.add(playerId);
             }
         }

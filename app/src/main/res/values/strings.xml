@@ -26,6 +26,7 @@
     <string name="intercept_request">/intercept</string>
     <string name="mission_update_request">/missionUpdate</string>
     <string name="get_info_request">/endInfo</string>
+    <string name="codename_discovered_request">/decipherCodename</string>
 
 
 
