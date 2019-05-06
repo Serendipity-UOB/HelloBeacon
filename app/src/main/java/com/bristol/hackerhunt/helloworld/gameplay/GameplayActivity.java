@@ -277,7 +277,7 @@ public class GameplayActivity extends AppCompatActivity {
                 consoleView.missionUpdatePrompt(missionDetails);
                 consoleView.setConsoleImage(consoleView.getConsoleFlag(getFlagFromMission(missionDetails)));
                 notificationVibrate();
-                if(missionDetails.toLowerCase().contains("your target")){
+                if(missionDetails.toLowerCase().contains("was last seen in")){
                     consoleView.enableTapToClose();
                 }
                 else {
