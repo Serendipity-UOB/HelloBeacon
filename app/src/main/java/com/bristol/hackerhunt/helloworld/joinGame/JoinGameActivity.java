@@ -74,21 +74,32 @@ public class JoinGameActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 // Starting timer thread
-                if (gameInfo.countdownStatus == CountdownStatus.ACTIVE && !timerStarted) {
-                    if(!joinPressed) {
-                        startCountdownToGameStart(playerIdentifiers, timer);
-                        showJoinGameButton();
+                if (gameInfo.countdownStatus == CountdownStatus.ACTIVE) {
+                    if (gameInfo.gameStarted) {
+                        gameStarted = true;
+                        serverRequestController.cancelAllRequests();
+                        goToGameplayActivity(playerIdentifiers);
                     }
-                }
-                if (gameInfo.countdownStatus == CountdownStatus.ACTIVE && !gameStarted ) {
-                    if(!joinPressed) {
+                    else {
                         updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
-                        showJoinGameButton();
-                        pressJoinGameButton();
+                        updateTimeLeftUntilGame(gameInfo.visibleTimeLeft);
+
+                        if (!gameInfo.visibleTimeLeft.equals("--:--")) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    TextView text = findViewById(R.id.join_game_success);
+                                    text.setVisibility(View.VISIBLE);
+                                    text.setText(R.string.join_game_waiting_for_start);
+                                }
+                            });
+                        }
+
+                        if (!joinPressed) {
+                            showJoinGameButton();
+                            pressJoinGameButton();
+                        }
                     }
-                }
-                if(joinPressed){
-                    updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
                 }
                 if (gameInfo.countdownStatus == CountdownStatus.NO_GAME && !timerStarted) {
                     updateTimeLeftUntilGame("--:--");
@@ -109,16 +120,6 @@ public class JoinGameActivity extends AppCompatActivity {
                 }
             }
         };
-    }
-
-    private void startCountdownToGameStart(final PlayerIdentifiers playerIdentifiers, final Timer timer) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                startGameTimer(playerIdentifiers, timer, (long) (gameInfo.minutesToStart * 60 * 1000)).start();
-            }
-        });
-        timerStarted = true;
     }
 
     private CountDownTimer startGameTimer(final PlayerIdentifiers playerIdentifiers,
@@ -162,7 +163,9 @@ public class JoinGameActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         joinGameButton.setVisibility(View.GONE);
-                        findViewById(R.id.join_game_success).setVisibility(View.VISIBLE);
+                        TextView text = findViewById(R.id.join_game_success);
+                        text.setVisibility(View.VISIBLE);
+                        text.setText(R.string.join_game_waiting);
                     }
                 });
                 TextView joinStatus = findViewById(R.id.join_game_success);
@@ -215,7 +218,6 @@ public class JoinGameActivity extends AppCompatActivity {
                     that.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            joinStatus.setText(R.string.join_game_success);
                             joinedGame = true;
                         }
                     });

@@ -113,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/join_game_success"
+            android:text="@string/join_game_waiting"
             android:textColor="@color/titleScreenText"
             android:fontFamily="@font/sharetech"
             android:textSize="10pt"
