@@ -15,7 +15,7 @@ import com.bristol.hackerhunt.helloworld.Typewriter;
 public class ConsoleView implements IConsoleView {
 
     private static final int TYPEWRITER_SPEED = 10;     // given in milliseconds.
-    private static final long MISSION_DURATION = 15000;
+    private static final long MISSION_DURATION = 20000;
 
     private final View overlay;
     private final View consoleView;
@@ -333,7 +333,7 @@ public class ConsoleView implements IConsoleView {
 
     private CountDownTimer missionTimer(){
 
-        return new CountDownTimer(15*1000, 1000) {
+        return new CountDownTimer(20*1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 String formattedTime = formatTime(millisUntilFinished);
