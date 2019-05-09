@@ -36,6 +36,7 @@ public class ConsoleView implements IConsoleView {
     private boolean takedownSuccessInProgress;
 
     private boolean notFirstMission = false;
+    private boolean gameOverPrompt = false;
 
     private CountDownTimer cTimer = null;
 
@@ -127,12 +128,14 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void applicationError() {
-        hideTimer();
-        enableCloseConsole();
-        setNeutralConsole();
+        if (!gameOverPrompt) {
+            hideTimer();
+            enableCloseConsole();
+            setNeutralConsole();
 
-        setConsoleTitle(R.string.console_error_title);
-        setConsoleMessage("Application error, please try again later.");
+            setConsoleTitle(R.string.console_error_title);
+            setConsoleMessage("Application error, please try again later.");
+        }
     }
 
     private void setNeutralConsole() {
@@ -166,16 +169,18 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void playersTargetTakenDownPrompt(String homeBeaconName) {
-        hideTimer();
-        disableCloseConsole();
+        if (!gameOverPrompt) {
+            hideTimer();
+            disableCloseConsole();
 
-        this.currentHomeBeacon = homeBeaconName;
-        this.playersTargetGotTakenDownInProgress = true;
-        setNeutralConsole();
-        setConsoleTitle(R.string.console_target_taken_down_title);
-        setConsoleImage(R.drawable.un_flag_small);
-        playersTargetGotTakenDownConsoleMessage(homeBeaconName);
-        this.interactionInProgress = false;
+            this.currentHomeBeacon = homeBeaconName;
+            this.playersTargetGotTakenDownInProgress = true;
+            setNeutralConsole();
+            setConsoleTitle(R.string.console_target_taken_down_title);
+            setConsoleImage(R.drawable.un_flag_small);
+            playersTargetGotTakenDownConsoleMessage(homeBeaconName);
+            this.interactionInProgress = false;
+        }
     }
 
     private void setConsoleTitle(int id) {
@@ -194,17 +199,19 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void playerGotTakenDownPrompt(String homeBeaconName) {
-        hideTimer();
+        if (!gameOverPrompt) {
+            hideTimer();
 
-        disableCloseConsole();
+            disableCloseConsole();
 
-        this.playerGotTakenDownInProgress = true;
-        this.currentHomeBeacon = homeBeaconName;
-        setBadConsole();
-        setConsoleTitle(R.string.console_taken_down_title);
-        setConsoleImage(R.drawable.un_flag_small);
-        playerTakenDownConsoleMessage(homeBeaconName);
-        this.interactionInProgress = false;
+            this.playerGotTakenDownInProgress = true;
+            this.currentHomeBeacon = homeBeaconName;
+            setBadConsole();
+            setConsoleTitle(R.string.console_taken_down_title);
+            setConsoleImage(R.drawable.un_flag_small);
+            playerTakenDownConsoleMessage(homeBeaconName);
+            this.interactionInProgress = false;
+        }
     }
 
     private void playerTakenDownConsoleMessage(String homeBeaconName) {
@@ -217,7 +224,7 @@ public class ConsoleView implements IConsoleView {
     @Override
     public void endOfGamePrompt(final Context context, final Intent goToLeaderboardIntent) {
         hideTimer();
-
+        gameOverPrompt = true;
         disableCloseConsole();
 
         setNeutralConsole();
@@ -235,57 +242,60 @@ public class ConsoleView implements IConsoleView {
                 context.startActivity(goToLeaderboardIntent);
             }
         };
-        consoleViewText.setOnClickListener(cl);
-        consoleView.setOnClickListener(cl);
+        setCloseOnClickListener(cl);
     }
 
     @Override
     public void missionUpdatePrompt(String missionStatement) {
-        hideTimer();
+        if (!gameOverPrompt) {
+            hideTimer();
 
-        disableCloseConsole();
-        setNeutralConsole();
-        setConsoleMessage(missionStatement);
-        if(missionStatement.toLowerCase().contains("was last seen in")){
-            setConsoleTitle(R.string.mission_hint_title);
-        }
-        else{
-            setConsoleTitle(R.string.mission_update_title);
-        }
-        setConsoleImage(getConsoleFlag(getFlagFromMission(missionStatement)));
-        if(notFirstMission) {
-            if(!missionStatement.toLowerCase().contains("was last seen in")) {
-                startMissionTimer();
+            disableCloseConsole();
+            setNeutralConsole();
+            setConsoleMessage(missionStatement);
+            if (missionStatement.toLowerCase().contains("was last seen in")) {
+                setConsoleTitle(R.string.mission_hint_title);
+            } else {
+                setConsoleTitle(R.string.mission_update_title);
             }
-        }
-        else{
-            notFirstMission = true;
+            setConsoleImage(getConsoleFlag(getFlagFromMission(missionStatement)));
+            if (notFirstMission) {
+                if (!missionStatement.toLowerCase().contains("was last seen in")) {
+                    startMissionTimer();
+                }
+            } else {
+                notFirstMission = true;
+            }
         }
     }
 
     @Override
     public void missionSuccessPrompt(String missionSuccessMessage) {
-        hideTimer();
+        if (!gameOverPrompt) {
+            hideTimer();
 
-        enableCloseConsole();
-        setGoodConsole();
-        setConsoleMessage(missionSuccessMessage);
-        setConsoleTitle(R.string.mission_success_title);
-        Log.d("Mission Flag", Integer.toString(getFlagFromMission(missionSuccessMessage)));
-        setConsoleImage(getConsoleFlag(getFlagFromMission(missionSuccessMessage)));
+            enableCloseConsole();
+            setGoodConsole();
+            setConsoleMessage(missionSuccessMessage);
+            setConsoleTitle(R.string.mission_success_title);
+            Log.d("Mission Flag", Integer.toString(getFlagFromMission(missionSuccessMessage)));
+            setConsoleImage(getConsoleFlag(getFlagFromMission(missionSuccessMessage)));
+        }
     }
 
     @Override
     public void missionFailedPrompt(String missionFailedMessage) {
-        hideTimer();
+        if (!gameOverPrompt) {
+            hideTimer();
 
-        enableCloseConsole();
-        setBadConsole();
-        setConsoleMessage(missionFailedMessage);
-        setConsoleTitle(R.string.mission_failed_title);
+            enableCloseConsole();
+            setBadConsole();
+            setConsoleMessage(missionFailedMessage);
+            setConsoleTitle(R.string.mission_failed_title);
 
-        int res = getConsoleFlag(getFlagFromMission(missionFailedMessage));
-        setConsoleImage(res);
+            int res = getConsoleFlag(getFlagFromMission(missionFailedMessage));
+            setConsoleImage(res);
+        }
     }
 
     @Override
@@ -378,21 +388,23 @@ public class ConsoleView implements IConsoleView {
 
     @Override
     public void exposeSuccessPrompt(String homeBeaconName) {
-        hideTimer();
-        disableCloseConsole();
+        if (!gameOverPrompt) {
+            hideTimer();
+            disableCloseConsole();
 
-        this.currentHomeBeacon = homeBeaconName;
-        this.takedownSuccessInProgress = true;
+            this.currentHomeBeacon = homeBeaconName;
+            this.takedownSuccessInProgress = true;
 
-        setGoodConsole();
-        setConsoleTitle(R.string.console_expose_success_title);
-        setConsoleImage(R.drawable.un_flag_small);
-        String message = consoleView.getResources()
-                .getString(R.string.console_expose_success_message);
-        message = message.replace("$BEACON", homeBeaconName);
-        setConsoleMessage(message);
+            setGoodConsole();
+            setConsoleTitle(R.string.console_expose_success_title);
+            setConsoleImage(R.drawable.un_flag_small);
+            String message = consoleView.getResources()
+                    .getString(R.string.console_expose_success_message);
+            message = message.replace("$BEACON", homeBeaconName);
+            setConsoleMessage(message);
 
-        this.interactionInProgress = false;
+            this.interactionInProgress = false;
+        }
     }
 
     private void setConsoleMessage(String message) {
