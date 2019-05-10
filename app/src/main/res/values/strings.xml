@@ -68,6 +68,8 @@
     <string name="join_game_time_until_game">Time to next game:</string>
     <string name="join_game_welcome_message">Welcome, agent $PLAYER_NAME.</string>
     <string name="join_game_success">Join game successful</string>
+    <string name="join_game_waiting">Waiting for players</string>
+    <string name="join_game_waiting_for_start">Waiting for game start</string>
     <string name="join_game_loading">Join game loading</string>
     <string name="join_game_button">Join game</string>
     <string name="players_in_game_placeholder">3</string>

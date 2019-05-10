@@ -89,14 +89,13 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
     }
 
     private void updateGameInfo(JSONObject gameInfoJson) throws JSONException {
-        String timeToStartJson = gameInfoJson.getString("start_time");
-        double minutesToStart = calculateTimeRemainingInMinutes(timeToStartJson);
+        String gameStartTime = gameInfoJson.getString("countdown");
         int numberOfPlayers = gameInfoJson.getInt("number_players");
+        Boolean gameStarted = gameInfoJson.getBoolean("game_start");
 
-        if (gameInfo.minutesToStart == null) {
-            gameInfo.minutesToStart = minutesToStart;
-        }
+        gameInfo.visibleTimeLeft = gameStartTime;
         gameInfo.numberOfPlayers = numberOfPlayers;
+        gameInfo.gameStarted = gameStarted;
     }
 
     private float calculateTimeRemainingInMinutes(String startTime) {
@@ -148,7 +147,7 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
                 if (error.networkResponse != null) {
                     Log.d("Network", Integer.toString(error.networkResponse.statusCode));
                 }
-                noGameAvailableToJoin();
+                // TODO: error handling.
             }
         };
 
@@ -157,11 +156,6 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
 
         return new JsonObjectRequestWithNull(Request.Method.POST, SERVER_ADDRESS + JOIN_GAME_URL, requestBody,
                 listener, errorListener,setStatusCodeRunnable(), new HashMap<String, Integer>());
-    }
-
-    private void noGameAvailableToJoin() {
-        gameInfo.minutesToStart = -1.0;
-        gameInfo.numberOfPlayers = -1;
     }
 
     private void setStatusCode(int code){

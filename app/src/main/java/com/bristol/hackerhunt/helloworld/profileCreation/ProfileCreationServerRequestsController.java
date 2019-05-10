@@ -70,6 +70,9 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
                         Log.d("Network", String.valueOf(e.getCause()));
                     }
                 }
+                if (statusCode == 204) {
+                    onProfileInvalidRunnable.run("There is currently no game available to join.");
+                }
                 else if (statusCode == 400){
                     try {
                         if (response.has("error")){
@@ -100,12 +103,12 @@ public class ProfileCreationServerRequestsController implements IProfileCreation
                         onProfileInvalidRunnable.run(jsonError);
                     } catch (JSONException e) {
                         Log.d("Network","Message: " + e.getMessage());
-                        onProfileInvalidRunnable.run("Network error.");
+                        onProfileInvalidRunnable.run("No game available to join.");
                     }
                 }
                 else {
                     Log.d("Network","Message:" + error.toString());
-                    onProfileInvalidRunnable.run("Network error.");
+                    onProfileInvalidRunnable.run("No game available to join.");
                 }
 
             }
