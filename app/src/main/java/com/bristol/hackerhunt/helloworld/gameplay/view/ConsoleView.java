@@ -227,22 +227,22 @@ public class ConsoleView implements IConsoleView {
         gameOverPrompt = true;
         disableCloseConsole();
 
-        setNeutralConsole();
-        setConsoleMessage(context.getString(R.string.game_over_console_message));
-        setConsoleTitle(R.string.game_over_console_title);
-        setConsoleImage(R.drawable.un_flag_small);
+        //setNeutralConsole();
+        //setConsoleMessage(context.getString(R.string.game_over_console_message));
+        //setConsoleTitle(R.string.game_over_console_title);
+        //setConsoleImage(R.drawable.un_flag_small);
 
 
         this.interactionInProgress = false;
 
-        View.OnClickListener cl = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("App", "Going to leaderboard.");
+        //View.OnClickListener cl = new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View view) {
+        //        Log.d("App", "Going to leaderboard.");
                 context.startActivity(goToLeaderboardIntent);
-            }
-        };
-        setCloseOnClickListener(cl);
+        //    }
+        //};
+        //setCloseOnClickListener(cl);
     }
 
     @Override
