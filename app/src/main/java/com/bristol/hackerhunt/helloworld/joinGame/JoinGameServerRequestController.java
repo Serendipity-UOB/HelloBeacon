@@ -79,7 +79,12 @@ public class JoinGameServerRequestController implements IJoinGameServerRequestCo
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Network", error.getMessage());
+                if (error.getMessage() != null) {
+                    Log.d("Network", error.getMessage());
+                }
+                else {
+                    Log.d("Network", "Received server error on join game");
+                }
                 gameInfo.countdownStatus = CountdownStatus.NO_GAME;
             }
         };
