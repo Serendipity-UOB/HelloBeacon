@@ -459,9 +459,9 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (gameOver) {
-                    cancel();
                     beaconController.stopScanning();
                     serverRequestsController.cancelAllRequests();
+                    cancel();
                 }
                 else {
                     pollServerTask();
