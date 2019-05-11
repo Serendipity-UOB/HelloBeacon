@@ -584,6 +584,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         if(gameStateController.playerHasFullIntel(playerId)){
             if(!codenameDiscoveredList.contains(playerId)){
                 try {
+                    Log.i("Codename Discovered : ", playerId);
                     codenameDiscovered(playerId);
                 }
                 catch(JSONException e){
