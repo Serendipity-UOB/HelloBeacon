@@ -471,6 +471,7 @@ public class PlayerListView implements IPlayerListView {
                             intelBar.setTextColor(ContextCompat.getColor(context, R.color.progress_bar_text));
                         }
                         intelBar.setText(Integer.toString((int) newProgress));
+                        intelBar.setProgress(newProgress);
                         exchangeSuccess = false;
                         interceptSuccess = false;
                     }
