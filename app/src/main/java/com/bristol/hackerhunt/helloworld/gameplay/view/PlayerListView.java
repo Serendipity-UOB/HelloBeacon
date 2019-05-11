@@ -119,6 +119,7 @@ public class PlayerListView implements IPlayerListView {
 
     @Override
     public void revealPlayerHackerName(String playerId, final String hackerName) {
+        Log.d("Reveal Name", playerId);
         playerIdCodeNameMap.put(playerId, hackerName);
         displayPlayerCodeName(playerId);
     }
