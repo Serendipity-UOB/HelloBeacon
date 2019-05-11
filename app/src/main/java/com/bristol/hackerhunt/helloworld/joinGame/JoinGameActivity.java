@@ -79,6 +79,7 @@ public class JoinGameActivity extends AppCompatActivity {
                         gameStarted = true;
                         serverRequestController.cancelAllRequests();
                         goToGameplayActivity(playerIdentifiers);
+                        this.cancel();
                     }
                     else {
                         updateNumberOfPlayersInGame(gameInfo.numberOfPlayers.toString());
