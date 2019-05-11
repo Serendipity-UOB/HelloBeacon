@@ -34,7 +34,7 @@ public class GameStateController implements IGameStateController {
     private int points;
     private String leaderboardPosition;
 
-    private final Map<String, PlayerDetails> allPlayersMap; // key: player_id (nfc)
+    private final Map<String, PlayerDetails> allPlayersMap; // key: player_id
     private List<String> nearbyPlayerIds;
     private String targetPlayerId;
     private String exposerId;
