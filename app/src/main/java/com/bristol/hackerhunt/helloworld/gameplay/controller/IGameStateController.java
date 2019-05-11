@@ -230,5 +230,5 @@ public interface IGameStateController {
 
     String getExchangeRequesterId();
 
-    String getTargetId();
+    String getTargetName();
 }

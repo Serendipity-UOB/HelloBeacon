@@ -236,8 +236,8 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
-    public String getTargetId(){
-        return this.targetPlayerId;
+    public String getTargetName(){
+        return allPlayersMap.get(targetPlayerId).hackerName;
     }
 
     @Override

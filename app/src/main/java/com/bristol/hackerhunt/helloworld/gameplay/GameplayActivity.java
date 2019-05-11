@@ -143,7 +143,8 @@ public class GameplayActivity extends AppCompatActivity {
                 if (newTargetRequested) {
                     try {
                         serverRequestsController.newTargetRequest();
-                        consoleView.newTargetPrompt(getPlayerName(gameStateController.getTargetId()));
+                        String targetCodename = gameStateController.getTargetName();
+                        consoleView.newTargetPrompt(targetCodename);
                         newTargetRequested = false;
                     } catch (JSONException e) {
                         e.printStackTrace();
