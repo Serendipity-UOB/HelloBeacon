@@ -48,7 +48,7 @@ public class GameplayActivity extends AppCompatActivity {
     private static final int POLLING_PERIOD = 1;                // given in seconds
     private static final int POLLING_SCALAR_MS = 750;           // given in milliseconds
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
-    private static final int CONSOLE_POPUP_DELAY_PERIOD = 3;    // given in seconds.
+    private static final int CONSOLE_POPUP_DELAY_PERIOD = 1;    // given in seconds.
     private static final int MISSION_POLLING_PERIOD = 1;        // given in seconds.
 
     private static final int WAIT = 0;
@@ -143,6 +143,7 @@ public class GameplayActivity extends AppCompatActivity {
                 if (newTargetRequested) {
                     try {
                         serverRequestsController.newTargetRequest();
+                        consoleView.newTargetPrompt(getPlayerName(gameStateController.getTargetId()));
                         newTargetRequested = false;
                     } catch (JSONException e) {
                         e.printStackTrace();

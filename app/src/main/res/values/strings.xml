@@ -125,6 +125,7 @@
     <string name="mission_hint_title">Target update</string>
     <string name="mission_success_title">Mission success</string>
     <string name="mission_failed_title">Mission failed</string>
+    <string name="new_target_title">New Target</string>
 
     <!-- Little notifications -->
     <string name="notification_exchange_requested">

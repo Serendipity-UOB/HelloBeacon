@@ -236,6 +236,11 @@ public class GameStateController implements IGameStateController {
     }
 
     @Override
+    public String getTargetId(){
+        return this.targetPlayerId;
+    }
+
+    @Override
     public void updateNearbyPlayers(List<String> playerIds) {
         List<String> nearbyPlayers = new ArrayList<>();
         for (String id : playerIds) {

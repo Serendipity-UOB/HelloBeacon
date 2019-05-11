@@ -73,4 +73,6 @@ public interface IConsoleView {
     void setConsoleImage(int res);
 
     void setCountdownText(String time);
+
+    void newTargetPrompt(String target);
 }
