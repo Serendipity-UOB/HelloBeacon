@@ -143,8 +143,6 @@ public class GameplayActivity extends AppCompatActivity {
                 if (newTargetRequested) {
                     try {
                         serverRequestsController.newTargetRequest();
-                        String targetCodename = gameStateController.getTargetName();
-                        consoleView.newTargetPrompt(targetCodename);
                         newTargetRequested = false;
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -152,6 +150,15 @@ public class GameplayActivity extends AppCompatActivity {
                 }
             }
         }, CONSOLE_POPUP_DELAY_PERIOD * 1000);
+    }
+
+    public StringInputRunnable newTargetConsole(){
+        return new StringInputRunnable() {
+            @Override
+            public void run(String targetId) {
+                consoleView.newTargetPrompt(gameStateController.getTargetName(targetId));
+            }
+        };
     }
 
     @Override
@@ -183,6 +190,7 @@ public class GameplayActivity extends AppCompatActivity {
         serverRequestsController.registerChangeLocationRunnable(this.playerListView.changeLocationRunnable());
         serverRequestsController.registerEnableInteractionsRunnable(enableInteractionsRunnable());
         serverRequestsController.registerDisableInteractionsRunnable(disableInteractionsRunnable());
+        serverRequestsController.registerNewTargetConsoleRunnable(newTargetConsole());
     }
 
     private StringInputRunnable exposeSuccessfulRunnable() {
