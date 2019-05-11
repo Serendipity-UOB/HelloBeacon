@@ -34,7 +34,7 @@ public class GameStateController implements IGameStateController {
     private int points;
     private String leaderboardPosition;
 
-    private final Map<String, PlayerDetails> allPlayersMap; // key: player_id (nfc)
+    public final Map<String, PlayerDetails> allPlayersMap; // key: player_id
     private List<String> nearbyPlayerIds;
     private String targetPlayerId;
     private String exposerId;
@@ -233,6 +233,11 @@ public class GameStateController implements IGameStateController {
         String codeName = allPlayersMap.get(targetPlayerId).hackerName;
         playerListController.setTargetCodeName(codeName);
         playerStatusBarController.setPlayerTargetCodeName(codeName);
+    }
+
+    @Override
+    public String getTargetName(String targetId){
+        return allPlayersMap.get(targetId).hackerName;
     }
 
     @Override

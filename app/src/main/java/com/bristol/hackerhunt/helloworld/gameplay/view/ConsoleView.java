@@ -299,6 +299,17 @@ public class ConsoleView implements IConsoleView {
     }
 
     @Override
+    public void newTargetPrompt(String target){
+        hideTimer();
+
+        enableCloseConsole();
+        setNeutralConsole();
+        setConsoleMessage("Your new target is " + target);
+        setConsoleTitle(R.string.new_target_title);
+        setConsoleImage(getConsoleFlag(0));
+    }
+
+    @Override
     public int getConsoleFlag(int flag){
         int imageId = R.drawable.beacon_valor;
         if(flag == 0){

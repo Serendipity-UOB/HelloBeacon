@@ -58,6 +58,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private TwinInputRunnable changeLocationRunnable;
     private Runnable disableInteractionsRunnable;
     private Runnable enableInteractionsRunnable;
+    private StringInputRunnable newTargetConsoleRunnable;
 
     private Map<String, Integer> statusCodeRequestMap;
 
@@ -232,6 +233,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private void updateTargetPlayer(JSONObject obj) throws JSONException {
         String targetPlayerId = obj.getString("target_player_id");
         gameStateController.updateTargetPlayer(targetPlayerId);
+        newTargetConsoleRunnable.run(targetPlayerId);
+
     }
 
     @Override
@@ -982,6 +985,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     @Override
     public void registerChangeLocationRunnable(TwinInputRunnable runnable){
         this.changeLocationRunnable = runnable;
+    }
+
+    @Override
+    public void registerNewTargetConsoleRunnable(StringInputRunnable runnable){
+        this.newTargetConsoleRunnable = runnable;
     }
 
     @Override

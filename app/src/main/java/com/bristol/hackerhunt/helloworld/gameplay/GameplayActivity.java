@@ -48,7 +48,7 @@ public class GameplayActivity extends AppCompatActivity {
     private static final int POLLING_PERIOD = 1;                // given in seconds
     private static final int POLLING_SCALAR_MS = 750;           // given in milliseconds
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
-    private static final int CONSOLE_POPUP_DELAY_PERIOD = 3;    // given in seconds.
+    private static final int CONSOLE_POPUP_DELAY_PERIOD = 1;    // given in seconds.
     private static final int MISSION_POLLING_PERIOD = 1;        // given in seconds.
 
     private static final int WAIT = 0;
@@ -152,6 +152,15 @@ public class GameplayActivity extends AppCompatActivity {
         }, CONSOLE_POPUP_DELAY_PERIOD * 1000);
     }
 
+    public StringInputRunnable newTargetConsole(){
+        return new StringInputRunnable() {
+            @Override
+            public void run(String targetId) {
+                consoleView.newTargetPrompt(gameStateController.getTargetName(targetId));
+            }
+        };
+    }
+
     @Override
     public void onBackPressed() {
         // do nothing.
@@ -181,6 +190,7 @@ public class GameplayActivity extends AppCompatActivity {
         serverRequestsController.registerChangeLocationRunnable(this.playerListView.changeLocationRunnable());
         serverRequestsController.registerEnableInteractionsRunnable(enableInteractionsRunnable());
         serverRequestsController.registerDisableInteractionsRunnable(disableInteractionsRunnable());
+        serverRequestsController.registerNewTargetConsoleRunnable(newTargetConsole());
     }
 
     private StringInputRunnable exposeSuccessfulRunnable() {
