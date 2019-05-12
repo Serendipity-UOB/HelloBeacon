@@ -495,6 +495,7 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     private Runnable playerTakenDownRunnable() {
+        final Activity that = this;
         return new Runnable(){
             @Override
             public void run(){
@@ -502,8 +503,13 @@ public class GameplayActivity extends AppCompatActivity {
                 String exposerId = gameStateController.getExposerId();
                 String exposerName = getPlayerName(exposerId);
                 gameStateController.resetExposerId();
+                that.runOnUiThread(new Runnable(){
+                    @Override
+                    public void run(){
+                        consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
+                    }
+                });
 
-                consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
                 notificationVibrate();
                 gameStateController.loseHalfOfPlayersIntel();
                 gameStateController.resetPlayerTakenDown();
