@@ -46,7 +46,7 @@ import java.util.TimerTask;
 public class GameplayActivity extends AppCompatActivity {
 
     private static final int POLLING_PERIOD = 1;                // given in seconds
-    private static final int POLLING_SCALAR_MS = 750;           // given in milliseconds
+    private static final int POLLING_SCALAR_MS = 1000;          // given in milliseconds
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
     private static final int CONSOLE_POPUP_DELAY_PERIOD = 1;    // given in seconds.
     private static final int MISSION_POLLING_PERIOD = 1;        // given in seconds.
