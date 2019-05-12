@@ -157,6 +157,7 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run(String targetId) {
                 consoleView.newTargetPrompt(gameStateController.getTargetName(targetId));
+                notificationVibrate();
             }
         };
     }
