@@ -200,6 +200,7 @@ public class GameplayActivity extends AppCompatActivity {
         serverRequestsController.registerEnableInteractionsRunnable(enableInteractionsRunnable());
         serverRequestsController.registerDisableInteractionsRunnable(disableInteractionsRunnable());
         serverRequestsController.registerNewTargetConsoleRunnable(newTargetConsole());
+        serverRequestsController.registerPlayerTakenDownRunnable(playerTakenDownRunnable());
     }
 
     private StringInputRunnable exposeSuccessfulRunnable() {
@@ -493,6 +494,23 @@ public class GameplayActivity extends AppCompatActivity {
         };
     }
 
+    private Runnable playerTakenDownRunnable() {
+        return new Runnable(){
+            @Override
+            public void run(){
+                closeConsoleOnHomeBeaconNearby = true;
+                String exposerId = gameStateController.getExposerId();
+                String exposerName = getPlayerName(exposerId);
+                gameStateController.resetExposerId();
+
+                consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
+                notificationVibrate();
+                gameStateController.loseHalfOfPlayersIntel();
+                gameStateController.resetPlayerTakenDown();
+            }
+        };
+    }
+
     private void pollServerTask() {
         this.runOnUiThread(new Runnable() {
             @Override
@@ -519,6 +537,7 @@ public class GameplayActivity extends AppCompatActivity {
                                 beginExchangeResponseServerPolling(id);
                             }
 
+                            /*
                             if (gameStateController.playerHasBeenTakenDown()) {
                                 closeConsoleOnHomeBeaconNearby = true;
                                 String exposerId = gameStateController.getExposerId();
@@ -530,6 +549,7 @@ public class GameplayActivity extends AppCompatActivity {
                                 gameStateController.loseHalfOfPlayersIntel();
                                 gameStateController.resetPlayerTakenDown();
                             }
+                            */
                             /*
                             if (gameStateController.playersTargetHasBeenTakenDown()) {
                                 newTargetRequested = true;

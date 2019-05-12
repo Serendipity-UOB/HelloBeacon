@@ -135,4 +135,6 @@ public interface IGameplayServerRequestsController {
     void registerEnableInteractionsRunnable(Runnable runnable);
 
     void registerNewTargetConsoleRunnable(StringInputRunnable runnable);
+
+    void registerPlayerTakenDownRunnable(Runnable runnable);
 }
