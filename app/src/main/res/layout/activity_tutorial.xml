@@ -323,49 +323,6 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- This icon displays how much evidence you’ve gathered about an agent -->
-    <RelativeLayout
-        android:id="@+id/this_icon_displays_evidence"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/neutral_full_pop_up"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-
-            android:layout_marginTop="90pt"
-            android:layout_marginLeft="7pt"
-            android:layout_marginRight="7pt"
-            android:layout_marginBottom="7pt"
-
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="28pt"
-                android:layout_height="28pt"
-                android:layout_marginEnd="15dp"
-                android:src="@drawable/agency_spy_logo" />
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sharetech"
-                android:textColor="#fff"
-                android:textSize="9pt"
-                android:gravity="center"
-                android:text="This is how much evidence you've gathered about an agent."/>
-        </LinearLayout>
-    </RelativeLayout>
-
     <!-- If you have full evidence on the agent’s activities their codename will be revealed. -->
     <RelativeLayout
         android:id="@+id/codename_reveal"
@@ -749,7 +706,7 @@
                 android:textColor="#fff"
                 android:textSize="9pt"
                 android:gravity="center"
-                android:text="Note: You can only have one intercept active at once."/>
+                android:text="If evidence is exchanged during an intercept then you will also receive it."/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -878,7 +835,7 @@
                 android:textColor="#fff"
                 android:textSize="9pt"
                 android:gravity="center"
-                android:text="Expose your target, releasing your evidence and increasing your reputation"/>
+                android:text="Tap expose."/>
         </LinearLayout>
     </RelativeLayout>
 

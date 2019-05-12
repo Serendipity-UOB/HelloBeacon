@@ -44,7 +44,6 @@ public class PlayerListView implements IPlayerListView {
     private List<String> interceptExchangeIds;
 
     private Map<String, Integer> playerIdLocationMap;
-    private Map<String, Integer> playerIdIntelMap;
 
     private StringInputRunnable beginExposeOnClickRunner;
     private StringInputRunnable beginExchangeOnClickRunner;
@@ -92,7 +91,6 @@ public class PlayerListView implements IPlayerListView {
         this.interceptExchangeIds = new ArrayList<>();
         this.playerIdLocationMap = new HashMap<>();
         this.playerIdIntColourMap = new HashMap<>();
-        this.playerIdIntelMap = new HashMap<>();
 
         this.beginExposeOnClickRunner = beginExposeOnClickRunner;
         this.beginExchangeOnClickRunner = beginExchangeOnClickRunner;
@@ -178,7 +176,6 @@ public class PlayerListView implements IPlayerListView {
     @Override
     public void insertPlayer(String playerId, String playerName) {
         playerIdNameMap.put(playerId, playerName);
-        this.playerIdIntelMap.put(playerId, 0);
         insertPlayer(playerId, false, 0);
     }
 
@@ -445,26 +442,16 @@ public class PlayerListView implements IPlayerListView {
                 final float intel = intelBar.getProgress();
                 final float newProgress = (intel + intelIncrement >= 100) ? 100 : intel + intelIncrement;
 
-                this.playerIdIntelMap.put(playerId, (int) newProgress);
-
                 intelBar.setText("+" + String.valueOf(intelIncrement));
                 intelBar.setTextColor(ContextCompat.getColor(playerList.getContext(),
                         R.color.progress_bar_increase));
 
-                final Handler increaseHandler = new Handler();
-                increaseHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (intelBar.getProgress() < newProgress) {
-                            intelBar.setProgress(Math.min(newProgress, intelBar.getProgress() + 2));
-                            increaseHandler.postDelayed(this, 25);
-                        }
-
-                        else if (newProgress >= 100) {
-                            setFullIntelCircleProgressBarColours(playerId, intelBar);
-                        }
-                    }
-                }, 25);
+                if (newProgress >= 100) {
+                    setFullIntelCircleProgressBarColours(playerId, intelBar);
+                }
+                intelBar.setProgress(newProgress);
+                exchangeSuccess = false;
+                interceptSuccess = false;
 
                 final Handler restoreTextHandler = new Handler();
                 restoreTextHandler.postDelayed(new Runnable() {
@@ -477,11 +464,8 @@ public class PlayerListView implements IPlayerListView {
                             intelBar.setTextColor(ContextCompat.getColor(context, R.color.progress_bar_text));
                         }
                         intelBar.setText(Integer.toString((int) newProgress));
-                        intelBar.setProgress(newProgress);
-                        exchangeSuccess = false;
-                        interceptSuccess = false;
                     }
-                }, 1000);
+                }, 2000);
             }
         }
     }
@@ -548,7 +532,6 @@ public class PlayerListView implements IPlayerListView {
 
             float intel = intelBar.getProgress();
             final float newIntel = Math.max(0, intel - intelIncrement);
-            this.playerIdIntelMap.put(playerId, (int) newIntel);
 
             if (newIntel >= 100) {
                 setFullIntelCircleProgressBarColours(playerId, intelBar);
@@ -579,7 +562,6 @@ public class PlayerListView implements IPlayerListView {
             final CircleProgressBar intelBar = listItem.findViewById(R.id.player_intel_circle);
 
             setNotFullIntelCircleProgressBarColoursNearby(intelBar);
-            this.playerIdIntelMap.put(playerId, 0);
 
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -897,11 +879,10 @@ public class PlayerListView implements IPlayerListView {
             throw new IllegalArgumentException("Error: player is not listed as playing the game.");
         }
         else {
-            //int id = playerIdListItemIdMap.get(playerId);
-            //RelativeLayout ll = playerList.findViewById(id);
-            //CircleProgressBar ib = ll.findViewById(R.id.player_intel_circle);
-            //return (int) ib.getProgress();
-            return this.playerIdIntelMap.get(playerId);
+            int id = playerIdListItemIdMap.get(playerId);
+            RelativeLayout ll = playerList.findViewById(id);
+            CircleProgressBar ib = ll.findViewById(R.id.player_intel_circle);
+            return (int) ib.getProgress();
         }
     }
 
