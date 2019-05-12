@@ -220,7 +220,12 @@ public class ConsoleView implements IConsoleView {
         String message = consoleView.getResources()
                 .getString(R.string.console_taken_down_message);
         message = message.replace("$BEACON", homeBeaconName);
-        message = message.replace("$EXPOSER", exposerName);
+        if(exposerName != null) {
+            message = message.replace("$EXPOSER", exposerName);
+        }
+        else{
+            message = message.replace("$EXPOSER", "another agent");
+        }
         setConsoleMessage(message);
     }
 

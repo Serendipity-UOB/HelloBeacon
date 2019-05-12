@@ -136,5 +136,5 @@ public interface IGameplayServerRequestsController {
 
     void registerNewTargetConsoleRunnable(StringInputRunnable runnable);
 
-    void registerPlayerTakenDownRunnable(Runnable runnable);
+    void registerPlayerTakenDownRunnable(StringInputRunnable runnable);
 }

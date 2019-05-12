@@ -502,13 +502,12 @@ public class GameplayActivity extends AppCompatActivity {
         };
     }
 
-    private Runnable playerTakenDownRunnable() {
+    private StringInputRunnable playerTakenDownRunnable() {
         final Activity that = this;
-        return new Runnable(){
+        return new StringInputRunnable(){
             @Override
-            public void run(){
+            public void run(String exposerId){
                 closeConsoleOnHomeBeaconNearby = true;
-                String exposerId = gameStateController.getExposerId();
                 final String exposerName = getPlayerName(exposerId);
                 gameStateController.resetExposerId();
                 that.runOnUiThread(new Runnable(){

@@ -59,7 +59,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private Runnable disableInteractionsRunnable;
     private Runnable enableInteractionsRunnable;
     private StringInputRunnable newTargetConsoleRunnable;
-    private Runnable playerTakenDownRunnable;
+    private StringInputRunnable playerTakenDownRunnable;
 
     private Map<String, Integer> statusCodeRequestMap;
 
@@ -380,7 +380,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 if (!exposedId.equals("0")) {
                     updates.add(PlayerUpdate.TAKEN_DOWN);
                     gameStateController.setExposerId(exposedId);
-                    playerTakenDownRunnable.run();
+                    playerTakenDownRunnable.run(exposedId);
                 }
         }
         if (obj.has("req_new_target")) {
@@ -995,7 +995,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     @Override
-    public void registerPlayerTakenDownRunnable(Runnable runnable){
+    public void registerPlayerTakenDownRunnable(StringInputRunnable runnable){
         this.playerTakenDownRunnable = runnable;
     }
 
