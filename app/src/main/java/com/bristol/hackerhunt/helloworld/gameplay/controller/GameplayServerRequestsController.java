@@ -236,13 +236,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         String targetPlayerId = obj.getString("target_player_id");
         gameStateController.updateTargetPlayer(targetPlayerId);
 
-        //If first time we are requesting target then do not display update console
-        if(notFirstTarget) {
-            newTargetConsoleRunnable.run(targetPlayerId);
-        }
-        else{
-            notFirstTarget = true;
-        }
+        newTargetConsoleRunnable.run(targetPlayerId);
+
 
     }
 
