@@ -59,6 +59,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private Runnable disableInteractionsRunnable;
     private Runnable enableInteractionsRunnable;
     private StringInputRunnable newTargetConsoleRunnable;
+    private Runnable playerTakenDownRunnable;
 
     private Map<String, Integer> statusCodeRequestMap;
 
@@ -236,13 +237,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
         String targetPlayerId = obj.getString("target_player_id");
         gameStateController.updateTargetPlayer(targetPlayerId);
 
-        //If first time we are requesting target then do not display update console
-        if(notFirstTarget) {
-            newTargetConsoleRunnable.run(targetPlayerId);
-        }
-        else{
-            notFirstTarget = true;
-        }
+        newTargetConsoleRunnable.run(targetPlayerId);
+
 
     }
 
@@ -384,6 +380,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
                 if (!exposedId.equals("0")) {
                     updates.add(PlayerUpdate.TAKEN_DOWN);
                     gameStateController.setExposerId(exposedId);
+                    playerTakenDownRunnable.run();
                 }
         }
         if (obj.has("req_new_target")) {
@@ -995,6 +992,11 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     @Override
     public void registerNewTargetConsoleRunnable(StringInputRunnable runnable){
         this.newTargetConsoleRunnable = runnable;
+    }
+
+    @Override
+    public void registerPlayerTakenDownRunnable(Runnable runnable){
+        this.playerTakenDownRunnable = runnable;
     }
 
     @Override
