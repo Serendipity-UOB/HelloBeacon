@@ -106,9 +106,9 @@
 
     <string name="console_taken_down_title">Security Breach</string>
     <string name="console_taken_down_message">
-        Your mission has been exposed, you have lost 50% of your gathered evidence.
-        \n\n
-        Return to $BEACON, agent.
+        Exposed by $EXPOSER.
+        \nLose 50% of your evidence
+        \nReturn to $BEACON.
     </string>
 
     <string name="console_expose_success_title">Expose Success</string>

@@ -77,14 +77,15 @@ public class ConsoleView implements IConsoleView {
         setCloseOnClickListener(listener);
         consoleTapToCloseMessage.setVisibility(View.VISIBLE);
     }
-
+    /*
     private void enableCloseConsoleWithoutOverride() {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 overlay.setVisibility(View.GONE);
                 if (playerGotTakenDownInProgress) {
-                    playerGotTakenDownPrompt(currentHomeBeacon);
+
+                    //playerGotTakenDownPrompt(currentHomeBeacon);
                 }
                 else if (playersTargetGotTakenDownInProgress) {
                     playersTargetTakenDownPrompt(currentHomeBeacon);
@@ -101,6 +102,7 @@ public class ConsoleView implements IConsoleView {
         setCloseOnClickListener(listener);
         consoleTapToCloseMessage.setVisibility(View.VISIBLE);
     }
+    */
 
     void setCloseOnClickListener(View.OnClickListener listener) {
         overlay.setOnClickListener(listener);
@@ -198,7 +200,7 @@ public class ConsoleView implements IConsoleView {
     }
 
     @Override
-    public void playerGotTakenDownPrompt(String homeBeaconName) {
+    public void playerGotTakenDownPrompt(String homeBeaconName, String exposerName) {
         if (!gameOverPrompt) {
             hideTimer();
 
@@ -209,15 +211,16 @@ public class ConsoleView implements IConsoleView {
             setBadConsole();
             setConsoleTitle(R.string.console_taken_down_title);
             setConsoleImage(R.drawable.un_flag_small);
-            playerTakenDownConsoleMessage(homeBeaconName);
+            playerTakenDownConsoleMessage(homeBeaconName, exposerName);
             this.interactionInProgress = false;
         }
     }
 
-    private void playerTakenDownConsoleMessage(String homeBeaconName) {
+    private void playerTakenDownConsoleMessage(String homeBeaconName, String exposerName) {
         String message = consoleView.getResources()
                 .getString(R.string.console_taken_down_message);
         message = message.replace("$BEACON", homeBeaconName);
+        message = message.replace("$EXPOSER", exposerName);
         setConsoleMessage(message);
     }
 

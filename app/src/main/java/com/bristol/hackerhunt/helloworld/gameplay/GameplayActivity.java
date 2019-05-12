@@ -76,6 +76,8 @@ public class GameplayActivity extends AppCompatActivity {
     private int currentPlayerExchangeResponse = WAIT;
     private String targetId = "";
 
+    private int startScanningCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // initialization
@@ -385,6 +387,12 @@ public class GameplayActivity extends AppCompatActivity {
 
                 if (!details.status.equals(InteractionStatus.RESPONSE_PENDING) && !details.status.equals(InteractionStatus.IN_PROGRESS)){
                     cancel();
+                    that.runOnUiThread(new Runnable(){
+                        @Override
+                        public void run(){
+                            consoleView.enableTapToClose();
+                        }
+                    });
                 }
             }
         },0, MISSION_POLLING_PERIOD * 1000);
@@ -501,12 +509,12 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(){
                 closeConsoleOnHomeBeaconNearby = true;
                 String exposerId = gameStateController.getExposerId();
-                String exposerName = getPlayerName(exposerId);
+                final String exposerName = getPlayerName(exposerId);
                 gameStateController.resetExposerId();
                 that.runOnUiThread(new Runnable(){
                     @Override
                     public void run(){
-                        consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
+                        consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName(), exposerName);
                     }
                 });
 
@@ -526,6 +534,13 @@ public class GameplayActivity extends AppCompatActivity {
                         gameOver();
                     }
                     else {
+                        if(startScanningCount >= 60){
+                            beaconController.startScanning();
+                            startScanningCount = 0;
+                        }
+                        else{
+                            startScanningCount += 1;
+                        }
                         if (!timerStarted && gameStateController.getGameDuration() > 0) {
                             startGameTimer(gameStateController.getGameDuration());
                             timerStarted = true;

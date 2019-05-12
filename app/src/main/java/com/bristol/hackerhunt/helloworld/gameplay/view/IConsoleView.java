@@ -23,7 +23,7 @@ public interface IConsoleView {
     /**
      * Tells player that they have been taken down, and associated functionality.
      */
-    void playerGotTakenDownPrompt(String homeBeaconName);
+    void playerGotTakenDownPrompt(String homeBeaconName, String exposerName);
 
     /**
      * End of game prompt.
