@@ -64,6 +64,8 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     private List<String> codenameDiscoveredList;
 
+    private Boolean notFirstTarget = false;
+
 
     /**
      * Class constructor.
@@ -233,7 +235,14 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     private void updateTargetPlayer(JSONObject obj) throws JSONException {
         String targetPlayerId = obj.getString("target_player_id");
         gameStateController.updateTargetPlayer(targetPlayerId);
-        newTargetConsoleRunnable.run(targetPlayerId);
+
+        //If first time we are requesting target then do not display update console
+        if(notFirstTarget) {
+            newTargetConsoleRunnable.run(targetPlayerId);
+        }
+        else{
+            notFirstTarget = true;
+        }
 
     }
 
