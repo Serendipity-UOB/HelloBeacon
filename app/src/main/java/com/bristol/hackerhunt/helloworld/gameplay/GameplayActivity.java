@@ -509,12 +509,12 @@ public class GameplayActivity extends AppCompatActivity {
             public void run(){
                 closeConsoleOnHomeBeaconNearby = true;
                 String exposerId = gameStateController.getExposerId();
-                String exposerName = getPlayerName(exposerId);
+                final String exposerName = getPlayerName(exposerId);
                 gameStateController.resetExposerId();
                 that.runOnUiThread(new Runnable(){
                     @Override
                     public void run(){
-                        consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName());
+                        consoleView.playerGotTakenDownPrompt(gameStateController.getHomeBeaconName(), exposerName);
                     }
                 });
 

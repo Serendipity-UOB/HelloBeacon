@@ -77,14 +77,15 @@ public class ConsoleView implements IConsoleView {
         setCloseOnClickListener(listener);
         consoleTapToCloseMessage.setVisibility(View.VISIBLE);
     }
-
+    /*
     private void enableCloseConsoleWithoutOverride() {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 overlay.setVisibility(View.GONE);
                 if (playerGotTakenDownInProgress) {
-                    playerGotTakenDownPrompt(currentHomeBeacon);
+
+                    //playerGotTakenDownPrompt(currentHomeBeacon);
                 }
                 else if (playersTargetGotTakenDownInProgress) {
                     playersTargetTakenDownPrompt(currentHomeBeacon);
@@ -101,6 +102,7 @@ public class ConsoleView implements IConsoleView {
         setCloseOnClickListener(listener);
         consoleTapToCloseMessage.setVisibility(View.VISIBLE);
     }
+    */
 
     void setCloseOnClickListener(View.OnClickListener listener) {
         overlay.setOnClickListener(listener);
