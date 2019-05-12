@@ -248,11 +248,6 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
 
     @Override
     public void playerUpdateRequest() throws JSONException {
-        // this is just a placeholder.
-        // String response = "{\"nearby_players\":[\"2\",\"3\",\"4\"],\"points\":516,\"position\":\"2\"}";
-        // JSONObject obj = new JSONObject(response);
-        // playerUpdate(obj);
-
         requestQueue.add(volleyPlayerUpdateRequest());
     }
 
@@ -284,6 +279,7 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
     }
 
     private void playerUpdate(JSONObject obj) throws JSONException {
+        //Do state updates based on JSONObject obj
         updateNearbyPlayers(obj);
         updatePlayerPoints(obj);
         updateLeaderboardPosition(obj);

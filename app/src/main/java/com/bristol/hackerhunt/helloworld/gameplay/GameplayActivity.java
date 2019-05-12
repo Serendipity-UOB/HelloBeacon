@@ -46,7 +46,7 @@ import java.util.TimerTask;
 public class GameplayActivity extends AppCompatActivity {
 
     private static final int POLLING_PERIOD = 1;                // given in seconds
-    private static final int POLLING_SCALAR_MS = 1000;          // given in milliseconds
+    private static final int POLLING_SCALAR_MS = 1000;           // given in milliseconds
     private static final int EXCHANGE_POLLING_PERIOD = 1;       // given in seconds.
     private static final int CONSOLE_POPUP_DELAY_PERIOD = 1;    // given in seconds.
     private static final int MISSION_POLLING_PERIOD = 1;        // given in seconds.
@@ -72,7 +72,9 @@ public class GameplayActivity extends AppCompatActivity {
     private boolean gameOver = false;
     private boolean closeConsoleOnHomeBeaconNearby = false;
     private boolean newTargetRequested = true;
+    private boolean newTargetUpdated = false;
     private int currentPlayerExchangeResponse = WAIT;
+    private String targetId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +111,19 @@ public class GameplayActivity extends AppCompatActivity {
                     else{
                         notFirstConsole = true;
                     }
+                    Log.d("New Target", Boolean.toString(newTargetUpdated));
+                    if(newTargetUpdated){
+                        new Handler().postDelayed(new Runnable(){
+                            @Override
+                            public void run() {
+                                Log.d("New Target", "Display popup");
+                                consoleView.newTargetPrompt(gameStateController.getTargetName(targetId));
+                                notificationVibrate();
+                            }
+                        }, CONSOLE_POPUP_DELAY_PERIOD * 1000);
+
+                        newTargetUpdated = false;
+                    }
                     closeConsoleOnHomeBeaconNearby = true;
                 }
             }
@@ -140,14 +155,6 @@ public class GameplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 consoleView.enableTapToClose();
-                if (newTargetRequested) {
-                    try {
-                        serverRequestsController.newTargetRequest();
-                        newTargetRequested = false;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         }, CONSOLE_POPUP_DELAY_PERIOD * 1000);
     }
@@ -155,8 +162,10 @@ public class GameplayActivity extends AppCompatActivity {
     public StringInputRunnable newTargetConsole(){
         return new StringInputRunnable() {
             @Override
-            public void run(String targetId) {
-                consoleView.newTargetPrompt(gameStateController.getTargetName(targetId));
+            public void run(String target) {
+                Log.d("New Target", target);
+                targetId = target;
+                newTargetUpdated = true;
             }
         };
     }
@@ -203,7 +212,11 @@ public class GameplayActivity extends AppCompatActivity {
                 notificationVibrate();
                 Log.d("Clear Evidence", targetId);
                 gameStateController.clearAllEvidence(targetId);
-                newTargetRequested = true;
+                try{
+                    serverRequestsController.newTargetRequest();
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
             }
         };
     }

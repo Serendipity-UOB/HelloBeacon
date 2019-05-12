@@ -178,6 +178,7 @@ public class GameStateController implements IGameStateController {
             pd.intel = Math.min(100, pd.intel + intelIncrement);
             playerListController.increasePlayerIntel(playerId, intelIncrement);
             if (playerHasFullIntel(playerId)) {
+                Log.d("Full intel", playerId + " Intel + " + pd.intel);
                 playerListController.revealPlayerHackerName(playerId, pd.hackerName);
             }
         }
