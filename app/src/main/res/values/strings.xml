@@ -11,7 +11,7 @@
     <!--*******************************-->
     <string name="server_address">https://serendipity-game-controller.herokuapp.com</string>
 
-    <string name="register_player_request">/registerPlayer=</string>
+    <string name="register_player_request">/registerPlayer</string>
 
     <string name="game_info_request">/gameInfo</string>
     <string name="join_game_request">/joinGame</string>
