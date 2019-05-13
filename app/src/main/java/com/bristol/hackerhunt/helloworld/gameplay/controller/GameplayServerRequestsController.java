@@ -912,11 +912,18 @@ public class GameplayServerRequestsController implements IGameplayServerRequests
             JSONArray evidenceGained = obj.getJSONArray("evidence");
             for (int i = 0; i < evidenceGained.length(); i++) {
                 JSONObject entry = evidenceGained.getJSONObject(i);
-                String playerId = entry.getString("player_id");
-                int amount = entry.getInt("amount");
-                gameStateController.increasePlayerIntel(playerId, amount);
-                checkPlayerFullIntelAndSend(playerId);
-                details.gainedIntelPlayerIds.add(playerId);
+
+                if(entry.has("player_id")){
+                    String playerId = entry.getString("player_id");
+                    if(entry.has("amount")){
+                        int amount = entry.getInt("amount");
+                        gameStateController.increasePlayerIntel(playerId, amount);
+                    }
+                    checkPlayerFullIntelAndSend(playerId);
+                    details.gainedIntelPlayerIds.add(playerId);
+                }
+
+
             }
         }
         Log.v("Intercept", "Success");
