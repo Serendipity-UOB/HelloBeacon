@@ -533,12 +533,8 @@ public class GameplayActivity extends AppCompatActivity {
                         gameOver();
                     }
                     else {
-                        if(startScanningCount >= 60){
+                        if(!beaconController.isScanning()){
                             beaconController.startScanning();
-                            startScanningCount = 0;
-                        }
-                        else{
-                            startScanningCount += 1;
                         }
                         if (!timerStarted && gameStateController.getGameDuration() > 0) {
                             startGameTimer(gameStateController.getGameDuration());

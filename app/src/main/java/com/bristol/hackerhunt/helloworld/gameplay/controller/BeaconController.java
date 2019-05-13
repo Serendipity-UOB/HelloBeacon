@@ -56,6 +56,11 @@ public class BeaconController implements IBeaconController {
         proximityManager.disconnect();
     }
 
+    @Override
+    public boolean isScanning() {
+        return proximityManager.isScanning();
+    }
+
     private void initializeProximityManager(Context context) {
         proximityManager = ProximityManagerFactory.create(context);
         proximityManager.setIBeaconListener(createIBeaconListener());

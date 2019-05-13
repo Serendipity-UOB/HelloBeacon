@@ -15,4 +15,6 @@ public interface IBeaconController {
      */
     void stopScanning();
 
+    boolean isScanning();
+
 }
